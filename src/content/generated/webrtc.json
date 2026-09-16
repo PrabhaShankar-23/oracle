@@ -1,0 +1,165 @@
+{
+  "title": "WebRTC",
+  "cards": [
+    {
+      "id": "card-01",
+      "number": 1,
+      "cover": true,
+      "topic": "WebRTC · Real-time Systems",
+      "title": "WebRTC Field Notes",
+      "titleHtml": "Web<em>RTC</em> Field Notes",
+      "subtitle": "A pocket atlas of peer connections, NAT traversal, and the protocols that make real-time media flow.",
+      "html": "<div>\n      <span class=\"label\">Volume</span>\n      <span class=\"value\">Senior &amp; Architect Track</span>\n    </div>\n    <div>\n      <span class=\"label\">Compiled</span>\n      <span class=\"value\">May 2026</span>\n    </div>\n    <div>\n      <span class=\"label\">Cards</span>\n      <span class=\"value\">Sixteen</span>\n    </div>\n    <div>\n      <span class=\"label\">Use</span>\n      <span class=\"value\">Pre-interview &amp; design rounds</span>\n    </div>"
+    },
+    {
+      "id": "card-02",
+      "number": 2,
+      "cover": false,
+      "topic": "Foundation · Mental Model",
+      "title": "The Four Obstacles",
+      "titleHtml": "The Four <em>Obstacles</em>",
+      "subtitle": "WebRTC is one sentence: two browsers want to send UDP packets to each other, but NAT is in the way. Every acronym solves one obstacle on that path.",
+      "html": "<ol class=\"steps\">\n      <li><b>Find each other.</b> A meeting place, agreed in advance. → <span class=\"term\">Signaling</span> &nbsp; <em>(your WebSocket — not in the WebRTC spec)</em></li>\n      <li><b>Agree on what to speak.</b> Codecs, encryption, transport parameters. → <span class=\"term\">SDP</span> &nbsp; <em>(offer / answer, exchanged via signaling)</em></li>\n      <li><b>Find a network path.</b> Through NATs and firewalls. → <span class=\"term\">ICE</span> &nbsp; <em>(uses STUN for discovery, TURN for relay)</em></li>\n      <li><b>Encrypt the media.</b> Mandatory in WebRTC, no plaintext mode. → <span class=\"term\">DTLS → SRTP</span> &nbsp; <em>(handshake derives keys; SRTP is the wire format)</em></li>\n    </ol>\n    <p class=\"pullquote\">If you can list the four obstacles, you can always reconstruct the rest.</p>"
+    },
+    {
+      "id": "card-03",
+      "number": 3,
+      "cover": false,
+      "topic": "Foundation · Architecture",
+      "title": "Three Layers Never Conflate",
+      "titleHtml": "Three <em>Layers</em> Never Conflate",
+      "subtitle": "Most WebRTC confusion comes from mixing these up. Each layer runs over different infrastructure, with different scaling concerns and different cost lines.",
+      "html": "<table class=\"table\">\n      <thead>\n        <tr><th>Layer</th><th>What It Does</th><th>Who Builds It</th></tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>Signaling</td>\n          <td>Exchanges SDP and ICE candidates between peers, before media flows.</td>\n          <td><strong>You</strong> — typically a WebSocket fleet</td>\n        </tr>\n        <tr>\n          <td>NAT traversal</td>\n          <td>Discovers public IPs, finds and validates network paths between peers.</td>\n          <td>STUN &amp; TURN providers, or self-hosted <code>coturn</code></td>\n        </tr>\n        <tr>\n          <td>Media transport</td>\n          <td>Encrypted real-time audio/video/data over UDP. Direct between peers.</td>\n          <td>Browser, end-to-end</td>\n        </tr>\n      </tbody>\n    </table>\n    <p><strong>Key point.</strong> The signaling server is in the path before connection but never carries media. STUN is consulted only at gather time. TURN, when used, carries every byte of media.</p>"
+    },
+    {
+      "id": "card-04",
+      "number": 4,
+      "cover": false,
+      "topic": "Protocol · SDP",
+      "title": "SDP The Session Blob",
+      "titleHtml": "<em>SDP</em> The Session Blob",
+      "subtitle": "Session Description Protocol — a plain-text manifest that describes what a peer can speak. Exchanged via offer/answer through your signaling server.",
+      "html": "<p><strong>What it carries.</strong> Codec list (Opus, VP8, VP9, AV1, H.264), RTP extensions, encryption fingerprints, ICE credentials (ufrag, pwd), bandwidth limits, media stream IDs.</p>\n    <pre class=\"code\">v=0\no=- 4611737293671806839 2 IN IP4 127.0.0.1\ns=-\nt=0 0\nm=audio 9 UDP/TLS/RTP/SAVPF 111 103 104\na=rtpmap:111 opus/48000/2\na=fingerprint:sha-256 AB:CD:...\na=ice-ufrag:F7gI\na=ice-pwd:x9cml/YzichV2+XlhiMu8g</pre>\n    <p><strong>Offer / answer rule.</strong> The answer must be a <em>subset</em> of the offer. The result is a negotiated session: both peers know the exact codec, encryption, and transport parameters.</p>"
+    },
+    {
+      "id": "card-05",
+      "number": 5,
+      "cover": false,
+      "topic": "NAT Traversal · ICE",
+      "title": "ICE Gathering Five Steps",
+      "titleHtml": "<em>ICE</em> Gathering Five Steps",
+      "subtitle": "Interactive Connectivity Establishment — RFC 8445. Doesn't predict the right path; it tries every plausible path in parallel and picks the first that works.",
+      "html": "<ol class=\"steps\">\n      <li><b>Enumerate interfaces.</b> Walk every local interface (WiFi, Ethernet, VPN). Each yields a <em>host</em> candidate.</li>\n      <li><b>Query STUN.</b> From each interface, send STUN binding requests. Returns your public IP:port — a <em>server-reflexive (srflx)</em> candidate.</li>\n      <li><b>Allocate on TURN.</b> If TURN is configured, request an allocation from each. Returns a <em>relay</em> candidate.</li>\n      <li><b>Trickle.</b> Each candidate, as discovered, fires <code>onicecandidate</code> and is sent to the peer through signaling.</li>\n      <li><b>Connectivity checks.</b> Both peers pair their local with the remote candidates and run STUN binding pings. The first valid pair (by priority) becomes the selected pair.</li>\n    </ol>"
+    },
+    {
+      "id": "card-06",
+      "number": 6,
+      "cover": false,
+      "topic": "NAT Traversal · Candidates",
+      "title": "Three Candidates, One Priority Order",
+      "titleHtml": "Three <em>Candidates</em>, One Priority Order",
+      "subtitle": "ICE prefers the cheapest, most direct path. Falls back only when checks fail. The priority order is the heart of the whole system.",
+      "html": "<table class=\"table\">\n      <thead>\n        <tr><th>Type</th><th>Source</th><th>Priority</th></tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>host</td>\n          <td>Local interface — same LAN, same WiFi, same VPN.</td>\n          <td>Highest</td>\n        </tr>\n        <tr>\n          <td>srflx</td>\n          <td>Public IP discovered via STUN. Works through most NATs.</td>\n          <td>Medium</td>\n        </tr>\n        <tr>\n          <td>relay</td>\n          <td>Address allocated on a TURN server. Always works, paid path.</td>\n          <td>Lowest</td>\n        </tr>\n      </tbody>\n    </table>\n    <p><strong>The fourth type.</strong> Peer-reflexive (<em>prflx</em>) is discovered <em>during</em> connectivity checks — when a check packet reaches the peer from an address neither side gathered ahead of time, due to NAT behavior. ICE handles this gracefully.</p>\n    <p class=\"pullquote\">Direct first. Reflexive second. Relay only when nothing else works.</p>"
+    },
+    {
+      "id": "card-07",
+      "number": 7,
+      "cover": false,
+      "topic": "NAT Traversal · STUN & TURN",
+      "title": "STUN discovers. TURN relays.",
+      "titleHtml": "<em>STUN</em> discovers. <em>TURN</em> relays.",
+      "subtitle": "A common confusion: these are not interchangeable. They solve different problems and have wildly different cost profiles.",
+      "html": "<table class=\"table\">\n      <thead>\n        <tr><th></th><th>STUN</th><th>TURN</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>Role</td><td>Tells you your public IP</td><td>Relays media between peers</td></tr>\n        <tr><td>Default Port</td><td>3478 / UDP</td><td>3478 + 5349 (TLS) + 443 (firewall escape)</td></tr>\n        <tr><td>State</td><td>Stateless</td><td>Stateful — allocations with lifetime</td></tr>\n        <tr><td>Auth</td><td>None</td><td>Required (username + credential, often HMAC time-limited)</td></tr>\n        <tr><td>Bandwidth</td><td>Negligible (a few packets)</td><td>Full media bandwidth, both directions</td></tr>\n        <tr><td>Cost</td><td>~Free</td><td>~$0.13 / hour per relayed 720p call</td></tr>\n        <tr><td>Used by</td><td>~80% of calls (gather time only)</td><td>~10–20% of calls (active path)</td></tr>\n      </tbody>\n    </table>\n    <p><strong>Why TURN exists.</strong> Symmetric NAT assigns a different public port for every destination. The address learned via STUN is valid only for the STUN server. TURN sidesteps this by holding a real public IP both peers can reach.</p>"
+    },
+    {
+      "id": "card-08",
+      "number": 8,
+      "cover": false,
+      "topic": "Encryption · DTLS-SRTP",
+      "title": "DTLS the keys. SRTP the bytes.",
+      "titleHtml": "<em>DTLS</em> the keys. <em>SRTP</em> the bytes.",
+      "subtitle": "All WebRTC media is mandatorily encrypted. There is no plaintext mode; the spec doesn't allow one.",
+      "html": "<p><strong>DTLS</strong> — Datagram Transport Layer Security. TLS adapted for UDP. Used here for the handshake that derives SRTP encryption keys. The SDP carries DTLS certificate fingerprints so peers can verify each other before any media flows.</p>\n    <p><strong>SRTP</strong> — Secure Real-time Transport Protocol. RTP plus AES encryption plus HMAC authentication. The actual on-the-wire format for every encrypted media packet.</p>\n    <p><strong>SCTP over DTLS</strong> — what <code>RTCDataChannel</code> rides on. Gives you per-channel reliability/ordering choices: TCP-like or UDP-like.</p>\n    <div class=\"fact\"><span class=\"label\">DTLS handshake</span><span class=\"dots\"></span><span class=\"value\">~150–300 ms</span></div>\n    <div class=\"fact\"><span class=\"label\">Cipher</span><span class=\"dots\"></span><span class=\"value\">AES-128-GCM (typical)</span></div>\n    <div class=\"fact\"><span class=\"label\">Verification</span><span class=\"dots\"></span><span class=\"value\">SHA-256 fingerprint in SDP</span></div>"
+    },
+    {
+      "id": "card-09",
+      "number": 9,
+      "cover": false,
+      "topic": "NAT Traversal · Optimization",
+      "title": "Trickle ICE",
+      "titleHtml": "Trickle <em>ICE</em>",
+      "subtitle": "An optimisation over RFC 5245. Peers send the offer immediately and stream candidates as discovered, instead of waiting for full gathering.",
+      "html": "<p><strong>Without trickle.</strong> Caller calls <code>setLocalDescription</code>, waits 2–5 seconds for all candidates, then sends a fully-baked offer. Setup time: 5–10 seconds.</p>\n    <p><strong>With trickle.</strong> Caller sends offer immediately. Each candidate fires <code>onicecandidate</code> as it's found and is forwarded through signaling. Setup time: under a second.</p>\n    <pre class=\"code\">pc.onicecandidate = (event) =&gt; {\n  if (event.candidate) {\n    signalingChannel.send({\n      type: 'candidate',\n      candidate: event.candidate\n    });\n  } else {\n    // null candidate = gathering complete\n  }\n};</pre>\n    <p><strong>Half-trickle.</strong> When bridging to systems that don't support trickle (some SIP gateways), gather locally for ~500ms, send what you have in the offer, then trickle the rest.</p>"
+    },
+    {
+      "id": "card-10",
+      "number": 10,
+      "cover": false,
+      "topic": "NAT Traversal · Resilience",
+      "title": "ICE Restart",
+      "titleHtml": "ICE <em>Restart</em>",
+      "subtitle": "When the network path breaks mid-call — laptop changes WiFi, mobile hands off, VPN connects — the existing candidates may all become invalid. Restart re-runs ICE without tearing down the call.",
+      "html": "<pre class=\"code\">// Trigger restart on the peer connection\nconst offer = await pc.createOffer({ iceRestart: true });\nawait pc.setLocalDescription(offer);\n// Send the new offer through signaling\n// The peer answers; both sides re-gather and re-check</pre>\n    <p><strong>What's preserved.</strong> The DTLS state. The SRTP keys. The peer connection object itself. There's no key renegotiation, no media tear-down.</p>\n    <p><strong>What's rebuilt.</strong> ICE credentials (ufrag, pwd). Candidate gathering. Connectivity checks. The selected pair.</p>\n    <p class=\"pullquote\">Without restart, network changes silently fail the call.</p>\n    <p><strong>When to trigger.</strong> Detect <code>iceConnectionState === 'disconnected'</code> for more than a few seconds, or use the Network Information API to detect interface changes.</p>"
+    },
+    {
+      "id": "card-11",
+      "number": 11,
+      "cover": false,
+      "topic": "Architecture · Topology",
+      "title": "Mesh, SFU, MCU",
+      "titleHtml": "Mesh, <em>SFU</em>, MCU",
+      "subtitle": "Pure peer-to-peer dies past four participants. The choice between SFU and MCU is one of the canonical real-time architecture decisions.",
+      "html": "<table class=\"table\">\n      <thead>\n        <tr><th>Topology</th><th>Mechanism</th><th>Use Case</th></tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>Mesh (P2P)</td>\n          <td>Every client connects to every other. N-1 uploads per client.</td>\n          <td>1:1 calls only</td>\n        </tr>\n        <tr>\n          <td>SFU</td>\n          <td>Server forwards streams without decoding. ~1–3% CPU per stream.</td>\n          <td>Most modern conferencing — Meet, Jitsi, LiveKit, mediasoup</td>\n        </tr>\n        <tr>\n          <td>MCU</td>\n          <td>Server decodes, mixes, re-encodes one composite. ~30–50% CPU per stream, +100–300ms latency.</td>\n          <td>Telephony bridges, low-bandwidth clients</td>\n        </tr>\n      </tbody>\n    </table>\n    <p><strong>Why mesh fails.</strong> Five peers at 720p means ~1.5 Mbps × 4 uploads = 6 Mbps upload per client. Most home connections cap there.</p>\n    <p><strong>Simulcast.</strong> Publisher sends 1080p + 720p + 360p simultaneously; SFU forwards the right resolution to each subscriber. Doubles upload cost but cleanly handles heterogeneous clients.</p>"
+    },
+    {
+      "id": "card-12",
+      "number": 12,
+      "cover": false,
+      "topic": "Reference · Key Numbers",
+      "title": "Numbers Worth Memorising",
+      "titleHtml": "Numbers Worth <em>Memorising</em>",
+      "subtitle": "Quoting concrete numbers in interviews signals lived experience. These are the ones that come up.",
+      "html": "<div class=\"fact\"><span class=\"label\">End-to-end latency, good network</span><span class=\"dots\"></span><span class=\"value\">150–250 ms</span></div>\n    <div class=\"fact\"><span class=\"label\">Setup time, with trickle ICE</span><span class=\"dots\"></span><span class=\"value\">500 ms – 1.5 s</span></div>\n    <div class=\"fact\"><span class=\"label\">Calls requiring TURN</span><span class=\"dots\"></span><span class=\"value\">~10–20%</span></div>\n    <div class=\"fact\"><span class=\"label\">Opus voice bitrate</span><span class=\"dots\"></span><span class=\"value\">16–32 kbps</span></div>\n    <div class=\"fact\"><span class=\"label\">VP8/VP9 720p bitrate</span><span class=\"dots\"></span><span class=\"value\">1–2.5 Mbps</span></div>\n    <div class=\"fact\"><span class=\"label\">Max practical mesh size</span><span class=\"dots\"></span><span class=\"value\">4 peers</span></div>\n    <div class=\"fact\"><span class=\"label\">Max practical SFU room</span><span class=\"dots\"></span><span class=\"value\">50–200</span></div>\n    <div class=\"fact\"><span class=\"label\">SFU CPU per stream</span><span class=\"dots\"></span><span class=\"value\">1–3% of a core</span></div>\n    <div class=\"fact\"><span class=\"label\">MCU CPU per stream</span><span class=\"dots\"></span><span class=\"value\">30–50% of a core</span></div>\n    <div class=\"fact\"><span class=\"label\">DTLS handshake</span><span class=\"dots\"></span><span class=\"value\">150–300 ms</span></div>\n    <div class=\"fact\"><span class=\"label\">STUN port</span><span class=\"dots\"></span><span class=\"value\">3478 / UDP</span></div>\n    <div class=\"fact\"><span class=\"label\">TURN ports</span><span class=\"dots\"></span><span class=\"value\">3478 / 5349 / 443</span></div>\n    <div class=\"fact\"><span class=\"label\">TURN cost per relayed 720p hour</span><span class=\"dots\"></span><span class=\"value\">~$0.13</span></div>\n    <div class=\"fact\"><span class=\"label\">ICE checking timeout, default</span><span class=\"dots\"></span><span class=\"value\">~30 s</span></div>"
+    },
+    {
+      "id": "card-13",
+      "number": 13,
+      "cover": false,
+      "topic": "API · State Machines",
+      "title": "Two State Machines",
+      "titleHtml": "Two <em>State</em> Machines",
+      "subtitle": "A common bug: assuming gathering=complete means you're connected. They're separate machines tracking different things.",
+      "html": "<p><strong>iceGatheringState</strong> — am I still finding my own candidates?</p>\n    <pre class=\"code\">new  →  gathering  →  complete</pre>\n    <p><strong>iceConnectionState</strong> — have I established a working path with the peer?</p>\n    <pre class=\"code\">new  →  checking  →  connected  →  completed\n                  ↘  disconnected\n                  ↘  failed\n                  ↘  closed</pre>\n    <p><strong>connectionState</strong> — the aggregate, including DTLS:</p>\n    <pre class=\"code\">new  →  connecting  →  connected\n                    ↘  disconnected / failed / closed</pre>\n    <p>For UI purposes, watch <code>connectionState</code>. For diagnostics, watch the other two.</p>"
+    },
+    {
+      "id": "card-14",
+      "number": 14,
+      "cover": false,
+      "topic": "Architecture · Scaling",
+      "title": "Four Tiers, Independent Scale",
+      "titleHtml": "Four Tiers, <em>Independent</em> Scale",
+      "subtitle": "A production WebRTC system has four scaling tiers. Each scales differently and has its own cost profile. Treating them as one server is the junior answer.",
+      "html": "<ol class=\"steps\">\n      <li><b>Signaling.</b> WebSocket fleet, sticky-sessioned per room. Redis pub/sub or Kafka for cross-node messaging. Cheap to scale; latency-sensitive on connect.</li>\n      <li><b>STUN.</b> Stateless, anycast in front. Effectively free. Place close to users.</li>\n      <li><b>TURN.</b> Bandwidth-heavy. Region-pin to nearest user. Authentication via short-lived HMAC credentials. The dominant cost line in many deployments.</li>\n      <li><b>SFU.</b> Stateful — room ↔ node affinity. Vertical scale per node (CPU + 1 Gbps NIC), horizontal scale via room sharding plus cascading for cross-region rooms.</li>\n    </ol>\n    <p><strong>Capacity math, 100K concurrent users.</strong></p>\n    <div class=\"fact\"><span class=\"label\">SFU node capacity, 720p</span><span class=\"dots\"></span><span class=\"value\">~600 streams</span></div>\n    <div class=\"fact\"><span class=\"label\">TURN node capacity, full duplex</span><span class=\"dots\"></span><span class=\"value\">~300 sessions</span></div>\n    <div class=\"fact\"><span class=\"label\">TURN nodes needed, 20% relayed</span><span class=\"dots\"></span><span class=\"value\">~67</span></div>"
+    },
+    {
+      "id": "card-15",
+      "number": 15,
+      "cover": false,
+      "topic": "Decision · Voice AI",
+      "title": "WebRTC vs WebSocket + PCM",
+      "titleHtml": "WebRTC <em>vs</em> WebSocket + PCM",
+      "subtitle": "For AI voice agents — the canonical choice. Each wins in a different operating regime; the architect's job is knowing which.",
+      "html": "<table class=\"table\">\n      <thead>\n        <tr><th>Dimension</th><th>WebSocket + PCM</th><th>WebRTC</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>Stack complexity</td><td>One connection</td><td>Signaling + SFU + TURN</td></tr>\n        <tr><td>Setup latency</td><td>~50–200 ms</td><td>500 ms – 1.5 s</td></tr>\n        <tr><td>Echo cancellation</td><td>Build it yourself</td><td>Built in</td></tr>\n        <tr><td>Jitter buffer</td><td>Build it yourself</td><td>Built in</td></tr>\n        <tr><td>Adaptive bitrate</td><td>None — fixed PCM</td><td>Yes (GCC, TWCC)</td></tr>\n        <tr><td>Bandwidth, voice</td><td>~256 kbps PCM</td><td>~16–32 kbps Opus</td></tr>\n        <tr><td>Backend control</td><td>Full</td><td>Mediated by SFU</td></tr>\n      </tbody>\n    </table>\n    <p><strong>When WebSocket+PCM wins.</strong> One-shot voice agents on good networks. Backend integrations. Anything where you control both ends and want simplicity.</p>\n    <p><strong>When WebRTC wins.</strong> Long-form duplex conversations. Mobile users on varied networks. Full-duplex barge-in. Anywhere call quality needs to degrade gracefully.</p>\n    <p><strong>Anchor.</strong> OpenAI's Realtime API offers both — WebRTC for browsers, WebSocket for backends. Exactly the right call.</p>"
+    },
+    {
+      "id": "card-16",
+      "number": 16,
+      "cover": false,
+      "topic": "Recall · Memory Hook",
+      "title": "The 30-Second Pitch",
+      "titleHtml": "The <em>30-Second</em> Pitch",
+      "subtitle": "If you forget everything else, keep this. It's the whole stack in one paragraph, organised by the four obstacles.",
+      "html": "<p class=\"pullquote\">WebRTC is a browser-native standard for peer-to-peer real-time media. Audio and video flow directly between peers as encrypted UDP — SRTP. Setup uses SDP blobs exchanged through a signaling server you build. NAT traversal is handled by ICE, which gathers host, server-reflexive, and relay candidates using STUN and TURN. Encryption keys come from a DTLS handshake. Beyond two peers, production uses an SFU.</p>\n    <p><strong>One-line memory hook.</strong></p>\n    <p class=\"pullquote\">Signal the SDP, ICE the path, DTLS the keys, SRTP the bytes.</p>\n    <table class=\"table\">\n      <thead>\n        <tr><th>Step</th><th>What Happens</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>Signal</td><td>SDP offer/answer through your WebSocket</td></tr>\n        <tr><td>ICE</td><td>Gather host → srflx → relay; check pairs; pick one</td></tr>\n        <tr><td>DTLS</td><td>Handshake derives SRTP keys; fingerprint verified</td></tr>\n        <tr><td>SRTP</td><td>Encrypted media flowing peer-to-peer</td></tr>\n      </tbody>\n    </table>"
+    }
+  ]
+}

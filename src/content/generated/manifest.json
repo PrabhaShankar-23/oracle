@@ -1,0 +1,2217 @@
+{
+  "dsa": {
+    "patterns": [
+      {
+        "id": "P01",
+        "name": "Two Pointers — Converging",
+        "family": "A — Arrays & Pointers",
+        "count": 5
+      },
+      {
+        "id": "P02",
+        "name": "Fast & Slow Pointers",
+        "family": "A — Arrays & Pointers",
+        "count": 3
+      },
+      {
+        "id": "P03",
+        "name": "Sliding Window — Fixed Size",
+        "family": "A — Arrays & Pointers",
+        "count": 2
+      },
+      {
+        "id": "P04",
+        "name": "Sliding Window — Variable Size",
+        "family": "A — Arrays & Pointers",
+        "count": 4
+      },
+      {
+        "id": "P05",
+        "name": "Prefix Sum + HashMap",
+        "family": "A — Arrays & Pointers",
+        "count": 4
+      },
+      {
+        "id": "P06",
+        "name": "Kadane's / Max Subarray",
+        "family": "A — Arrays & Pointers",
+        "count": 3
+      },
+      {
+        "id": "P07",
+        "name": "Dutch National Flag / Partition",
+        "family": "A — Arrays & Pointers",
+        "count": 3
+      },
+      {
+        "id": "P08",
+        "name": "Merge Intervals",
+        "family": "B — Intervals, Sorting & Heaps",
+        "count": 3
+      },
+      {
+        "id": "P09",
+        "name": "Cyclic Sort",
+        "family": "B — Intervals, Sorting & Heaps",
+        "count": 2
+      },
+      {
+        "id": "P10",
+        "name": "Greedy — Interval Scheduling",
+        "family": "B — Intervals, Sorting & Heaps",
+        "count": 4
+      },
+      {
+        "id": "P11",
+        "name": "Two Heaps",
+        "family": "B — Intervals, Sorting & Heaps",
+        "count": 2
+      },
+      {
+        "id": "P12",
+        "name": "Binary Search — on Index",
+        "family": "C — Searching & Selection",
+        "count": 7
+      },
+      {
+        "id": "P13",
+        "name": "Binary Search — on Answer Space",
+        "family": "C — Searching & Selection",
+        "count": 2
+      },
+      {
+        "id": "P14",
+        "name": "Top-K Elements (Heap / Quickselect)",
+        "family": "C — Searching & Selection",
+        "count": 4
+      },
+      {
+        "id": "P15",
+        "name": "K-way Merge",
+        "family": "C — Searching & Selection",
+        "count": 3
+      },
+      {
+        "id": "P16",
+        "name": "Monotonic Stack",
+        "family": "D — Stacks, Queues & Linked Lists",
+        "count": 3
+      },
+      {
+        "id": "P17",
+        "name": "Monotonic Deque",
+        "family": "D — Stacks, Queues & Linked Lists",
+        "count": 1
+      },
+      {
+        "id": "P18",
+        "name": "Stack — Parsing & Matching",
+        "family": "D — Stacks, Queues & Linked Lists",
+        "count": 4
+      },
+      {
+        "id": "P19",
+        "name": "In-place Linked List Reversal",
+        "family": "D — Stacks, Queues & Linked Lists",
+        "count": 5
+      },
+      {
+        "id": "P20",
+        "name": "Tree BFS — Level Order",
+        "family": "E — Trees & Tries",
+        "count": 4
+      },
+      {
+        "id": "P21",
+        "name": "Tree DFS — Path Problems",
+        "family": "E — Trees & Tries",
+        "count": 9
+      },
+      {
+        "id": "P22",
+        "name": "BST Invariants",
+        "family": "E — Trees & Tries",
+        "count": 4
+      },
+      {
+        "id": "P23",
+        "name": "Lowest Common Ancestor",
+        "family": "E — Trees & Tries",
+        "count": 2
+      },
+      {
+        "id": "P24",
+        "name": "Trie",
+        "family": "E — Trees & Tries",
+        "count": 3
+      },
+      {
+        "id": "P25",
+        "name": "Graph BFS — Shortest Path / Multi-source",
+        "family": "F — Graphs",
+        "count": 4
+      },
+      {
+        "id": "P26",
+        "name": "Graph DFS / Flood Fill",
+        "family": "F — Graphs",
+        "count": 5
+      },
+      {
+        "id": "P27",
+        "name": "Topological Sort",
+        "family": "F — Graphs",
+        "count": 3
+      },
+      {
+        "id": "P28",
+        "name": "Union-Find",
+        "family": "F — Graphs",
+        "count": 5
+      },
+      {
+        "id": "P29",
+        "name": "Dijkstra / Weighted Shortest Path",
+        "family": "F — Graphs",
+        "count": 3
+      },
+      {
+        "id": "P30",
+        "name": "Bit Manipulation & XOR Tricks",
+        "family": "G — Bits & Math",
+        "count": 6
+      },
+      {
+        "id": "P31",
+        "name": "Backtracking — Subsets & Combinations",
+        "family": "H — Backtracking",
+        "count": 7
+      },
+      {
+        "id": "P32",
+        "name": "Backtracking — Permutations",
+        "family": "H — Backtracking",
+        "count": 2
+      },
+      {
+        "id": "P33",
+        "name": "Backtracking — Constraint Grids",
+        "family": "H — Backtracking",
+        "count": 4
+      },
+      {
+        "id": "P34",
+        "name": "DP — Linear / Fibonacci-style",
+        "family": "I — Dynamic Programming",
+        "count": 7
+      },
+      {
+        "id": "P35",
+        "name": "DP — 0/1 Knapsack",
+        "family": "I — Dynamic Programming",
+        "count": 2
+      },
+      {
+        "id": "P36",
+        "name": "DP — Unbounded Knapsack",
+        "family": "I — Dynamic Programming",
+        "count": 2
+      },
+      {
+        "id": "P37",
+        "name": "DP — LCS Family",
+        "family": "I — Dynamic Programming",
+        "count": 5
+      },
+      {
+        "id": "P38",
+        "name": "DP — LIS Family",
+        "family": "I — Dynamic Programming",
+        "count": 1
+      },
+      {
+        "id": "P39",
+        "name": "DP — Grid Paths",
+        "family": "I — Dynamic Programming",
+        "count": 5
+      },
+      {
+        "id": "P40",
+        "name": "DP — Interval / Palindrome",
+        "family": "I — Dynamic Programming",
+        "count": 3
+      },
+      {
+        "id": "X1",
+        "name": "Greedy",
+        "family": "J — Outside the 40-Pattern Taxonomy",
+        "count": 6
+      },
+      {
+        "id": "X2",
+        "name": "Hashing Fundamentals",
+        "family": "J — Outside the 40-Pattern Taxonomy",
+        "count": 4
+      },
+      {
+        "id": "X3",
+        "name": "Design",
+        "family": "J — Outside the 40-Pattern Taxonomy",
+        "count": 3
+      },
+      {
+        "id": "X4",
+        "name": "Matrix & Math Manipulation",
+        "family": "J — Outside the 40-Pattern Taxonomy",
+        "count": 4
+      },
+      {
+        "id": "X5",
+        "name": "Linked List — Not Reversal-shaped",
+        "family": "J — Outside the 40-Pattern Taxonomy",
+        "count": 2
+      }
+    ],
+    "problems": [
+      {
+        "id": "P01-valid-palindrome",
+        "title": "Valid Palindrome",
+        "pattern": "Two Pointers — Converging",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P01-two-sum-ii-input-array-is-sorted",
+        "title": "Two Sum II - Input Array Is Sorted",
+        "pattern": "Two Pointers — Converging",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P01-3sum",
+        "title": "3Sum",
+        "pattern": "Two Pointers — Converging",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P01-container-with-most-water",
+        "title": "Container With Most Water",
+        "pattern": "Two Pointers — Converging",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P01-trapping-rain-water",
+        "title": "Trapping Rain Water",
+        "pattern": "Two Pointers — Converging",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P02-linked-list-cycle",
+        "title": "Linked List Cycle",
+        "pattern": "Fast & Slow Pointers",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P02-happy-number",
+        "title": "Happy Number",
+        "pattern": "Fast & Slow Pointers",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P02-find-the-duplicate-number",
+        "title": "Find the Duplicate Number",
+        "pattern": "Fast & Slow Pointers",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P03-permutation-in-string",
+        "title": "Permutation in String",
+        "pattern": "Sliding Window — Fixed Size",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P03-substring-with-concatenation-of-all-words",
+        "title": "Substring with Concatenation of All Words",
+        "pattern": "Sliding Window — Fixed Size",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P04-longest-substring-without-repeating-characters",
+        "title": "Longest Substring Without Repeating Characters",
+        "pattern": "Sliding Window — Variable Size",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P04-longest-repeating-character-replacement",
+        "title": "Longest Repeating Character Replacement",
+        "pattern": "Sliding Window — Variable Size",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P04-minimum-size-subarray-sum",
+        "title": "Minimum Size Subarray Sum",
+        "pattern": "Sliding Window — Variable Size",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P04-minimum-window-substring",
+        "title": "Minimum Window Substring",
+        "pattern": "Sliding Window — Variable Size",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P05-contains-duplicate-ii",
+        "title": "Contains Duplicate II",
+        "pattern": "Prefix Sum + HashMap",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P05-subarray-sum-equals-k",
+        "title": "Subarray Sum Equals K",
+        "pattern": "Prefix Sum + HashMap",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P05-product-of-array-except-self",
+        "title": "Product of Array Except Self",
+        "pattern": "Prefix Sum + HashMap",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P05-longest-consecutive-sequence",
+        "title": "Longest Consecutive Sequence",
+        "pattern": "Prefix Sum + HashMap",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P06-maximum-subarray",
+        "title": "Maximum Subarray",
+        "pattern": "Kadane's / Max Subarray",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P06-maximum-product-subarray",
+        "title": "Maximum Product Subarray",
+        "pattern": "Kadane's / Max Subarray",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P06-maximum-sum-circular-subarray",
+        "title": "Maximum Sum Circular Subarray",
+        "pattern": "Kadane's / Max Subarray",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P07-remove-element",
+        "title": "Remove Element",
+        "pattern": "Dutch National Flag / Partition",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P07-sort-colors",
+        "title": "Sort Colors",
+        "pattern": "Dutch National Flag / Partition",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P07-remove-duplicates-from-sorted-array-ii",
+        "title": "Remove Duplicates from Sorted Array II",
+        "pattern": "Dutch National Flag / Partition",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P08-summary-ranges",
+        "title": "Summary Ranges",
+        "pattern": "Merge Intervals",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P08-merge-intervals",
+        "title": "Merge Intervals",
+        "pattern": "Merge Intervals",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P08-insert-interval",
+        "title": "Insert Interval",
+        "pattern": "Merge Intervals",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P09-missing-number",
+        "title": "Missing Number",
+        "pattern": "Cyclic Sort",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P09-first-missing-positive",
+        "title": "First Missing Positive",
+        "pattern": "Cyclic Sort",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P10-meeting-rooms",
+        "title": "Meeting Rooms",
+        "pattern": "Greedy — Interval Scheduling",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P10-non-overlapping-intervals",
+        "title": "Non-overlapping Intervals",
+        "pattern": "Greedy — Interval Scheduling",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P10-minimum-number-of-arrows-to-burst-balloons",
+        "title": "Minimum Number of Arrows to Burst Balloons",
+        "pattern": "Greedy — Interval Scheduling",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P10-meeting-rooms-ii",
+        "title": "Meeting Rooms II",
+        "pattern": "Greedy — Interval Scheduling",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P11-ipo",
+        "title": "IPO",
+        "pattern": "Two Heaps",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P11-find-median-from-data-stream",
+        "title": "Find Median from Data Stream",
+        "pattern": "Two Heaps",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P12-binary-search",
+        "title": "Binary Search",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P12-search-a-2d-matrix",
+        "title": "Search a 2D Matrix",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P12-find-peak-element",
+        "title": "Find Peak Element",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P12-find-first-and-last-position-of-element-in-sorted-array",
+        "title": "Find First and Last Position of Element in Sorted Array",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P12-find-minimum-in-rotated-sorted-array",
+        "title": "Find Minimum in Rotated Sorted Array",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P12-search-in-rotated-sorted-array",
+        "title": "Search in Rotated Sorted Array",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P12-median-of-two-sorted-arrays",
+        "title": "Median of Two Sorted Arrays",
+        "pattern": "Binary Search — on Index",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P13-sqrtx",
+        "title": "Sqrt(x)",
+        "pattern": "Binary Search — on Answer Space",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P13-koko-eating-bananas",
+        "title": "Koko Eating Bananas",
+        "pattern": "Binary Search — on Answer Space",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P14-top-k-frequent-elements",
+        "title": "Top K Frequent Elements",
+        "pattern": "Top-K Elements (Heap / Quickselect)",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P14-k-closest-points-to-origin",
+        "title": "K Closest Points to Origin",
+        "pattern": "Top-K Elements (Heap / Quickselect)",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P14-kth-largest-element-in-an-array",
+        "title": "Kth Largest Element in an Array",
+        "pattern": "Top-K Elements (Heap / Quickselect)",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P14-task-scheduler",
+        "title": "Task Scheduler",
+        "pattern": "Top-K Elements (Heap / Quickselect)",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P15-merge-two-sorted-lists",
+        "title": "Merge Two Sorted Lists",
+        "pattern": "K-way Merge",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P15-find-k-pairs-with-smallest-sums",
+        "title": "Find K Pairs with Smallest Sums",
+        "pattern": "K-way Merge",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P15-merge-k-sorted-lists",
+        "title": "Merge k Sorted Lists",
+        "pattern": "K-way Merge",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P16-daily-temperatures",
+        "title": "Daily Temperatures",
+        "pattern": "Monotonic Stack",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P16-car-fleet",
+        "title": "Car Fleet",
+        "pattern": "Monotonic Stack",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P16-largest-rectangle-in-histogram",
+        "title": "Largest Rectangle in Histogram",
+        "pattern": "Monotonic Stack",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P17-sliding-window-maximum",
+        "title": "Sliding Window Maximum",
+        "pattern": "Monotonic Deque",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P18-valid-parentheses",
+        "title": "Valid Parentheses",
+        "pattern": "Stack — Parsing & Matching",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P18-min-stack",
+        "title": "Min Stack",
+        "pattern": "Stack — Parsing & Matching",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P18-evaluate-reverse-polish-notation",
+        "title": "Evaluate Reverse Polish Notation",
+        "pattern": "Stack — Parsing & Matching",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P18-basic-calculator",
+        "title": "Basic Calculator",
+        "pattern": "Stack — Parsing & Matching",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P19-reverse-linked-list",
+        "title": "Reverse Linked List",
+        "pattern": "In-place Linked List Reversal",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P19-reverse-linked-list-ii",
+        "title": "Reverse Linked List II",
+        "pattern": "In-place Linked List Reversal",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P19-reorder-list",
+        "title": "Reorder List",
+        "pattern": "In-place Linked List Reversal",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P19-remove-nth-node-from-end-of-list",
+        "title": "Remove Nth Node From End of List",
+        "pattern": "In-place Linked List Reversal",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P19-reverse-nodes-in-k-group",
+        "title": "Reverse Nodes in k-Group",
+        "pattern": "In-place Linked List Reversal",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P20-average-of-levels-in-binary-tree",
+        "title": "Average of Levels in Binary Tree",
+        "pattern": "Tree BFS — Level Order",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P20-binary-tree-level-order-traversal",
+        "title": "Binary Tree Level Order Traversal",
+        "pattern": "Tree BFS — Level Order",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P20-binary-tree-right-side-view",
+        "title": "Binary Tree Right Side View",
+        "pattern": "Tree BFS — Level Order",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P20-binary-tree-zigzag-level-order-traversal",
+        "title": "Binary Tree Zigzag Level Order Traversal",
+        "pattern": "Tree BFS — Level Order",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P21-maximum-depth-of-binary-tree",
+        "title": "Maximum Depth of Binary Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P21-same-tree",
+        "title": "Same Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P21-invert-binary-tree",
+        "title": "Invert Binary Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P21-diameter-of-binary-tree",
+        "title": "Diameter of Binary Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P21-balanced-binary-tree",
+        "title": "Balanced Binary Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P21-subtree-of-another-tree",
+        "title": "Subtree of Another Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P21-construct-binary-tree-from-preorder-and-inorder-traversal",
+        "title": "Construct Binary Tree from Preorder and Inorder Traversal",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P21-binary-tree-maximum-path-sum",
+        "title": "Binary Tree Maximum Path Sum",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P21-serialize-and-deserialize-binary-tree",
+        "title": "Serialize and Deserialize Binary Tree",
+        "pattern": "Tree DFS — Path Problems",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P22-minimum-absolute-difference-in-bst",
+        "title": "Minimum Absolute Difference in BST",
+        "pattern": "BST Invariants",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P22-validate-binary-search-tree",
+        "title": "Validate Binary Search Tree",
+        "pattern": "BST Invariants",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P22-kth-smallest-element-in-a-bst",
+        "title": "Kth Smallest Element in a BST",
+        "pattern": "BST Invariants",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P22-binary-search-tree-iterator",
+        "title": "Binary Search Tree Iterator",
+        "pattern": "BST Invariants",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P23-lowest-common-ancestor-of-a-binary-search-tree",
+        "title": "Lowest Common Ancestor of a Binary Search Tree",
+        "pattern": "Lowest Common Ancestor",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P23-lowest-common-ancestor-of-a-binary-tree",
+        "title": "Lowest Common Ancestor of a Binary Tree",
+        "pattern": "Lowest Common Ancestor",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P24-implement-trie-prefix-tree",
+        "title": "Implement Trie (Prefix Tree)",
+        "pattern": "Trie",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P24-design-add-and-search-words-data-structure",
+        "title": "Design Add and Search Words Data Structure",
+        "pattern": "Trie",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P24-word-search-ii",
+        "title": "Word Search II",
+        "pattern": "Trie",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P25-rotting-oranges",
+        "title": "Rotting Oranges",
+        "pattern": "Graph BFS — Shortest Path / Multi-source",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P25-walls-and-gates",
+        "title": "Walls and Gates",
+        "pattern": "Graph BFS — Shortest Path / Multi-source",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P25-snakes-and-ladders",
+        "title": "Snakes and Ladders",
+        "pattern": "Graph BFS — Shortest Path / Multi-source",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P25-word-ladder",
+        "title": "Word Ladder",
+        "pattern": "Graph BFS — Shortest Path / Multi-source",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P26-number-of-islands",
+        "title": "Number of Islands",
+        "pattern": "Graph DFS / Flood Fill",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P26-max-area-of-island",
+        "title": "Max Area of Island",
+        "pattern": "Graph DFS / Flood Fill",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P26-clone-graph",
+        "title": "Clone Graph",
+        "pattern": "Graph DFS / Flood Fill",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P26-surrounded-regions",
+        "title": "Surrounded Regions",
+        "pattern": "Graph DFS / Flood Fill",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P26-pacific-atlantic-water-flow",
+        "title": "Pacific Atlantic Water Flow",
+        "pattern": "Graph DFS / Flood Fill",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P27-course-schedule",
+        "title": "Course Schedule",
+        "pattern": "Topological Sort",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P27-course-schedule-ii",
+        "title": "Course Schedule II",
+        "pattern": "Topological Sort",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P27-alien-dictionary",
+        "title": "Alien Dictionary",
+        "pattern": "Topological Sort",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P28-number-of-connected-components-in-an-undirected-graph",
+        "title": "Number of Connected Components in an Undirected Graph",
+        "pattern": "Union-Find",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P28-graph-valid-tree",
+        "title": "Graph Valid Tree",
+        "pattern": "Union-Find",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P28-redundant-connection",
+        "title": "Redundant Connection",
+        "pattern": "Union-Find",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P28-evaluate-division",
+        "title": "Evaluate Division",
+        "pattern": "Union-Find",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P28-min-cost-to-connect-all-points",
+        "title": "Min Cost to Connect All Points",
+        "pattern": "Union-Find",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P29-network-delay-time",
+        "title": "Network Delay Time",
+        "pattern": "Dijkstra / Weighted Shortest Path",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P29-cheapest-flights-within-k-stops",
+        "title": "Cheapest Flights Within K Stops",
+        "pattern": "Dijkstra / Weighted Shortest Path",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P29-swim-in-rising-water",
+        "title": "Swim in Rising Water",
+        "pattern": "Dijkstra / Weighted Shortest Path",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P30-single-number",
+        "title": "Single Number",
+        "pattern": "Bit Manipulation & XOR Tricks",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P30-number-of-1-bits",
+        "title": "Number of 1 Bits",
+        "pattern": "Bit Manipulation & XOR Tricks",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P30-counting-bits",
+        "title": "Counting Bits",
+        "pattern": "Bit Manipulation & XOR Tricks",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P30-reverse-bits",
+        "title": "Reverse Bits",
+        "pattern": "Bit Manipulation & XOR Tricks",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P30-single-number-ii",
+        "title": "Single Number II",
+        "pattern": "Bit Manipulation & XOR Tricks",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P30-sum-of-two-integers",
+        "title": "Sum of Two Integers",
+        "pattern": "Bit Manipulation & XOR Tricks",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-subsets",
+        "title": "Subsets",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-subsets-ii",
+        "title": "Subsets II",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-combination-sum",
+        "title": "Combination Sum",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-combination-sum-ii",
+        "title": "Combination Sum II",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-letter-combinations-of-a-phone-number",
+        "title": "Letter Combinations of a Phone Number",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-generate-parentheses",
+        "title": "Generate Parentheses",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P31-palindrome-partitioning",
+        "title": "Palindrome Partitioning",
+        "pattern": "Backtracking — Subsets & Combinations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P32-permutations",
+        "title": "Permutations",
+        "pattern": "Backtracking — Permutations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P32-permutations-ii",
+        "title": "Permutations II",
+        "pattern": "Backtracking — Permutations",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P33-valid-sudoku",
+        "title": "Valid Sudoku",
+        "pattern": "Backtracking — Constraint Grids",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P33-word-search",
+        "title": "Word Search",
+        "pattern": "Backtracking — Constraint Grids",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P33-n-queens",
+        "title": "N-Queens",
+        "pattern": "Backtracking — Constraint Grids",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P33-n-queens-ii",
+        "title": "N-Queens II",
+        "pattern": "Backtracking — Constraint Grids",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P34-climbing-stairs",
+        "title": "Climbing Stairs",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P34-min-cost-climbing-stairs",
+        "title": "Min Cost Climbing Stairs",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "P34-house-robber",
+        "title": "House Robber",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P34-house-robber-ii",
+        "title": "House Robber II",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P34-decode-ways",
+        "title": "Decode Ways",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P34-word-break",
+        "title": "Word Break",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P34-best-time-to-buy-and-sell-stock-with-cooldown",
+        "title": "Best Time to Buy and Sell Stock with Cooldown",
+        "pattern": "DP — Linear / Fibonacci-style",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P35-partition-equal-subset-sum",
+        "title": "Partition Equal Subset Sum",
+        "pattern": "DP — 0/1 Knapsack",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P35-target-sum",
+        "title": "Target Sum",
+        "pattern": "DP — 0/1 Knapsack",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P36-coin-change",
+        "title": "Coin Change",
+        "pattern": "DP — Unbounded Knapsack",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P36-coin-change-ii",
+        "title": "Coin Change II",
+        "pattern": "DP — Unbounded Knapsack",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P37-longest-common-subsequence",
+        "title": "Longest Common Subsequence",
+        "pattern": "DP — LCS Family",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P37-edit-distance",
+        "title": "Edit Distance",
+        "pattern": "DP — LCS Family",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P37-interleaving-string",
+        "title": "Interleaving String",
+        "pattern": "DP — LCS Family",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P37-distinct-subsequences",
+        "title": "Distinct Subsequences",
+        "pattern": "DP — LCS Family",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P37-regular-expression-matching",
+        "title": "Regular Expression Matching",
+        "pattern": "DP — LCS Family",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P38-longest-increasing-subsequence",
+        "title": "Longest Increasing Subsequence",
+        "pattern": "DP — LIS Family",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P39-unique-paths",
+        "title": "Unique Paths",
+        "pattern": "DP — Grid Paths",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P39-unique-paths-ii",
+        "title": "Unique Paths II",
+        "pattern": "DP — Grid Paths",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P39-minimum-path-sum",
+        "title": "Minimum Path Sum",
+        "pattern": "DP — Grid Paths",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P39-maximal-square",
+        "title": "Maximal Square",
+        "pattern": "DP — Grid Paths",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P39-longest-increasing-path-in-a-matrix",
+        "title": "Longest Increasing Path in a Matrix",
+        "pattern": "DP — Grid Paths",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "P40-longest-palindromic-substring",
+        "title": "Longest Palindromic Substring",
+        "pattern": "DP — Interval / Palindrome",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P40-palindromic-substrings",
+        "title": "Palindromic Substrings",
+        "pattern": "DP — Interval / Palindrome",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "P40-burst-balloons",
+        "title": "Burst Balloons",
+        "pattern": "DP — Interval / Palindrome",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "X1-jump-game",
+        "title": "Jump Game",
+        "pattern": "Greedy",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X1-jump-game-ii",
+        "title": "Jump Game II",
+        "pattern": "Greedy",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X1-gas-station",
+        "title": "Gas Station",
+        "pattern": "Greedy",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X1-partition-labels",
+        "title": "Partition Labels",
+        "pattern": "Greedy",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X1-hand-of-straights",
+        "title": "Hand of Straights",
+        "pattern": "Greedy",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X1-candy",
+        "title": "Candy",
+        "pattern": "Greedy",
+        "difficulty": "Hard"
+      },
+      {
+        "id": "X2-two-sum",
+        "title": "Two Sum",
+        "pattern": "Hashing Fundamentals",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "X2-valid-anagram",
+        "title": "Valid Anagram",
+        "pattern": "Hashing Fundamentals",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "X2-group-anagrams",
+        "title": "Group Anagrams",
+        "pattern": "Hashing Fundamentals",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X2-contains-duplicate",
+        "title": "Contains Duplicate",
+        "pattern": "Hashing Fundamentals",
+        "difficulty": "Easy"
+      },
+      {
+        "id": "X3-lru-cache",
+        "title": "LRU Cache",
+        "pattern": "Design",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X3-insert-delete-getrandom-o1",
+        "title": "Insert Delete GetRandom O(1)",
+        "pattern": "Design",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X3-design-twitter",
+        "title": "Design Twitter",
+        "pattern": "Design",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X4-rotate-image",
+        "title": "Rotate Image",
+        "pattern": "Matrix & Math Manipulation",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X4-spiral-matrix",
+        "title": "Spiral Matrix",
+        "pattern": "Matrix & Math Manipulation",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X4-set-matrix-zeroes",
+        "title": "Set Matrix Zeroes",
+        "pattern": "Matrix & Math Manipulation",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X4-powx-n",
+        "title": "Pow(x, n)",
+        "pattern": "Matrix & Math Manipulation",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X5-add-two-numbers",
+        "title": "Add Two Numbers",
+        "pattern": "Linked List — Not Reversal-shaped",
+        "difficulty": "Medium"
+      },
+      {
+        "id": "X5-copy-list-with-random-pointer",
+        "title": "Copy List with Random Pointer",
+        "pattern": "Linked List — Not Reversal-shaped",
+        "difficulty": "Medium"
+      }
+    ]
+  },
+  "caseStudies": [
+    {
+      "slug": "parking-lot",
+      "title": "System Design: Parking Lot (LLD / Machine-Coding Round)",
+      "summary": "Three strategy interfaces, a lock-free spot claim, and a rehearsed list of extensibility follow-ups. The round is an Open/Closed exam wearing a costume.",
+      "tags": [
+        {
+          "label": "LLD",
+          "tone": "primary"
+        },
+        {
+          "label": "Strategy",
+          "tone": "success"
+        },
+        {
+          "label": "Concurrency",
+          "tone": "warning"
+        }
+      ],
+      "readingTime": "18 min · 4,063 words · 3 diagrams",
+      "subtitle": "The machine-coding warm-up that is really an Open/Closed exam.",
+      "meta": [
+        "Source: 07-Design-problems/parking-lot.md",
+        "18 min read",
+        "Updated 7 Aug 2026"
+      ],
+      "headings": [
+        {
+          "id": "note-metadata",
+          "text": "🗂️ Note Metadata",
+          "level": 2
+        },
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "visual-recall",
+          "text": "🖼️ Visual Recall",
+          "level": 2
+        },
+        {
+          "id": "1-clarifying-questions-to-ask-first",
+          "text": "1. Clarifying Questions to Ask First",
+          "level": 2
+        },
+        {
+          "id": "2-functional-requirements",
+          "text": "2. Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "3-non-functional-requirements",
+          "text": "3. Non-Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "4-class-model",
+          "text": "4. Class Model",
+          "level": 2
+        },
+        {
+          "id": "5-core-code-interfaces-and-the-skeleton",
+          "text": "5. Core Code — Interfaces and the Skeleton",
+          "level": 2
+        },
+        {
+          "id": "value-objects-and-enums",
+          "text": "Value objects and enums",
+          "level": 2
+        },
+        {
+          "id": "the-three-extension-points",
+          "text": "The three extension points",
+          "level": 2
+        },
+        {
+          "id": "the-spot-owns-its-own-invariant",
+          "text": "The spot — owns its own invariant",
+          "level": 2
+        },
+        {
+          "id": "allocation-nearest-first-with-the-fit-policy-injected",
+          "text": "Allocation — nearest-first, with the fit policy injected",
+          "level": 2
+        },
+        {
+          "id": "the-contended-resource-free-spot-sets-per-floor",
+          "text": "The contended resource — free-spot sets per floor",
+          "level": 2
+        },
+        {
+          "id": "pricing-slab-based-the-shape-they-will-ask-you-to-change",
+          "text": "Pricing — slab-based, the shape they will ask you to change",
+          "level": 2
+        },
+        {
+          "id": "the-facade",
+          "text": "The facade",
+          "level": 2
+        },
+        {
+          "id": "6-data-flow-step-by-step",
+          "text": "6. Data Flow — Step by Step",
+          "level": 2
+        },
+        {
+          "id": "7-key-design-decisions-with-justification",
+          "text": "7. Key Design Decisions with Justification",
+          "level": 2
+        },
+        {
+          "id": "the-patterns-actually-used-and-the-ones-deliberately-not",
+          "text": "The patterns actually used — and the ones deliberately not",
+          "level": 2
+        },
+        {
+          "id": "8-failure-modes-mitigations",
+          "text": "8. Failure Modes & Mitigations",
+          "level": 2
+        },
+        {
+          "id": "9-scale-considerations-the-now-make-it-500-lots-follow-up",
+          "text": "9. Scale Considerations (the \"now make it 500 lots\" follow-up)",
+          "level": 2
+        },
+        {
+          "id": "10-capacity-back-of-envelope",
+          "text": "10. Capacity Back-of-Envelope",
+          "level": 2
+        },
+        {
+          "id": "11-extensibility-follow-ups-rehearse-these-they-are-the-round",
+          "text": "11. Extensibility Follow-Ups (rehearse these — they are the round)",
+          "level": 2
+        },
+        {
+          "id": "12-30-second-verbal-summary-follow-up-prep",
+          "text": "12. 30-Second Verbal Summary + Follow-up Prep",
+          "level": 2
+        },
+        {
+          "id": "one-paragraph-spoken-opener",
+          "text": "One-paragraph spoken opener",
+          "level": 2
+        },
+        {
+          "id": "follow-up-questions-to-prepare-for",
+          "text": "Follow-up questions to prepare for",
+          "level": 2
+        },
+        {
+          "id": "13-connections-typed-knowledge-graph",
+          "text": "13. Connections (Typed Knowledge Graph)",
+          "level": 2
+        },
+        {
+          "id": "related-design-problems",
+          "text": "🏗️ Related design problems",
+          "level": 2
+        },
+        {
+          "id": "patterns-used",
+          "text": "🎨 Patterns used",
+          "level": 2
+        },
+        {
+          "id": "alternative-modelling-approaches",
+          "text": "🔀 Alternative modelling approaches",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "elevator",
+      "title": "System Design: Elevator Control System (LLD / Machine-Coding Round)",
+      "summary": "A state machine whose most important edge is the one that doesn't exist, plus SCAN scheduling and a tick loop that survives a thrown exception.",
+      "tags": [
+        {
+          "label": "LLD",
+          "tone": "primary"
+        },
+        {
+          "label": "State machine",
+          "tone": "success"
+        },
+        {
+          "label": "Scheduling",
+          "tone": "warning"
+        }
+      ],
+      "readingTime": "19 min · 4,271 words · 4 diagrams",
+      "subtitle": "The only classic LLD problem with an autonomous control loop — and that changes everything.",
+      "meta": [
+        "Source: 07-Design-problems/elevator.md",
+        "19 min read",
+        "Updated 7 Aug 2026"
+      ],
+      "headings": [
+        {
+          "id": "note-metadata",
+          "text": "🗂️ Note Metadata",
+          "level": 2
+        },
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "visual-recall",
+          "text": "🖼️ Visual Recall",
+          "level": 2
+        },
+        {
+          "id": "1-clarifying-questions-to-ask-first",
+          "text": "1. Clarifying Questions to Ask First",
+          "level": 2
+        },
+        {
+          "id": "2-functional-requirements",
+          "text": "2. Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "3-non-functional-requirements",
+          "text": "3. Non-Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "4-the-state-machine-this-is-the-centrepiece",
+          "text": "4. The State Machine (this is the centrepiece)",
+          "level": 2
+        },
+        {
+          "id": "5-component-model",
+          "text": "5. Component Model",
+          "level": 2
+        },
+        {
+          "id": "6-core-code",
+          "text": "6. Core Code",
+          "level": 2
+        },
+        {
+          "id": "enums-and-requests",
+          "text": "Enums and requests",
+          "level": 2
+        },
+        {
+          "id": "the-target-set-direction-aware-this-is-the-real-data-structure",
+          "text": "The target set — direction-aware, this is the real data structure",
+          "level": 2
+        },
+        {
+          "id": "the-car-state-machine-plus-one-tick",
+          "text": "The car — state machine plus one tick",
+          "level": 2
+        },
+        {
+          "id": "dispatch-the-extension-point",
+          "text": "Dispatch — the extension point",
+          "level": 2
+        },
+        {
+          "id": "the-control-loop",
+          "text": "The control loop",
+          "level": 2
+        },
+        {
+          "id": "7-data-flow-a-hall-call-end-to-end",
+          "text": "7. Data Flow — a hall call end to end",
+          "level": 2
+        },
+        {
+          "id": "8-key-design-decisions-with-justification",
+          "text": "8. Key Design Decisions with Justification",
+          "level": 2
+        },
+        {
+          "id": "patterns-used-and-the-count",
+          "text": "Patterns used — and the count",
+          "level": 2
+        },
+        {
+          "id": "9-failure-modes-mitigations",
+          "text": "9. Failure Modes & Mitigations",
+          "level": 2
+        },
+        {
+          "id": "10-scale-considerations-the-make-it-a-building-fleet-follow-up",
+          "text": "10. Scale Considerations (the \"make it a building fleet\" follow-up)",
+          "level": 2
+        },
+        {
+          "id": "11-testing-strategy-bring-this-up-unprompted-its-rare-and-scores",
+          "text": "11. Testing Strategy (bring this up unprompted — it's rare and scores)",
+          "level": 2
+        },
+        {
+          "id": "12-30-second-verbal-summary-follow-up-prep",
+          "text": "12. 30-Second Verbal Summary + Follow-up Prep",
+          "level": 2
+        },
+        {
+          "id": "one-paragraph-spoken-opener",
+          "text": "One-paragraph spoken opener",
+          "level": 2
+        },
+        {
+          "id": "follow-up-questions-to-prepare-for",
+          "text": "Follow-up questions to prepare for",
+          "level": 2
+        },
+        {
+          "id": "13-connections-typed-knowledge-graph",
+          "text": "13. Connections (Typed Knowledge Graph)",
+          "level": 2
+        },
+        {
+          "id": "related-design-problems",
+          "text": "🏗️ Related design problems",
+          "level": 2
+        },
+        {
+          "id": "patterns-used",
+          "text": "🎨 Patterns used",
+          "level": 2
+        },
+        {
+          "id": "alternative-approaches",
+          "text": "🔀 Alternative approaches",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "book-my-show",
+      "title": "System Design: BookMyShow — Movie Ticket Booking (LLD + HLD)",
+      "summary": "Hold-then-confirm with an atomic Redis claim, dual expiry, and idempotent payment confirmation. The whole round is one concurrency question.",
+      "tags": [
+        {
+          "label": "LLD + HLD",
+          "tone": "primary"
+        },
+        {
+          "label": "Atomic claim",
+          "tone": "error"
+        },
+        {
+          "label": "Saga",
+          "tone": "warning"
+        }
+      ],
+      "readingTime": "20 min · 4,371 words · 4 diagrams",
+      "subtitle": "One question, asked for forty-five minutes: how do two users not get the same seat?",
+      "meta": [
+        "Source: 07-Design-problems/book-my-show.md",
+        "20 min read",
+        "Updated 7 Aug 2026"
+      ],
+      "headings": [
+        {
+          "id": "note-metadata",
+          "text": "🗂️ Note Metadata",
+          "level": 2
+        },
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "visual-recall",
+          "text": "🖼️ Visual Recall",
+          "level": 2
+        },
+        {
+          "id": "1-clarifying-questions-to-ask-first",
+          "text": "1. Clarifying Questions to Ask First",
+          "level": 2
+        },
+        {
+          "id": "2-functional-requirements",
+          "text": "2. Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "3-non-functional-requirements",
+          "text": "3. Non-Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "4-capacity-back-of-envelope",
+          "text": "4. Capacity Back-of-Envelope",
+          "level": 2
+        },
+        {
+          "id": "5-high-level-architecture",
+          "text": "5. High-Level Architecture",
+          "level": 2
+        },
+        {
+          "id": "6-the-seat-state-machine-the-centrepiece",
+          "text": "6. The Seat State Machine (the centrepiece)",
+          "level": 2
+        },
+        {
+          "id": "7-the-concurrency-answer-this-is-the-round",
+          "text": "7. The Concurrency Answer (this is the round)",
+          "level": 2
+        },
+        {
+          "id": "why-the-obvious-approaches-fail-name-these-before-giving-your-answer",
+          "text": "Why the obvious approaches fail — name these before giving your answer",
+          "level": 2
+        },
+        {
+          "id": "the-answer-atomic-hold-with-ttl",
+          "text": "The answer: atomic hold with TTL",
+          "level": 2
+        },
+        {
+          "id": "expiry-you-need-both-mechanisms-and-should-say-why",
+          "text": "Expiry — you need both mechanisms, and should say why",
+          "level": 2
+        },
+        {
+          "id": "idempotency-the-payment-retry",
+          "text": "Idempotency — the payment retry",
+          "level": 2
+        },
+        {
+          "id": "8-data-flow-step-by-step",
+          "text": "8. Data Flow — Step by Step",
+          "level": 2
+        },
+        {
+          "id": "9-lld-class-model",
+          "text": "9. LLD — Class Model",
+          "level": 2
+        },
+        {
+          "id": "10-key-design-decisions-with-justification",
+          "text": "10. Key Design Decisions with Justification",
+          "level": 2
+        },
+        {
+          "id": "11-failure-modes-mitigations",
+          "text": "11. Failure Modes & Mitigations",
+          "level": 2
+        },
+        {
+          "id": "12-scale-considerations",
+          "text": "12. Scale Considerations",
+          "level": 2
+        },
+        {
+          "id": "13-30-second-verbal-summary-follow-up-prep",
+          "text": "13. 30-Second Verbal Summary + Follow-up Prep",
+          "level": 2
+        },
+        {
+          "id": "one-paragraph-spoken-opener",
+          "text": "One-paragraph spoken opener",
+          "level": 2
+        },
+        {
+          "id": "follow-up-questions-to-prepare-for",
+          "text": "Follow-up questions to prepare for",
+          "level": 2
+        },
+        {
+          "id": "14-connections-typed-knowledge-graph",
+          "text": "14. Connections (Typed Knowledge Graph)",
+          "level": 2
+        },
+        {
+          "id": "related-design-problems",
+          "text": "🏗️ Related design problems",
+          "level": 2
+        },
+        {
+          "id": "patterns-used",
+          "text": "🎨 Patterns used",
+          "level": 2
+        },
+        {
+          "id": "alternative-architectures",
+          "text": "🔀 Alternative architectures",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "url-shortener",
+      "title": "System Design: URL Shortener (HLD Round)",
+      "summary": "Seven Base62 characters, pre-allocated counter ranges, and a Feistel scramble — because multiply-by-a-constant leaks your entire key space.",
+      "tags": [
+        {
+          "label": "HLD",
+          "tone": "primary"
+        },
+        {
+          "label": "Read-heavy",
+          "tone": "success"
+        },
+        {
+          "label": "Key generation",
+          "tone": "warning"
+        }
+      ],
+      "readingTime": "21 min · 4,647 words · 3 diagrams",
+      "subtitle": "A 100-to-1 read-heavy system where the interesting part is generating seven characters.",
+      "meta": [
+        "Source: 07-Design-problems/url-shortener.md",
+        "21 min read",
+        "Updated 7 Aug 2026"
+      ],
+      "headings": [
+        {
+          "id": "note-metadata",
+          "text": "🗂️ Note Metadata",
+          "level": 2
+        },
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "visual-recall",
+          "text": "🖼️ Visual Recall",
+          "level": 2
+        },
+        {
+          "id": "1-clarifying-questions-to-ask-first",
+          "text": "1. Clarifying Questions to Ask First",
+          "level": 2
+        },
+        {
+          "id": "2-functional-requirements",
+          "text": "2. Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "3-non-functional-requirements",
+          "text": "3. Non-Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "4-capacity-back-of-envelope",
+          "text": "4. Capacity Back-of-Envelope",
+          "level": 2
+        },
+        {
+          "id": "5-high-level-architecture",
+          "text": "5. High-Level Architecture",
+          "level": 2
+        },
+        {
+          "id": "6-key-generation-the-part-that-differentiates-you",
+          "text": "6. Key Generation (the part that differentiates you)",
+          "level": 2
+        },
+        {
+          "id": "the-four-approaches-know-all-four-recommend-one",
+          "text": "The four approaches — know all four, recommend one",
+          "level": 2
+        },
+        {
+          "id": "the-recommended-design",
+          "text": "The recommended design",
+          "level": 2
+        },
+        {
+          "id": "custom-aliases",
+          "text": "Custom aliases",
+          "level": 2
+        },
+        {
+          "id": "7-the-read-path-step-by-step",
+          "text": "7. The Read Path — Step by Step",
+          "level": 2
+        },
+        {
+          "id": "8-data-model-storage",
+          "text": "8. Data Model & Storage",
+          "level": 2
+        },
+        {
+          "id": "9-key-design-decisions-with-justification",
+          "text": "9. Key Design Decisions with Justification",
+          "level": 2
+        },
+        {
+          "id": "10-failure-modes-mitigations",
+          "text": "10. Failure Modes & Mitigations",
+          "level": 2
+        },
+        {
+          "id": "11-scale-cost-considerations",
+          "text": "11. Scale & Cost Considerations",
+          "level": 2
+        },
+        {
+          "id": "12-30-second-verbal-summary-follow-up-prep",
+          "text": "12. 30-Second Verbal Summary + Follow-up Prep",
+          "level": 2
+        },
+        {
+          "id": "one-paragraph-spoken-opener",
+          "text": "One-paragraph spoken opener",
+          "level": 2
+        },
+        {
+          "id": "follow-up-questions-to-prepare-for",
+          "text": "Follow-up questions to prepare for",
+          "level": 2
+        },
+        {
+          "id": "13-connections-typed-knowledge-graph",
+          "text": "13. Connections (Typed Knowledge Graph)",
+          "level": 2
+        },
+        {
+          "id": "related-design-problems",
+          "text": "🏗️ Related design problems",
+          "level": 2
+        },
+        {
+          "id": "concepts-exercised",
+          "text": "🧩 Concepts exercised",
+          "level": 2
+        },
+        {
+          "id": "alternative-architectures",
+          "text": "🔀 Alternative architectures",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "high-concurrency-flash-sale-system",
+      "title": "System Design: High-Concurrency Flash Sale (Seckill) Order System",
+      "summary": "Shed traffic at every tier so only ~1.2× the stock count reaches the order service. Redis Lua is the only inventory truth during the sale.",
+      "tags": [
+        {
+          "label": "HLD",
+          "tone": "primary"
+        },
+        {
+          "label": "Extreme concurrency",
+          "tone": "error"
+        },
+        {
+          "label": "Redis Lua",
+          "tone": "warning"
+        }
+      ],
+      "readingTime": "27 min · 6,033 words · 4 diagrams",
+      "subtitle": "Selling 10,000 units to 2 million people in sixty seconds without overselling one.",
+      "meta": [
+        "Source: 07-Design-problems/high-concurrency-flash-sale-system.md",
+        "27 min read",
+        "Updated 7 Aug 2026"
+      ],
+      "headings": [
+        {
+          "id": "note-metadata",
+          "text": "🗂️ Note Metadata",
+          "level": 2
+        },
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "visual-recall",
+          "text": "🖼️ Visual Recall",
+          "level": 2
+        },
+        {
+          "id": "1-clarifying-questions-to-ask-first",
+          "text": "1. Clarifying Questions to Ask First",
+          "level": 2
+        },
+        {
+          "id": "2-functional-requirements",
+          "text": "2. Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "3-non-functional-requirements",
+          "text": "3. Non-Functional Requirements",
+          "level": 2
+        },
+        {
+          "id": "4-high-level-architecture",
+          "text": "4. High-Level Architecture",
+          "level": 2
+        },
+        {
+          "id": "5-component-by-component-breakdown",
+          "text": "5. Component-by-Component Breakdown",
+          "level": 2
+        },
+        {
+          "id": "6-data-flow-step-by-step",
+          "text": "6. Data Flow — Step by Step",
+          "level": 2
+        },
+        {
+          "id": "7-key-design-decisions-with-justification",
+          "text": "7. Key Design Decisions with Justification",
+          "level": 2
+        },
+        {
+          "id": "8-failure-modes-mitigations",
+          "text": "8. Failure Modes & Mitigations",
+          "level": 2
+        },
+        {
+          "id": "9-scale-considerations",
+          "text": "9. Scale Considerations",
+          "level": 2
+        },
+        {
+          "id": "10-capacity-cost-back-of-envelope",
+          "text": "10. Capacity & Cost Back-of-Envelope",
+          "level": 2
+        },
+        {
+          "id": "11-cost-optimization-levers",
+          "text": "11. Cost Optimization Levers",
+          "level": 2
+        },
+        {
+          "id": "12-30-second-verbal-summary-follow-up-prep",
+          "text": "12. 30-Second Verbal Summary + Follow-up Prep",
+          "level": 2
+        },
+        {
+          "id": "one-paragraph-spoken-opener",
+          "text": "One-paragraph spoken opener",
+          "level": 2
+        },
+        {
+          "id": "follow-up-questions-to-prepare-for",
+          "text": "Follow-up Questions to Prepare For",
+          "level": 2
+        },
+        {
+          "id": "13-connections-typed-knowledge-graph",
+          "text": "13. Connections (Typed Knowledge Graph)",
+          "level": 2
+        },
+        {
+          "id": "related-system-designs",
+          "text": "🏗️ Related System Designs",
+          "level": 2
+        },
+        {
+          "id": "python-primitives-used-inside-this-design",
+          "text": "🐍 Python Primitives Used Inside This Design",
+          "level": 2
+        },
+        {
+          "id": "alternative-architectures",
+          "text": "🔀 Alternative Architectures",
+          "level": 2
+        },
+        {
+          "id": "reference-implementations-open-source",
+          "text": "📦 Reference Implementations (Open Source)",
+          "level": 2
+        }
+      ]
+    }
+  ],
+  "webrtc": [
+    {
+      "id": "card-01",
+      "number": 1,
+      "title": "WebRTC Field Notes",
+      "topic": "WebRTC · Real-time Systems"
+    },
+    {
+      "id": "card-02",
+      "number": 2,
+      "title": "The Four Obstacles",
+      "topic": "Foundation · Mental Model"
+    },
+    {
+      "id": "card-03",
+      "number": 3,
+      "title": "Three Layers Never Conflate",
+      "topic": "Foundation · Architecture"
+    },
+    {
+      "id": "card-04",
+      "number": 4,
+      "title": "SDP The Session Blob",
+      "topic": "Protocol · SDP"
+    },
+    {
+      "id": "card-05",
+      "number": 5,
+      "title": "ICE Gathering Five Steps",
+      "topic": "NAT Traversal · ICE"
+    },
+    {
+      "id": "card-06",
+      "number": 6,
+      "title": "Three Candidates, One Priority Order",
+      "topic": "NAT Traversal · Candidates"
+    },
+    {
+      "id": "card-07",
+      "number": 7,
+      "title": "STUN discovers. TURN relays.",
+      "topic": "NAT Traversal · STUN & TURN"
+    },
+    {
+      "id": "card-08",
+      "number": 8,
+      "title": "DTLS the keys. SRTP the bytes.",
+      "topic": "Encryption · DTLS-SRTP"
+    },
+    {
+      "id": "card-09",
+      "number": 9,
+      "title": "Trickle ICE",
+      "topic": "NAT Traversal · Optimization"
+    },
+    {
+      "id": "card-10",
+      "number": 10,
+      "title": "ICE Restart",
+      "topic": "NAT Traversal · Resilience"
+    },
+    {
+      "id": "card-11",
+      "number": 11,
+      "title": "Mesh, SFU, MCU",
+      "topic": "Architecture · Topology"
+    },
+    {
+      "id": "card-12",
+      "number": 12,
+      "title": "Numbers Worth Memorising",
+      "topic": "Reference · Key Numbers"
+    },
+    {
+      "id": "card-13",
+      "number": 13,
+      "title": "Two State Machines",
+      "topic": "API · State Machines"
+    },
+    {
+      "id": "card-14",
+      "number": 14,
+      "title": "Four Tiers, Independent Scale",
+      "topic": "Architecture · Scaling"
+    },
+    {
+      "id": "card-15",
+      "number": 15,
+      "title": "WebRTC vs WebSocket + PCM",
+      "topic": "Decision · Voice AI"
+    },
+    {
+      "id": "card-16",
+      "number": 16,
+      "title": "The 30-Second Pitch",
+      "topic": "Recall · Memory Hook"
+    }
+  ]
+}

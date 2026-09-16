@@ -1,35 +1,41 @@
-# My Notes
+# AlgoHandbook site
 
-Personal notes written in Markdown, served as a React (Vite + TypeScript) site on Netlify.
+The AlgoHandbook interview-prep notes as a responsive React site, published section by section.
 
-## Writing notes
+**Live today:** DSA cold recall (169 problems) and System Design (5 case studies and WebRTC revision cards).
 
-Put `.md` files in `notes/`. Subfolders become sections:
+## Develop
 
-```
-notes/welcome.md                        → /notes/welcome
-notes/getting-started/adding-notes.md   → /notes/getting-started/adding-notes
-```
-
-Frontmatter is optional:
-
-```md
----
-title: My note
-date: 2026-09-16
-tags: [react, hooks]
----
+```bash
+npm install
+npm run dev
 ```
 
-## Commands
+## Update content from the vault
 
-| Command           | What it does                     |
-| ----------------- | -------------------------------- |
-| `npm run dev`     | Local dev server with hot reload |
-| `npm run build`   | Type-check and build to `dist/`  |
-| `npm run preview` | Serve the production build       |
-| `npm run lint`    | Lint with oxlint                 |
+```bash
+npm run ingest                       # default vault path: ~/Desktop/java/Spring Boot/AlgoHandbook
+VAULT_DIR=/path/to/vault npm run ingest
+```
 
-## Deploy
+This rewrites `src/content/generated/*.json`. Commit the result.
 
-Netlify builds on every push to `main` using `netlify.toml`. `public/_redirects` makes deep links work.
+## Deploy to Netlify (free tier, manual)
+
+```bash
+npm run build
+```
+
+Then on app.netlify.com: **Add new project → Deploy manually**, and drag the `dist/` folder in.
+To update, open the project's **Deploys** tab and drag the new `dist/` folder in again.
+
+`dist/_redirects` makes page refreshes and shared deep links work.
+
+## Where things are
+
+| Path | What |
+| --- | --- |
+| `src/theme/theme.ts` | Material 3 theme: colours, type, breakpoints, component defaults |
+| `src/content/sections.ts` | Navigation and search: every section and its pages |
+| `scripts/ingest-vault.mjs` | Vault HTML → JSON |
+| `claude/responsive-guide.md` | Responsive rules (loaded by `CLAUDE.md`) |
