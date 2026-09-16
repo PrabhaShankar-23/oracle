@@ -47,6 +47,12 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
 3. Add the page to its section in `sections.ts` (and search entries if useful).
 4. Follow the responsive guide below and run through its checklist.
 
+## Building features
+
+For anything bigger than a small fix, use the `/feature-flow` skill (personal skill in
+`~/.claude/skills/feature-flow`). This repo's commands, test approach and definition of done are in
+`claude/feature-flow.md`; plans are saved under `claude/features/`.
+
 ## Responsive and UI rules
 
 @claude/responsive-guide.md
