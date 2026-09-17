@@ -26,7 +26,7 @@ npm run lint      # oxlint
 ## Stack
 
 React 19 · Vite 8 · TypeScript · React Router 8 (declarative `BrowserRouter`) · MUI 9 with a
-Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
+Material Design 3 theme · Mermaid and highlight.js (lazy-loaded) · `marked` (ingest only, Markdown → HTML).
 
 ## Layout
 
@@ -47,7 +47,8 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
 ## Adding a page from the vault
 
 1. Extend `scripts/ingest-vault.mjs` to extract it (structured JSON where the source is regular,
-   cleaned article HTML otherwise). Add anything nav/search needs to `manifest.json`.
+   cleaned article HTML otherwise; Markdown notes go through `marked`, see `ingestAiSystems`).
+   Add anything nav/search needs to `manifest.json`.
 2. Add types to `src/content/types.ts`, a page under `src/pages/<section>/`, a lazy route in `App.tsx`.
 3. Add the page to its section in `sections.ts` (and search entries if useful).
 4. Follow the responsive guide below and run through its checklist.

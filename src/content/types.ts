@@ -70,6 +70,18 @@ export type ApproachWalkthrough = {
 export type Family = { id: string; name: string; patterns: Pattern[] }
 export type ColdRecall = { title: string; intro: string; families: Family[] }
 
+/** A vault Markdown note rendered to HTML (see ingestAiSystems). */
+export type VaultDoc = {
+  slug: string
+  title: string
+  /** Lines of the note's opening blockquote: created/revised, scope, pointers. */
+  meta: string[]
+  headings: Heading[]
+  html: string
+}
+
+export type AiSystems = { docs: VaultDoc[] }
+
 export type TagTone = 'primary' | 'success' | 'warning' | 'error'
 
 export type CaseStudySummary = {
@@ -141,5 +153,6 @@ export type Manifest = {
   }
   caseStudies: (CaseStudySummary & { subtitle: string; meta: string[]; headings: Heading[] })[]
   webrtc: { id: string; number: number; title: string; topic: string }[]
+  aiSystems: Omit<VaultDoc, 'html'>[]
   dsaUtils: { lang: UtilsLang; id: string; name: string; section: string }[]
 }

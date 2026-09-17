@@ -90,6 +90,12 @@ export const sections: Section[] = [
         description: s.summary,
         group: 'Case studies',
       })),
+      ...manifest.aiSystems.map((d) => ({
+        title: 'Agentic system design',
+        path: `/system-design/ai-systems/${d.slug}`,
+        description: 'Design-round view of agents: decisions, budgets and failure stories, 15 sections.',
+        group: 'AI systems',
+      })),
       {
         title: 'WebRTC revision cards',
         path: '/system-design/webrtc',
@@ -177,6 +183,15 @@ export const searchIndex: SearchItem[] = [
     path: `/system-design/webrtc#${c.id}`,
     group: 'WebRTC cards',
   })),
+  ...manifest.aiSystems.flatMap((d) =>
+    d.headings.map((h) => ({
+      key: `ai:${d.slug}:${h.id}`,
+      label: h.text,
+      secondary: 'Agentic system design',
+      path: `/system-design/ai-systems/${d.slug}#${h.id}`,
+      group: 'AI systems',
+    })),
+  ),
   ...manifest.dsaUtils.map((h) => ({
     key: `utils:${h.lang}:${h.id}`,
     label: h.name,

@@ -2214,6 +2214,106 @@
       "topic": "Recall · Memory Hook"
     }
   ],
+  "aiSystems": [
+    {
+      "slug": "agentic-design",
+      "title": "Agentic System Design — Revision Index v1 (Compressed)",
+      "meta": [
+        "<strong>Created:</strong> 17 Sep 2026 · <strong>Last revised:</strong> 17 Sep 2026",
+        "The <strong>design-round</strong> view of agents: the decisions, budgets and failure stories that turn agent components into a design you can defend under questioning. Same shape as <code>05-AI-ML/00-Index/ml_index_v2.md</code>: related topics collapsed into single lines, <strong>15 sections</strong>.",
+        "<strong>Scope: agentic design decisions only.</strong> Concept depth is owned elsewhere and is pointed to, not re-covered — each section ends with one <strong>Depth →</strong> line.",
+        "Owned elsewhere: agent concepts &amp; mechanics → <code>05-AI-ML/03-Agentic-AI</code> (item numbers below = <code>index_agentic_v2.md</code>) · retrieval pipeline → <code>RAG-and-AI-Systems-Reference-Index.md</code> · LLM serving internals → <code>05-AI-ML/05-LLM-Production</code> · runtime debugging → <code>AI-Failure-Modes-and-Debugging-Reference-Index.md</code> · distributed-systems physics → <code>03-hld</code>",
+        "🧭 Router: System Design — Master Index"
+      ],
+      "headings": [
+        {
+          "id": "1-framing-the-agentic-round",
+          "text": "1 — Framing the Agentic Round",
+          "level": 2
+        },
+        {
+          "id": "2-reference-architecture",
+          "text": "2 — Reference Architecture",
+          "level": 2
+        },
+        {
+          "id": "3-control-flow-orchestration",
+          "text": "3 — Control Flow & Orchestration",
+          "level": 2
+        },
+        {
+          "id": "4-tool-layer-design",
+          "text": "4 — Tool Layer Design",
+          "level": 2
+        },
+        {
+          "id": "5-memory-state-context",
+          "text": "5 — Memory, State & Context",
+          "level": 2
+        },
+        {
+          "id": "6-multi-agent-topology",
+          "text": "6 — Multi-Agent Topology",
+          "level": 2
+        },
+        {
+          "id": "7-durable-execution-long-running-runs",
+          "text": "7 — Durable Execution & Long-Running Runs",
+          "level": 2
+        },
+        {
+          "id": "8-reliability-engineering",
+          "text": "8 — Reliability Engineering",
+          "level": 2
+        },
+        {
+          "id": "9-latency-streaming",
+          "text": "9 — Latency & Streaming",
+          "level": 2
+        },
+        {
+          "id": "10-cost-modeling-optimization",
+          "text": "10 — Cost Modeling & Optimization",
+          "level": 2
+        },
+        {
+          "id": "11-safety-security-governance",
+          "text": "11 — Safety, Security & Governance",
+          "level": 2
+        },
+        {
+          "id": "12-evaluation-observability",
+          "text": "12 — Evaluation & Observability",
+          "level": 2
+        },
+        {
+          "id": "13-deployment-versioning-scaling",
+          "text": "13 — Deployment, Versioning & Scaling",
+          "level": 2
+        },
+        {
+          "id": "14-canonical-agentic-design-problems",
+          "text": "14 — Canonical Agentic Design Problems",
+          "level": 2
+        },
+        {
+          "id": "15-architect-lens-staff-architect-rounds",
+          "text": "15 — Architect Lens (staff / architect rounds)",
+          "level": 2
+        },
+        {
+          "id": "study-order",
+          "text": "Study order",
+          "level": 2
+        },
+        {
+          "id": "depth-rule",
+          "text": "Depth rule",
+          "level": 2
+        }
+      ]
+    }
+  ],
   "dsaUtils": [
     {
       "lang": "python",

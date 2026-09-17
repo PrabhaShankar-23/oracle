@@ -13,6 +13,7 @@ const JavaUtilsPage = lazy(() => import('./pages/dsa/JavaUtilsPage'))
 const CaseStudiesIndexPage = lazy(() => import('./pages/system-design/CaseStudiesIndexPage'))
 const CaseStudyPage = lazy(() => import('./pages/system-design/CaseStudyPage'))
 const WebRtcPage = lazy(() => import('./pages/system-design/WebRtcPage'))
+const AiSystemsPage = lazy(() => import('./pages/system-design/AiSystemsPage'))
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="system-design/case-studies" element={<CaseStudiesIndexPage />} />
           <Route path="system-design/case-studies/:slug" element={<CaseStudyPage />} />
           <Route path="system-design/webrtc" element={<WebRtcPage />} />
+          <Route path="system-design/ai-systems/:slug" element={<AiSystemsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

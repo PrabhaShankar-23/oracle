@@ -2,6 +2,7 @@
 // Run: npm run ingest            (uses the default vault path below)
 //      VAULT_DIR=/path npm run ingest
 import * as cheerio from 'cheerio'
+import { marked } from 'marked'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import path from 'node:path'
@@ -12,6 +13,7 @@ const VAULT =
 const OUT = path.resolve(import.meta.dirname, '../src/content/generated')
 
 const CASE_STUDIES_DIR = '01-System Design/07-Design-problems/html'
+const AI_SYSTEMS_DIR = '01-System Design/06-ai-systems'
 const CASE_STUDY_ROUTE = '/system-design/case-studies'
 
 const load = async (rel) => cheerio.load(await readFile(path.join(VAULT, rel), 'utf8'))
@@ -315,9 +317,56 @@ async function ingestUtils({ lang, file }) {
   return data
 }
 
+/* ---------------- AI systems (Markdown notes) ---------------- */
+
+const AI_SYSTEMS_DOCS = [
+  { slug: 'agentic-design', file: 'index_agentic_systems_design.md' },
+]
+
+/** `[C]` / `[I]` / `[B]` tier markers become chips the page can style. */
+const TIERS = { C: 'core', I: 'important', B: 'breadth' }
+
+async function ingestAiSystems() {
+  const docs = []
+  for (const { slug, file } of AI_SYSTEMS_DOCS) {
+    const md = await readFile(path.join(VAULT, AI_SYSTEMS_DIR, file), 'utf8')
+    const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+    const body = $('body')
+
+    const title = text(body.find('h1').first())
+    body.find('h1').first().remove()
+
+    // The opening blockquote is the note's metadata: created/revised, scope, router.
+    const lead = body.find('blockquote').first()
+    rewriteLinks($, lead)
+    const meta = lead
+      .find('p')
+      .toArray()
+      .flatMap((p) => inner($(p)).split('\n'))
+      .map((line) => line.trim())
+      .filter(Boolean)
+    lead.remove()
+
+    body.find('code').each((_, node) => {
+      const code = $(node)
+      const tier = /^\[([CIB])\]$/.exec(text(code))
+      if (tier) code.replaceWith(`<span class="tier tier-${TIERS[tier[1]]}">${tier[1]}</span>`)
+    })
+
+    rewriteLinks($, body)
+    const headings = collectHeadings($, body)
+    docs.push({ slug, title, meta, headings, html: inner(body) })
+    console.log(`  parsed ${file} (${headings.length} headings)`)
+  }
+
+  const data = { docs }
+  await write('ai-systems.json', data)
+  return data
+}
+
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems) {
   await write('manifest.json', {
     dsa: {
       patterns: dsa.families.flatMap((f) =>
@@ -334,6 +383,10 @@ async function writeManifest(dsa, caseStudies, webrtc, utils) {
       headings: headings.filter((h) => h.level === 2),
     })),
     webrtc: webrtc.cards.map((c) => ({ id: c.id, number: c.number, title: c.title, topic: c.topic })),
+    aiSystems: aiSystems.docs.map(({ html: _html, ...doc }) => ({
+      ...doc,
+      headings: doc.headings.filter((h) => h.level === 2),
+    })),
     dsaUtils: utils.flatMap((u) =>
       u.sections.flatMap((s) =>
         s.helpers.filter((h) => h.id).map((h) => ({ lang: u.lang, id: h.id, name: h.name, section: s.title })),
@@ -346,4 +399,10 @@ await mkdir(OUT, { recursive: true })
 console.log(`Vault: ${VAULT}`)
 const utils = []
 for (const u of UTILS) utils.push(await ingestUtils(u))
-await writeManifest(await ingestColdRecall(), await ingestCaseStudies(), await ingestWebRtc(), utils)
+await writeManifest(
+  await ingestColdRecall(),
+  await ingestCaseStudies(),
+  await ingestWebRtc(),
+  utils,
+  await ingestAiSystems(),
+)

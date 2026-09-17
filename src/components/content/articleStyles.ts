@@ -52,6 +52,24 @@ export const articleStyles: SxProps<Theme> = (t) => {
       backgroundColor: v.surface.containerHigh,
     },
 
+    // Tier chips from vault index notes: [C] core, [I] important, [B] breadth
+    '& .tier': {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 18,
+      height: 18,
+      mr: 0.75,
+      borderRadius: '50%',
+      fontFamily: FONT_MONO,
+      fontSize: '0.6875rem',
+      fontWeight: 700,
+      verticalAlign: 'text-bottom',
+    },
+    '& .tier-core': { backgroundColor: v.container.primary, color: v.container.onPrimary },
+    '& .tier-important': { backgroundColor: v.container.tertiary, color: v.container.onTertiary },
+    '& .tier-breadth': { border: `1px solid ${v.surface.outlineVariant}`, color: v.text.secondary },
+
     // Code blocks
     '& pre': {
       position: 'relative',
