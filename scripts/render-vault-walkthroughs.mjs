@@ -114,6 +114,40 @@ document.addEventListener('click', function (e) {
 });
 </script>`
 
+// A pointer or span past the end of a row would draw off the diagram; catch it here.
+function checkDiagrams() {
+  for (const [id, approaches] of Object.entries(walkthroughs)) {
+    for (const a of approaches) {
+      for (const d of a.diagrams) {
+        for (const row of d.rows) {
+          const n = (d.kind === 'cells' ? row.cells : row.heights).length
+          const at = (label, i) => {
+            if (!Number.isInteger(i) || i < 0 || i >= n) throw new Error(`${id} · ${a.name}: ${label} index ${i} outside 0…${n - 1}`)
+          }
+          for (const p of row.pointers ?? []) at(`pointer ${p.label}`, p.at)
+          for (const k of Object.keys(row.states ?? {})) at('state', Number(k))
+          for (const i of row.dim ?? []) at('dim', i)
+          if (row.span) {
+            at('span from', row.span.from)
+            at('span to', row.span.to)
+            if (row.span.from > row.span.to) throw new Error(`${id} · ${a.name}: span runs backwards`)
+          }
+          for (const l of row.levels ?? []) {
+            at(`level ${l.label} from`, l.from)
+            at(`level ${l.label} to`, l.to)
+          }
+          if (row.box) {
+            at('box from', row.box.from)
+            at('box to', row.box.to)
+          }
+        }
+      }
+    }
+  }
+}
+
+checkDiagrams()
+
 let html = await readFile(FILE, 'utf8')
 const $ = cheerio.load(html)
 

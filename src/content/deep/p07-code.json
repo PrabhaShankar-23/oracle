@@ -1,0 +1,8 @@
+{
+  "P07-remove-duplicates-from-sorted-array-ii": "def remove_duplicates(nums):\n    k = 0                              # write pointer\n    for x in nums:\n        if k < 2 or x != nums[k - 2]:  # at most two copies\n            nums[k] = x\n            k += 1\n    return k",
+  "P07-remove-duplicates-from-sorted-array-ii#copy": "from collections import Counter\n\ndef remove_duplicates(nums):\n    seen, kept = Counter(), []\n    for x in nums:\n        if seen[x] < 2:\n            kept.append(x)\n            seen[x] += 1\n    nums[:len(kept)] = kept\n    return len(kept)",
+  "P07-remove-element": "def remove_element(nums, val):\n    k = 0                              # write pointer\n    for x in nums:\n        if x != val:\n            nums[k] = x\n            k += 1\n    return k",
+  "P07-remove-element#copy": "def remove_element(nums, val):\n    kept = [x for x in nums if x != val]   # a second array of size n\n    nums[:len(kept)] = kept\n    return len(kept)",
+  "P07-sort-colors": "def sort_colors(nums):\n    low, mid, high = 0, 0, len(nums) - 1\n    while mid <= high:\n        if nums[mid] == 0:\n            nums[low], nums[mid] = nums[mid], nums[low]\n            low += 1\n            mid += 1\n        elif nums[mid] == 1:\n            mid += 1\n        else:                          # 2: swap to the back, re-check mid\n            nums[mid], nums[high] = nums[high], nums[mid]\n            high -= 1",
+  "P07-sort-colors#count": "def sort_colors(nums):\n    count = [0, 0, 0]\n    for x in nums:                     # pass 1: tally\n        count[x] += 1\n    i = 0\n    for color in range(3):             # pass 2: overwrite\n        for _ in range(count[color]):\n            nums[i] = color\n            i += 1"
+}

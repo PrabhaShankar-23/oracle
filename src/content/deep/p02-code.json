@@ -1,0 +1,8 @@
+{
+  "P02-find-the-duplicate-number": "def find_duplicate(nums):\n    slow = fast = 0                    # index i points to nums[i]\n    while True:\n        slow = nums[slow]\n        fast = nums[nums[fast]]\n        if slow == fast:\n            break\n    slow = 0                           # phase 2: meet at the cycle entry\n    while slow != fast:\n        slow, fast = nums[slow], nums[fast]\n    return slow",
+  "P02-find-the-duplicate-number#sort": "def find_duplicate(nums):\n    ordered = sorted(nums)             # a copy, so the input stays read-only\n    for i in range(1, len(ordered)):\n        if ordered[i] == ordered[i - 1]:\n            return ordered[i]\n    return -1",
+  "P02-happy-number": "def is_happy(n):\n    def f(x):\n        return sum(int(d) ** 2 for d in str(x))\n\n    slow, fast = f(n), f(f(n))\n    while fast != 1 and slow != fast:\n        slow, fast = f(slow), f(f(fast))\n    return fast == 1",
+  "P02-happy-number#set": "def is_happy(n):\n    seen = set()\n    while n != 1 and n not in seen:\n        seen.add(n)\n        n = sum(int(d) ** 2 for d in str(n))\n    return n == 1",
+  "P02-linked-list-cycle": "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow, fast = slow.next, fast.next.next\n        if slow is fast:\n            return True\n    return False",
+  "P02-linked-list-cycle#set": "def has_cycle(head):\n    seen = set()\n    while head:\n        if head in seen:\n            return True\n        seen.add(head)                 # nodes hash by identity\n        head = head.next\n    return False"
+}
