@@ -94,7 +94,8 @@ async function ingestColdRecall() {
             winner: $(a).hasClass('win'),
           })),
         why: inner(card.find('.why')) || undefined,
-        code: card.find('pre').text() || undefined,
+        // Cards with a walkthrough block keep the best approach's code in its panel.
+        code: card.children('pre').text() || card.find('.walk-best pre').text() || undefined,
         traps: card
           .find('.note')
           .toArray()

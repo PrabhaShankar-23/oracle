@@ -24,6 +24,7 @@ import PageContainer from '../../components/content/PageContainer'
 import PageHeader from '../../components/content/PageHeader'
 import TableOfContents from '../../components/content/TableOfContents'
 import type { UtilsHelper, UtilsLang, UtilsToolkit } from '../../content/types'
+import { codeBlockHtml } from '../../lib/codeHtml'
 import { FONT_MONO, HEADER_HEIGHT, READING_MAX_WIDTH } from '../../theme/theme'
 
 const LANGS: Record<UtilsLang, { label: string; path: string }> = {
@@ -31,7 +32,6 @@ const LANGS: Record<UtilsLang, { label: string; path: string }> = {
   java: { label: 'Java', path: '/dsa/java-utils' },
 }
 
-const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const stripTags = (s = '') => s.replace(/<[^>]+>/g, '')
 
 type Props = { toolkit: UtilsToolkit }
@@ -267,7 +267,7 @@ export default function UtilsPage({ toolkit }: Props) {
 
 const HelperCard = memo(function HelperCard({ helper: h, lang }: { helper: UtilsHelper; lang: UtilsLang }) {
   const navigate = useNavigate()
-  const html = useMemo(() => `<pre><code class="language-${lang}">${escapeHtml(h.code)}</code></pre>`, [h.code, lang])
+  const html = useMemo(() => codeBlockHtml(h.code, lang), [h.code, lang])
 
   const onAnchor = (e: MouseEvent) => {
     e.preventDefault()

@@ -12,8 +12,12 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { memo, useState } from 'react'
+import HtmlContent from '../../components/content/HtmlContent'
+import { walkthroughs } from '../../content/deep'
 import type { Difficulty, Problem } from '../../content/types'
+import { codeBlockHtml } from '../../lib/codeHtml'
 import { FONT_MONO } from '../../theme/theme'
+import ApproachTabs from './ApproachTabs'
 import { MARK_LABELS } from './marks'
 
 const DIFFICULTY_COLOR: Record<Difficulty, 'success' | 'warning' | 'error'> = {
@@ -30,6 +34,7 @@ type Props = { problem: Problem; recallMode: boolean }
 function ProblemCard({ problem: p, recallMode }: Props) {
   const [revealed, setRevealed] = useState(false)
   const hidden = recallMode && !revealed
+  const walkthrough = walkthroughs[p.id]
 
   return (
     <Card id={p.id} component="article" sx={{ mb: 1.5 }}>
@@ -84,61 +89,65 @@ function ProblemCard({ problem: p, recallMode }: Props) {
               </dd>
             </Box>
 
-            <Box
-              component="ol"
-              sx={(t) => ({
-                listStyle: 'none',
-                p: 0,
-                m: 0,
-                mt: 1.5,
-                pt: 1.5,
-                borderTop: `1px dashed ${t.vars.palette.divider}`,
-                '& code': inlineCode,
-              })}
-            >
-              {p.approaches.map((a) => (
-                <Box
-                  component="li"
-                  key={a.label}
-                  sx={(t) => ({
-                    display: 'flex',
-                    flexWrap: { xs: 'wrap', sm: 'nowrap' },
-                    alignItems: 'baseline',
-                    columnGap: 1,
-                    py: 0.5,
-                    px: 1,
-                    mx: -1,
-                    borderRadius: 2,
-                    typography: 'body2',
-                    ...(a.winner && { backgroundColor: t.vars.palette.container.primary, color: t.vars.palette.container.onPrimary }),
-                  })}
-                >
-                  {a.winner ? (
-                    <CheckCircleIcon sx={{ fontSize: 16, alignSelf: 'center', color: 'primary.main' }} aria-label="Best approach" />
-                  ) : (
-                    <Box component="span" sx={{ color: 'text.secondary', minWidth: 16 }}>
-                      {a.label}
-                    </Box>
-                  )}
-                  <Box component="span" sx={{ flex: 1, minWidth: 0 }}>
-                    <Html html={a.text} />
-                  </Box>
+            {walkthrough ? (
+              <ApproachTabs approaches={walkthrough} />
+            ) : (
+              <Box
+                component="ol"
+                sx={(t) => ({
+                  listStyle: 'none',
+                  p: 0,
+                  m: 0,
+                  mt: 1.5,
+                  pt: 1.5,
+                  borderTop: `1px dashed ${t.vars.palette.divider}`,
+                  '& code': inlineCode,
+                })}
+              >
+                {p.approaches.map((a) => (
                   <Box
-                    component="span"
-                    sx={{
-                      fontFamily: FONT_MONO,
-                      fontSize: '0.75rem',
-                      whiteSpace: 'nowrap',
-                      opacity: 0.85,
-                      width: { xs: '100%', sm: 'auto' },
-                      pl: { xs: 3, sm: 1 },
-                    }}
+                    component="li"
+                    key={a.label}
+                    sx={(t) => ({
+                      display: 'flex',
+                      flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                      alignItems: 'baseline',
+                      columnGap: 1,
+                      py: 0.5,
+                      px: 1,
+                      mx: -1,
+                      borderRadius: 2,
+                      typography: 'body2',
+                      ...(a.winner && { backgroundColor: t.vars.palette.container.primary, color: t.vars.palette.container.onPrimary }),
+                    })}
                   >
-                    {a.complexity}
+                    {a.winner ? (
+                      <CheckCircleIcon sx={{ fontSize: 16, alignSelf: 'center', color: 'primary.main' }} aria-label="Best approach" />
+                    ) : (
+                      <Box component="span" sx={{ color: 'text.secondary', minWidth: 16 }}>
+                        {a.label}
+                      </Box>
+                    )}
+                    <Box component="span" sx={{ flex: 1, minWidth: 0 }}>
+                      <Html html={a.text} />
+                    </Box>
+                    <Box
+                      component="span"
+                      sx={{
+                        fontFamily: FONT_MONO,
+                        fontSize: '0.75rem',
+                        whiteSpace: 'nowrap',
+                        opacity: 0.85,
+                        width: { xs: '100%', sm: 'auto' },
+                        pl: { xs: 3, sm: 1 },
+                      }}
+                    >
+                      {a.complexity}
+                    </Box>
                   </Box>
-                </Box>
-              ))}
-            </Box>
+                ))}
+              </Box>
+            )}
 
             {p.why && (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontStyle: 'italic', '& code': inlineCode }}>
@@ -146,23 +155,8 @@ function ProblemCard({ problem: p, recallMode }: Props) {
               </Typography>
             )}
 
-            {p.code && (
-              <Box
-                component="pre"
-                sx={(t) => ({
-                  mt: 1.5,
-                  mb: 0,
-                  p: 1.5,
-                  overflowX: 'auto',
-                  borderRadius: 2,
-                  backgroundColor: t.vars.palette.surface.containerHigh,
-                  fontFamily: FONT_MONO,
-                  fontSize: { xs: '0.75rem', sm: '0.8125rem' },
-                  lineHeight: 1.6,
-                })}
-              >
-                {p.code}
-              </Box>
+            {!walkthrough && p.code && (
+              <HtmlContent html={codeBlockHtml(p.code, 'python')} sx={{ '& pre': { mt: 1.5, mb: 0 } }} />
             )}
 
             {p.traps.map((trap) => (
