@@ -1,16 +1,11 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardActionArea from '@mui/material/CardActionArea'
-import CardContent from '@mui/material/CardContent'
-import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { Link } from 'react-router'
 import PageContainer from '../components/content/PageContainer'
-import { liveSections, manifest, upcomingSections } from '../content/sections'
+import { manifest } from '../content/sections'
 
 export default function HomePage() {
   return (
@@ -42,35 +37,6 @@ export default function HomePage() {
         </Stack>
       </Box>
 
-      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
-        Sections
-      </Typography>
-      <Grid container spacing={2}>
-        {[...liveSections, ...upcomingSections].map((s) => (
-          <Grid key={s.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-            <Card sx={{ height: '100%', opacity: s.pages.length ? 1 : 0.75 }}>
-              <CardActionArea component={Link} to={s.path} sx={{ height: '100%', alignItems: 'flex-start' }}>
-                <CardContent>
-                  <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-                    <s.icon color={s.pages.length ? 'primary' : 'disabled'} />
-                    {s.pages.length ? (
-                      <Chip label={`${s.pages.length} ${s.pages.length === 1 ? 'page' : 'pages'}`} size="small" color="primary" variant="outlined" />
-                    ) : (
-                      <Chip label="Soon" size="small" />
-                    )}
-                  </Stack>
-                  <Typography variant="subtitle1" component="h3">
-                    {s.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {s.description}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
     </PageContainer>
   )
 }

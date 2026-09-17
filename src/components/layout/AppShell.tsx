@@ -13,16 +13,19 @@ import { useTheme } from '@mui/material/styles'
 import { Suspense, useState } from 'react'
 import { Link, Outlet } from 'react-router'
 import { useHashScroll } from '../../hooks/useHashScroll'
+import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../../theme/theme'
 import PageLoader from '../content/PageLoader'
 import ColorModeToggle from './ColorModeToggle'
 import GlobalSearch from './GlobalSearch'
 import NavDrawer from './NavDrawer'
-import SectionMenus from './SectionMenus'
+import SideNav from './SideNav'
 
 export default function AppShell() {
   const theme = useTheme()
   const wide = useMediaQuery(theme.breakpoints.up('md'))
+  const sidebar = useMediaQuery(theme.breakpoints.up('lg'))
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(readSidebarPref)
   const [searchOpen, setSearchOpen] = useState(false)
   useHashScroll()
 
@@ -30,7 +33,15 @@ export default function AppShell() {
     <Box sx={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
       <AppBar>
         <Toolbar sx={{ gap: { xs: 0.5, md: 1.5 }, px: { xs: 1, sm: 2 } }}>
-          {!wide && (
+          {sidebar ? (
+            <IconButton
+              onClick={() => toggleSidebar(!sidebarOpen)}
+              aria-label={sidebarOpen ? 'Hide sections sidebar' : 'Show sections sidebar'}
+              aria-expanded={sidebarOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+          ) : (
             <IconButton onClick={() => setDrawerOpen(true)} aria-label="Open navigation">
               <MenuIcon />
             </IconButton>
@@ -44,8 +55,6 @@ export default function AppShell() {
           >
             AlgoHandbook
           </Typography>
-
-          {wide && <SectionMenus />}
 
           <Box sx={{ flex: 1 }} />
 
@@ -62,7 +71,7 @@ export default function AppShell() {
         </Toolbar>
       </AppBar>
 
-      {!wide && <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />}
+      {!sidebar && <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />}
 
       <Dialog
         fullScreen
@@ -78,15 +87,58 @@ export default function AppShell() {
         </Stack>
       </Dialog>
 
-      <Box component="main" sx={{ flex: 1, minWidth: 0 }}>
-        <Suspense fallback={<PageLoader />}>
-          <Outlet />
-        </Suspense>
-      </Box>
+      <Box sx={{ flex: 1, display: 'flex', minWidth: 0 }}>
+        {sidebar && sidebarOpen && (
+          <Box
+            component="aside"
+            sx={(t) => ({
+              width: SIDEBAR_WIDTH,
+              flexShrink: 0,
+              position: 'sticky',
+              top: HEADER_HEIGHT,
+              alignSelf: 'flex-start',
+              height: `calc(100dvh - ${HEADER_HEIGHT}px)`,
+              overflowY: 'auto',
+              overscrollBehavior: 'contain',
+              borderRight: `1px solid ${t.vars.palette.surface.outlineVariant}`,
+              backgroundColor: t.vars.palette.surface.containerLow,
+            })}
+          >
+            <SideNav />
+          </Box>
+        )}
 
-      <Box component="footer" sx={{ py: 3, px: 2, textAlign: 'center', color: 'text.secondary' }}>
-        <Typography variant="caption">Built from the AlgoHandbook notes vault</Typography>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          <Box component="main" sx={{ flex: 1, minWidth: 0 }}>
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </Box>
+
+          <Box component="footer" sx={{ py: 3, px: 2, textAlign: 'center', color: 'text.secondary' }}>
+            <Typography variant="caption">Built from the AlgoHandbook notes vault</Typography>
+          </Box>
+        </Box>
       </Box>
     </Box>
   )
+
+  function toggleSidebar(open: boolean) {
+    setSidebarOpen(open)
+    try {
+      localStorage.setItem(SIDEBAR_KEY, open ? 'open' : 'closed')
+    } catch {
+      // Storage blocked (private mode): the choice just isn't remembered.
+    }
+  }
+}
+
+const SIDEBAR_KEY = 'sidebar'
+
+function readSidebarPref() {
+  try {
+    return localStorage.getItem(SIDEBAR_KEY) !== 'closed'
+  } catch {
+    return true
+  }
 }

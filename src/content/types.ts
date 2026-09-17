@@ -63,6 +63,35 @@ export type RevisionCard = {
 
 export type WebRtcDeck = { title: string; cards: RevisionCard[] }
 
+export type UtilsLang = 'python' | 'java'
+
+export type UtilsHelper = {
+  /** Anchor id, e.g. `s2-is_palindrome`. Missing on header-less snippets (imports, constants, tests). */
+  id?: string
+  name?: string
+  /** Source tag: `def`, `class`, `static`, `field`, … */
+  kind?: string
+  doc?: string
+  code: string
+}
+
+export type UtilsSection = {
+  id: string
+  title: string
+  lede?: string
+  sheet: { label: string; code: string }[]
+  helpers: UtilsHelper[]
+}
+
+export type UtilsToolkit = {
+  lang: UtilsLang
+  title: string
+  subtitle: string
+  meta: string
+  stats: { value: string; label: string }[]
+  sections: UtilsSection[]
+}
+
 export type Manifest = {
   dsa: {
     patterns: { id: string; name: string; family: string; count: number }[]
@@ -70,4 +99,5 @@ export type Manifest = {
   }
   caseStudies: (CaseStudySummary & { subtitle: string; meta: string[]; headings: Heading[] })[]
   webrtc: { id: string; number: number; title: string; topic: string }[]
+  dsaUtils: { lang: UtilsLang; id: string; name: string; section: string }[]
 }

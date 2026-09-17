@@ -249,9 +249,74 @@ async function ingestWebRtc() {
   return data
 }
 
+/* ---------------- DSA helper toolkits (Python + Java) ---------------- */
+
+const UTILS = [
+  { lang: 'python', label: 'Python helpers', file: 'py_dsa_utils.html', route: '/dsa/python-utils' },
+  { lang: 'java', label: 'Java helpers', file: 'JavaDsaUtils.html', route: '/dsa/java-utils' },
+]
+
+async function ingestUtils({ lang, file }) {
+  const $ = await load(`04-DSA-V2/00-index/${file}`)
+  const main = $('main')
+
+  // Twin page → its site route; the .py/.java source isn't on the site, so keep only the text.
+  main.find('.meta a[href]').each((_, node) => {
+    const a = $(node)
+    const twin = UTILS.find((u) => u.file === a.attr('href'))
+    if (twin) a.attr('href', twin.route).text(twin.label)
+    else a.replaceWith(a.contents())
+  })
+  main.find('code.py').removeAttr('class')
+
+  const sections = main
+    .find('section.sec')
+    .toArray()
+    .map((node) => {
+      const sec = $(node)
+      return {
+        id: sec.attr('id'),
+        title: text(sec.find('h2')),
+        lede: inner(sec.find('.lede')) || undefined,
+        sheet: sec
+          .find('.sheet .row')
+          .toArray()
+          .map((r) => ({ label: text($(r).find('.k')), code: $(r).find('.v').text() })),
+        helpers: sec
+          .find('.card')
+          .toArray()
+          .map((c) => {
+            const card = $(c)
+            const name = card.find('.cname')
+            return {
+              id: name.attr('id'),
+              name: name.length ? text(name) : undefined,
+              kind: text(card.find('.card-head .tag')) || undefined,
+              doc: inner(card.find('.doc')) || undefined,
+              code: card.find('pre.code code').text(),
+            }
+          }),
+      }
+    })
+
+  const data = {
+    lang,
+    title: text(main.find('h1')),
+    subtitle: text(main.find('.subtitle')),
+    meta: inner(main.find('.meta')),
+    stats: main
+      .find('.stats .num')
+      .toArray()
+      .map((n) => ({ value: text($(n).find('b')), label: text($(n).find('span')) })),
+    sections,
+  }
+  await write(`dsa-utils-${lang}.json`, data)
+  return data
+}
+
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc) {
+async function writeManifest(dsa, caseStudies, webrtc, utils) {
   await write('manifest.json', {
     dsa: {
       patterns: dsa.families.flatMap((f) =>
@@ -268,9 +333,16 @@ async function writeManifest(dsa, caseStudies, webrtc) {
       headings: headings.filter((h) => h.level === 2),
     })),
     webrtc: webrtc.cards.map((c) => ({ id: c.id, number: c.number, title: c.title, topic: c.topic })),
+    dsaUtils: utils.flatMap((u) =>
+      u.sections.flatMap((s) =>
+        s.helpers.filter((h) => h.id).map((h) => ({ lang: u.lang, id: h.id, name: h.name, section: s.title })),
+      ),
+    ),
   })
 }
 
 await mkdir(OUT, { recursive: true })
 console.log(`Vault: ${VAULT}`)
-await writeManifest(await ingestColdRecall(), await ingestCaseStudies(), await ingestWebRtc())
+const utils = []
+for (const u of UTILS) utils.push(await ingestUtils(u))
+await writeManifest(await ingestColdRecall(), await ingestCaseStudies(), await ingestWebRtc(), utils)

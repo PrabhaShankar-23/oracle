@@ -29,12 +29,12 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
 ## Layout
 
 - `src/theme/theme.ts` — **the only place** for colours, type scale, breakpoints, radii,
-  component defaults and layout constants (`HEADER_HEIGHT`, `CONTENT_MAX_WIDTH`, `READING_MAX_WIDTH`).
-- `src/content/sections.ts` — site map: every vault section, its nav pages, and the global search index.
+  component defaults and layout constants (`HEADER_HEIGHT`, `CONTENT_MAX_WIDTH`, `READING_MAX_WIDTH`, `SIDEBAR_WIDTH`).
+- `src/content/sections.ts` — site map: every vault section — **DSA first, then vault folder order** (the sidebar follows it), its nav pages, and the global search index.
   A section with `pages: []` shows as "Soon".
 - `src/content/generated/` — output of `scripts/ingest-vault.mjs`. Don't hand-edit; re-run ingest.
   `manifest.json` is small and imported by the main bundle; the other JSON files are imported only by lazy pages.
-- `src/components/layout/` — app bar, section dropdown menus (desktop), nav drawer (mobile), global search.
+- `src/components/layout/` — app bar, `SideNav` section sidebar (permanent at `lg`+, inside `NavDrawer` below), global search.
 - `src/components/content/` — `PageContainer`, `PageHeader`, `HtmlContent` (renders vault HTML with
   diagrams, highlighting, copy buttons), `TableOfContents`, `articleStyles`.
 - `src/pages/` — one folder per section. Content pages are `lazy()`-loaded in `src/App.tsx`.

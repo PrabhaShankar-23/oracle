@@ -21,6 +21,7 @@ import { alpha, createTheme } from '@mui/material/styles'
 export const HEADER_HEIGHT = 64
 export const CONTENT_MAX_WIDTH = 1280
 export const READING_MAX_WIDTH = 860
+export const SIDEBAR_WIDTH = 280
 export const FONT_MONO = "'Roboto Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace"
 const FONT_SANS = "'Roboto Flex Variable', Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif"
 
