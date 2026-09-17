@@ -9,8 +9,8 @@ Rules for every page and component in this app. The breakpoints and layout const
 | ---- | --------- | ------------ | ---------------------------------------------------------- |
 | `xs` | 0         | Compact      | One column. Hamburger → `NavDrawer`. Search opens a full-screen dialog. |
 | `sm` | 600       | Medium       | Two-column card grids. Filters/controls can sit in a row.  |
-| `md` | 840       | Medium+      | App bar shows `SectionMenus` dropdowns and inline search.  |
-| `lg` | 1200      | Expanded     | Sticky side rails appear (table of contents, pattern list). |
+| `md` | 840       | Medium+      | App bar shows inline search. Sections still in the hamburger → `NavDrawer`. |
+| `lg` | 1200      | Expanded     | Permanent `SideNav` sidebar (`SIDEBAR_WIDTH`, hamburger hides it). Sticky page rails appear (table of contents, pattern list). |
 | `xl` | 1600      | Large        | Content stays capped at `CONTENT_MAX_WIDTH` (1280px).      |
 
 Test at **360, 390, 600, 840, 1024, 1280 and 1440px** wide. There must never be horizontal page

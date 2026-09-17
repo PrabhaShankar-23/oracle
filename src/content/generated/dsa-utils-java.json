@@ -1,0 +1,770 @@
+{
+  "lang": "java",
+  "title": "JavaDsaUtils.java",
+  "subtitle": "Java warm-up and handy helpers for DSA — the whole toolkit on one page.",
+  "meta": "Run it: <code>java JavaDsaUtils.java</code> · or <code>javac JavaDsaUtils.java &amp;&amp; java JavaDsaUtils</code> · Python twin: <a href=\"/dsa/python-utils\">Python helpers</a> · source: JavaDsaUtils.java",
+  "stats": [
+    {
+      "value": "15",
+      "label": "sections"
+    },
+    {
+      "value": "76",
+      "label": "helpers"
+    },
+    {
+      "value": "1052",
+      "label": "lines of source"
+    }
+  ],
+  "sections": [
+    {
+      "id": "s0",
+      "title": "📇 0. Syntax Cheat Sheet",
+      "lede": "Read-only reference — the Java you actually type under time pressure.",
+      "sheet": [
+        {
+          "label": "Variables",
+          "code": "int left = 0, right = s.length() - 1;"
+        },
+        {
+          "label": "Condition",
+          "code": "if (left < right) { ... }"
+        },
+        {
+          "label": "While",
+          "code": "while (left < right) { left++; right--; }"
+        },
+        {
+          "label": "For",
+          "code": "for (int i = 0; i < nums.length; i++) { ... }"
+        },
+        {
+          "label": "For (reverse)",
+          "code": "for (int i = nums.length - 1; i >= 0; i--) { ... }"
+        },
+        {
+          "label": "For-each",
+          "code": "for (int x : nums) { ... }"
+        },
+        {
+          "label": "Index",
+          "code": "s.charAt(i)   nums[i]   s.substring(i, j)  (j excluded)"
+        },
+        {
+          "label": "Length",
+          "code": "s.length()    nums.length    list.size()"
+        },
+        {
+          "label": "Booleans",
+          "code": "true / false        &&  ||  !"
+        },
+        {
+          "label": "Increment",
+          "code": "i++  i--  i += 1"
+        },
+        {
+          "label": "Return",
+          "code": "return true;   return false;"
+        },
+        {
+          "label": "Char checks",
+          "code": "Character.isLetterOrDigit(c) / isLetter / isDigit\nCharacter.toLowerCase(c) / toUpperCase(c)"
+        },
+        {
+          "label": "Char <-> int",
+          "code": "c - 'a'  ->  0..25        (char)('a' + k)"
+        },
+        {
+          "label": "Common",
+          "code": "Math.max(a,b)  Math.min(a,b)  Math.abs(x)  Math.sqrt(x)"
+        },
+        {
+          "label": "Int division",
+          "code": "7 / 2 -> 3      7 % 2 -> 1     (watch: -7/2 -> -3, not -4)"
+        },
+        {
+          "label": "Overflow",
+          "code": "mid = left + (right - left) / 2;   // NOT (left+right)/2"
+        },
+        {
+          "label": "Infinity",
+          "code": "Integer.MAX_VALUE / Integer.MIN_VALUE   (long for sums)"
+        },
+        {
+          "label": "Swap",
+          "code": "int t = a; a = b; b = t;"
+        },
+        {
+          "label": "Array",
+          "code": "int[] a = new int[n];            Arrays.fill(a, -1);"
+        },
+        {
+          "label": "2D array",
+          "code": "int[][] g = new int[rows][cols];  g[r][c]"
+        },
+        {
+          "label": "Array copy",
+          "code": "int[] b = Arrays.copyOf(a, a.length);"
+        },
+        {
+          "label": "Array sort",
+          "code": "Arrays.sort(a);   Arrays.sort(pairs, (x,y) -> x[0]-y[0]);"
+        },
+        {
+          "label": "Array print",
+          "code": "Arrays.toString(a)     Arrays.deepToString(g)"
+        },
+        {
+          "label": "List",
+          "code": "List<Integer> l = new ArrayList<>(); l.add(x); l.get(i);\nl.remove(l.size()-1);  l.set(i, v);  l.contains(x) (O(n)!)"
+        },
+        {
+          "label": "HashMap",
+          "code": "Map<Character,Integer> m = new HashMap<>();\nm.put(k,v); m.get(k); m.getOrDefault(k,0);\nm.merge(k, 1, Integer::sum);   // the idiomatic counter\nm.computeIfAbsent(k, x -> new ArrayList<>()).add(v);\nfor (Map.Entry<K,V> e : m.entrySet()) e.getKey(), e.getValue()"
+        },
+        {
+          "label": "Set",
+          "code": "Set<Integer> seen = new HashSet<>(); seen.add(x); seen.contains(x)"
+        },
+        {
+          "label": "Stack",
+          "code": "Deque<Integer> st = new ArrayDeque<>(); st.push/pop/peek/isEmpty"
+        },
+        {
+          "label": "Queue",
+          "code": "Deque<Integer> q = new ArrayDeque<>(); q.offer/poll/peek"
+        },
+        {
+          "label": "Heap",
+          "code": "PriorityQueue<Integer> pq = new PriorityQueue<>();       // min\nnew PriorityQueue<>(Comparator.reverseOrder());          // max\nnew PriorityQueue<>((a,b) -> a[1] - b[1]);               // by field"
+        },
+        {
+          "label": "StringBuilder",
+          "code": "StringBuilder sb = new StringBuilder(); sb.append(c);\nsb.reverse(); sb.toString();   // NEVER s += c in a loop"
+        },
+        {
+          "label": "String <-> chars char[] cs = s.toCharArray();",
+          "code": "new String(cs);"
+        },
+        {
+          "label": "Sort chars",
+          "code": "char[] cs = s.toCharArray(); Arrays.sort(cs);"
+        },
+        {
+          "label": "Equality",
+          "code": "\"a\".equals(b)   NOT a == b       (== compares references)"
+        },
+        {
+          "label": "Boxing gotcha",
+          "code": "Integer a = 128, b = 128; a == b is FALSE. Use .equals()"
+        },
+        {
+          "label": "Multiple return",
+          "code": "return new int[]{left, right};"
+        }
+      ],
+      "helpers": []
+    },
+    {
+      "id": "simports",
+      "title": "📦 Imports You Actually Use",
+      "lede": "Paste this header and stop thinking about imports.",
+      "sheet": [],
+      "helpers": [
+        {
+          "code": "import java.util.ArrayDeque;\nimport java.util.ArrayList;\nimport java.util.Arrays;\nimport java.util.Comparator;\nimport java.util.Deque;\nimport java.util.HashMap;\nimport java.util.HashSet;\nimport java.util.LinkedHashMap;\nimport java.util.List;\nimport java.util.Map;\nimport java.util.PriorityQueue;\nimport java.util.Queue;\nimport java.util.Set;"
+        }
+      ]
+    },
+    {
+      "id": "s1",
+      "title": "🔤 1. Strings & Chars",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s1-isPalindrome",
+          "name": "isPalindrome",
+          "kind": "static",
+          "doc": "Two-pointer palindrome check, ignoring non-alphanumerics and case.",
+          "code": "static boolean isPalindrome(String s) {\n    int left = 0, right = s.length() - 1;\n    while (left < right) {\n        while (left < right && !Character.isLetterOrDigit(s.charAt(left))) left++;\n        while (left < right && !Character.isLetterOrDigit(s.charAt(right))) right--;\n        if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {\n            return false;\n        }\n        left++;\n        right--;\n    }\n    return true;\n}"
+        },
+        {
+          "id": "s1-charIndex",
+          "name": "charIndex",
+          "kind": "static",
+          "doc": "'a' -&gt; 0 ... 'z' -&gt; 25. Use for int[26] buckets.",
+          "code": "static int charIndex(char c) {\n    return Character.toLowerCase(c) - 'a';\n}"
+        },
+        {
+          "id": "s1-alphaCounts",
+          "name": "alphaCounts",
+          "kind": "static",
+          "doc": "Fixed 26-slot count — faster than a HashMap for letters-only input.",
+          "code": "static int[] alphaCounts(String s) {\n    int[] counts = new int[26];\n    for (char c : s.toCharArray()) {\n        if (Character.isLetter(c)) counts[charIndex(c)]++;\n    }\n    return counts;\n}"
+        },
+        {
+          "id": "s1-isAnagram",
+          "name": "isAnagram",
+          "kind": "static",
+          "code": "static boolean isAnagram(String a, String b) {\n    if (a.length() != b.length()) return false;\n    int[] counts = new int[26];\n    for (int i = 0; i < a.length(); i++) {\n        counts[a.charAt(i) - 'a']++;\n        counts[b.charAt(i) - 'a']--;\n    }\n    for (int c : counts) if (c != 0) return false;\n    return true;\n}"
+        },
+        {
+          "id": "s1-groupAnagrams",
+          "name": "groupAnagrams",
+          "kind": "static",
+          "doc": "Sorted-chars signature as the map key. LinkedHashMap keeps input order.",
+          "code": "static List<List<String>> groupAnagrams(String[] words) {\n    Map<String, List<String>> groups = new LinkedHashMap<>();\n    for (String w : words) {\n        char[] cs = w.toCharArray();\n        Arrays.sort(cs);\n        groups.computeIfAbsent(new String(cs), k -> new ArrayList<>()).add(w);\n    }\n    return new ArrayList<>(groups.values());\n}"
+        },
+        {
+          "id": "s1-reverse",
+          "name": "reverse",
+          "kind": "static",
+          "code": "static String reverse(String s) {\n    return new StringBuilder(s).reverse().toString();\n}"
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "↔️ 2. Arrays / Two Pointers / Sliding Window",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s2-twoSumSorted",
+          "name": "twoSumSorted",
+          "kind": "static",
+          "doc": "Converging two pointers on a SORTED array. Returns indices or {-1,-1}.",
+          "code": "static int[] twoSumSorted(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while (left < right) {\n        int sum = nums[left] + nums[right];\n        if (sum == target) return new int[]{left, right};\n        if (sum < target) left++;\n        else right--;\n    }\n    return new int[]{-1, -1};\n}"
+        },
+        {
+          "id": "s2-twoSum",
+          "name": "twoSum",
+          "kind": "static",
+          "doc": "Unsorted array, one pass with a map of value -&gt; index.",
+          "code": "static int[] twoSum(int[] nums, int target) {\n    Map<Integer, Integer> seen = new HashMap<>();\n    for (int i = 0; i < nums.length; i++) {\n        Integer j = seen.get(target - nums[i]);\n        if (j != null) return new int[]{j, i};\n        seen.put(nums[i], i);\n    }\n    return new int[]{-1, -1};\n}"
+        },
+        {
+          "id": "s2-maxSumWindow",
+          "name": "maxSumWindow",
+          "kind": "static",
+          "doc": "FIXED-size sliding window: add the entering element, drop the leaving one.",
+          "code": "static int maxSumWindow(int[] nums, int k) {\n    if (k > nums.length) return 0;\n    int window = 0;\n    for (int i = 0; i < k; i++) window += nums[i];\n    int best = window;\n    for (int right = k; right < nums.length; right++) {\n        window += nums[right] - nums[right - k];\n        best = Math.max(best, window);\n    }\n    return best;\n}"
+        },
+        {
+          "id": "s2-longestUniqueSubstring",
+          "name": "longestUniqueSubstring",
+          "kind": "static",
+          "doc": "VARIABLE-size sliding window: grow right, shrink left while invalid.",
+          "code": "static int longestUniqueSubstring(String s) {\n    Set<Character> seen = new HashSet<>();\n    int left = 0, best = 0;\n    for (int right = 0; right < s.length(); right++) {\n        while (seen.contains(s.charAt(right))) {\n            seen.remove(s.charAt(left));\n            left++;\n        }\n        seen.add(s.charAt(right));\n        best = Math.max(best, right - left + 1);\n    }\n    return best;\n}"
+        },
+        {
+          "id": "s2-prefixSums",
+          "name": "prefixSums",
+          "kind": "static",
+          "doc": "pre[i] = sum of nums[0..i). Range sum [i, j) == pre[j] - pre[i].",
+          "code": "static int[] prefixSums(int[] nums) {\n    int[] pre = new int[nums.length + 1];\n    for (int i = 0; i < nums.length; i++) pre[i + 1] = pre[i] + nums[i];\n    return pre;\n}"
+        },
+        {
+          "id": "s2-subarraySumEqualsK",
+          "name": "subarraySumEqualsK",
+          "kind": "static",
+          "doc": "Count subarrays summing to k. Prefix sum + map of counts.",
+          "code": "static int subarraySumEqualsK(int[] nums, int k) {\n    Map<Integer, Integer> counts = new HashMap<>();\n    counts.put(0, 1);\n    int running = 0, total = 0;\n    for (int x : nums) {\n        running += x;\n        total += counts.getOrDefault(running - k, 0);\n        counts.merge(running, 1, Integer::sum);\n    }\n    return total;\n}"
+        },
+        {
+          "id": "s2-kadane",
+          "name": "kadane",
+          "kind": "static",
+          "doc": "Kadane: extend the previous run, or restart at x.",
+          "code": "static int kadane(int[] nums) {\n    int best = nums[0], current = nums[0];\n    for (int i = 1; i < nums.length; i++) {\n        current = Math.max(nums[i], current + nums[i]);\n        best = Math.max(best, current);\n    }\n    return best;\n}"
+        },
+        {
+          "id": "s2-reverseRange",
+          "name": "reverseRange",
+          "kind": "static",
+          "doc": "In-place reverse of a subarray — the building block for rotations.",
+          "code": "static void reverseRange(int[] nums, int left, int right) {\n    while (left < right) {\n        int t = nums[left];\n        nums[left++] = nums[right];\n        nums[right--] = t;\n    }\n}"
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "#️⃣ 3. Hashing & Counting",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s3-frequency",
+          "name": "frequency",
+          "kind": "static",
+          "doc": "merge(k, 1, Integer::sum) is the Java equivalent of freq.get(x, 0) + 1.",
+          "code": "static <T> Map<T, Integer> frequency(List<T> items) {\n    Map<T, Integer> freq = new HashMap<>();\n    for (T x : items) freq.merge(x, 1, Integer::sum);\n    return freq;\n}"
+        },
+        {
+          "id": "s3-charFrequency",
+          "name": "charFrequency",
+          "kind": "static",
+          "code": "static Map<Character, Integer> charFrequency(String s) {\n    Map<Character, Integer> freq = new HashMap<>();\n    for (char c : s.toCharArray()) freq.merge(c, 1, Integer::sum);\n    return freq;\n}"
+        },
+        {
+          "id": "s3-topKFrequent",
+          "name": "topKFrequent",
+          "kind": "static",
+          "doc": "Bucket by count, then walk buckets high -&gt; low. O(n), beats a heap.",
+          "code": "static int[] topKFrequent(int[] nums, int k) {\n    Map<Integer, Integer> freq = new HashMap<>();\n    for (int x : nums) freq.merge(x, 1, Integer::sum);\n\n    List<List<Integer>> buckets = new ArrayList<>();\n    for (int i = 0; i <= nums.length; i++) buckets.add(new ArrayList<>());\n    for (Map.Entry<Integer, Integer> e : freq.entrySet()) {\n        buckets.get(e.getValue()).add(e.getKey());\n    }\n\n    int[] out = new int[k];\n    int idx = 0;\n    for (int count = buckets.size() - 1; count >= 1 && idx < k; count--) {\n        for (int val : buckets.get(count)) {\n            if (idx < k) out[idx++] = val;\n        }\n    }\n    return out;\n}"
+        },
+        {
+          "id": "s3-hasDuplicate",
+          "name": "hasDuplicate",
+          "kind": "static",
+          "code": "static boolean hasDuplicate(int[] nums) {\n    Set<Integer> seen = new HashSet<>();\n    for (int x : nums) if (!seen.add(x)) return true;   // add returns false if present\n    return false;\n}"
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "🔍 4. Sorting & Binary Search",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s4-binarySearch",
+          "name": "binarySearch",
+          "kind": "static",
+          "doc": "Exact match on a sorted array. Returns index or -1.",
+          "code": "static int binarySearch(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while (left <= right) {                      // <= : left==right is still a candidate\n        int mid = left + (right - left) / 2;     // overflow-safe\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}"
+        },
+        {
+          "id": "s4-lowerBound",
+          "name": "lowerBound",
+          "kind": "static",
+          "doc": "First index with nums[i] &gt;= target (Python's bisect_left).",
+          "code": "static int lowerBound(int[] nums, int target) {\n    int left = 0, right = nums.length;\n    while (left < right) {                       // < : right is exclusive here\n        int mid = left + (right - left) / 2;\n        if (nums[mid] < target) left = mid + 1;\n        else right = mid;\n    }\n    return left;\n}"
+        },
+        {
+          "id": "s4-upperBound",
+          "name": "upperBound",
+          "kind": "static",
+          "doc": "First index with nums[i] &gt; target (Python's bisect_right).",
+          "code": "static int upperBound(int[] nums, int target) {\n    int left = 0, right = nums.length;\n    while (left < right) {\n        int mid = left + (right - left) / 2;\n        if (nums[mid] <= target) left = mid + 1;\n        else right = mid;\n    }\n    return left;\n}"
+        },
+        {
+          "id": "s4-binarySearchAnswer",
+          "name": "binarySearchAnswer",
+          "kind": "static",
+          "doc": "'Binary search on the answer' — what most interview problems actually want. feasible must be monotonic: false...false true...true. Returns smallest true x.",
+          "code": "static int binarySearchAnswer(int lo, int hi, java.util.function.IntPredicate feasible) {\n    while (lo < hi) {\n        int mid = lo + (hi - lo) / 2;\n        if (feasible.test(mid)) hi = mid;\n        else lo = mid + 1;\n    }\n    return lo;\n}"
+        },
+        {
+          "id": "s4-sortByCustom",
+          "name": "sortByCustom",
+          "kind": "static",
+          "doc": "Sort by first ascending, then second descending. Use compare(), not a-b.",
+          "code": "static void sortByCustom(int[][] pairs) {\n    Arrays.sort(pairs, Comparator\n            .<int[]>comparingInt(p -> p[0])\n            .thenComparing(p -> p[1], Comparator.reverseOrder()));\n}"
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "🥞 5. Stack / Queue / Heap",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s5-validParentheses",
+          "name": "validParentheses",
+          "kind": "static",
+          "doc": "ArrayDeque is the stack you want — java.util.Stack is legacy and synchronized.",
+          "code": "static boolean validParentheses(String s) {\n    Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');\n    Deque<Character> stack = new ArrayDeque<>();\n    for (char c : s.toCharArray()) {\n        if (pairs.containsKey(c)) {\n            if (stack.isEmpty() || stack.pop() != pairs.get(c)) return false;\n        } else {\n            stack.push(c);\n        }\n    }\n    return stack.isEmpty();\n}"
+        },
+        {
+          "id": "s5-nextGreater",
+          "name": "nextGreater",
+          "kind": "static",
+          "doc": "Monotonic decreasing stack of indices. res[i] = next element &gt; nums[i], else -1.",
+          "code": "static int[] nextGreater(int[] nums) {\n    int[] res = new int[nums.length];\n    Arrays.fill(res, -1);\n    Deque<Integer> stack = new ArrayDeque<>();\n    for (int i = 0; i < nums.length; i++) {\n        while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {\n            res[stack.pop()] = nums[i];\n        }\n        stack.push(i);\n    }\n    return res;\n}"
+        },
+        {
+          "id": "s5-kLargest",
+          "name": "kLargest",
+          "kind": "static",
+          "doc": "Min-heap of size k -&gt; the k largest survive. PriorityQueue is a MIN-heap.",
+          "code": "static int[] kLargest(int[] nums, int k) {\n    PriorityQueue<Integer> heap = new PriorityQueue<>();\n    for (int x : nums) {\n        heap.offer(x);\n        if (heap.size() > k) heap.poll();\n    }\n    int[] out = new int[heap.size()];\n    for (int i = out.length - 1; i >= 0; i--) out[i] = heap.poll();  // ascending pops\n    return out;                                                       // -> descending array\n}"
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "🔗 6. Linked List",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s6-ListNode",
+          "name": "ListNode",
+          "kind": "class",
+          "code": "static class ListNode {\n    int val;\n    ListNode next;\n\n    ListNode() {}\n\n    ListNode(int val) { this.val = val; }\n\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}"
+        },
+        {
+          "id": "s6-buildList",
+          "name": "buildList",
+          "kind": "static",
+          "doc": "The dummy-head trick: no special case for the first node.",
+          "code": "static ListNode buildList(int[] values) {\n    ListNode dummy = new ListNode();\n    ListNode cur = dummy;\n    for (int v : values) {\n        cur.next = new ListNode(v);\n        cur = cur.next;\n    }\n    return dummy.next;\n}"
+        },
+        {
+          "id": "s6-toArray",
+          "name": "toArray",
+          "kind": "static",
+          "code": "static int[] toArray(ListNode head) {\n    List<Integer> out = new ArrayList<>();\n    while (head != null) {\n        out.add(head.val);\n        head = head.next;\n    }\n    int[] arr = new int[out.size()];\n    for (int i = 0; i < arr.length; i++) arr[i] = out.get(i);\n    return arr;\n}"
+        },
+        {
+          "id": "s6-reverseList",
+          "name": "reverseList",
+          "kind": "static",
+          "code": "static ListNode reverseList(ListNode head) {\n    ListNode prev = null;\n    while (head != null) {\n        ListNode next = head.next;\n        head.next = prev;\n        prev = head;\n        head = next;\n    }\n    return prev;\n}"
+        },
+        {
+          "id": "s6-middleNode",
+          "name": "middleNode",
+          "kind": "static",
+          "doc": "Fast/slow pointers. Same skeleton detects cycles and finds the k-th from end.",
+          "code": "static ListNode middleNode(ListNode head) {\n    ListNode slow = head, fast = head;\n    while (fast != null && fast.next != null) {\n        slow = slow.next;\n        fast = fast.next.next;\n    }\n    return slow;\n}"
+        },
+        {
+          "id": "s6-hasCycle",
+          "name": "hasCycle",
+          "kind": "static",
+          "code": "static boolean hasCycle(ListNode head) {\n    ListNode slow = head, fast = head;\n    while (fast != null && fast.next != null) {\n        slow = slow.next;\n        fast = fast.next.next;\n        if (slow == fast) return true;\n    }\n    return false;\n}"
+        },
+        {
+          "id": "s6-mergeSorted",
+          "name": "mergeSorted",
+          "kind": "static",
+          "code": "static ListNode mergeSorted(ListNode a, ListNode b) {\n    ListNode dummy = new ListNode();\n    ListNode cur = dummy;\n    while (a != null && b != null) {\n        if (a.val <= b.val) { cur.next = a; a = a.next; }\n        else { cur.next = b; b = b.next; }\n        cur = cur.next;\n    }\n    cur.next = (a != null) ? a : b;\n    return dummy.next;\n}"
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "🌳 7. Trees",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s7-TreeNode",
+          "name": "TreeNode",
+          "kind": "class",
+          "code": "static class TreeNode {\n    int val;\n    TreeNode left, right;\n\n    TreeNode() {}\n\n    TreeNode(int val) { this.val = val; }\n}"
+        },
+        {
+          "id": "s7-buildTree",
+          "name": "buildTree",
+          "kind": "static",
+          "doc": "LeetCode-style level-order array, e.g. {3, 9, 20, null, null, 15, 7}.",
+          "code": "static TreeNode buildTree(Integer[] values) {\n    if (values.length == 0 || values[0] == null) return null;\n    TreeNode root = new TreeNode(values[0]);\n    Queue<TreeNode> queue = new ArrayDeque<>();\n    queue.offer(root);\n    int i = 1;\n    while (!queue.isEmpty() && i < values.length) {\n        TreeNode node = queue.poll();\n        if (i < values.length && values[i] != null) {\n            node.left = new TreeNode(values[i]);\n            queue.offer(node.left);\n        }\n        i++;\n        if (i < values.length && values[i] != null) {\n            node.right = new TreeNode(values[i]);\n            queue.offer(node.right);\n        }\n        i++;\n    }\n    return root;\n}"
+        },
+        {
+          "id": "s7-inorder",
+          "name": "inorder",
+          "kind": "static",
+          "code": "static List<Integer> inorder(TreeNode root) {\n    List<Integer> out = new ArrayList<>();\n    inorderWalk(root, out);\n    return out;\n}"
+        },
+        {
+          "id": "s7-inorderWalk",
+          "name": "inorderWalk",
+          "kind": "private",
+          "code": "private static void inorderWalk(TreeNode node, List<Integer> out) {\n    if (node == null) return;\n    inorderWalk(node.left, out);\n    out.add(node.val);\n    inorderWalk(node.right, out);\n}"
+        },
+        {
+          "id": "s7-inorderIterative",
+          "name": "inorderIterative",
+          "kind": "static",
+          "doc": "Iterative inorder: go left as far as possible, pop, then go right.",
+          "code": "static List<Integer> inorderIterative(TreeNode root) {\n    List<Integer> out = new ArrayList<>();\n    Deque<TreeNode> stack = new ArrayDeque<>();\n    TreeNode cur = root;\n    while (cur != null || !stack.isEmpty()) {\n        while (cur != null) {\n            stack.push(cur);\n            cur = cur.left;\n        }\n        cur = stack.pop();\n        out.add(cur.val);\n        cur = cur.right;\n    }\n    return out;\n}"
+        },
+        {
+          "id": "s7-levelOrder",
+          "name": "levelOrder",
+          "kind": "static",
+          "doc": "BFS. The `int size = queue.size()` snapshot is what separates the levels.",
+          "code": "static List<List<Integer>> levelOrder(TreeNode root) {\n    List<List<Integer>> out = new ArrayList<>();\n    if (root == null) return out;\n    Queue<TreeNode> queue = new ArrayDeque<>();\n    queue.offer(root);\n    while (!queue.isEmpty()) {\n        int size = queue.size();\n        List<Integer> level = new ArrayList<>();\n        for (int i = 0; i < size; i++) {\n            TreeNode node = queue.poll();\n            level.add(node.val);\n            if (node.left != null) queue.offer(node.left);\n            if (node.right != null) queue.offer(node.right);\n        }\n        out.add(level);\n    }\n    return out;\n}"
+        },
+        {
+          "id": "s7-maxDepth",
+          "name": "maxDepth",
+          "kind": "static",
+          "code": "static int maxDepth(TreeNode root) {\n    if (root == null) return 0;\n    return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));\n}"
+        },
+        {
+          "id": "s7-bstContains",
+          "name": "bstContains",
+          "kind": "static",
+          "doc": "BST insert/search — the only tree ops where the value guides the path.",
+          "code": "static boolean bstContains(TreeNode root, int target) {\n    while (root != null) {\n        if (root.val == target) return true;\n        root = (target < root.val) ? root.left : root.right;\n    }\n    return false;\n}"
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "🕸️ 8. Graphs & Grids",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s8-DIRS4",
+          "name": "DIRS4",
+          "kind": "field",
+          "code": "static final int[][] DIRS4 = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};"
+        },
+        {
+          "id": "s8-DIRS8",
+          "name": "DIRS8",
+          "kind": "field",
+          "code": "static final int[][] DIRS8 = {\n        {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}\n};"
+        },
+        {
+          "id": "s8-inBounds",
+          "name": "inBounds",
+          "kind": "static",
+          "code": "static boolean inBounds(int r, int c, char[][] grid) {\n    return r >= 0 && r < grid.length && c >= 0 && c < grid[0].length;\n}"
+        },
+        {
+          "id": "s8-bfsGrid",
+          "name": "bfsGrid",
+          "kind": "static",
+          "doc": "Flood fill from (sr,sc) over cells == passable. Returns cells visited.",
+          "code": "static int bfsGrid(char[][] grid, int sr, int sc, boolean[][] visited, char passable) {\n    if (!inBounds(sr, sc, grid) || visited[sr][sc] || grid[sr][sc] != passable) return 0;\n    Queue<int[]> queue = new ArrayDeque<>();\n    queue.offer(new int[]{sr, sc});\n    visited[sr][sc] = true;\n    int count = 0;\n    while (!queue.isEmpty()) {\n        int[] cell = queue.poll();\n        count++;\n        for (int[] d : DIRS4) {\n            int nr = cell[0] + d[0], nc = cell[1] + d[1];\n            if (inBounds(nr, nc, grid) && !visited[nr][nc] && grid[nr][nc] == passable) {\n                visited[nr][nc] = true;\n                queue.offer(new int[]{nr, nc});\n            }\n        }\n    }\n    return count;\n}"
+        },
+        {
+          "id": "s8-countIslands",
+          "name": "countIslands",
+          "kind": "static",
+          "code": "static int countIslands(char[][] grid) {\n    boolean[][] visited = new boolean[grid.length][grid[0].length];\n    int count = 0;\n    for (int r = 0; r < grid.length; r++) {\n        for (int c = 0; c < grid[0].length; c++) {\n            if (grid[r][c] == '1' && !visited[r][c]) {\n                bfsGrid(grid, r, c, visited, '1');\n                count++;\n            }\n        }\n    }\n    return count;\n}"
+        },
+        {
+          "id": "s8-buildGraph",
+          "name": "buildGraph",
+          "kind": "static",
+          "doc": "Adjacency list. computeIfAbsent is the defaultdict(list) equivalent.",
+          "code": "static Map<Integer, List<Integer>> buildGraph(int[][] edges, boolean directed) {\n    Map<Integer, List<Integer>> graph = new HashMap<>();\n    for (int[] e : edges) {\n        graph.computeIfAbsent(e[0], k -> new ArrayList<>()).add(e[1]);\n        if (!directed) graph.computeIfAbsent(e[1], k -> new ArrayList<>()).add(e[0]);\n    }\n    return graph;\n}"
+        },
+        {
+          "id": "s8-bfsShortest",
+          "name": "bfsShortest",
+          "kind": "static",
+          "doc": "Unweighted shortest distances from start.",
+          "code": "static Map<Integer, Integer> bfsShortest(Map<Integer, List<Integer>> graph, int start) {\n    Map<Integer, Integer> dist = new HashMap<>();\n    dist.put(start, 0);\n    Queue<Integer> queue = new ArrayDeque<>();\n    queue.offer(start);\n    while (!queue.isEmpty()) {\n        int node = queue.poll();\n        for (int next : graph.getOrDefault(node, List.of())) {\n            if (!dist.containsKey(next)) {\n                dist.put(next, dist.get(node) + 1);\n                queue.offer(next);\n            }\n        }\n    }\n    return dist;\n}"
+        },
+        {
+          "id": "s8-dfsIterative",
+          "name": "dfsIterative",
+          "kind": "static",
+          "code": "static List<Integer> dfsIterative(Map<Integer, List<Integer>> graph, int start) {\n    List<Integer> order = new ArrayList<>();\n    Set<Integer> seen = new HashSet<>();\n    Deque<Integer> stack = new ArrayDeque<>();\n    stack.push(start);\n    seen.add(start);\n    while (!stack.isEmpty()) {\n        int node = stack.pop();\n        order.add(node);\n        for (int next : graph.getOrDefault(node, List.of())) {\n            if (seen.add(next)) stack.push(next);\n        }\n    }\n    return order;\n}"
+        },
+        {
+          "id": "s8-topoSort",
+          "name": "topoSort",
+          "kind": "static",
+          "doc": "Kahn's algorithm. Returns an empty list if there's a cycle.",
+          "code": "static List<Integer> topoSort(int numNodes, int[][] edges) {\n    Map<Integer, List<Integer>> graph = new HashMap<>();\n    int[] indeg = new int[numNodes];\n    for (int[] e : edges) {                      // e[0] must come before e[1]\n        graph.computeIfAbsent(e[0], k -> new ArrayList<>()).add(e[1]);\n        indeg[e[1]]++;\n    }\n    Queue<Integer> queue = new ArrayDeque<>();\n    for (int n = 0; n < numNodes; n++) if (indeg[n] == 0) queue.offer(n);\n\n    List<Integer> order = new ArrayList<>();\n    while (!queue.isEmpty()) {\n        int node = queue.poll();\n        order.add(node);\n        for (int next : graph.getOrDefault(node, List.of())) {\n            if (--indeg[next] == 0) queue.offer(next);\n        }\n    }\n    return order.size() == numNodes ? order : new ArrayList<>();\n}"
+        },
+        {
+          "id": "s8-dijkstra",
+          "name": "dijkstra",
+          "kind": "static",
+          "doc": "graph[u] = list of {v, weight}. Lazy-deletion min-heap.",
+          "code": "static Map<Integer, Integer> dijkstra(Map<Integer, List<int[]>> graph, int start) {\n    Map<Integer, Integer> dist = new HashMap<>();\n    dist.put(start, 0);\n    PriorityQueue<int[]> heap = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));\n    heap.offer(new int[]{0, start});\n    while (!heap.isEmpty()) {\n        int[] top = heap.poll();\n        int d = top[0], node = top[1];\n        if (d > dist.getOrDefault(node, Integer.MAX_VALUE)) continue;   // stale entry\n        for (int[] edge : graph.getOrDefault(node, List.of())) {\n            int next = edge[0], nd = d + edge[1];\n            if (nd < dist.getOrDefault(next, Integer.MAX_VALUE)) {\n                dist.put(next, nd);\n                heap.offer(new int[]{nd, next});\n            }\n        }\n    }\n    return dist;\n}"
+        },
+        {
+          "id": "s8-UnionFind",
+          "name": "UnionFind",
+          "kind": "class",
+          "doc": "Union by size + path compression. Effectively O(1) per operation.",
+          "code": "static class UnionFind {\n    private final int[] parent;\n    private final int[] size;\n    int components;\n\n    UnionFind(int n) {\n        parent = new int[n];\n        size = new int[n];\n        for (int i = 0; i < n; i++) {\n            parent[i] = i;\n            size[i] = 1;\n        }\n        components = n;\n    }\n\n    int find(int x) {\n        while (parent[x] != x) {\n            parent[x] = parent[parent[x]];   // path halving\n            x = parent[x];\n        }\n        return x;\n    }\n\n    boolean union(int a, int b) {\n        int ra = find(a), rb = find(b);\n        if (ra == rb) return false;\n        if (size[ra] < size[rb]) { int t = ra; ra = rb; rb = t; }\n        parent[rb] = ra;\n        size[ra] += size[rb];\n        components--;\n        return true;\n    }\n\n    boolean connected(int a, int b) {\n        return find(a) == find(b);\n    }\n}"
+        }
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "📏 9. Intervals",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s9-mergeIntervals",
+          "name": "mergeIntervals",
+          "kind": "static",
+          "doc": "Sort by start, then extend the last merged interval or append a new one.",
+          "code": "static int[][] mergeIntervals(int[][] intervals) {\n    if (intervals.length == 0) return new int[0][];\n    int[][] sorted = Arrays.copyOf(intervals, intervals.length);\n    Arrays.sort(sorted, Comparator.comparingInt(a -> a[0]));\n\n    List<int[]> merged = new ArrayList<>();\n    merged.add(new int[]{sorted[0][0], sorted[0][1]});\n    for (int i = 1; i < sorted.length; i++) {\n        int[] last = merged.get(merged.size() - 1);\n        if (sorted[i][0] <= last[1]) {\n            last[1] = Math.max(last[1], sorted[i][1]);\n        } else {\n            merged.add(new int[]{sorted[i][0], sorted[i][1]});\n        }\n    }\n    return merged.toArray(new int[0][]);\n}"
+        },
+        {
+          "id": "s9-overlaps",
+          "name": "overlaps",
+          "kind": "static",
+          "code": "static boolean overlaps(int[] a, int[] b) {\n    return a[0] < b[1] && b[0] < a[1];\n}"
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "➗ 10. Math & Bits",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s10-gcd",
+          "name": "gcd",
+          "kind": "static",
+          "code": "static int gcd(int a, int b) {\n    while (b != 0) {\n        int t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}"
+        },
+        {
+          "id": "s10-lcm",
+          "name": "lcm",
+          "kind": "static",
+          "code": "static long lcm(int a, int b) {\n    return (long) a / gcd(a, b) * b;\n}"
+        },
+        {
+          "id": "s10-sieve",
+          "name": "sieve",
+          "kind": "static",
+          "doc": "All primes &lt;= n.",
+          "code": "static List<Integer> sieve(int n) {\n    boolean[] composite = new boolean[n + 1];\n    List<Integer> primes = new ArrayList<>();\n    for (int p = 2; p <= n; p++) {\n        if (!composite[p]) {\n            primes.add(p);\n            for (long m = (long) p * p; m <= n; m += p) composite[(int) m] = true;\n        }\n    }\n    return primes;\n}"
+        },
+        {
+          "id": "s10-countBits",
+          "name": "countBits",
+          "kind": "static",
+          "code": "static int countBits(int x) {\n    return Integer.bitCount(x);\n}"
+        },
+        {
+          "id": "s10-getBit",
+          "name": "getBit",
+          "kind": "static",
+          "code": "static int getBit(int x, int i) {\n    return (x >> i) & 1;\n}"
+        },
+        {
+          "id": "s10-setBit",
+          "name": "setBit",
+          "kind": "static",
+          "code": "static int setBit(int x, int i) {\n    return x | (1 << i);\n}"
+        },
+        {
+          "id": "s10-clearBit",
+          "name": "clearBit",
+          "kind": "static",
+          "code": "static int clearBit(int x, int i) {\n    return x & ~(1 << i);\n}"
+        },
+        {
+          "id": "s10-singleNumber",
+          "name": "singleNumber",
+          "kind": "static",
+          "doc": "XOR cancels pairs; the loner survives.",
+          "code": "static int singleNumber(int[] nums) {\n    int result = 0;\n    for (int x : nums) result ^= x;\n    return result;\n}"
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "🎯 11. Backtracking / DP Skeletons",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s11-subsets",
+          "name": "subsets",
+          "kind": "static",
+          "doc": "Template: choose -&gt; recurse -&gt; un-choose. Always copy the path on record.",
+          "code": "static List<List<Integer>> subsets(int[] nums) {\n    List<List<Integer>> out = new ArrayList<>();\n    subsetsBacktrack(nums, 0, new ArrayList<>(), out);\n    return out;\n}"
+        },
+        {
+          "id": "s11-subsetsBacktrack",
+          "name": "subsetsBacktrack",
+          "kind": "private",
+          "code": "private static void subsetsBacktrack(int[] nums, int start,\n                                     List<Integer> path, List<List<Integer>> out) {\n    out.add(new ArrayList<>(path));                 // copy! path is mutated\n    for (int i = start; i < nums.length; i++) {\n        path.add(nums[i]);\n        subsetsBacktrack(nums, i + 1, path, out);\n        path.remove(path.size() - 1);\n    }\n}"
+        },
+        {
+          "id": "s11-permute",
+          "name": "permute",
+          "kind": "static",
+          "code": "static List<List<Integer>> permute(int[] nums) {\n    List<List<Integer>> out = new ArrayList<>();\n    permuteBacktrack(nums, new boolean[nums.length], new ArrayList<>(), out);\n    return out;\n}"
+        },
+        {
+          "id": "s11-permuteBacktrack",
+          "name": "permuteBacktrack",
+          "kind": "private",
+          "code": "private static void permuteBacktrack(int[] nums, boolean[] used,\n                                     List<Integer> path, List<List<Integer>> out) {\n    if (path.size() == nums.length) {\n        out.add(new ArrayList<>(path));\n        return;\n    }\n    for (int i = 0; i < nums.length; i++) {\n        if (used[i]) continue;\n        used[i] = true;\n        path.add(nums[i]);\n        permuteBacktrack(nums, used, path, out);\n        path.remove(path.size() - 1);\n        used[i] = false;\n    }\n}"
+        },
+        {
+          "id": "s11-fibMemo",
+          "name": "fibMemo",
+          "kind": "static",
+          "doc": "Top-down DP: a long[] memo is Java's @lru_cache.",
+          "code": "static long fibMemo(int n) {\n    long[] memo = new long[n + 1];\n    Arrays.fill(memo, -1);\n    return fibHelper(n, memo);\n}"
+        },
+        {
+          "id": "s11-fibHelper",
+          "name": "fibHelper",
+          "kind": "private",
+          "code": "private static long fibHelper(int k, long[] memo) {\n    if (k < 2) return k;\n    if (memo[k] >= 0) return memo[k];\n    return memo[k] = fibHelper(k - 1, memo) + fibHelper(k - 2, memo);\n}"
+        },
+        {
+          "id": "s11-climbStairs",
+          "name": "climbStairs",
+          "kind": "static",
+          "doc": "Bottom-up DP rolled down to two variables.",
+          "code": "static int climbStairs(int n) {\n    int a = 1, b = 1;\n    for (int i = 0; i < n - 1; i++) {\n        int next = a + b;\n        a = b;\n        b = next;\n    }\n    return b;\n}"
+        },
+        {
+          "id": "s11-coinChange",
+          "name": "coinChange",
+          "kind": "static",
+          "doc": "Unbounded knapsack. Returns -1 if the amount is unreachable.",
+          "code": "static int coinChange(int[] coins, int amount) {\n    int[] dp = new int[amount + 1];\n    Arrays.fill(dp, amount + 1);            // sentinel > any real answer\n    dp[0] = 0;\n    for (int target = 1; target <= amount; target++) {\n        for (int c : coins) {\n            if (c <= target) dp[target] = Math.min(dp[target], dp[target - c] + 1);\n        }\n    }\n    return dp[amount] > amount ? -1 : dp[amount];\n}"
+        },
+        {
+          "id": "s11-lcs",
+          "name": "lcs",
+          "kind": "static",
+          "doc": "2D DP grid template — longest common subsequence.",
+          "code": "static int lcs(String a, String b) {\n    int[][] dp = new int[a.length() + 1][b.length() + 1];\n    for (int i = 1; i <= a.length(); i++) {\n        for (int j = 1; j <= b.length(); j++) {\n            dp[i][j] = (a.charAt(i - 1) == b.charAt(j - 1))\n                    ? dp[i - 1][j - 1] + 1\n                    : Math.max(dp[i - 1][j], dp[i][j - 1]);\n        }\n    }\n    return dp[a.length()][b.length()];\n}"
+        }
+      ]
+    },
+    {
+      "id": "s12",
+      "title": "🐞 12. Debug Helpers",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s12-printGrid",
+          "name": "printGrid",
+          "kind": "static",
+          "code": "static void printGrid(char[][] grid) {\n    for (char[] row : grid) System.out.println(new String(row));\n}"
+        },
+        {
+          "id": "s12-trace",
+          "name": "trace",
+          "kind": "static",
+          "code": "static void trace(String label, Object... values) {\n    System.out.println(\"[\" + label + \"] \" + Arrays.deepToString(values));\n}"
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "title": "✅ 13. Self-tests",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s13-checksRun",
+          "name": "checksRun",
+          "kind": "field",
+          "code": "private static int checksRun = 0;"
+        },
+        {
+          "id": "s13-check",
+          "name": "check",
+          "kind": "static",
+          "code": "static void check(boolean condition, String label) {\n    if (!condition) throw new AssertionError(\"FAILED: \" + label);\n    checksRun++;\n}"
+        },
+        {
+          "id": "s13-main",
+          "name": "main",
+          "kind": "main",
+          "code": "public static void main(String[] args) {\n    // --- strings ---\n    check(isPalindrome(\"A man, a plan, a canal: Panama\"), \"isPalindrome yes\");\n    check(!isPalindrome(\"race a car\"), \"isPalindrome no\");\n    check(isAnagram(\"listen\", \"silent\"), \"isAnagram\");\n    check(groupAnagrams(new String[]{\"eat\", \"tea\", \"tan\"}).toString()\n            .equals(\"[[eat, tea], [tan]]\"), \"groupAnagrams\");\n    check(alphaCounts(\"abb\")[1] == 2, \"alphaCounts\");\n    check(reverse(\"abc\").equals(\"cba\"), \"reverse\");\n\n    // --- arrays ---\n    check(Arrays.equals(twoSumSorted(new int[]{2, 7, 11, 15}, 9), new int[]{0, 1}), \"twoSumSorted\");\n    check(Arrays.equals(twoSum(new int[]{3, 2, 4}, 6), new int[]{1, 2}), \"twoSum\");\n    check(maxSumWindow(new int[]{2, 1, 5, 1, 3, 2}, 3) == 9, \"maxSumWindow\");\n    check(longestUniqueSubstring(\"abcabcbb\") == 3, \"longestUniqueSubstring\");\n    check(Arrays.equals(prefixSums(new int[]{1, 2, 3}), new int[]{0, 1, 3, 6}), \"prefixSums\");\n    check(subarraySumEqualsK(new int[]{1, 1, 1}, 2) == 2, \"subarraySumEqualsK\");\n    check(kadane(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}) == 6, \"kadane\");\n    int[] toRev = {1, 2, 3, 4};\n    reverseRange(toRev, 0, 3);\n    check(Arrays.equals(toRev, new int[]{4, 3, 2, 1}), \"reverseRange\");\n\n    // --- hashing ---\n    check(charFrequency(\"aab\").get('a') == 2, \"charFrequency\");\n    check(frequency(List.of(\"x\", \"x\", \"y\")).get(\"x\") == 2, \"frequency\");\n    check(Arrays.equals(topKFrequent(new int[]{1, 1, 1, 2, 2, 3}, 2), new int[]{1, 2}), \"topKFrequent\");\n    check(hasDuplicate(new int[]{1, 2, 1}), \"hasDuplicate\");\n\n    // --- binary search ---\n    check(binarySearch(new int[]{1, 3, 5, 7}, 5) == 2, \"binarySearch hit\");\n    check(binarySearch(new int[]{1, 3, 5, 7}, 4) == -1, \"binarySearch miss\");\n    check(lowerBound(new int[]{1, 3, 3, 7}, 3) == 1, \"lowerBound\");\n    check(upperBound(new int[]{1, 3, 3, 7}, 3) == 3, \"upperBound\");\n    check(binarySearchAnswer(0, 100, x -> x * x >= 50) == 8, \"binarySearchAnswer\");\n    int[][] pairs = {{1, 2}, {1, 5}, {0, 9}};\n    sortByCustom(pairs);\n    check(Arrays.deepToString(pairs).equals(\"[[0, 9], [1, 5], [1, 2]]\"), \"sortByCustom\");\n\n    // --- stack / heap ---\n    check(validParentheses(\"({[]})\"), \"validParentheses yes\");\n    check(!validParentheses(\"(]\"), \"validParentheses no\");\n    check(Arrays.equals(nextGreater(new int[]{2, 1, 3}), new int[]{3, 3, -1}), \"nextGreater\");\n    check(Arrays.equals(kLargest(new int[]{5, 1, 9, 3}, 2), new int[]{9, 5}), \"kLargest\");\n\n    // --- linked list ---\n    check(Arrays.equals(toArray(reverseList(buildList(new int[]{1, 2, 3, 4}))),\n            new int[]{4, 3, 2, 1}), \"reverseList\");\n    check(middleNode(buildList(new int[]{1, 2, 3, 4, 5})).val == 3, \"middleNode\");\n    check(!hasCycle(buildList(new int[]{1, 2, 3})), \"hasCycle\");\n    check(Arrays.equals(toArray(mergeSorted(buildList(new int[]{1, 4}), buildList(new int[]{2, 3}))),\n            new int[]{1, 2, 3, 4}), \"mergeSorted\");\n\n    // --- trees ---\n    TreeNode root = buildTree(new Integer[]{3, 9, 20, null, null, 15, 7});\n    check(inorder(root).equals(List.of(9, 3, 15, 20, 7)), \"inorder\");\n    check(inorderIterative(root).equals(inorder(root)), \"inorderIterative\");\n    check(levelOrder(root).toString().equals(\"[[3], [9, 20], [15, 7]]\"), \"levelOrder\");\n    check(maxDepth(root) == 3, \"maxDepth\");\n    TreeNode bst = buildTree(new Integer[]{5, 3, 8});\n    check(bstContains(bst, 8) && !bstContains(bst, 4), \"bstContains\");\n\n    // --- graphs ---\n    char[][] grid = {\"110\".toCharArray(), \"110\".toCharArray(), \"001\".toCharArray()};\n    check(countIslands(grid) == 2, \"countIslands\");\n    Map<Integer, List<Integer>> g = buildGraph(new int[][]{{1, 2}, {2, 3}, {1, 4}}, false);\n    Map<Integer, Integer> dist = bfsShortest(g, 1);\n    check(dist.get(1) == 0 && dist.get(2) == 1 && dist.get(4) == 1 && dist.get(3) == 2, \"bfsShortest\");\n    List<Integer> dfs = new ArrayList<>(dfsIterative(g, 1));\n    java.util.Collections.sort(dfs);\n    check(dfs.equals(List.of(1, 2, 3, 4)), \"dfsIterative\");\n    check(topoSort(4, new int[][]{{0, 1}, {1, 2}, {2, 3}}).equals(List.of(0, 1, 2, 3)), \"topoSort\");\n    check(topoSort(2, new int[][]{{0, 1}, {1, 0}}).isEmpty(), \"topoSort cycle\");\n\n    Map<Integer, List<int[]>> weighted = new HashMap<>();\n    weighted.put(0, List.of(new int[]{1, 4}, new int[]{2, 1}));\n    weighted.put(2, List.of(new int[]{1, 2}));\n    Map<Integer, Integer> sp = dijkstra(weighted, 0);\n    check(sp.get(0) == 0 && sp.get(2) == 1 && sp.get(1) == 3, \"dijkstra\");\n\n    UnionFind uf = new UnionFind(5);\n    uf.union(0, 1);\n    uf.union(1, 2);\n    check(uf.connected(0, 2) && !uf.connected(0, 3), \"UnionFind connected\");\n    check(uf.components == 3, \"UnionFind components\");\n\n    // --- intervals ---\n    check(Arrays.deepToString(mergeIntervals(new int[][]{{1, 3}, {2, 6}, {8, 10}}))\n            .equals(\"[[1, 6], [8, 10]]\"), \"mergeIntervals\");\n    check(overlaps(new int[]{1, 5}, new int[]{4, 8}), \"overlaps\");\n\n    // --- math & bits ---\n    check(gcd(12, 18) == 6, \"gcd\");\n    check(lcm(4, 6) == 12, \"lcm\");\n    check(sieve(10).equals(List.of(2, 3, 5, 7)), \"sieve\");\n    check(countBits(7) == 3, \"countBits\");\n    check(getBit(5, 0) == 1 && setBit(4, 0) == 5 && clearBit(5, 0) == 4, \"bit ops\");\n    check(singleNumber(new int[]{4, 1, 2, 1, 2}) == 4, \"singleNumber\");\n\n    // --- backtracking & dp ---\n    check(subsets(new int[]{1, 2, 3}).size() == 8, \"subsets\");\n    check(permute(new int[]{1, 2, 3}).size() == 6, \"permute\");\n    check(fibMemo(30) == 832040L, \"fibMemo\");\n    check(climbStairs(5) == 8, \"climbStairs\");\n    check(coinChange(new int[]{1, 2, 5}, 11) == 3, \"coinChange\");\n    check(coinChange(new int[]{2}, 3) == -1, \"coinChange unreachable\");\n    check(lcs(\"abcde\", \"ace\") == 3, \"lcs\");\n\n    System.out.println(\"all \" + checksRun + \" checks passed\");\n}"
+        }
+      ]
+    }
+  ]
+}

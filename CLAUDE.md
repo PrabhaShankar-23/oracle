@@ -29,12 +29,12 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
 ## Layout
 
 - `src/theme/theme.ts` — **the only place** for colours, type scale, breakpoints, radii,
-  component defaults and layout constants (`HEADER_HEIGHT`, `CONTENT_MAX_WIDTH`, `READING_MAX_WIDTH`).
-- `src/content/sections.ts` — site map: every vault section, its nav pages, and the global search index.
+  component defaults and layout constants (`HEADER_HEIGHT`, `CONTENT_MAX_WIDTH`, `READING_MAX_WIDTH`, `SIDEBAR_WIDTH`).
+- `src/content/sections.ts` — site map: every vault section — **DSA first, then vault folder order** (the sidebar follows it), its nav pages, and the global search index.
   A section with `pages: []` shows as "Soon".
 - `src/content/generated/` — output of `scripts/ingest-vault.mjs`. Don't hand-edit; re-run ingest.
   `manifest.json` is small and imported by the main bundle; the other JSON files are imported only by lazy pages.
-- `src/components/layout/` — app bar, section dropdown menus (desktop), nav drawer (mobile), global search.
+- `src/components/layout/` — app bar, `SideNav` section sidebar (permanent at `lg`+, inside `NavDrawer` below), global search.
 - `src/components/content/` — `PageContainer`, `PageHeader`, `HtmlContent` (renders vault HTML with
   diagrams, highlighting, copy buttons), `TableOfContents`, `articleStyles`.
 - `src/pages/` — one folder per section. Content pages are `lazy()`-loaded in `src/App.tsx`.
@@ -46,6 +46,12 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
 2. Add types to `src/content/types.ts`, a page under `src/pages/<section>/`, a lazy route in `App.tsx`.
 3. Add the page to its section in `sections.ts` (and search entries if useful).
 4. Follow the responsive guide below and run through its checklist.
+
+## Building features
+
+For anything bigger than a small fix, use the `/feature-flow` skill (personal skill in
+`~/.claude/skills/feature-flow`). This repo's commands, test approach and definition of done are in
+`claude/feature-flow.md`; plans are saved under `claude/features/`.
 
 ## Responsive and UI rules
 

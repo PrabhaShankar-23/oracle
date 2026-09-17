@@ -1,5 +1,6 @@
 /**
- * Site map. Every section in the notes vault is listed here, in vault order.
+ * Site map. Every section in the notes vault is listed here: DSA first, then vault folder order
+ * (01-System Design, 02-Interview, 05-AI-ML, …). The sidebar shows them in exactly this order.
  * A section with `pages: []` shows as "Soon" in the nav — add pages as notes move over.
  */
 import type { SvgIconComponent } from '@mui/icons-material'
@@ -23,6 +24,8 @@ import type { Manifest } from './types'
 
 export const manifest = manifestJson as Manifest
 
+const UTILS_LABEL = { python: 'Python helpers', java: 'Java helpers' }
+
 export type NavPage = {
   title: string
   path: string
@@ -41,6 +44,33 @@ export type Section = {
 }
 
 export const sections: Section[] = [
+  {
+    id: 'dsa',
+    title: 'DSA',
+    path: '/dsa',
+    description: 'Pattern-first data structures and algorithms.',
+    icon: DataObjectOutlined,
+    pages: [
+      {
+        title: 'Cold recall',
+        path: '/dsa/cold-recall',
+        description: `${manifest.dsa.problems.length} problems across ${manifest.dsa.patterns.length} patterns — state, invariant, approaches, code.`,
+        group: 'Recall',
+      },
+      {
+        title: 'Python helpers',
+        path: '/dsa/python-utils',
+        description: 'py_dsa_utils — syntax sheet, imports and copy-paste helpers for every pattern.',
+        group: 'Toolkits',
+      },
+      {
+        title: 'Java helpers',
+        path: '/dsa/java-utils',
+        description: 'JavaDsaUtils — the same toolkit in Java, with a syntax sheet and self-tests.',
+        group: 'Toolkits',
+      },
+    ],
+  },
   {
     id: 'system-design',
     title: 'System Design',
@@ -68,21 +98,6 @@ export const sections: Section[] = [
       },
     ],
   },
-  {
-    id: 'dsa',
-    title: 'DSA',
-    path: '/dsa',
-    description: 'Pattern-first data structures and algorithms.',
-    icon: DataObjectOutlined,
-    pages: [
-      {
-        title: 'Cold recall',
-        path: '/dsa/cold-recall',
-        description: `${manifest.dsa.problems.length} problems across ${manifest.dsa.patterns.length} patterns — state, invariant, approaches, code.`,
-        group: 'Recall',
-      },
-    ],
-  },
   { id: 'interview', title: 'Interview', path: '/interview', description: 'Recall drills, project stories and question banks.', icon: RecordVoiceOverOutlined, pages: [] },
   { id: 'ai-ml', title: 'AI / ML', path: '/ai-ml', description: 'ML, deep learning, RAG, agents and LLM production.', icon: PsychologyOutlined, pages: [] },
   { id: 'ai-coding', title: 'AI Coding Patterns', path: '/ai-coding', description: 'Patterns for building with coding agents.', icon: AutoAwesomeOutlined, pages: [] },
@@ -96,9 +111,6 @@ export const sections: Section[] = [
   { id: 'react', title: 'React', path: '/react', description: 'React patterns and internals.', icon: WebOutlined, pages: [] },
   { id: 'communication', title: 'Communication', path: '/communication', description: 'Explaining, pitching and interviewing well.', icon: ForumOutlined, pages: [] },
 ]
-
-export const liveSections = sections.filter((s) => s.pages.length > 0)
-export const upcomingSections = sections.filter((s) => s.pages.length === 0)
 
 export function findSection(pathname: string) {
   return sections.find((s) => pathname === s.path || pathname.startsWith(`${s.path}/`))
@@ -164,5 +176,12 @@ export const searchIndex: SearchItem[] = [
     secondary: `WebRTC card ${c.number} · ${c.topic}`,
     path: `/system-design/webrtc#${c.id}`,
     group: 'WebRTC cards',
+  })),
+  ...manifest.dsaUtils.map((h) => ({
+    key: `utils:${h.lang}:${h.id}`,
+    label: h.name,
+    secondary: `${UTILS_LABEL[h.lang]} · ${h.section.replace(/^[^\p{Letter}]+/u, '')}`,
+    path: `/dsa/${h.lang}-utils#${h.id}`,
+    group: 'DSA helpers',
   })),
 ]

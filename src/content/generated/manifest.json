@@ -2213,5 +2213,829 @@
       "title": "The 30-Second Pitch",
       "topic": "Recall · Memory Hook"
     }
+  ],
+  "dsaUtils": [
+    {
+      "lang": "python",
+      "id": "s2-is_palindrome",
+      "name": "is_palindrome",
+      "section": "🔤 2. Strings & Chars"
+    },
+    {
+      "lang": "python",
+      "id": "s2-char_index",
+      "name": "char_index",
+      "section": "🔤 2. Strings & Chars"
+    },
+    {
+      "lang": "python",
+      "id": "s2-alpha_counts",
+      "name": "alpha_counts",
+      "section": "🔤 2. Strings & Chars"
+    },
+    {
+      "lang": "python",
+      "id": "s2-is_anagram",
+      "name": "is_anagram",
+      "section": "🔤 2. Strings & Chars"
+    },
+    {
+      "lang": "python",
+      "id": "s2-group_anagrams",
+      "name": "group_anagrams",
+      "section": "🔤 2. Strings & Chars"
+    },
+    {
+      "lang": "python",
+      "id": "s3-two_sum_sorted",
+      "name": "two_sum_sorted",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s3-two_sum",
+      "name": "two_sum",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s3-max_sum_window",
+      "name": "max_sum_window",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s3-longest_unique_substring",
+      "name": "longest_unique_substring",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s3-prefix_sums",
+      "name": "prefix_sums",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s3-subarray_sum_equals_k",
+      "name": "subarray_sum_equals_k",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s3-kadane",
+      "name": "kadane",
+      "section": "↔️ 3. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "python",
+      "id": "s4-frequency",
+      "name": "frequency",
+      "section": "#️⃣ 4. Hashing & Counting"
+    },
+    {
+      "lang": "python",
+      "id": "s4-top_k_frequent",
+      "name": "top_k_frequent",
+      "section": "#️⃣ 4. Hashing & Counting"
+    },
+    {
+      "lang": "python",
+      "id": "s4-has_duplicate",
+      "name": "has_duplicate",
+      "section": "#️⃣ 4. Hashing & Counting"
+    },
+    {
+      "lang": "python",
+      "id": "s5-binary_search",
+      "name": "binary_search",
+      "section": "🔍 5. Sorting & Binary Search"
+    },
+    {
+      "lang": "python",
+      "id": "s5-lower_bound",
+      "name": "lower_bound",
+      "section": "🔍 5. Sorting & Binary Search"
+    },
+    {
+      "lang": "python",
+      "id": "s5-binary_search_answer",
+      "name": "binary_search_answer",
+      "section": "🔍 5. Sorting & Binary Search"
+    },
+    {
+      "lang": "python",
+      "id": "s5-sort_by_custom",
+      "name": "sort_by_custom",
+      "section": "🔍 5. Sorting & Binary Search"
+    },
+    {
+      "lang": "python",
+      "id": "s6-valid_parentheses",
+      "name": "valid_parentheses",
+      "section": "🥞 6. Stack / Queue / Heap"
+    },
+    {
+      "lang": "python",
+      "id": "s6-next_greater",
+      "name": "next_greater",
+      "section": "🥞 6. Stack / Queue / Heap"
+    },
+    {
+      "lang": "python",
+      "id": "s6-k_largest",
+      "name": "k_largest",
+      "section": "🥞 6. Stack / Queue / Heap"
+    },
+    {
+      "lang": "python",
+      "id": "s7-ListNode",
+      "name": "ListNode",
+      "section": "🔗 7. Linked List"
+    },
+    {
+      "lang": "python",
+      "id": "s7-build_list",
+      "name": "build_list",
+      "section": "🔗 7. Linked List"
+    },
+    {
+      "lang": "python",
+      "id": "s7-to_pylist",
+      "name": "to_pylist",
+      "section": "🔗 7. Linked List"
+    },
+    {
+      "lang": "python",
+      "id": "s7-reverse_list",
+      "name": "reverse_list",
+      "section": "🔗 7. Linked List"
+    },
+    {
+      "lang": "python",
+      "id": "s7-middle_node",
+      "name": "middle_node",
+      "section": "🔗 7. Linked List"
+    },
+    {
+      "lang": "python",
+      "id": "s7-has_cycle",
+      "name": "has_cycle",
+      "section": "🔗 7. Linked List"
+    },
+    {
+      "lang": "python",
+      "id": "s8-TreeNode",
+      "name": "TreeNode",
+      "section": "🌳 8. Trees"
+    },
+    {
+      "lang": "python",
+      "id": "s8-build_tree",
+      "name": "build_tree",
+      "section": "🌳 8. Trees"
+    },
+    {
+      "lang": "python",
+      "id": "s8-inorder",
+      "name": "inorder",
+      "section": "🌳 8. Trees"
+    },
+    {
+      "lang": "python",
+      "id": "s8-inorder_iterative",
+      "name": "inorder_iterative",
+      "section": "🌳 8. Trees"
+    },
+    {
+      "lang": "python",
+      "id": "s8-level_order",
+      "name": "level_order",
+      "section": "🌳 8. Trees"
+    },
+    {
+      "lang": "python",
+      "id": "s8-max_depth",
+      "name": "max_depth",
+      "section": "🌳 8. Trees"
+    },
+    {
+      "lang": "python",
+      "id": "s9-in_bounds",
+      "name": "in_bounds",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-neighbors",
+      "name": "neighbors",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-bfs_grid",
+      "name": "bfs_grid",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-count_islands",
+      "name": "count_islands",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-build_graph",
+      "name": "build_graph",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-bfs_shortest",
+      "name": "bfs_shortest",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-dfs_iterative",
+      "name": "dfs_iterative",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-topo_sort",
+      "name": "topo_sort",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-dijkstra",
+      "name": "dijkstra",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s9-UnionFind",
+      "name": "UnionFind",
+      "section": "🕸️ 9. Graphs & Grids"
+    },
+    {
+      "lang": "python",
+      "id": "s10-merge_intervals",
+      "name": "merge_intervals",
+      "section": "📏 10. Intervals"
+    },
+    {
+      "lang": "python",
+      "id": "s10-overlaps",
+      "name": "overlaps",
+      "section": "📏 10. Intervals"
+    },
+    {
+      "lang": "python",
+      "id": "s11-gcd",
+      "name": "gcd",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-lcm",
+      "name": "lcm",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-sieve",
+      "name": "sieve",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-count_bits",
+      "name": "count_bits",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-get_bit",
+      "name": "get_bit",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-set_bit",
+      "name": "set_bit",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-clear_bit",
+      "name": "clear_bit",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s11-single_number",
+      "name": "single_number",
+      "section": "➗ 11. Math & Bits"
+    },
+    {
+      "lang": "python",
+      "id": "s12-subsets",
+      "name": "subsets",
+      "section": "🎯 12. Backtracking / Dp Skeletons"
+    },
+    {
+      "lang": "python",
+      "id": "s12-permute",
+      "name": "permute",
+      "section": "🎯 12. Backtracking / Dp Skeletons"
+    },
+    {
+      "lang": "python",
+      "id": "s12-fib_memo",
+      "name": "fib_memo",
+      "section": "🎯 12. Backtracking / Dp Skeletons"
+    },
+    {
+      "lang": "python",
+      "id": "s12-climb_stairs",
+      "name": "climb_stairs",
+      "section": "🎯 12. Backtracking / Dp Skeletons"
+    },
+    {
+      "lang": "python",
+      "id": "s12-coin_change",
+      "name": "coin_change",
+      "section": "🎯 12. Backtracking / Dp Skeletons"
+    },
+    {
+      "lang": "python",
+      "id": "s13-print_grid",
+      "name": "print_grid",
+      "section": "🐞 13. Debug Helpers"
+    },
+    {
+      "lang": "python",
+      "id": "s13-trace",
+      "name": "trace",
+      "section": "🐞 13. Debug Helpers"
+    },
+    {
+      "lang": "java",
+      "id": "s1-isPalindrome",
+      "name": "isPalindrome",
+      "section": "🔤 1. Strings & Chars"
+    },
+    {
+      "lang": "java",
+      "id": "s1-charIndex",
+      "name": "charIndex",
+      "section": "🔤 1. Strings & Chars"
+    },
+    {
+      "lang": "java",
+      "id": "s1-alphaCounts",
+      "name": "alphaCounts",
+      "section": "🔤 1. Strings & Chars"
+    },
+    {
+      "lang": "java",
+      "id": "s1-isAnagram",
+      "name": "isAnagram",
+      "section": "🔤 1. Strings & Chars"
+    },
+    {
+      "lang": "java",
+      "id": "s1-groupAnagrams",
+      "name": "groupAnagrams",
+      "section": "🔤 1. Strings & Chars"
+    },
+    {
+      "lang": "java",
+      "id": "s1-reverse",
+      "name": "reverse",
+      "section": "🔤 1. Strings & Chars"
+    },
+    {
+      "lang": "java",
+      "id": "s2-twoSumSorted",
+      "name": "twoSumSorted",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-twoSum",
+      "name": "twoSum",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-maxSumWindow",
+      "name": "maxSumWindow",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-longestUniqueSubstring",
+      "name": "longestUniqueSubstring",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-prefixSums",
+      "name": "prefixSums",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-subarraySumEqualsK",
+      "name": "subarraySumEqualsK",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-kadane",
+      "name": "kadane",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s2-reverseRange",
+      "name": "reverseRange",
+      "section": "↔️ 2. Arrays / Two Pointers / Sliding Window"
+    },
+    {
+      "lang": "java",
+      "id": "s3-frequency",
+      "name": "frequency",
+      "section": "#️⃣ 3. Hashing & Counting"
+    },
+    {
+      "lang": "java",
+      "id": "s3-charFrequency",
+      "name": "charFrequency",
+      "section": "#️⃣ 3. Hashing & Counting"
+    },
+    {
+      "lang": "java",
+      "id": "s3-topKFrequent",
+      "name": "topKFrequent",
+      "section": "#️⃣ 3. Hashing & Counting"
+    },
+    {
+      "lang": "java",
+      "id": "s3-hasDuplicate",
+      "name": "hasDuplicate",
+      "section": "#️⃣ 3. Hashing & Counting"
+    },
+    {
+      "lang": "java",
+      "id": "s4-binarySearch",
+      "name": "binarySearch",
+      "section": "🔍 4. Sorting & Binary Search"
+    },
+    {
+      "lang": "java",
+      "id": "s4-lowerBound",
+      "name": "lowerBound",
+      "section": "🔍 4. Sorting & Binary Search"
+    },
+    {
+      "lang": "java",
+      "id": "s4-upperBound",
+      "name": "upperBound",
+      "section": "🔍 4. Sorting & Binary Search"
+    },
+    {
+      "lang": "java",
+      "id": "s4-binarySearchAnswer",
+      "name": "binarySearchAnswer",
+      "section": "🔍 4. Sorting & Binary Search"
+    },
+    {
+      "lang": "java",
+      "id": "s4-sortByCustom",
+      "name": "sortByCustom",
+      "section": "🔍 4. Sorting & Binary Search"
+    },
+    {
+      "lang": "java",
+      "id": "s5-validParentheses",
+      "name": "validParentheses",
+      "section": "🥞 5. Stack / Queue / Heap"
+    },
+    {
+      "lang": "java",
+      "id": "s5-nextGreater",
+      "name": "nextGreater",
+      "section": "🥞 5. Stack / Queue / Heap"
+    },
+    {
+      "lang": "java",
+      "id": "s5-kLargest",
+      "name": "kLargest",
+      "section": "🥞 5. Stack / Queue / Heap"
+    },
+    {
+      "lang": "java",
+      "id": "s6-ListNode",
+      "name": "ListNode",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s6-buildList",
+      "name": "buildList",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s6-toArray",
+      "name": "toArray",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s6-reverseList",
+      "name": "reverseList",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s6-middleNode",
+      "name": "middleNode",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s6-hasCycle",
+      "name": "hasCycle",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s6-mergeSorted",
+      "name": "mergeSorted",
+      "section": "🔗 6. Linked List"
+    },
+    {
+      "lang": "java",
+      "id": "s7-TreeNode",
+      "name": "TreeNode",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-buildTree",
+      "name": "buildTree",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-inorder",
+      "name": "inorder",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-inorderWalk",
+      "name": "inorderWalk",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-inorderIterative",
+      "name": "inorderIterative",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-levelOrder",
+      "name": "levelOrder",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-maxDepth",
+      "name": "maxDepth",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s7-bstContains",
+      "name": "bstContains",
+      "section": "🌳 7. Trees"
+    },
+    {
+      "lang": "java",
+      "id": "s8-DIRS4",
+      "name": "DIRS4",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-DIRS8",
+      "name": "DIRS8",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-inBounds",
+      "name": "inBounds",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-bfsGrid",
+      "name": "bfsGrid",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-countIslands",
+      "name": "countIslands",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-buildGraph",
+      "name": "buildGraph",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-bfsShortest",
+      "name": "bfsShortest",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-dfsIterative",
+      "name": "dfsIterative",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-topoSort",
+      "name": "topoSort",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-dijkstra",
+      "name": "dijkstra",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s8-UnionFind",
+      "name": "UnionFind",
+      "section": "🕸️ 8. Graphs & Grids"
+    },
+    {
+      "lang": "java",
+      "id": "s9-mergeIntervals",
+      "name": "mergeIntervals",
+      "section": "📏 9. Intervals"
+    },
+    {
+      "lang": "java",
+      "id": "s9-overlaps",
+      "name": "overlaps",
+      "section": "📏 9. Intervals"
+    },
+    {
+      "lang": "java",
+      "id": "s10-gcd",
+      "name": "gcd",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-lcm",
+      "name": "lcm",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-sieve",
+      "name": "sieve",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-countBits",
+      "name": "countBits",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-getBit",
+      "name": "getBit",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-setBit",
+      "name": "setBit",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-clearBit",
+      "name": "clearBit",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s10-singleNumber",
+      "name": "singleNumber",
+      "section": "➗ 10. Math & Bits"
+    },
+    {
+      "lang": "java",
+      "id": "s11-subsets",
+      "name": "subsets",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-subsetsBacktrack",
+      "name": "subsetsBacktrack",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-permute",
+      "name": "permute",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-permuteBacktrack",
+      "name": "permuteBacktrack",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-fibMemo",
+      "name": "fibMemo",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-fibHelper",
+      "name": "fibHelper",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-climbStairs",
+      "name": "climbStairs",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-coinChange",
+      "name": "coinChange",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s11-lcs",
+      "name": "lcs",
+      "section": "🎯 11. Backtracking / DP Skeletons"
+    },
+    {
+      "lang": "java",
+      "id": "s12-printGrid",
+      "name": "printGrid",
+      "section": "🐞 12. Debug Helpers"
+    },
+    {
+      "lang": "java",
+      "id": "s12-trace",
+      "name": "trace",
+      "section": "🐞 12. Debug Helpers"
+    },
+    {
+      "lang": "java",
+      "id": "s13-checksRun",
+      "name": "checksRun",
+      "section": "✅ 13. Self-tests"
+    },
+    {
+      "lang": "java",
+      "id": "s13-check",
+      "name": "check",
+      "section": "✅ 13. Self-tests"
+    },
+    {
+      "lang": "java",
+      "id": "s13-main",
+      "name": "main",
+      "section": "✅ 13. Self-tests"
+    }
   ]
 }

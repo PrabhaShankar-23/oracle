@@ -1,0 +1,653 @@
+{
+  "lang": "python",
+  "title": "py_dsa_utils.py",
+  "subtitle": "Python warm-up and handy helpers for DSA — the whole toolkit on one page.",
+  "meta": "Run it: <code>python3 py_dsa_utils.py</code> · Use it: <code>from py_dsa_utils import two_sum, bfs_grid, …</code> · Java twin: <a href=\"/dsa/java-utils\">Java helpers</a> · source: py_dsa_utils.py",
+  "stats": [
+    {
+      "value": "15",
+      "label": "sections"
+    },
+    {
+      "value": "61",
+      "label": "helpers"
+    },
+    {
+      "value": "805",
+      "label": "lines of source"
+    }
+  ],
+  "sections": [
+    {
+      "id": "s0",
+      "title": "📇 0. Syntax Cheat Sheet",
+      "lede": "Read-only reference — the Python you actually type under time pressure.",
+      "sheet": [
+        {
+          "label": "Variables",
+          "code": "left = 0 ; right = len(s) - 1"
+        },
+        {
+          "label": "Condition",
+          "code": "if left < right: ..."
+        },
+        {
+          "label": "While",
+          "code": "while left < right: left += 1; right -= 1"
+        },
+        {
+          "label": "For",
+          "code": "for i in range(len(nums)): ..."
+        },
+        {
+          "label": "For (index+val)",
+          "code": "for i, x in enumerate(nums): ..."
+        },
+        {
+          "label": "For (reverse)",
+          "code": "for i in range(len(nums) - 1, -1, -1): ..."
+        },
+        {
+          "label": "For (pairs)",
+          "code": "for a, b in zip(xs, ys): ..."
+        },
+        {
+          "label": "Index",
+          "code": "s[i]        s[-1] (last)     s[i:j] (slice, j excluded)"
+        },
+        {
+          "label": "Length",
+          "code": "len(s)"
+        },
+        {
+          "label": "Booleans",
+          "code": "True / False        and / or / not"
+        },
+        {
+          "label": "Increment",
+          "code": "i += 1      i -= 1"
+        },
+        {
+          "label": "Return",
+          "code": "return True / return False"
+        },
+        {
+          "label": "Char checks",
+          "code": "s[i].isalnum() .isalpha() .isdigit() .lower() .upper()"
+        },
+        {
+          "label": "Char <-> int",
+          "code": "ord('a') -> 97      chr(97) -> 'a'      ord(c) - ord('a')"
+        },
+        {
+          "label": "Common",
+          "code": "max(a, b)  min(a, b)  abs(x)  sum(xs)  sorted(xs)"
+        },
+        {
+          "label": "Integer division",
+          "code": "7 // 2 -> 3        7 % 2 -> 1        divmod(7, 2) -> (3, 1)"
+        },
+        {
+          "label": "Infinity",
+          "code": "float('inf')  float('-inf')"
+        },
+        {
+          "label": "Swap",
+          "code": "a, b = b, a"
+        },
+        {
+          "label": "HashMap",
+          "code": "freq = {} ; freq[x] = freq.get(x, 0) + 1 ; for k, v in freq.items()"
+        },
+        {
+          "label": "Set",
+          "code": "seen = set() ; seen.add(x) ; x in seen ; seen.discard(x)"
+        },
+        {
+          "label": "List",
+          "code": "arr = [] ; arr.append(x) ; arr.pop() ; arr.pop(0) (O(n)!)"
+        },
+        {
+          "label": "List build",
+          "code": "grid = [[0] * cols for _ in range(rows)]   # NOT [[0]*c]*r"
+        },
+        {
+          "label": "Comprehension",
+          "code": "[x * x for x in nums if x > 0]"
+        },
+        {
+          "label": "Tuple key",
+          "code": "seen.add((r, c))"
+        },
+        {
+          "label": "Sort by key",
+          "code": "arr.sort(key=lambda p: (p[0], -p[1]))"
+        },
+        {
+          "label": "String join",
+          "code": "\"\".join(chars)      s.split()      s.strip()"
+        },
+        {
+          "label": "Reverse",
+          "code": "s[::-1]      arr.reverse()      reversed(arr)"
+        },
+        {
+          "label": "Multiple return",
+          "code": "return left, right   ->   a, b = f()"
+        },
+        {
+          "label": "Nested func",
+          "code": "def helper(i): ...   (can read outer vars; use nonlocal to write)"
+        }
+      ],
+      "helpers": []
+    },
+    {
+      "id": "s1",
+      "title": "📦 1. Imports You Actually Use",
+      "lede": "Paste this header and stop thinking about imports.",
+      "sheet": [],
+      "helpers": [
+        {
+          "code": "import heapq\nimport math\nfrom bisect import bisect_left, bisect_right, insort\nfrom collections import Counter, defaultdict, deque\nfrom functools import cmp_to_key, lru_cache\nfrom itertools import accumulate, combinations, permutations\nfrom typing import Dict, List, Optional, Set, Tuple\n\nINF = float(\"inf\")\nNEG_INF = float(\"-inf\")"
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "🔤 2. Strings & Chars",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s2-is_palindrome",
+          "name": "is_palindrome",
+          "kind": "def",
+          "doc": "Two-pointer palindrome check, ignoring non-alphanumerics and case.",
+          "code": "def is_palindrome(s: str) -> bool:\n    left, right = 0, len(s) - 1\n    while left < right:\n        while left < right and not s[left].isalnum():\n            left += 1\n        while left < right and not s[right].isalnum():\n            right -= 1\n        if s[left].lower() != s[right].lower():\n            return False\n        left += 1\n        right -= 1\n    return True"
+        },
+        {
+          "id": "s2-char_index",
+          "name": "char_index",
+          "kind": "def",
+          "doc": "'a' -&gt; 0 ... 'z' -&gt; 25. Use for int[26] style buckets.",
+          "code": "def char_index(c: str) -> int:\n    return ord(c.lower()) - ord(\"a\")"
+        },
+        {
+          "id": "s2-alpha_counts",
+          "name": "alpha_counts",
+          "kind": "def",
+          "doc": "Fixed-size 26 bucket count — cheaper than a dict for lowercase-only input.",
+          "code": "def alpha_counts(s: str) -> List[int]:\n    counts = [0] * 26\n    for c in s:\n        if c.isalpha():\n            counts[char_index(c)] += 1\n    return counts"
+        },
+        {
+          "id": "s2-is_anagram",
+          "name": "is_anagram",
+          "kind": "def",
+          "code": "def is_anagram(a: str, b: str) -> bool:\n    return Counter(a) == Counter(b)"
+        },
+        {
+          "id": "s2-group_anagrams",
+          "name": "group_anagrams",
+          "kind": "def",
+          "code": "def group_anagrams(words: List[str]) -> List[List[str]]:\n    groups = defaultdict(list)\n    for w in words:\n        groups[\"\".join(sorted(w))].append(w)\n    return list(groups.values())"
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "↔️ 3. Arrays / Two Pointers / Sliding Window",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s3-two_sum_sorted",
+          "name": "two_sum_sorted",
+          "kind": "def",
+          "doc": "Classic converging two pointers on a SORTED array. Returns indices or (-1, -1).",
+          "code": "def two_sum_sorted(nums: List[int], target: int) -> Tuple[int, int]:\n    left, right = 0, len(nums) - 1\n    while left < right:\n        total = nums[left] + nums[right]\n        if total == target:\n            return left, right\n        if total < target:\n            left += 1\n        else:\n            right -= 1\n    return -1, -1"
+        },
+        {
+          "id": "s3-two_sum",
+          "name": "two_sum",
+          "kind": "def",
+          "doc": "Unsorted array, one pass with a hashmap of value -&gt; index.",
+          "code": "def two_sum(nums: List[int], target: int) -> Tuple[int, int]:\n    seen: Dict[int, int] = {}\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return seen[target - x], i\n        seen[x] = i\n    return -1, -1"
+        },
+        {
+          "id": "s3-max_sum_window",
+          "name": "max_sum_window",
+          "kind": "def",
+          "doc": "FIXED-size sliding window: add the entering element, drop the leaving one.",
+          "code": "def max_sum_window(nums: List[int], k: int) -> int:\n    if k > len(nums):\n        return 0\n    window = sum(nums[:k])\n    best = window\n    for right in range(k, len(nums)):\n        window += nums[right] - nums[right - k]\n        best = max(best, window)\n    return best"
+        },
+        {
+          "id": "s3-longest_unique_substring",
+          "name": "longest_unique_substring",
+          "kind": "def",
+          "doc": "VARIABLE-size sliding window: grow right, shrink left while invalid.",
+          "code": "def longest_unique_substring(s: str) -> int:\n    seen: Set[str] = set()\n    left = 0\n    best = 0\n    for right in range(len(s)):\n        while s[right] in seen:\n            seen.discard(s[left])\n            left += 1\n        seen.add(s[right])\n        best = max(best, right - left + 1)\n    return best"
+        },
+        {
+          "id": "s3-prefix_sums",
+          "name": "prefix_sums",
+          "kind": "def",
+          "doc": "pre[i] = sum(nums[:i]). Range sum [i, j) == pre[j] - pre[i].",
+          "code": "def prefix_sums(nums: List[int]) -> List[int]:\n    pre = [0] * (len(nums) + 1)\n    for i, x in enumerate(nums):\n        pre[i + 1] = pre[i] + x\n    return pre\n    # one-liner alternative: [0] + list(accumulate(nums))"
+        },
+        {
+          "id": "s3-subarray_sum_equals_k",
+          "name": "subarray_sum_equals_k",
+          "kind": "def",
+          "doc": "Count subarrays summing to k. Prefix sum + hashmap of counts.",
+          "code": "def subarray_sum_equals_k(nums: List[int], k: int) -> int:\n    counts = defaultdict(int)\n    counts[0] = 1\n    running = 0\n    total = 0\n    for x in nums:\n        running += x\n        total += counts[running - k]\n        counts[running] += 1\n    return total"
+        },
+        {
+          "id": "s3-kadane",
+          "name": "kadane",
+          "kind": "def",
+          "doc": "Max subarray sum. Either extend the previous run or restart at x.",
+          "code": "def kadane(nums: List[int]) -> int:\n    best = current = nums[0]\n    for x in nums[1:]:\n        current = max(x, current + x)\n        best = max(best, current)\n    return best"
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "#️⃣ 4. Hashing & Counting",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s4-frequency",
+          "name": "frequency",
+          "kind": "def",
+          "doc": "Manual version of Counter — write this once so .get(x, 0) sticks.",
+          "code": "def frequency(items) -> Dict:\n    freq: Dict = {}\n    for x in items:\n        freq[x] = freq.get(x, 0) + 1\n    return freq"
+        },
+        {
+          "id": "s4-top_k_frequent",
+          "name": "top_k_frequent",
+          "kind": "def",
+          "code": "def top_k_frequent(nums: List[int], k: int) -> List[int]:\n    return [x for x, _ in Counter(nums).most_common(k)]"
+        },
+        {
+          "id": "s4-has_duplicate",
+          "name": "has_duplicate",
+          "kind": "def",
+          "code": "def has_duplicate(nums: List[int]) -> bool:\n    return len(set(nums)) != len(nums)"
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "🔍 5. Sorting & Binary Search",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s5-binary_search",
+          "name": "binary_search",
+          "kind": "def",
+          "doc": "Exact match on a sorted array. Returns index or -1.",
+          "code": "def binary_search(nums: List[int], target: int) -> int:\n    left, right = 0, len(nums) - 1\n    while left <= right:                 # <= because left==right is a valid candidate\n        mid = (left + right) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1"
+        },
+        {
+          "id": "s5-lower_bound",
+          "name": "lower_bound",
+          "kind": "def",
+          "doc": "First index with nums[i] &gt;= target. Same as bisect_left.",
+          "code": "def lower_bound(nums: List[int], target: int) -> int:\n    left, right = 0, len(nums)\n    while left < right:                  # < because right is exclusive here\n        mid = (left + right) // 2\n        if nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid\n    return left"
+        },
+        {
+          "id": "s5-binary_search_answer",
+          "name": "binary_search_answer",
+          "kind": "def",
+          "doc": "'Binary search on the answer' — the pattern most interview problems really want. feasible(x) must be monotonic: False...False True...True. Returns smallest True x.",
+          "code": "def binary_search_answer(lo: int, hi: int, feasible) -> int:\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if feasible(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo"
+        },
+        {
+          "id": "s5-sort_by_custom",
+          "name": "sort_by_custom",
+          "kind": "def",
+          "doc": "Sort by first ascending, then second descending.",
+          "code": "def sort_by_custom(pairs: List[Tuple[int, int]]) -> List[Tuple[int, int]]:\n    return sorted(pairs, key=lambda p: (p[0], -p[1]))"
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "title": "🥞 6. Stack / Queue / Heap",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s6-valid_parentheses",
+          "name": "valid_parentheses",
+          "kind": "def",
+          "code": "def valid_parentheses(s: str) -> bool:\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    stack: List[str] = []\n    for c in s:\n        if c in pairs:\n            if not stack or stack.pop() != pairs[c]:\n                return False\n        else:\n            stack.append(c)\n    return not stack"
+        },
+        {
+          "id": "s6-next_greater",
+          "name": "next_greater",
+          "kind": "def",
+          "doc": "Monotonic decreasing stack of indices. res[i] = next element &gt; nums[i], else -1.",
+          "code": "def next_greater(nums: List[int]) -> List[int]:\n    res = [-1] * len(nums)\n    stack: List[int] = []\n    for i, x in enumerate(nums):\n        while stack and nums[stack[-1]] < x:\n            res[stack.pop()] = x\n        stack.append(i)\n    return res"
+        },
+        {
+          "id": "s6-k_largest",
+          "name": "k_largest",
+          "kind": "def",
+          "doc": "Min-heap of size k. Python's heapq is a MIN-heap; push -x for a max-heap.",
+          "code": "def k_largest(nums: List[int], k: int) -> List[int]:\n    heap: List[int] = []\n    for x in nums:\n        heapq.heappush(heap, x)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return sorted(heap, reverse=True)\n    # shortcut: heapq.nlargest(k, nums)"
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "title": "🔗 7. Linked List",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s7-ListNode",
+          "name": "ListNode",
+          "kind": "class",
+          "code": "class ListNode:\n    def __init__(self, val=0, nxt=None):\n        self.val = val\n        self.next = nxt\n\n    def __repr__(self):\n        return f\"{self.val} -> {self.next}\" if self.next else str(self.val)"
+        },
+        {
+          "id": "s7-build_list",
+          "name": "build_list",
+          "kind": "def",
+          "code": "def build_list(values: List[int]) -> Optional[ListNode]:\n    dummy = ListNode()\n    cur = dummy\n    for v in values:\n        cur.next = ListNode(v)\n        cur = cur.next\n    return dummy.next"
+        },
+        {
+          "id": "s7-to_pylist",
+          "name": "to_pylist",
+          "kind": "def",
+          "code": "def to_pylist(head: Optional[ListNode]) -> List[int]:\n    out = []\n    while head:\n        out.append(head.val)\n        head = head.next\n    return out"
+        },
+        {
+          "id": "s7-reverse_list",
+          "name": "reverse_list",
+          "kind": "def",
+          "code": "def reverse_list(head: Optional[ListNode]) -> Optional[ListNode]:\n    prev = None\n    while head:\n        head.next, prev, head = prev, head, head.next\n    return prev"
+        },
+        {
+          "id": "s7-middle_node",
+          "name": "middle_node",
+          "kind": "def",
+          "doc": "Fast/slow pointers. Same trick detects cycles.",
+          "code": "def middle_node(head: Optional[ListNode]) -> Optional[ListNode]:\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    return slow"
+        },
+        {
+          "id": "s7-has_cycle",
+          "name": "has_cycle",
+          "kind": "def",
+          "code": "def has_cycle(head: Optional[ListNode]) -> bool:\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False"
+        }
+      ]
+    },
+    {
+      "id": "s8",
+      "title": "🌳 8. Trees",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s8-TreeNode",
+          "name": "TreeNode",
+          "kind": "class",
+          "code": "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right"
+        },
+        {
+          "id": "s8-build_tree",
+          "name": "build_tree",
+          "kind": "def",
+          "doc": "LeetCode-style level-order list, e.g. [3, 9, 20, None, None, 15, 7].",
+          "code": "def build_tree(values: List[Optional[int]]) -> Optional[TreeNode]:\n    if not values or values[0] is None:\n        return None\n    root = TreeNode(values[0])\n    queue = deque([root])\n    i = 1\n    while queue and i < len(values):\n        node = queue.popleft()\n        if i < len(values) and values[i] is not None:\n            node.left = TreeNode(values[i])\n            queue.append(node.left)\n        i += 1\n        if i < len(values) and values[i] is not None:\n            node.right = TreeNode(values[i])\n            queue.append(node.right)\n        i += 1\n    return root"
+        },
+        {
+          "id": "s8-inorder",
+          "name": "inorder",
+          "kind": "def",
+          "code": "def inorder(root: Optional[TreeNode]) -> List[int]:\n    out: List[int] = []\n\n    def walk(node):\n        if not node:\n            return\n        walk(node.left)\n        out.append(node.val)\n        walk(node.right)\n\n    walk(root)\n    return out"
+        },
+        {
+          "id": "s8-inorder_iterative",
+          "name": "inorder_iterative",
+          "kind": "def",
+          "code": "def inorder_iterative(root: Optional[TreeNode]) -> List[int]:\n    out, stack, cur = [], [], root\n    while cur or stack:\n        while cur:\n            stack.append(cur)\n            cur = cur.left\n        cur = stack.pop()\n        out.append(cur.val)\n        cur = cur.right\n    return out"
+        },
+        {
+          "id": "s8-level_order",
+          "name": "level_order",
+          "kind": "def",
+          "doc": "BFS. The `for _ in range(len(queue))` is what separates the levels.",
+          "code": "def level_order(root: Optional[TreeNode]) -> List[List[int]]:\n    if not root:\n        return []\n    out, queue = [], deque([root])\n    while queue:\n        level = []\n        for _ in range(len(queue)):\n            node = queue.popleft()\n            level.append(node.val)\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        out.append(level)\n    return out"
+        },
+        {
+          "id": "s8-max_depth",
+          "name": "max_depth",
+          "kind": "def",
+          "code": "def max_depth(root: Optional[TreeNode]) -> int:\n    if not root:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))"
+        }
+      ]
+    },
+    {
+      "id": "s9",
+      "title": "🕸️ 9. Graphs & Grids",
+      "sheet": [],
+      "helpers": [
+        {
+          "code": "DIRS4 = [(-1, 0), (1, 0), (0, -1), (0, 1)]\nDIRS8 = DIRS4 + [(-1, -1), (-1, 1), (1, -1), (1, 1)]"
+        },
+        {
+          "id": "s9-in_bounds",
+          "name": "in_bounds",
+          "kind": "def",
+          "code": "def in_bounds(r: int, c: int, grid: List[List]) -> bool:\n    return 0 <= r < len(grid) and 0 <= c < len(grid[0])"
+        },
+        {
+          "id": "s9-neighbors",
+          "name": "neighbors",
+          "kind": "def",
+          "code": "def neighbors(r: int, c: int, grid: List[List], dirs=DIRS4):\n    for dr, dc in dirs:\n        nr, nc = r + dr, c + dc\n        if in_bounds(nr, nc, grid):\n            yield nr, nc"
+        },
+        {
+          "id": "s9-bfs_grid",
+          "name": "bfs_grid",
+          "kind": "def",
+          "doc": "Flood fill from start over cells equal to `passable`. Returns visited set.",
+          "code": "def bfs_grid(grid: List[List[str]], start: Tuple[int, int], passable=\"1\") -> Set[Tuple[int, int]]:\n    sr, sc = start\n    if not in_bounds(sr, sc, grid) or grid[sr][sc] != passable:\n        return set()\n    visited = {start}\n    queue = deque([start])\n    while queue:\n        r, c = queue.popleft()\n        for nr, nc in neighbors(r, c, grid):\n            if (nr, nc) not in visited and grid[nr][nc] == passable:\n                visited.add((nr, nc))\n                queue.append((nr, nc))\n    return visited"
+        },
+        {
+          "id": "s9-count_islands",
+          "name": "count_islands",
+          "kind": "def",
+          "code": "def count_islands(grid: List[List[str]]) -> int:\n    seen: Set[Tuple[int, int]] = set()\n    count = 0\n    for r in range(len(grid)):\n        for c in range(len(grid[0])):\n            if grid[r][c] == \"1\" and (r, c) not in seen:\n                seen |= bfs_grid(grid, (r, c))\n                count += 1\n    return count"
+        },
+        {
+          "id": "s9-build_graph",
+          "name": "build_graph",
+          "kind": "def",
+          "code": "def build_graph(edges: List[Tuple[int, int]], directed=False) -> Dict[int, List[int]]:\n    graph = defaultdict(list)\n    for u, v in edges:\n        graph[u].append(v)\n        if not directed:\n            graph[v].append(u)\n    return graph"
+        },
+        {
+          "id": "s9-bfs_shortest",
+          "name": "bfs_shortest",
+          "kind": "def",
+          "doc": "Unweighted shortest distances from start.",
+          "code": "def bfs_shortest(graph: Dict[int, List[int]], start: int) -> Dict[int, int]:\n    dist = {start: 0}\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        for nxt in graph[node]:\n            if nxt not in dist:\n                dist[nxt] = dist[node] + 1\n                queue.append(nxt)\n    return dist"
+        },
+        {
+          "id": "s9-dfs_iterative",
+          "name": "dfs_iterative",
+          "kind": "def",
+          "code": "def dfs_iterative(graph: Dict[int, List[int]], start: int) -> List[int]:\n    order, seen, stack = [], {start}, [start]\n    while stack:\n        node = stack.pop()\n        order.append(node)\n        for nxt in graph[node]:\n            if nxt not in seen:\n                seen.add(nxt)\n                stack.append(nxt)\n    return order"
+        },
+        {
+          "id": "s9-topo_sort",
+          "name": "topo_sort",
+          "kind": "def",
+          "doc": "Kahn's algorithm. Returns [] if there's a cycle.",
+          "code": "def topo_sort(num_nodes: int, edges: List[Tuple[int, int]]) -> List[int]:\n    graph = defaultdict(list)\n    indeg = [0] * num_nodes\n    for u, v in edges:          # u must come before v\n        graph[u].append(v)\n        indeg[v] += 1\n    queue = deque(n for n in range(num_nodes) if indeg[n] == 0)\n    order = []\n    while queue:\n        node = queue.popleft()\n        order.append(node)\n        for nxt in graph[node]:\n            indeg[nxt] -= 1\n            if indeg[nxt] == 0:\n                queue.append(nxt)\n    return order if len(order) == num_nodes else []"
+        },
+        {
+          "id": "s9-dijkstra",
+          "name": "dijkstra",
+          "kind": "def",
+          "doc": "graph[u] = [(v, weight), ...]. Lazy-deletion min-heap.",
+          "code": "def dijkstra(graph: Dict[int, List[Tuple[int, int]]], start: int) -> Dict[int, int]:\n    dist = {start: 0}\n    heap = [(0, start)]\n    while heap:\n        d, node = heapq.heappop(heap)\n        if d > dist.get(node, INF):\n            continue\n        for nxt, w in graph.get(node, []):\n            nd = d + w\n            if nd < dist.get(nxt, INF):\n                dist[nxt] = nd\n                heapq.heappush(heap, (nd, nxt))\n    return dist"
+        },
+        {
+          "id": "s9-UnionFind",
+          "name": "UnionFind",
+          "kind": "class",
+          "doc": "Union by size + path compression. Near-O(1) per op.",
+          "code": "class UnionFind:\n    def __init__(self, n: int):\n        self.parent = list(range(n))\n        self.size = [1] * n\n        self.components = n\n\n    def find(self, x: int) -> int:\n        while self.parent[x] != x:\n            self.parent[x] = self.parent[self.parent[x]]\n            x = self.parent[x]\n        return x\n\n    def union(self, a: int, b: int) -> bool:\n        ra, rb = self.find(a), self.find(b)\n        if ra == rb:\n            return False\n        if self.size[ra] < self.size[rb]:\n            ra, rb = rb, ra\n        self.parent[rb] = ra\n        self.size[ra] += self.size[rb]\n        self.components -= 1\n        return True\n\n    def connected(self, a: int, b: int) -> bool:\n        return self.find(a) == self.find(b)"
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "title": "📏 10. Intervals",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s10-merge_intervals",
+          "name": "merge_intervals",
+          "kind": "def",
+          "doc": "Sort by start, then extend or append.",
+          "code": "def merge_intervals(intervals: List[List[int]]) -> List[List[int]]:\n    if not intervals:\n        return []\n    intervals = sorted(intervals, key=lambda x: x[0])\n    merged = [intervals[0][:]]\n    for start, end in intervals[1:]:\n        if start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged"
+        },
+        {
+          "id": "s10-overlaps",
+          "name": "overlaps",
+          "kind": "def",
+          "code": "def overlaps(a: List[int], b: List[int]) -> bool:\n    return a[0] < b[1] and b[0] < a[1]"
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "title": "➗ 11. Math & Bits",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s11-gcd",
+          "name": "gcd",
+          "kind": "def",
+          "code": "def gcd(a: int, b: int) -> int:\n    while b:\n        a, b = b, a % b\n    return a"
+        },
+        {
+          "id": "s11-lcm",
+          "name": "lcm",
+          "kind": "def",
+          "code": "def lcm(a: int, b: int) -> int:\n    return a // gcd(a, b) * b"
+        },
+        {
+          "id": "s11-sieve",
+          "name": "sieve",
+          "kind": "def",
+          "doc": "All primes &lt;= n.",
+          "code": "def sieve(n: int) -> List[int]:\n    is_prime = [True] * (n + 1)\n    is_prime[0:2] = [False, False]\n    for p in range(2, int(math.isqrt(n)) + 1):\n        if is_prime[p]:\n            for multiple in range(p * p, n + 1, p):\n                is_prime[multiple] = False\n    return [i for i, ok in enumerate(is_prime) if ok]"
+        },
+        {
+          "id": "s11-count_bits",
+          "name": "count_bits",
+          "kind": "def",
+          "code": "def count_bits(x: int) -> int:\n    return bin(x).count(\"1\")          # or x.bit_count() on Python 3.10+"
+        },
+        {
+          "id": "s11-get_bit",
+          "name": "get_bit",
+          "kind": "def",
+          "code": "def get_bit(x: int, i: int) -> int:\n    return (x >> i) & 1"
+        },
+        {
+          "id": "s11-set_bit",
+          "name": "set_bit",
+          "kind": "def",
+          "code": "def set_bit(x: int, i: int) -> int:\n    return x | (1 << i)"
+        },
+        {
+          "id": "s11-clear_bit",
+          "name": "clear_bit",
+          "kind": "def",
+          "code": "def clear_bit(x: int, i: int) -> int:\n    return x & ~(1 << i)"
+        },
+        {
+          "id": "s11-single_number",
+          "name": "single_number",
+          "kind": "def",
+          "doc": "XOR cancels pairs; the loner survives.",
+          "code": "def single_number(nums: List[int]) -> int:\n    result = 0\n    for x in nums:\n        result ^= x\n    return result"
+        }
+      ]
+    },
+    {
+      "id": "s12",
+      "title": "🎯 12. Backtracking / Dp Skeletons",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s12-subsets",
+          "name": "subsets",
+          "kind": "def",
+          "doc": "Backtracking template: choose -&gt; recurse -&gt; un-choose.",
+          "code": "def subsets(nums: List[int]) -> List[List[int]]:\n    out: List[List[int]] = []\n    path: List[int] = []\n\n    def backtrack(start: int):\n        out.append(path[:])            # copy! path mutates\n        for i in range(start, len(nums)):\n            path.append(nums[i])\n            backtrack(i + 1)\n            path.pop()\n\n    backtrack(0)\n    return out"
+        },
+        {
+          "id": "s12-permute",
+          "name": "permute",
+          "kind": "def",
+          "code": "def permute(nums: List[int]) -> List[List[int]]:\n    out: List[List[int]] = []\n    used = [False] * len(nums)\n    path: List[int] = []\n\n    def backtrack():\n        if len(path) == len(nums):\n            out.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            backtrack()\n            path.pop()\n            used[i] = False\n\n    backtrack()\n    return out"
+        },
+        {
+          "id": "s12-fib_memo",
+          "name": "fib_memo",
+          "kind": "def",
+          "doc": "Top-down DP. @lru_cache is the zero-effort memo table.",
+          "code": "def fib_memo(n: int) -> int:\n    @lru_cache(maxsize=None)\n    def f(k: int) -> int:\n        return k if k < 2 else f(k - 1) + f(k - 2)\n\n    return f(n)"
+        },
+        {
+          "id": "s12-climb_stairs",
+          "name": "climb_stairs",
+          "kind": "def",
+          "doc": "Bottom-up DP rolled down to two variables.",
+          "code": "def climb_stairs(n: int) -> int:\n    a, b = 1, 1\n    for _ in range(n - 1):\n        a, b = b, a + b\n    return b"
+        },
+        {
+          "id": "s12-coin_change",
+          "name": "coin_change",
+          "kind": "def",
+          "doc": "Classic unbounded knapsack. Returns -1 if unreachable.",
+          "code": "def coin_change(coins: List[int], amount: int) -> int:\n    dp = [0] + [INF] * amount\n    for target in range(1, amount + 1):\n        for c in coins:\n            if c <= target:\n                dp[target] = min(dp[target], dp[target - c] + 1)\n    return -1 if dp[amount] == INF else int(dp[amount])"
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "title": "🐞 13. Debug Helpers",
+      "sheet": [],
+      "helpers": [
+        {
+          "id": "s13-print_grid",
+          "name": "print_grid",
+          "kind": "def",
+          "code": "def print_grid(grid: List[List]) -> None:\n    for row in grid:\n        print(\" \".join(str(x) for x in row))"
+        },
+        {
+          "id": "s13-trace",
+          "name": "trace",
+          "kind": "def",
+          "code": "def trace(label: str, *values) -> None:\n    print(f\"[{label}]\", *values)"
+        }
+      ]
+    },
+    {
+      "id": "stests",
+      "title": "✅ Self-Tests",
+      "lede": "Run <code>python3 py_dsa_utils.py</code> — every helper above is asserted here. These double as worked examples: the expected output <em>is</em> the spec.",
+      "sheet": [],
+      "helpers": [
+        {
+          "code": "if __name__ == \"__main__\":\n    assert is_palindrome(\"A man, a plan, a canal: Panama\")\n    assert not is_palindrome(\"race a car\")\n    assert is_anagram(\"listen\", \"silent\")\n    assert group_anagrams([\"eat\", \"tea\", \"tan\"]) == [[\"eat\", \"tea\"], [\"tan\"]]\n    assert alpha_counts(\"abb\")[:3] == [1, 2, 0]\n\n    assert two_sum_sorted([2, 7, 11, 15], 9) == (0, 1)\n    assert two_sum([3, 2, 4], 6) == (1, 2)\n    assert max_sum_window([2, 1, 5, 1, 3, 2], 3) == 9\n    assert longest_unique_substring(\"abcabcbb\") == 3\n    assert prefix_sums([1, 2, 3]) == [0, 1, 3, 6]\n    assert subarray_sum_equals_k([1, 1, 1], 2) == 2\n    assert kadane([-2, 1, -3, 4, -1, 2, 1, -5, 4]) == 6\n\n    assert frequency(\"aab\") == {\"a\": 2, \"b\": 1}\n    assert top_k_frequent([1, 1, 1, 2, 2, 3], 2) == [1, 2]\n    assert has_duplicate([1, 2, 1])\n\n    assert binary_search([1, 3, 5, 7], 5) == 2\n    assert binary_search([1, 3, 5, 7], 4) == -1\n    assert lower_bound([1, 3, 3, 7], 3) == 1 == bisect_left([1, 3, 3, 7], 3)\n    assert binary_search_answer(0, 100, lambda x: x * x >= 50) == 8\n    assert sort_by_custom([(1, 2), (1, 5), (0, 9)]) == [(0, 9), (1, 5), (1, 2)]\n\n    assert valid_parentheses(\"({[]})\")\n    assert not valid_parentheses(\"(]\")\n    assert next_greater([2, 1, 3]) == [3, 3, -1]\n    assert k_largest([5, 1, 9, 3], 2) == [9, 5]\n\n    assert to_pylist(reverse_list(build_list([1, 2, 3, 4]))) == [4, 3, 2, 1]\n    assert middle_node(build_list([1, 2, 3, 4, 5])).val == 3\n    assert not has_cycle(build_list([1, 2, 3]))\n\n    root = build_tree([3, 9, 20, None, None, 15, 7])\n    assert inorder(root) == inorder_iterative(root) == [9, 3, 15, 20, 7]\n    assert level_order(root) == [[3], [9, 20], [15, 7]]\n    assert max_depth(root) == 3\n\n    grid = [list(\"110\"), list(\"110\"), list(\"001\")]\n    assert count_islands(grid) == 2\n    g = build_graph([(1, 2), (2, 3), (1, 4)])\n    assert bfs_shortest(g, 1) == {1: 0, 2: 1, 4: 1, 3: 2}\n    assert sorted(dfs_iterative(g, 1)) == [1, 2, 3, 4]\n    assert topo_sort(4, [(0, 1), (1, 2), (2, 3)]) == [0, 1, 2, 3]\n    assert topo_sort(2, [(0, 1), (1, 0)]) == []\n    assert dijkstra({0: [(1, 4), (2, 1)], 2: [(1, 2)], 1: []}, 0) == {0: 0, 2: 1, 1: 3}\n\n    uf = UnionFind(5)\n    uf.union(0, 1)\n    uf.union(1, 2)\n    assert uf.connected(0, 2) and not uf.connected(0, 3)\n    assert uf.components == 3\n\n    assert merge_intervals([[1, 3], [2, 6], [8, 10]]) == [[1, 6], [8, 10]]\n    assert overlaps([1, 5], [4, 8])\n\n    assert gcd(12, 18) == 6 and lcm(4, 6) == 12\n    assert sieve(10) == [2, 3, 5, 7]\n    assert count_bits(7) == 3\n    assert get_bit(5, 0) == 1 and set_bit(4, 0) == 5 and clear_bit(5, 0) == 4\n    assert single_number([4, 1, 2, 1, 2]) == 4\n\n    assert len(subsets([1, 2, 3])) == 8\n    assert len(permute([1, 2, 3])) == 6\n    assert fib_memo(30) == 832040\n    assert climb_stairs(5) == 8\n    assert coin_change([1, 2, 5], 11) == 3\n    assert coin_change([2], 3) == -1\n\n    print(\"all checks passed\")"
+        }
+      ]
+    }
+  ]
+}
