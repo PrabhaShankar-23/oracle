@@ -38,7 +38,7 @@
                 }
               ],
               "why": "The cleaned string is never needed as a value — only the comparison is.",
-              "code": "while (l < r) {\n  while (l < r && !isLetterOrDigit(s[l])) l++;\n  while (l < r && !isLetterOrDigit(s[r])) r--;\n  if (toLower(s[l++]) != toLower(s[r--])) return false;\n}",
+              "code": "def is_palindrome(s):\n    l, r = 0, len(s) - 1\n    while l < r:\n        while l < r and not s[l].isalnum():\n            l += 1\n        while l < r and not s[r].isalnum():\n            r -= 1\n        if s[l].lower() != s[r].lower():\n            return False\n        l, r = l + 1, r - 1\n    return True",
               "traps": []
             },
             {
@@ -69,7 +69,7 @@
                 }
               ],
               "why": "One pointer move discards n candidates at once instead of log-searching for one.",
-              "code": "while (l < r) {\n  s = a[l] + a[r];\n  if (s == target) return {l+1, r+1};\n  if (s < target) l++; else r--;\n}",
+              "code": "def two_sum(numbers, target):\n    l, r = 0, len(numbers) - 1\n    while l < r:\n        total = numbers[l] + numbers[r]\n        if total == target:\n            return [l + 1, r + 1]      # 1-indexed\n        if total < target:\n            l += 1\n        else:\n            r -= 1\n    return []",
               "traps": []
             },
             {
@@ -100,7 +100,7 @@
                 }
               ],
               "why": "Sorting makes duplicate-skipping a local check, so no dedupe set is needed.",
-              "code": "sort(a);\nfor (i = 0; i < n-2; i++) {\n  if (i > 0 && a[i] == a[i-1]) continue;\n  l = i+1; r = n-1;\n  while (l < r) {\n    s = a[i] + a[l] + a[r];\n    if (s < 0) l++;\n    else if (s > 0) r--;\n    else { emit(i,l,r); while (l < r && a[l] == a[l+1]) l++; l++; r--; }\n  }\n}",
+              "code": "def three_sum(nums):\n    nums.sort()\n    res = []\n    for i in range(len(nums) - 2):\n        if nums[i] > 0:\n            break\n        if i > 0 and nums[i] == nums[i - 1]:\n            continue                   # same fixed value → same triplets\n        l, r = i + 1, len(nums) - 1\n        while l < r:\n            total = nums[i] + nums[l] + nums[r]\n            if total < 0:\n                l += 1\n            elif total > 0:\n                r -= 1\n            else:\n                res.append([nums[i], nums[l], nums[r]])\n                l += 1\n                while l < r and nums[l] == nums[l - 1]:\n                    l += 1\n                r -= 1\n    return res",
               "traps": []
             },
             {
@@ -125,7 +125,7 @@
                 }
               ],
               "why": "Moving the taller wall can never beat the current area — that branch is provably dead.",
-              "code": "while (l < r) {\n  best = max(best, (r - l) * min(h[l], h[r]));\n  if (h[l] < h[r]) l++; else r--;\n}",
+              "code": "def max_area(height):\n    l, r, best = 0, len(height) - 1, 0\n    while l < r:\n        best = max(best, (r - l) * min(height[l], height[r]))\n        if height[l] < height[r]:\n            l += 1                     # the shorter wall can never do better\n        else:\n            r -= 1\n    return best",
               "traps": []
             },
             {
@@ -156,7 +156,7 @@
                 }
               ],
               "why": "The smaller of the two maxima is already the binding constraint, so the other array is never read.",
-              "code": "while (l < r) {\n  if (h[l] < h[r]) { leftMax  = max(leftMax,  h[l]); total += leftMax  - h[l++]; }\n  else            { rightMax = max(rightMax, h[r]); total += rightMax - h[r--]; }\n}",
+              "code": "def trap(height):\n    l, r = 0, len(height) - 1\n    left_max = right_max = total = 0\n    while l < r:\n        if height[l] < height[r]:      # left side is bounded by left_max\n            left_max = max(left_max, height[l])\n            total += left_max - height[l]\n            l += 1\n        else:\n            right_max = max(right_max, height[r])\n            total += right_max - height[r]\n            r -= 1\n    return total",
               "traps": []
             }
           ]
@@ -193,7 +193,7 @@
                 }
               ],
               "why": "The closing gap replaces the visited set entirely.",
-              "code": "while (fast && fast.next) {\n  slow = slow.next; fast = fast.next.next;\n  if (slow == fast) return true;\n}",
+              "code": "def has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow, fast = slow.next, fast.next.next\n        if slow is fast:\n            return True\n    return False",
               "traps": []
             },
             {
@@ -224,7 +224,7 @@
                 }
               ],
               "why": "Same termination guarantee, two cursors instead of a growing set.",
-              "code": "do { slow = sq(slow); fast = sq(sq(fast)); } while (slow != fast);\nreturn slow == 1;",
+              "code": "def is_happy(n):\n    def f(x):\n        return sum(int(d) ** 2 for d in str(x))\n\n    slow, fast = f(n), f(f(n))\n    while fast != 1 and slow != fast:\n        slow, fast = f(slow), f(f(fast))\n    return fast == 1",
               "traps": []
             },
             {
@@ -255,7 +255,7 @@
                 }
               ],
               "why": "Read-only input with O(1) space is the actual constraint, and only the cycle-entry trick satisfies both.",
-              "code": "do { slow = a[slow]; fast = a[a[fast]]; } while (slow != fast);\nslow = 0;\nwhile (slow != fast) { slow = a[slow]; fast = a[fast]; }\nreturn slow;",
+              "code": "def find_duplicate(nums):\n    slow = fast = 0                    # index i points to nums[i]\n    while True:\n        slow = nums[slow]\n        fast = nums[nums[fast]]\n        if slow == fast:\n            break\n    slow = 0                           # phase 2: meet at the cycle entry\n    while slow != fast:\n        slow, fast = nums[slow], nums[fast]\n    return slow",
               "traps": []
             }
           ]
@@ -292,7 +292,7 @@
                 }
               ],
               "why": "A slide is a local edit, so the check should be local too.",
-              "code": "add(s2[r]); remove(s2[r - k]);\nif (matched == 26) return true;",
+              "code": "def check_inclusion(s1, s2):\n    k = len(s1)\n    if k > len(s2):\n        return False\n    diff = [0] * 26                    # count(s1) - count(window)\n    for c in s1:\n        diff[ord(c) - 97] += 1\n    for c in s2[:k]:\n        diff[ord(c) - 97] -= 1\n    matched = sum(d == 0 for d in diff)\n\n    def update(i, delta):\n        nonlocal matched\n        if diff[i] == 0:\n            matched -= 1\n        diff[i] += delta\n        if diff[i] == 0:\n            matched += 1\n\n    for r in range(k, len(s2)):\n        if matched == 26:\n            return True\n        update(ord(s2[r]) - 97, -1)      # letter entering\n        update(ord(s2[r - k]) - 97, +1)  # letter leaving\n    return matched == 26",
               "traps": []
             },
             {
@@ -323,7 +323,7 @@
                 }
               ],
               "why": "Aligning by offset lets the window slide a whole word at a time instead of restarting.",
-              "code": "for (off = 0; off < w; off++) {\n  l = off; cnt = 0; map.clear();\n  for (r = off; r + w <= n; r += w) {\n    word = s[r : r+w];\n    if (!need.has(word)) { map.clear(); cnt = 0; l = r + w; continue; }\n    map[word]++; cnt++;\n    while (map[word] > need[word]) { map[s[l:l+w]]--; cnt--; l += w; }\n    if (cnt == k) record(l);\n  }\n}",
+              "code": "from collections import Counter\n\ndef find_substring(s, words):\n    w, k = len(words[0]), len(words)\n    need = Counter(words)\n    res = []\n    for offset in range(w):            # w independent word-aligned windows\n        l, count, seen = offset, 0, Counter()\n        for r in range(offset, len(s) - w + 1, w):\n            word = s[r:r + w]\n            if word not in need:\n                l, count, seen = r + w, 0, Counter()\n                continue\n            seen[word] += 1\n            count += 1\n            while seen[word] > need[word]:\n                seen[s[l:l + w]] -= 1\n                count -= 1\n                l += w\n            if count == k:\n                res.append(l)\n                seen[s[l:l + w]] -= 1\n                count -= 1\n                l += w\n    return res",
               "traps": []
             }
           ]
@@ -360,7 +360,7 @@
                 }
               ],
               "why": "The last-seen index says exactly where to land, so no per-character shrinking loop is needed.",
-              "code": "if (last.has(c)) l = max(l, last[c] + 1);\nlast[c] = r;\nbest = max(best, r - l + 1);",
+              "code": "def length_of_longest_substring(s):\n    last = {}                          # char → last index seen\n    l = best = 0\n    for r, c in enumerate(s):\n        if c in last:\n            l = max(l, last[c] + 1)    # never move l backwards\n        last[c] = r\n        best = max(best, r - l + 1)\n    return best",
               "traps": []
             },
             {
@@ -391,7 +391,7 @@
                 }
               ],
               "why": "The window only ever grows when a record is broken, so the stale max is harmless.",
-              "code": "cnt[c]++; maxCount = max(maxCount, cnt[c]);\nif (r - l + 1 - maxCount > k) cnt[s[l++]]--;\nbest = max(best, r - l + 1);",
+              "code": "def character_replacement(s, k):\n    count = [0] * 26\n    l = max_count = best = 0\n    for r, c in enumerate(s):\n        count[ord(c) - 65] += 1\n        max_count = max(max_count, count[ord(c) - 65])  # never decreased\n        if (r - l + 1) - max_count > k:\n            count[ord(s[l]) - 65] -= 1\n            l += 1                     # window slides, never shrinks\n        best = max(best, r - l + 1)\n    return best",
               "traps": [
                 "Never shrink maxCount. Also note the window here never shrinks — it slides."
               ]
@@ -424,7 +424,7 @@
                 }
               ],
               "why": "Positivity gives monotonicity, so the left pointer never needs to back up.",
-              "code": "sum += a[r];\nwhile (sum >= target) { best = min(best, r - l + 1); sum -= a[l++]; }",
+              "code": "def min_sub_array_len(target, nums):\n    l = total = 0\n    best = float('inf')\n    for r, x in enumerate(nums):\n        total += x\n        while total >= target:         # shrink while still valid\n            best = min(best, r - l + 1)\n            total -= nums[l]\n            l += 1\n    return 0 if best == float('inf') else best",
               "traps": []
             },
             {
@@ -455,7 +455,7 @@
                 }
               ],
               "why": "Each index enters and leaves the window once, so the sweep is linear rather than quadratic.",
-              "code": "have[c]++; if (have[c] == need[c]) formed++;\nwhile (formed == required) {\n  record(l, r);\n  have[s[l]]--; if (have[s[l]] < need[s[l]]) formed--;\n  l++;\n}",
+              "code": "from collections import Counter\n\ndef min_window(s, t):\n    need, have = Counter(t), Counter()\n    required, formed = len(need), 0\n    l, start, length = 0, 0, float('inf')\n    for r, c in enumerate(s):\n        have[c] += 1\n        if c in need and have[c] == need[c]:\n            formed += 1\n        while formed == required:      # feasible: record, then contract\n            if r - l + 1 < length:\n                start, length = l, r - l + 1\n            d = s[l]\n            have[d] -= 1\n            if d in need and have[d] < need[d]:\n                formed -= 1\n            l += 1\n    return \"\" if length == float('inf') else s[start:start + length]",
               "traps": []
             }
           ]
@@ -485,7 +485,7 @@
                   "winner": true
                 }
               ],
-              "code": "if (last.has(a[i]) && i - last[a[i]] <= k) return true;\nlast[a[i]] = i;",
+              "code": "def contains_nearby_duplicate(nums, k):\n    last = {}                          # value → last index\n    for i, x in enumerate(nums):\n        if x in last and i - last[x] <= k:\n            return True\n        last[x] = i\n    return False",
               "traps": []
             },
             {
@@ -516,7 +516,7 @@
                 }
               ],
               "why": "\"Find a matching earlier prefix\" collapses into a single hash lookup.",
-              "code": "sum += a[i];\nans += cnt.getOrDefault(sum - k, 0);\ncnt[sum]++;",
+              "code": "from collections import defaultdict\n\ndef subarray_sum(nums, k):\n    count = defaultdict(int)\n    count[0] = 1                       # empty prefix\n    prefix = res = 0\n    for x in nums:\n        prefix += x\n        res += count[prefix - k]       # earlier prefixes that leave sum k\n        count[prefix] += 1\n    return res",
               "traps": [
                 "Values can be negative, so a sliding window is invalid here. Seeding {0:1} is what counts subarrays starting at index 0."
               ]
@@ -549,7 +549,7 @@
                 }
               ],
               "why": "The right product is only ever needed at one index at a time.",
-              "code": "out[0] = 1;\nfor (i = 1; i < n; i++) out[i] = out[i-1] * a[i-1];\nR = 1;\nfor (i = n-1; i >= 0; i--) { out[i] *= R; R *= a[i]; }",
+              "code": "def product_except_self(nums):\n    n = len(nums)\n    out = [1] * n\n    for i in range(1, n):              # out[i] = product of nums[:i]\n        out[i] = out[i - 1] * nums[i - 1]\n    R = 1                              # product of nums[i+1:]\n    for i in range(n - 1, -1, -1):\n        out[i] *= R\n        R *= nums[i]\n    return out",
               "traps": []
             },
             {
@@ -580,7 +580,7 @@
                 }
               ],
               "why": "The no-predecessor guard is what keeps total walk work linear instead of quadratic.",
-              "code": "for (x : set) {\n  if (set.has(x - 1)) continue;   // not a run head\n  y = x; while (set.has(y + 1)) y++;\n  best = max(best, y - x + 1);\n}",
+              "code": "def longest_consecutive(nums):\n    values = set(nums)\n    best = 0\n    for x in values:\n        if x - 1 not in values:        # x is a run head\n            y = x\n            while y + 1 in values:\n                y += 1\n            best = max(best, y - x + 1)\n    return best",
               "traps": []
             }
           ]
@@ -617,7 +617,7 @@
                 }
               ],
               "why": "Identical idea in one variable — <code>cur = max(a[i], cur + a[i])</code>.",
-              "code": "cur = max(a[i], cur + a[i]);\nbest = max(best, cur);",
+              "code": "def max_sub_array(nums):\n    cur = best = nums[0]\n    for x in nums[1:]:\n        cur = max(x, cur + x)          # extend, or restart at x\n        best = max(best, cur)\n    return best",
               "traps": []
             },
             {
@@ -642,7 +642,7 @@
                 }
               ],
               "why": "A large negative minimum is one multiplication away from being the maximum.",
-              "code": "if (a[i] < 0) swap(curMax, curMin);\ncurMax = max(a[i], curMax * a[i]);\ncurMin = min(a[i], curMin * a[i]);\nbest   = max(best, curMax);",
+              "code": "def max_product(nums):\n    cur_max = cur_min = best = nums[0]\n    for x in nums[1:]:\n        if x < 0:\n            cur_max, cur_min = cur_min, cur_max   # a negative flips the roles\n        cur_max = max(x, cur_max * x)\n        cur_min = min(x, cur_min * x)\n        best = max(best, cur_max)\n    return best",
               "traps": []
             },
             {
@@ -673,7 +673,7 @@
                 }
               ],
               "why": "The complement trick handles wrap-around without materialising 2n elements.",
-              "code": "return (maxSum > 0) ? max(maxSum, total - minSum) : maxSum;",
+              "code": "def max_subarray_sum_circular(nums):\n    total = cur_max = cur_min = 0\n    best_max = best_min = nums[0]\n    for x in nums:\n        cur_max = max(x, cur_max + x)\n        best_max = max(best_max, cur_max)\n        cur_min = min(x, cur_min + x)\n        best_min = min(best_min, cur_min)\n        total += x\n    if best_max < 0:                   # all negative: wrapping would be empty\n        return best_max\n    return max(best_max, total - best_min)",
               "traps": [
                 "If every element is negative, total - minSum is 0 (the empty subarray) — hence the maxSum &gt; 0 guard."
               ]
@@ -705,7 +705,7 @@
                   "winner": true
                 }
               ],
-              "code": "for (x : a) if (x != val) a[k++] = x;\nreturn k;",
+              "code": "def remove_element(nums, val):\n    k = 0                              # write pointer\n    for x in nums:\n        if x != val:\n            nums[k] = x\n            k += 1\n    return k",
               "traps": []
             },
             {
@@ -736,7 +736,7 @@
                 }
               ],
               "why": "Single pass, and it generalises to keys you cannot count.",
-              "code": "while (mid <= high) {\n  if (a[mid] == 0) swap(a[low++], a[mid++]);\n  else if (a[mid] == 1) mid++;\n  else swap(a[mid], a[high--]);\n}",
+              "code": "def sort_colors(nums):\n    low, mid, high = 0, 0, len(nums) - 1\n    while mid <= high:\n        if nums[mid] == 0:\n            nums[low], nums[mid] = nums[mid], nums[low]\n            low += 1\n            mid += 1\n        elif nums[mid] == 1:\n            mid += 1\n        else:                          # 2: swap to the back, re-check mid\n            nums[mid], nums[high] = nums[high], nums[mid]\n            high -= 1",
               "traps": [
                 "On the 2-swap you do NOT advance mid — the value swapped in from high is still unexamined."
               ]
@@ -763,7 +763,7 @@
                 }
               ],
               "why": "Generalises to \"keep at most m\" by comparing against a[k-m].",
-              "code": "for (x : a) if (k < 2 || x != a[k-2]) a[k++] = x;\nreturn k;",
+              "code": "def remove_duplicates(nums):\n    k = 0                              # write pointer\n    for x in nums:\n        if k < 2 or x != nums[k - 2]:  # at most two copies\n            nums[k] = x\n            k += 1\n    return k",
               "traps": []
             }
           ]
@@ -799,7 +799,7 @@
                   "winner": true
                 }
               ],
-              "code": "start = a[i];\nwhile (i + 1 < n && a[i+1] == a[i] + 1) i++;\nemit(start, a[i]);",
+              "code": "def summary_ranges(nums):\n    res, i = [], 0\n    while i < len(nums):\n        start = i\n        while i + 1 < len(nums) and nums[i + 1] == nums[i] + 1:\n            i += 1\n        res.append(str(nums[start]) if start == i else f\"{nums[start]}->{nums[i]}\")\n        i += 1\n    return res",
               "traps": []
             },
             {
@@ -830,7 +830,7 @@
                 }
               ],
               "why": "Sorting reduces overlap from a global search to one local comparison.",
-              "code": "if (cur[0] <= tail[1]) tail[1] = max(tail[1], cur[1]);\nelse out.add(cur);",
+              "code": "def merge(intervals):\n    intervals.sort(key=lambda iv: iv[0])\n    merged = []\n    for start, end in intervals:\n        if merged and start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)   # extend the tail\n        else:\n            merged.append([start, end])\n    return merged",
               "traps": []
             },
             {
@@ -855,7 +855,7 @@
                 }
               ],
               "why": "The pre-existing sort is the whole reason this is O(n) and not O(n log n).",
-              "code": "while (i < n && a[i][1] < nw[0]) out.add(a[i++]);\nwhile (i < n && a[i][0] <= nw[1]) {\n  nw[0] = min(nw[0], a[i][0]); nw[1] = max(nw[1], a[i][1]); i++;\n}\nout.add(nw);\nwhile (i < n) out.add(a[i++]);",
+              "code": "def insert(intervals, new_interval):\n    res, i, n = [], 0, len(intervals)\n    start, end = new_interval\n    while i < n and intervals[i][1] < start:     # 1. strictly before\n        res.append(intervals[i])\n        i += 1\n    while i < n and intervals[i][0] <= end:      # 2. overlapping: absorb\n        start = min(start, intervals[i][0])\n        end = max(end, intervals[i][1])\n        i += 1\n    res.append([start, end])\n    res.extend(intervals[i:])                    # 3. strictly after\n    return res",
               "traps": []
             }
           ]
@@ -892,7 +892,7 @@
                 }
               ],
               "why": "XOR is overflow-proof and needs no closed form.",
-              "code": "for (i = 0; i < n; i++) x ^= i ^ a[i];\nx ^= n;\nreturn x;",
+              "code": "def missing_number(nums):\n    acc = len(nums)                    # the index n has no slot\n    for i, x in enumerate(nums):\n        acc ^= i ^ x                   # pairs cancel, the missing one remains\n    return acc",
               "traps": []
             },
             {
@@ -923,7 +923,7 @@
                 }
               ],
               "why": "The array itself is the hash table — index i is the natural bucket for value i+1.",
-              "code": "for (i = 0; i < n; i++)\n  while (a[i] >= 1 && a[i] <= n && a[a[i]-1] != a[i])\n    swap(a[i], a[a[i]-1]);\nfor (i = 0; i < n; i++) if (a[i] != i + 1) return i + 1;\nreturn n + 1;",
+              "code": "def first_missing_positive(nums):\n    n = len(nums)\n    for i in range(n):\n        while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:\n            j = nums[i] - 1            # value v belongs in slot v-1\n            nums[i], nums[j] = nums[j], nums[i]\n    for i in range(n):\n        if nums[i] != i + 1:\n            return i + 1\n    return n + 1",
               "traps": [
                 "Loop condition is a[a[i]-1] != a[i], not a[i] != i+1 — otherwise duplicates spin forever."
               ]
@@ -957,7 +957,7 @@
                   "winner": true
                 }
               ],
-              "code": "sort by start;\nif (a[i][0] < a[i-1][1]) return false;",
+              "code": "def can_attend_meetings(intervals):\n    intervals.sort(key=lambda iv: iv[0])\n    for i in range(1, len(intervals)):\n        if intervals[i][0] < intervals[i - 1][1]:\n            return False\n    return True",
               "traps": []
             },
             {
@@ -988,7 +988,7 @@
                 }
               ],
               "why": "Earliest-finish-time is provably optimal, so no DP table is needed.",
-              "code": "sort by end;\nif (a[i][0] >= prevEnd) { kept++; prevEnd = a[i][1]; }\nreturn n - kept;",
+              "code": "def erase_overlap_intervals(intervals):\n    intervals.sort(key=lambda iv: iv[1])   # earliest end leaves the most room\n    kept, prev_end = 0, float('-inf')\n    for start, end in intervals:\n        if start >= prev_end:\n            kept += 1\n            prev_end = end\n    return len(intervals) - kept",
               "traps": [
                 "Sorting by start instead of end silently gives wrong answers on nested intervals."
               ]
@@ -1015,7 +1015,7 @@
                 }
               ],
               "why": "Identical to Non-overlapping Intervals with the answer read off the other way.",
-              "code": "sort by end;\nif (a[i][0] > arrow) { arrows++; arrow = a[i][1]; }",
+              "code": "def find_min_arrow_shots(points):\n    points.sort(key=lambda p: p[1])\n    arrows, arrow = 0, float('-inf')\n    for start, end in points:\n        if start > arrow:              # true miss: fire at this balloon's end\n            arrows += 1\n            arrow = end\n    return arrows",
               "traps": [
                 "Touching endpoints count as overlap here, so the test is &gt; and not &gt;=."
               ]
@@ -1050,7 +1050,7 @@
                 }
               ],
               "why": "The heap answers \"is any room free\" in O(log n) and directly models room reuse.",
-              "code": "sort by start;\nif (!heap.isEmpty() && heap.peek() <= start) heap.poll();\nheap.add(end);\nans = max(ans, heap.size());",
+              "code": "import heapq\n\ndef min_meeting_rooms(intervals):\n    intervals.sort(key=lambda iv: iv[0])\n    ends = []                          # min-heap of end times = rooms in use\n    for start, end in intervals:\n        if ends and ends[0] <= start:\n            heapq.heapreplace(ends, end)   # reuse the room that frees first\n        else:\n            heapq.heappush(ends, end)\n    return len(ends)",
               "traps": []
             }
           ]
@@ -1081,7 +1081,7 @@
                 }
               ],
               "why": "Affordability only ever grows, so a project moves between heaps exactly once.",
-              "code": "for (k rounds) {\n  while (!minCap.isEmpty() && minCap.peek().cap <= w) maxProfit.add(minCap.poll());\n  if (maxProfit.isEmpty()) break;\n  w += maxProfit.poll().profit;\n}",
+              "code": "import heapq\n\ndef find_maximized_capital(k, w, profits, capital):\n    locked = list(zip(capital, profits))   # min-heap by capital\n    heapq.heapify(locked)\n    affordable = []                        # max-heap by profit (negated)\n    for _ in range(k):\n        while locked and locked[0][0] <= w:\n            heapq.heappush(affordable, -heapq.heappop(locked)[1])\n        if not affordable:\n            break\n        w -= heapq.heappop(affordable)\n    return w",
               "traps": []
             },
             {
@@ -1112,7 +1112,7 @@
                 }
               ],
               "why": "Only the boundary between the two halves matters, and heaps expose exactly that.",
-              "code": "lo.add(x); hi.add(lo.poll());\nif (hi.size() > lo.size()) lo.add(hi.poll());\nmedian = lo.size() > hi.size() ? lo.peek() : (lo.peek() + hi.peek()) / 2.0;",
+              "code": "import heapq\n\nclass MedianFinder:\n    def __init__(self):\n        self.lo = []                   # max-heap (negated): smaller half\n        self.hi = []                   # min-heap: larger half\n\n    def addNum(self, num):\n        heapq.heappush(self.lo, -num)\n        heapq.heappush(self.hi, -heapq.heappop(self.lo))\n        if len(self.hi) > len(self.lo):    # keep len(lo) >= len(hi)\n            heapq.heappush(self.lo, -heapq.heappop(self.hi))\n\n    def findMedian(self):\n        if len(self.lo) > len(self.hi):\n            return -self.lo[0]\n        return (-self.lo[0] + self.hi[0]) / 2",
               "traps": [
                 "Always push through lo first — pushing directly into hi breaks the ordering invariant."
               ]
@@ -1150,7 +1150,7 @@
                   "winner": true
                 }
               ],
-              "code": "while (lo <= hi) {\n  m = lo + (hi - lo) / 2;\n  if (a[m] == t) return m;\n  if (a[m] < t) lo = m + 1; else hi = m - 1;\n}",
+              "code": "def search(nums, target):\n    lo, hi = 0, len(nums) - 1          # inclusive bounds\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1",
               "traps": []
             },
             {
@@ -1181,7 +1181,7 @@
                 }
               ],
               "why": "Same complexity, one loop, and no boundary bugs between two searches.",
-              "code": "lo = 0; hi = m*n - 1;\nv = a[mid / n][mid % n];",
+              "code": "def search_matrix(matrix, target):\n    m, n = len(matrix), len(matrix[0])\n    lo, hi = 0, m * n - 1              # one index over the flattened matrix\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        value = matrix[mid // n][mid % n]\n        if value == target:\n            return True\n        if value < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return False",
               "traps": []
             },
             {
@@ -1206,7 +1206,7 @@
                 }
               ],
               "why": "You are searching a shape, not a value — the slope tells you which half must contain a peak.",
-              "code": "while (lo < hi) {\n  m = lo + (hi - lo) / 2;\n  if (a[m] < a[m+1]) lo = m + 1; else hi = m;\n}\nreturn lo;",
+              "code": "def find_peak_element(nums):\n    lo, hi = 0, len(nums) - 1\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if nums[mid] < nums[mid + 1]:\n            lo = mid + 1               # uphill to the right: a peak is there\n        else:\n            hi = mid\n    return lo",
               "traps": []
             },
             {
@@ -1231,7 +1231,7 @@
                 }
               ],
               "why": "Writing one clean lowerBound and calling it twice removes the usual off-by-one mess.",
-              "code": "lo = lowerBound(a, t);\nif (lo == n || a[lo] != t) return {-1, -1};\nreturn {lo, lowerBound(a, t + 1) - 1};",
+              "code": "def search_range(nums, target):\n    def lower_bound(x):                # first index with nums[i] >= x\n        lo, hi = 0, len(nums)\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if nums[mid] < x:\n                lo = mid + 1\n            else:\n                hi = mid\n        return lo\n\n    first = lower_bound(target)\n    if first == len(nums) or nums[first] != target:\n        return [-1, -1]\n    return [first, lower_bound(target + 1) - 1]",
               "traps": []
             },
             {
@@ -1255,7 +1255,7 @@
                   "winner": true
                 }
               ],
-              "code": "while (lo < hi) {\n  m = lo + (hi - lo) / 2;\n  if (a[m] > a[hi]) lo = m + 1; else hi = m;\n}\nreturn a[lo];",
+              "code": "def find_min(nums):\n    lo, hi = 0, len(nums) - 1\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if nums[mid] > nums[hi]:\n            lo = mid + 1               # the drop is right of mid\n        else:\n            hi = mid\n    return nums[lo]",
               "traps": [
                 "Compare to a[hi], never a[lo] — comparing to lo breaks on an unrotated array."
               ]
@@ -1288,7 +1288,7 @@
                 }
               ],
               "why": "The sorted half is decidable from three values, so the pivot pass is redundant.",
-              "code": "if (a[lo] <= a[m]) {\n  if (a[lo] <= t && t < a[m]) hi = m - 1; else lo = m + 1;\n} else {\n  if (a[m] < t && t <= a[hi]) lo = m + 1; else hi = m - 1;\n}",
+              "code": "def search(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[lo] <= nums[mid]:          # left half is sorted\n            if nums[lo] <= target < nums[mid]:\n                hi = mid - 1\n            else:\n                lo = mid + 1\n        else:                              # right half is sorted\n            if nums[mid] < target <= nums[hi]:\n                lo = mid + 1\n            else:\n                hi = mid - 1\n    return -1",
               "traps": []
             },
             {
@@ -1319,7 +1319,7 @@
                 }
               ],
               "why": "The median depends only on the four values straddling the cut, never on the full merge.",
-              "code": "if (A[i-1] > B[j])      hi = i - 1;\nelse if (B[j-1] > A[i]) lo = i + 1;\nelse  answer from max(A[i-1], B[j-1]) and min(A[i], B[j]);",
+              "code": "def find_median_sorted_arrays(a, b):\n    if len(a) > len(b):\n        a, b = b, a                        # binary search the shorter array\n    m, n = len(a), len(b)\n    half = (m + n + 1) // 2\n    lo, hi = 0, m\n    while lo <= hi:\n        i = (lo + hi) // 2                 # cut in a\n        j = half - i                       # cut in b\n        a_left = a[i - 1] if i > 0 else float('-inf')\n        a_right = a[i] if i < m else float('inf')\n        b_left = b[j - 1] if j > 0 else float('-inf')\n        b_right = b[j] if j < n else float('inf')\n        if a_left <= b_right and b_left <= a_right:\n            if (m + n) % 2:\n                return max(a_left, b_left)\n            return (max(a_left, b_left) + min(a_right, b_right)) / 2\n        if a_left > b_right:\n            hi = i - 1\n        else:\n            lo = i + 1",
               "traps": [
                 "Use ±infinity for out-of-range i and j, and always binary search the shorter array so j stays in bounds."
               ]
@@ -1351,7 +1351,7 @@
                   "winner": true
                 }
               ],
-              "code": "while (lo <= hi) {\n  m = lo + (hi - lo) / 2;\n  if (m <= x / m) { ans = m; lo = m + 1; } else hi = m - 1;\n}",
+              "code": "def my_sqrt(x):\n    lo, hi, ans = 0, x, 0\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if mid * mid <= x:\n            ans = mid                  # feasible: remember it, try larger\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return ans",
               "traps": [
                 "Use m &lt;= x/m rather than m*m &lt;= x to dodge overflow."
               ]
@@ -1384,7 +1384,7 @@
                 }
               ],
               "why": "Monotone feasibility turns a linear scan of candidate answers into a logarithmic one.",
-              "code": "while (lo < hi) {\n  k = lo + (hi - lo) / 2;\n  if (hours(k) <= h) hi = k; else lo = k + 1;\n}\nreturn lo;",
+              "code": "def min_eating_speed(piles, h):\n    lo, hi = 1, max(piles)\n    while lo < hi:\n        k = (lo + hi) // 2\n        hours = sum((p + k - 1) // k for p in piles)   # ceil(p / k)\n        if hours <= h:\n            hi = k                     # feasible: try slower\n        else:\n            lo = k + 1\n    return lo",
               "traps": []
             }
           ]
@@ -1421,7 +1421,7 @@
                 }
               ],
               "why": "The frequency range is bounded by n, so counting beats comparing.",
-              "code": "bucket[freq[x]].add(x);\nfor (f = n; f >= 1 && collected < k; f--) drain bucket[f];",
+              "code": "from collections import Counter\n\ndef top_k_frequent(nums, k):\n    buckets = [[] for _ in range(len(nums) + 1)]   # index = frequency\n    for x, f in Counter(nums).items():\n        buckets[f].append(x)\n    res = []\n    for f in range(len(nums), 0, -1):\n        for x in buckets[f]:\n            res.append(x)\n            if len(res) == k:\n                return res\n    return res",
               "traps": []
             },
             {
@@ -1452,7 +1452,7 @@
                 }
               ],
               "why": "You never need the other n−k points in any order.",
-              "code": "heap.add(p);              // compare on x*x + y*y, no sqrt\nif (heap.size() > k) heap.poll();",
+              "code": "import heapq\n\ndef k_closest(points, k):\n    heap = []                          # max-heap of size k (negated distance)\n    for x, y in points:\n        heapq.heappush(heap, (-(x * x + y * y), x, y))\n        if len(heap) > k:\n            heapq.heappop(heap)        # drop the farthest\n    return [[x, y] for _, x, y in heap]",
               "traps": []
             },
             {
@@ -1483,7 +1483,7 @@
                 }
               ],
               "why": "Half the remaining work is discarded each round instead of being ordered.",
-              "code": "p = partition(l, r);\nif (p == target) return a[p];\nif (p < target) l = p + 1; else r = p - 1;",
+              "code": "import random\n\ndef find_kth_largest(nums, k):\n    target = len(nums) - k             # index in ascending order\n    lo, hi = 0, len(nums) - 1\n    while True:\n        pivot = nums[random.randint(lo, hi)]\n        lt, i, gt = lo, lo, hi         # 3-way partition: < pivot | == | >\n        while i <= gt:\n            if nums[i] < pivot:\n                nums[lt], nums[i] = nums[i], nums[lt]\n                lt += 1\n                i += 1\n            elif nums[i] > pivot:\n                nums[gt], nums[i] = nums[i], nums[gt]\n                gt -= 1\n            else:\n                i += 1\n        if target < lt:\n            hi = lt - 1\n        elif target > gt:\n            lo = gt + 1\n        else:\n            return pivot",
               "traps": [
                 "Without a random (or median-of-three) pivot, sorted input degrades this to O(n²)."
               ]
@@ -1516,7 +1516,7 @@
                 }
               ],
               "why": "The schedule length is entirely determined by the busiest task — simulation only re-derives the formula.",
-              "code": "return max(tasks.length, (f - 1) * (n + 1) + c);",
+              "code": "from collections import Counter\n\ndef least_interval(tasks, n):\n    counts = Counter(tasks).values()\n    f = max(counts)                             # max frequency\n    c = sum(1 for x in counts if x == f)        # tasks tied at f\n    return max(len(tasks), (f - 1) * (n + 1) + c)",
               "traps": [
                 "The max(...) with tasks.length is what handles the case where there are too many distinct tasks to ever idle."
               ]
@@ -1549,7 +1549,7 @@
                 }
               ],
               "why": "The dummy head removes every \"is this the first node\" special case.",
-              "code": "while (a && b) {\n  if (a.val <= b.val) { tail.next = a; a = a.next; }\n  else                { tail.next = b; b = b.next; }\n  tail = tail.next;\n}\ntail.next = (a != null) ? a : b;",
+              "code": "def merge_two_lists(l1, l2):\n    dummy = tail = ListNode()\n    while l1 and l2:\n        if l1.val <= l2.val:\n            tail.next, l1 = l1, l1.next\n        else:\n            tail.next, l2 = l2, l2.next\n        tail = tail.next\n    tail.next = l1 or l2               # splice the leftover run\n    return dummy.next",
               "traps": []
             },
             {
@@ -1580,7 +1580,7 @@
                 }
               ],
               "why": "Row-wise monotonicity means the next answer is always already in the heap.",
-              "code": "push (i, 0) for i < min(k, m);\npop (i, j) -> emit (a[i], b[j]);\nif (j + 1 < n) push (i, j + 1);",
+              "code": "import heapq\n\ndef k_smallest_pairs(nums1, nums2, k):\n    heap = [(nums1[i] + nums2[0], i, 0) for i in range(min(k, len(nums1)))]\n    heapq.heapify(heap)                # one frontier per row i\n    res = []\n    while heap and len(res) < k:\n        _, i, j = heapq.heappop(heap)\n        res.append([nums1[i], nums2[j]])\n        if j + 1 < len(nums2):\n            heapq.heappush(heap, (nums1[i] + nums2[j + 1], i, j + 1))\n    return res",
               "traps": []
             },
             {
@@ -1611,7 +1611,7 @@
                 }
               ],
               "why": "Same time bound with no heap — each round is just the two-list merge you already know.",
-              "code": "interval = 1;\nwhile (interval < k) {\n  for (i = 0; i + interval < k; i += 2 * interval)\n    lists[i] = merge2(lists[i], lists[i + interval]);\n  interval *= 2;\n}\nreturn lists[0];",
+              "code": "def merge_k_lists(lists):\n    def merge_two(a, b):\n        dummy = tail = ListNode()\n        while a and b:\n            if a.val <= b.val:\n                tail.next, a = a, a.next\n            else:\n                tail.next, b = b, b.next\n            tail = tail.next\n        tail.next = a or b\n        return dummy.next\n\n    if not lists:\n        return None\n    interval = 1\n    while interval < len(lists):       # rounds: merge pairs at doubling gaps\n        for i in range(0, len(lists) - interval, interval * 2):\n            lists[i] = merge_two(lists[i], lists[i + interval])\n        interval *= 2\n    return lists[0]",
               "traps": []
             }
           ]
@@ -1654,7 +1654,7 @@
                 }
               ],
               "why": "Each index is pushed and popped exactly once, so the total scan is linear.",
-              "code": "while (!st.isEmpty() && t[i] > t[st.peek()]) {\n  j = st.pop(); ans[j] = i - j;\n}\nst.push(i);",
+              "code": "def daily_temperatures(temps):\n    res = [0] * len(temps)\n    stack = []                         # indices, temperatures decreasing\n    for i, t in enumerate(temps):\n        while stack and temps[stack[-1]] < t:\n            j = stack.pop()            # i is j's next warmer day\n            res[j] = i - j\n        stack.append(i)\n    return res",
               "traps": [
                 "Push indices, not temperatures — you need the distance."
               ]
@@ -1681,7 +1681,7 @@
                 }
               ],
               "why": "You can drop the stack entirely and just carry the max arrival time seen so far.",
-              "code": "t = (target - pos) / speed;        // as a double\nif (st.isEmpty() || t > st.peek()) st.push(t);   // else it merges",
+              "code": "def car_fleet(target, position, speed):\n    stack = []                         # arrival time of each fleet\n    for p, s in sorted(zip(position, speed), reverse=True):\n        time = (target - p) / s\n        if not stack or time > stack[-1]:\n            stack.append(time)         # slower than the fleet ahead: new fleet\n    return len(stack)",
               "traps": []
             },
             {
@@ -1712,7 +1712,7 @@
                 }
               ],
               "why": "The pop moment is precisely when both boundaries of that bar are determined.",
-              "code": "while (!st.isEmpty() && h[i] < h[st.peek()]) {\n  ht = h[st.pop()];\n  w  = st.isEmpty() ? i : i - st.peek() - 1;\n  best = max(best, ht * w);\n}\nst.push(i);",
+              "code": "def largest_rectangle_area(heights):\n    stack, best = [], 0                # indices, heights increasing\n    for i, h in enumerate(heights + [0]):      # sentinel 0 flushes the stack\n        while stack and heights[stack[-1]] >= h:\n            height = heights[stack.pop()]\n            left = stack[-1] if stack else -1\n            best = max(best, height * (i - left - 1))\n        stack.append(i)\n    return best",
               "traps": [
                 "Width is i - st.peek() - 1 AFTER the pop, not i - poppedIndex."
               ]
@@ -1751,7 +1751,7 @@
                 }
               ],
               "why": "An earlier, smaller element is dominated forever — so it is deleted, not merely deprioritised.",
-              "code": "while (!dq.isEmpty() && a[dq.peekLast()] <= a[i]) dq.pollLast();\ndq.addLast(i);\nif (dq.peekFirst() <= i - k) dq.pollFirst();\nif (i >= k - 1) out[i - k + 1] = a[dq.peekFirst()];",
+              "code": "from collections import deque\n\ndef max_sliding_window(nums, k):\n    dq, res = deque(), []              # indices, values decreasing front → back\n    for i, x in enumerate(nums):\n        while dq and nums[dq[-1]] <= x:\n            dq.pop()                   # can never be a max again\n        dq.append(i)\n        if dq[0] <= i - k:\n            dq.popleft()               # slid out of the window\n        if i >= k - 1:\n            res.append(nums[dq[0]])\n    return res",
               "traps": []
             }
           ]
@@ -1782,7 +1782,7 @@
                 }
               ],
               "why": "Pushing the closer rather than the opener removes the pair-lookup at pop time.",
-              "code": "if (isOpen(c)) st.push(match(c));\nelse if (st.isEmpty() || st.pop() != c) return false;\nreturn st.isEmpty();",
+              "code": "def is_valid(s):\n    closer = {'(': ')', '[': ']', '{': '}'}\n    stack = []                         # expected closing brackets\n    for c in s:\n        if c in closer:\n            stack.append(closer[c])\n        elif not stack or stack.pop() != c:\n            return False\n    return not stack",
               "traps": []
             },
             {
@@ -1813,7 +1813,7 @@
                 }
               ],
               "why": "The min is a property of the stack depth, so it belongs in the frame.",
-              "code": "push(x): st.push({x, st.isEmpty() ? x : min(x, st.peek()[1])});\ngetMin(): return st.peek()[1];",
+              "code": "class MinStack:\n    def __init__(self):\n        self.stack = []                # (value, min so far)\n\n    def push(self, val):\n        low = min(val, self.stack[-1][1]) if self.stack else val\n        self.stack.append((val, low))\n\n    def pop(self):\n        self.stack.pop()\n\n    def top(self):\n        return self.stack[-1][0]\n\n    def getMin(self):\n        return self.stack[-1][1]",
               "traps": []
             },
             {
@@ -1837,7 +1837,7 @@
                   "winner": true
                 }
               ],
-              "code": "b = st.pop(); a = st.pop();\nst.push(apply(a, op, b));   // order matters for - and /",
+              "code": "def eval_rpn(tokens):\n    stack = []\n    for t in tokens:\n        if t in {'+', '-', '*', '/'}:\n            b, a = stack.pop(), stack.pop()    # right operand pops first\n            if t == '+':\n                stack.append(a + b)\n            elif t == '-':\n                stack.append(a - b)\n            elif t == '*':\n                stack.append(a * b)\n            else:\n                stack.append(int(a / b))       # truncate toward zero\n        else:\n            stack.append(int(t))\n    return stack[0]",
               "traps": []
             },
             {
@@ -1868,7 +1868,7 @@
                 }
               ],
               "why": "With only + and −, the paren context is just two integers, so no postfix conversion is needed.",
-              "code": "'(' -> st.push(res); st.push(sign); res = 0; sign = 1;\n')' -> res = res * st.pop() + st.pop();\ndigit -> res += sign * number;",
+              "code": "def calculate(s):\n    res, num, sign = 0, 0, 1\n    stack = []                         # (res before '(', sign before '(')\n    for c in s:\n        if c.isdigit():\n            num = num * 10 + int(c)\n        elif c in '+-':\n            res += sign * num\n            num, sign = 0, (1 if c == '+' else -1)\n        elif c == '(':\n            stack.append(res)\n            stack.append(sign)\n            res, sign = 0, 1\n        elif c == ')':\n            res += sign * num\n            num = 0\n            res *= stack.pop()         # sign before the paren\n            res += stack.pop()         # result before the paren\n    return res + sign * num",
               "traps": []
             }
           ]
@@ -1899,7 +1899,7 @@
                 }
               ],
               "why": "Recursion is O(n) stack for no gain — the iterative form is the one to have in muscle memory.",
-              "code": "while (cur) { nxt = cur.next; cur.next = prev; prev = cur; cur = nxt; }\nreturn prev;",
+              "code": "def reverse_list(head):\n    prev, cur = None, head\n    while cur:\n        nxt = cur.next\n        cur.next = prev\n        prev, cur = cur, nxt\n    return prev",
               "traps": []
             },
             {
@@ -1924,7 +1924,7 @@
                 }
               ],
               "why": "Head-insertion avoids having to re-find and re-attach the two boundary nodes afterwards.",
-              "code": "cur = before.next;\nfor (k = 0; k < right - left; k++) {\n  nxt = cur.next;\n  cur.next = nxt.next;\n  nxt.next = before.next;\n  before.next = nxt;\n}",
+              "code": "def reverse_between(head, left, right):\n    dummy = ListNode(0, head)\n    before = dummy\n    for _ in range(left - 1):\n        before = before.next           # node at position left-1\n    cur = before.next                  # becomes the tail of the reversed part\n    for _ in range(right - left):\n        move = cur.next                # head-insert the node after cur\n        cur.next = move.next\n        move.next = before.next\n        before.next = move\n    return dummy.next",
               "traps": []
             },
             {
@@ -1949,7 +1949,7 @@
                 }
               ],
               "why": "It is three routines you already own, composed — nothing new to memorise.",
-              "code": "mid    = slowFast(head);\nsecond = reverse(mid);\nwhile (second.next) { alternate splice(first, second); }",
+              "code": "def reorder_list(head):\n    slow, fast = head, head.next       # 1. find the middle\n    while fast and fast.next:\n        slow, fast = slow.next, fast.next.next\n    second, slow.next = slow.next, None\n\n    prev = None                        # 2. reverse the second half\n    while second:\n        nxt = second.next\n        second.next = prev\n        prev, second = second, nxt\n\n    first, second = head, prev         # 3. weave\n    while second:\n        n1, n2 = first.next, second.next\n        first.next = second\n        second.next = n1\n        first, second = n1, n2",
               "traps": []
             },
             {
@@ -1980,7 +1980,7 @@
                 }
               ],
               "why": "The fixed gap encodes \"n from the end\" without ever knowing the length.",
-              "code": "for (i = 0; i <= n; i++) fast = fast.next;\nwhile (fast) { fast = fast.next; slow = slow.next; }\nslow.next = slow.next.next;",
+              "code": "def remove_nth_from_end(head, n):\n    dummy = ListNode(0, head)\n    slow = fast = dummy\n    for _ in range(n + 1):\n        fast = fast.next               # gap of n nodes between slow and fast\n    while fast:\n        slow, fast = slow.next, fast.next\n    slow.next = slow.next.next         # slow sits just before the target\n    return dummy.next",
               "traps": [
                 "The dummy head is what makes deleting the first node work without a branch."
               ]
@@ -2007,7 +2007,7 @@
                 }
               ],
               "why": "The \"look ahead k nodes first\" check is the only thing separating this from plain reversal.",
-              "code": "kth = getKth(groupPrev, k);\nif (kth == null) break;\ngroupNext = kth.next;\nreverse [groupPrev.next .. kth] with prev = groupNext;\ntmp = groupPrev.next; groupPrev.next = kth; groupPrev = tmp;",
+              "code": "def reverse_k_group(head, k):\n    dummy = ListNode(0, head)\n    group_prev = dummy\n    while True:\n        kth = group_prev               # 1. check that k nodes exist\n        for _ in range(k):\n            kth = kth.next\n            if not kth:\n                return dummy.next\n        group_next = kth.next\n\n        prev, cur = group_next, group_prev.next   # 2. reverse the block\n        while cur is not group_next:\n            nxt = cur.next\n            cur.next = prev\n            prev, cur = cur, nxt\n\n        first = group_prev.next        # 3. relink; old first is the new tail\n        group_prev.next = kth\n        group_prev = first",
               "traps": []
             }
           ]
@@ -2044,7 +2044,7 @@
                 }
               ],
               "why": "Snapshotting the size before the inner loop is the entire level-order idiom.",
-              "code": "sz = q.size(); sum = 0;\nfor (i = 0; i < sz; i++) { node = q.poll(); sum += node.val; push children; }\nout.add(sum / sz);",
+              "code": "from collections import deque\n\ndef average_of_levels(root):\n    res, queue = [], deque([root])\n    while queue:\n        size, total = len(queue), 0    # snapshot: this level only\n        for _ in range(size):\n            node = queue.popleft()\n            total += node.val\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        res.append(total / size)\n    return res",
               "traps": []
             },
             {
@@ -2068,7 +2068,7 @@
                   "winner": true
                 }
               ],
-              "code": "sz = q.size(); level = [];\nfor (i = 0; i < sz; i++) { node = q.poll(); level.add(node.val); push children; }\nout.add(level);",
+              "code": "from collections import deque\n\ndef level_order(root):\n    if not root:\n        return []\n    res, queue = [], deque([root])\n    while queue:\n        level = []\n        for _ in range(len(queue)):\n            node = queue.popleft()\n            level.append(node.val)\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        res.append(level)\n    return res",
               "traps": []
             },
             {
@@ -2099,7 +2099,7 @@
                 }
               ],
               "why": "Same cost, but BFS makes \"rightmost at this depth\" literal instead of an ordering trick.",
-              "code": "if (i == sz - 1) out.add(node.val);",
+              "code": "from collections import deque\n\ndef right_side_view(root):\n    if not root:\n        return []\n    res, queue = [], deque([root])\n    while queue:\n        for i in range(len(queue)):\n            node = queue.popleft()\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        res.append(node.val)           # last node dequeued on this level\n    return res",
               "traps": []
             },
             {
@@ -2124,7 +2124,7 @@
                 }
               ],
               "why": "Flipping insertion beats reversing the queue, which would break the child ordering.",
-              "code": "level = new ArrayDeque();\nif (leftToRight) level.addLast(node.val); else level.addFirst(node.val);",
+              "code": "from collections import deque\n\ndef zigzag_level_order(root):\n    if not root:\n        return []\n    res, queue, left_to_right = [], deque([root]), True\n    while queue:\n        level = deque()\n        for _ in range(len(queue)):\n            node = queue.popleft()\n            if left_to_right:\n                level.append(node.val)\n            else:\n                level.appendleft(node.val)\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        res.append(list(level))\n        left_to_right = not left_to_right\n    return res",
               "traps": []
             }
           ]
@@ -2154,7 +2154,7 @@
                   "winner": true
                 }
               ],
-              "code": "return node == null ? 0 : 1 + max(dfs(node.left), dfs(node.right));",
+              "code": "def max_depth(root):\n    if not root:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))",
               "traps": []
             },
             {
@@ -2178,7 +2178,7 @@
                   "winner": true
                 }
               ],
-              "code": "if (p == null || q == null) return p == q;\nreturn p.val == q.val && same(p.left, q.left) && same(p.right, q.right);",
+              "code": "def is_same_tree(p, q):\n    if not p or not q:\n        return p is q                  # both empty, or one is missing\n    return (p.val == q.val\n            and is_same_tree(p.left, q.left)\n            and is_same_tree(p.right, q.right))",
               "traps": []
             },
             {
@@ -2202,7 +2202,7 @@
                   "winner": true
                 }
               ],
-              "code": "swap(node.left, node.right);\ninvert(node.left); invert(node.right);",
+              "code": "def invert_tree(root):\n    if root:\n        root.left, root.right = invert_tree(root.right), invert_tree(root.left)\n    return root",
               "traps": []
             },
             {
@@ -2233,7 +2233,7 @@
                 }
               ],
               "why": "The return value and the answer are <i>different quantities</i> — that split is the whole pattern.",
-              "code": "hl = dfs(node.left); hr = dfs(node.right);\nbest = max(best, hl + hr);\nreturn 1 + max(hl, hr);",
+              "code": "def diameter_of_binary_tree(root):\n    best = 0\n\n    def height(node):\n        nonlocal best\n        if not node:\n            return 0\n        l, r = height(node.left), height(node.right)\n        best = max(best, l + r)        # longest path through this node (edges)\n        return 1 + max(l, r)\n\n    height(root)\n    return best",
               "traps": []
             },
             {
@@ -2264,7 +2264,7 @@
                 }
               ],
               "why": "Heights are computed once and reused on the way up instead of recomputed on the way down.",
-              "code": "if (hl == -1 || hr == -1 || abs(hl - hr) > 1) return -1;\nreturn 1 + max(hl, hr);",
+              "code": "def is_balanced(root):\n    def height(node):                  # -1 = unbalanced below\n        if not node:\n            return 0\n        l = height(node.left)\n        if l == -1:\n            return -1\n        r = height(node.right)\n        if r == -1 or abs(l - r) > 1:\n            return -1\n        return 1 + max(l, r)\n\n    return height(root) != -1",
               "traps": []
             },
             {
@@ -2295,7 +2295,7 @@
                 }
               ],
               "why": "One unambiguous encoding replaces n separate structural comparisons.",
-              "code": "serialize: \",\" + node.val   or   \",#\" for null\nreturn serialize(s).contains(serialize(t));",
+              "code": "def is_subtree(root, sub_root):\n    def serialize(node, out):\n        if not node:\n            out.append('#')            # explicit null markers\n            return\n        out.append(f'^{node.val}')     # '^' stops \"2\" matching inside \"12\"\n        serialize(node.left, out)\n        serialize(node.right, out)\n\n    a, b = [], []\n    serialize(root, a)\n    serialize(sub_root, b)\n    return ','.join(b) in ','.join(a)",
               "traps": [
                 "Without the separator, values 2 and 12 collide — the comma is load-bearing."
               ]
@@ -2328,7 +2328,7 @@
                 }
               ],
               "why": "The split point becomes a lookup instead of a scan.",
-              "code": "root = new Node(pre[p++]);\ni = idx[root.val];\nroot.left  = build(lo, i - 1);\nroot.right = build(i + 1, hi);",
+              "code": "def build_tree(preorder, inorder):\n    index = {v: i for i, v in enumerate(inorder)}\n    pre = 0                            # next root in preorder\n\n    def build(lo, hi):                 # subtree over inorder[lo..hi]\n        nonlocal pre\n        if lo > hi:\n            return None\n        root = TreeNode(preorder[pre])\n        pre += 1\n        mid = index[root.val]\n        root.left = build(lo, mid - 1)     # left first: preorder order\n        root.right = build(mid + 1, hi)\n        return root\n\n    return build(0, len(inorder) - 1)",
               "traps": [
                 "Build left before right — the shared preorder cursor makes the order load-bearing."
               ]
@@ -2355,7 +2355,7 @@
                 }
               ],
               "why": "Clamping negatives to 0 is how \"don't take this branch\" is expressed without a branch.",
-              "code": "l = max(0, dfs(node.left));\nr = max(0, dfs(node.right));\nbest = max(best, node.val + l + r);\nreturn node.val + max(l, r);",
+              "code": "def max_path_sum(root):\n    best = float('-inf')\n\n    def gain(node):                    # best downward chain from node\n        nonlocal best\n        if not node:\n            return 0\n        l = max(gain(node.left), 0)    # clamp: drop negative branches\n        r = max(gain(node.right), 0)\n        best = max(best, node.val + l + r)\n        return node.val + max(l, r)\n\n    gain(root)\n    return best",
               "traps": []
             },
             {
@@ -2386,7 +2386,7 @@
                 }
               ],
               "why": "Decode is the same recursion as encode, so one cursor reconstructs the tree.",
-              "code": "enc(n): if (n == null) { out.add(\"#\"); return; }\n        out.add(n.val); enc(n.left); enc(n.right);\ndec():  t = next(); if (t == \"#\") return null;\n        n = new Node(t); n.left = dec(); n.right = dec(); return n;",
+              "code": "class Codec:\n    def serialize(self, root):\n        out = []\n\n        def dfs(node):                 # preorder, '#' for null\n            if not node:\n                out.append('#')\n                return\n            out.append(str(node.val))\n            dfs(node.left)\n            dfs(node.right)\n\n        dfs(root)\n        return ','.join(out)\n\n    def deserialize(self, data):\n        tokens = iter(data.split(','))  # single cursor\n\n        def build():\n            t = next(tokens)\n            if t == '#':\n                return None\n            node = TreeNode(int(t))\n            node.left = build()\n            node.right = build()\n            return node\n\n        return build()",
               "traps": []
             }
           ]
@@ -2416,7 +2416,7 @@
                   "winner": true
                 }
               ],
-              "code": "inorder(node):\n  if (prev != null) best = min(best, node.val - prev);\n  prev = node.val;",
+              "code": "def get_minimum_difference(root):\n    best, prev = float('inf'), None\n\n    def inorder(node):                 # BST in-order = sorted\n        nonlocal best, prev\n        if not node:\n            return\n        inorder(node.left)\n        if prev is not None:\n            best = min(best, node.val - prev)\n        prev = node.val\n        inorder(node.right)\n\n    inorder(root)\n    return best",
               "traps": []
             },
             {
@@ -2447,7 +2447,7 @@
                 }
               ],
               "why": "Bounds make the grandparent-violation case impossible to forget.",
-              "code": "return node.val > lo && node.val < hi\n    && valid(node.left,  lo, node.val)\n    && valid(node.right, node.val, hi);",
+              "code": "def is_valid_bst(root):\n    def valid(node, lo, hi):           # every value must sit in (lo, hi)\n        if not node:\n            return True\n        if not lo < node.val < hi:\n            return False\n        return valid(node.left, lo, node.val) and valid(node.right, node.val, hi)\n\n    return valid(root, float('-inf'), float('inf'))",
               "traps": [
                 "Use long (or nullable) bounds — Integer.MIN_VALUE appears as a legal node value."
               ]
@@ -2480,7 +2480,7 @@
                 }
               ],
               "why": "It stops early — you never traverse past the answer.",
-              "code": "while (cur != null || !st.isEmpty()) {\n  while (cur != null) { st.push(cur); cur = cur.left; }\n  cur = st.pop();\n  if (--k == 0) return cur.val;\n  cur = cur.right;\n}",
+              "code": "def kth_smallest(root, k):\n    stack, node = [], root\n    while True:\n        while node:                    # push the left spine\n            stack.append(node)\n            node = node.left\n        node = stack.pop()\n        k -= 1\n        if k == 0:\n            return node.val\n        node = node.right",
               "traps": []
             },
             {
@@ -2505,7 +2505,7 @@
                 }
               ],
               "why": "It is Kth-Smallest with the loop turned inside out into next()/hasNext().",
-              "code": "next(): n = st.pop(); pushLeftSpine(n.right); return n.val;\npushLeftSpine(x): while (x != null) { st.push(x); x = x.left; }",
+              "code": "class BSTIterator:\n    def __init__(self, root):\n        self.stack = []                # the current left spine\n        self._push_left(root)\n\n    def _push_left(self, node):\n        while node:\n            self.stack.append(node)\n            node = node.left\n\n    def next(self):\n        node = self.stack.pop()\n        self._push_left(node.right)\n        return node.val\n\n    def hasNext(self):\n        return bool(self.stack)",
               "traps": []
             }
           ]
@@ -2536,7 +2536,7 @@
                 }
               ],
               "why": "The ordering means you never have to search the other subtree at all.",
-              "code": "while (true) {\n  if (p.val < n.val && q.val < n.val) n = n.left;\n  else if (p.val > n.val && q.val > n.val) n = n.right;\n  else return n;\n}",
+              "code": "def lowest_common_ancestor(root, p, q):\n    node = root\n    while node:\n        if p.val < node.val and q.val < node.val:\n            node = node.left\n        elif p.val > node.val and q.val > node.val:\n            node = node.right\n        else:\n            return node                # p and q split here (or one is node)",
               "traps": []
             },
             {
@@ -2561,7 +2561,7 @@
                 }
               ],
               "why": "Returning the found node instead of a boolean lets one traversal answer both questions.",
-              "code": "if (node == null || node == p || node == q) return node;\nl = lca(node.left); r = lca(node.right);\nreturn (l != null && r != null) ? node : (l != null ? l : r);",
+              "code": "def lowest_common_ancestor(root, p, q):\n    if not root or root is p or root is q:\n        return root\n    left = lowest_common_ancestor(root.left, p, q)\n    right = lowest_common_ancestor(root.right, p, q)\n    if left and right:\n        return root                    # p and q found on different sides\n    return left or right",
               "traps": []
             }
           ]
@@ -2592,7 +2592,7 @@
                 }
               ],
               "why": "isEnd is the only thing separating \"a word exists\" from \"a prefix exists\".",
-              "code": "for (c : word) {\n  if (node.ch[c] == null) node.ch[c] = new Node();\n  node = node.ch[c];\n}\nnode.isEnd = true;",
+              "code": "class TrieNode:\n    def __init__(self):\n        self.children = [None] * 26\n        self.is_end = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n\n    def insert(self, word):\n        node = self.root\n        for c in word:\n            i = ord(c) - 97\n            if not node.children[i]:\n                node.children[i] = TrieNode()\n            node = node.children[i]\n        node.is_end = True\n\n    def _walk(self, s):\n        node = self.root\n        for c in s:\n            node = node.children[ord(c) - 97]\n            if not node:\n                return None\n        return node\n\n    def search(self, word):\n        node = self._walk(word)\n        return bool(node and node.is_end)\n\n    def startsWith(self, prefix):\n        return self._walk(prefix) is not None",
               "traps": []
             },
             {
@@ -2617,7 +2617,7 @@
                 }
               ],
               "why": "The wildcard is the only place the walk becomes a search.",
-              "code": "if (c == '.') {\n  for (child : node.ch) if (child != null && dfs(child, i + 1)) return true;\n  return false;\n}\nreturn node.ch[c] != null && dfs(node.ch[c], i + 1);",
+              "code": "class WordDictionary:\n    def __init__(self):\n        self.root = {}                 # char → child dict; '$' marks a word end\n\n    def addWord(self, word):\n        node = self.root\n        for c in word:\n            node = node.setdefault(c, {})\n        node['$'] = True\n\n    def search(self, word):\n        def dfs(node, i):\n            if i == len(word):\n                return '$' in node\n            c = word[i]\n            if c == '.':               # fork into every child\n                return any(dfs(child, i + 1) for key, child in node.items() if key != '$')\n            return c in node and dfs(node[c], i + 1)\n\n        return dfs(self.root, 0)",
               "traps": []
             },
             {
@@ -2648,7 +2648,7 @@
                 }
               ],
               "why": "All words are searched in a single pass, and one prefix miss prunes an entire family.",
-              "code": "if (node.ch[grid[r][c]] == null) return;      // prefix prune\nif (node.word != null) { out.add(node.word); node.word = null; }  // dedupe",
+              "code": "def find_words(board, words):\n    root = {}                          # trie of every word; '$' holds the word\n    for w in words:\n        node = root\n        for c in w:\n            node = node.setdefault(c, {})\n        node['$'] = w\n\n    m, n = len(board), len(board[0])\n    found = []\n\n    def dfs(r, c, parent):\n        ch = board[r][c]\n        node = parent[ch]\n        if '$' in node:\n            found.append(node.pop('$'))    # pop: report each word once\n        board[r][c] = '#'\n        for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):\n            if 0 <= nr < m and 0 <= nc < n and board[nr][nc] in node:\n                dfs(nr, nc, node)\n        board[r][c] = ch\n        if not node:\n            parent.pop(ch)                 # prune exhausted branches\n\n    for r in range(m):\n        for c in range(n):\n            if board[r][c] in root:\n                dfs(r, c, root)\n    return found",
               "traps": [
                 "Null out node.word after collecting it — that is the dedupe, not a HashSet."
               ]
@@ -2693,7 +2693,7 @@
                 }
               ],
               "why": "Seeding all sources at level 0 computes every cell's nearest-source distance in one sweep.",
-              "code": "while (!q.isEmpty() && fresh > 0) {\n  sz = q.size();\n  for (i = 0; i < sz; i++) rot neighbours, fresh--;\n  minutes++;\n}\nreturn fresh == 0 ? minutes : -1;",
+              "code": "from collections import deque\n\ndef oranges_rotting(grid):\n    m, n = len(grid), len(grid[0])\n    queue, fresh = deque(), 0\n    for r in range(m):\n        for c in range(n):\n            if grid[r][c] == 2:\n                queue.append((r, c))   # every rotten orange is a source\n            elif grid[r][c] == 1:\n                fresh += 1\n    minutes = 0\n    while queue and fresh:\n        for _ in range(len(queue)):    # one level = one minute\n            r, c = queue.popleft()\n            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):\n                if 0 <= nr < m and 0 <= nc < n and grid[nr][nc] == 1:\n                    grid[nr][nc] = 2\n                    fresh -= 1\n                    queue.append((nr, nc))\n        minutes += 1\n    return -1 if fresh else minutes",
               "traps": []
             },
             {
@@ -2720,7 +2720,7 @@
                 }
               ],
               "why": "Writing distances in place removes both the visited set and the distance array.",
-              "code": "if (grid[nr][nc] != INF) continue;\ngrid[nr][nc] = grid[r][c] + 1;\nq.add(nr, nc);",
+              "code": "from collections import deque\n\ndef walls_and_gates(rooms):\n    if not rooms:\n        return\n    INF = 2 ** 31 - 1\n    m, n = len(rooms), len(rooms[0])\n    queue = deque((r, c) for r in range(m) for c in range(n) if rooms[r][c] == 0)\n    while queue:                       # BFS from every gate at once\n        r, c = queue.popleft()\n        for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):\n            if 0 <= nr < m and 0 <= nc < n and rooms[nr][nc] == INF:\n                rooms[nr][nc] = rooms[r][c] + 1    # first visit = nearest gate\n                queue.append((nr, nc))",
               "traps": []
             },
             {
@@ -2745,7 +2745,7 @@
                 }
               ],
               "why": "Unweighted edges are exactly the condition that makes BFS optimal — no Dijkstra needed.",
-              "code": "for (d = 1; d <= 6; d++) {\n  nxt  = cur + d;\n  dest = board[nxt] > 0 ? board[nxt] : nxt;\n  if (!seen[dest]) { seen[dest] = true; q.add(dest); }\n}",
+              "code": "from collections import deque\n\ndef snakes_and_ladders(board):\n    n = len(board)\n\n    def cell(square):                  # 1-based square → (row, col)\n        r, c = divmod(square - 1, n)\n        return n - 1 - r, (c if r % 2 == 0 else n - 1 - c)\n\n    moves = {1: 0}\n    queue = deque([1])\n    while queue:\n        square = queue.popleft()\n        if square == n * n:\n            return moves[square]\n        for nxt in range(square + 1, min(square + 6, n * n) + 1):\n            r, c = cell(nxt)\n            if board[r][c] != -1:\n                nxt = board[r][c]      # take the snake or ladder\n            if nxt not in moves:\n                moves[nxt] = moves[square] + 1\n                queue.append(nxt)\n    return -1",
               "traps": [
                 "The index-to-(row,col) flattening is the whole bug surface: rows count from the bottom and odd rows run right-to-left."
               ]
@@ -2778,7 +2778,7 @@
                 }
               ],
               "why": "Bucketing by wildcard finds neighbours without any all-pairs comparison.",
-              "code": "for (i = 0; i < L; i++) {\n  pattern = word[:i] + '*' + word[i+1:];\n  for (nb : bucket[pattern]) if (!seen.has(nb)) { seen.add(nb); q.add(nb); }\n}",
+              "code": "from collections import defaultdict, deque\n\ndef ladder_length(begin_word, end_word, word_list):\n    if end_word not in word_list:\n        return 0\n    L = len(begin_word)\n    buckets = defaultdict(list)        # \"h*t\" → [\"hot\", \"hit\", ...]\n    for w in word_list:\n        for i in range(L):\n            buckets[w[:i] + '*' + w[i + 1:]].append(w)\n\n    seen = {begin_word}\n    queue = deque([(begin_word, 1)])\n    while queue:\n        word, steps = queue.popleft()\n        for i in range(L):\n            key = word[:i] + '*' + word[i + 1:]\n            for nxt in buckets[key]:\n                if nxt == end_word:\n                    return steps + 1\n                if nxt not in seen:\n                    seen.add(nxt)\n                    queue.append((nxt, steps + 1))\n            buckets[key] = []          # each bucket only needs expanding once\n    return 0",
               "traps": []
             }
           ]
@@ -2809,7 +2809,7 @@
                 }
               ],
               "why": "Overwriting the grid removes the separate visited array.",
-              "code": "for (each cell)\n  if (grid[r][c] == '1') { count++; sink(r, c); }",
+              "code": "def num_islands(grid):\n    m, n = len(grid), len(grid[0])\n    count = 0\n    for r in range(m):\n        for c in range(n):\n            if grid[r][c] != '1':\n                continue\n            count += 1\n            grid[r][c] = '0'           # sink on first contact\n            stack = [(r, c)]           # explicit stack: no recursion limit\n            while stack:\n                i, j = stack.pop()\n                for ni, nj in ((i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)):\n                    if 0 <= ni < m and 0 <= nj < n and grid[ni][nj] == '1':\n                        grid[ni][nj] = '0'\n                        stack.append((ni, nj))\n    return count",
               "traps": []
             },
             {
@@ -2833,7 +2833,7 @@
                   "winner": true
                 }
               ],
-              "code": "int dfs(r, c) {\n  if (out of bounds || grid[r][c] == 0) return 0;\n  grid[r][c] = 0;\n  return 1 + dfs(r+1,c) + dfs(r-1,c) + dfs(r,c+1) + dfs(r,c-1);\n}",
+              "code": "def max_area_of_island(grid):\n    m, n = len(grid), len(grid[0])\n    best = 0\n    for r in range(m):\n        for c in range(n):\n            if grid[r][c] != 1:\n                continue\n            grid[r][c] = 0\n            stack, size = [(r, c)], 0\n            while stack:\n                i, j = stack.pop()\n                size += 1\n                for ni, nj in ((i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)):\n                    if 0 <= ni < m and 0 <= nj < n and grid[ni][nj] == 1:\n                        grid[ni][nj] = 0\n                        stack.append((ni, nj))\n            best = max(best, size)\n    return best",
               "traps": []
             },
             {
@@ -2858,7 +2858,7 @@
                 }
               ],
               "why": "Registering the clone in the map <i>before</i> recursing is what makes cycles terminate.",
-              "code": "if (map.has(n)) return map[n];\nclone = new Node(n.val); map[n] = clone;     // before recursing\nfor (nb : n.neighbors) clone.neighbors.add(dfs(nb));",
+              "code": "def clone_graph(node):\n    clones = {}                        # original → clone: memo and visited set\n\n    def dfs(cur):\n        if cur in clones:\n            return clones[cur]\n        copy = Node(cur.val)\n        clones[cur] = copy             # register before recursing (cycles)\n        copy.neighbors = [dfs(nb) for nb in cur.neighbors]\n        return copy\n\n    return dfs(node) if node else None",
               "traps": []
             },
             {
@@ -2889,7 +2889,7 @@
                 }
               ],
               "why": "Inverting the question removes the per-region \"did it escape\" flag entirely.",
-              "code": "for (border cells) if ('O') dfs mark as 'S';\nfor (all cells) grid = (grid == 'S') ? 'O' : 'X';",
+              "code": "def solve(board):\n    m, n = len(board), len(board[0])\n    stack = [(r, c) for r in range(m) for c in (0, n - 1)]\n    stack += [(r, c) for r in (0, m - 1) for c in range(n)]\n    while stack:                       # mark every 'O' reachable from the border\n        r, c = stack.pop()\n        if 0 <= r < m and 0 <= c < n and board[r][c] == 'O':\n            board[r][c] = 'S'\n            stack.extend(((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)))\n    for r in range(m):\n        for c in range(n):\n            board[r][c] = 'O' if board[r][c] == 'S' else 'X'",
               "traps": []
             },
             {
@@ -2920,7 +2920,7 @@
                 }
               ],
               "why": "Reversing makes each ocean one sweep instead of one sweep per cell.",
-              "code": "dfs(r, c, seen): only move to nb where h[nb] >= h[r][c];\nanswer = { cells where pac[r][c] && atl[r][c] };",
+              "code": "def pacific_atlantic(heights):\n    m, n = len(heights), len(heights[0])\n\n    def reach(starts):                 # walk uphill inward from an ocean\n        seen = set(starts)\n        stack = list(starts)\n        while stack:\n            r, c = stack.pop()\n            for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):\n                if (0 <= nr < m and 0 <= nc < n and (nr, nc) not in seen\n                        and heights[nr][nc] >= heights[r][c]):\n                    seen.add((nr, nc))\n                    stack.append((nr, nc))\n        return seen\n\n    pacific = reach([(0, c) for c in range(n)] + [(r, 0) for r in range(m)])\n    atlantic = reach([(m - 1, c) for c in range(n)] + [(r, n - 1) for r in range(m)])\n    return [list(cell) for cell in pacific & atlantic]",
               "traps": []
             }
           ]
@@ -2957,7 +2957,7 @@
                 }
               ],
               "why": "One counter gives both the cycle check and the ordering, with no recursion state to manage.",
-              "code": "for (popped node) for (nb) if (--indeg[nb] == 0) q.add(nb);\nreturn processed == n;",
+              "code": "from collections import deque\n\ndef can_finish(num_courses, prerequisites):\n    graph = [[] for _ in range(num_courses)]\n    indegree = [0] * num_courses\n    for course, pre in prerequisites:\n        graph[pre].append(course)\n        indegree[course] += 1\n    queue = deque(i for i in range(num_courses) if indegree[i] == 0)\n    taken = 0\n    while queue:\n        node = queue.popleft()\n        taken += 1\n        for nxt in graph[node]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                queue.append(nxt)\n    return taken == num_courses        # a cycle leaves nodes never freed",
               "traps": []
             },
             {
@@ -2981,7 +2981,7 @@
                   "winner": true
                 }
               ],
-              "code": "order[idx++] = node;\nreturn idx == n ? order : new int[0];",
+              "code": "from collections import deque\n\ndef find_order(num_courses, prerequisites):\n    graph = [[] for _ in range(num_courses)]\n    indegree = [0] * num_courses\n    for course, pre in prerequisites:\n        graph[pre].append(course)\n        indegree[course] += 1\n    queue = deque(i for i in range(num_courses) if indegree[i] == 0)\n    order = []\n    while queue:\n        node = queue.popleft()\n        order.append(node)             # pop order is a valid schedule\n        for nxt in graph[node]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                queue.append(nxt)\n    return order if len(order) == num_courses else []",
               "traps": []
             },
             {
@@ -3008,7 +3008,7 @@
                 }
               ],
               "why": "The reduction to a graph is the whole problem — the sort itself is stock Kahn's.",
-              "code": "if (a.startsWith(b) && a.length() > b.length()) return \"\";   // invalid input\nat first i where a[i] != b[i]: addEdge(a[i], b[i]); break;",
+              "code": "from collections import deque\n\ndef alien_order(words):\n    graph = {c: set() for w in words for c in w}\n    indegree = {c: 0 for c in graph}\n    for a, b in zip(words, words[1:]):\n        for x, y in zip(a, b):\n            if x != y:                 # first difference gives x before y\n                if y not in graph[x]:\n                    graph[x].add(y)\n                    indegree[y] += 1\n                break\n        else:\n            if len(a) > len(b):        # \"abc\" before \"ab\" is impossible\n                return \"\"\n    queue = deque(c for c in indegree if indegree[c] == 0)\n    order = []\n    while queue:\n        c = queue.popleft()\n        order.append(c)\n        for nxt in graph[c]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                queue.append(nxt)\n    return ''.join(order) if len(order) == len(graph) else \"\"",
               "traps": [
                 "The prefix-longer-than-its-prefix case is invalid input, not just a missing edge."
               ]
@@ -3049,7 +3049,7 @@
                 }
               ],
               "why": "No adjacency list is needed, and it works when edges arrive as a stream.",
-              "code": "if (find(a) != find(b)) { parent[find(a)] = find(b); components--; }",
+              "code": "def count_components(n, edges):\n    parent, rank = list(range(n)), [0] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]  # path halving\n            x = parent[x]\n        return x\n\n    components = n\n    for a, b in edges:\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            continue\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra                    # union by rank\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n        components -= 1\n    return components",
               "traps": []
             },
             {
@@ -3076,7 +3076,7 @@
                 }
               ],
               "why": "The count check rules out forests; the cycle check rules out multi-edges.",
-              "code": "if (edges.length != n - 1) return false;\nfor (e : edges) { if (find(a) == find(b)) return false; union(a, b); }\nreturn true;",
+              "code": "def valid_tree(n, edges):\n    if len(edges) != n - 1:            # a tree has exactly n-1 edges\n        return False\n    parent = list(range(n))\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    for a, b in edges:\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False               # this edge closes a cycle\n        parent[ra] = rb\n    return True",
               "traps": []
             },
             {
@@ -3100,7 +3100,7 @@
                   "winner": true
                 }
               ],
-              "code": "for (e : edges) {\n  if (find(a) == find(b)) return e;\n  union(a, b);\n}",
+              "code": "def find_redundant_connection(edges):\n    parent = list(range(len(edges) + 1))   # nodes are 1..n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    for a, b in edges:\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return [a, b]              # already connected: this edge is extra\n        parent[ra] = rb\n    return []",
               "traps": []
             },
             {
@@ -3131,7 +3131,7 @@
                 }
               ],
               "why": "Compression folds an entire chain into one ratio, so repeated queries become near-constant.",
-              "code": "find(x): if (p[x] != x) { r = find(p[x]); w[x] *= w[p[x]]; p[x] = r; }\n         return p[x];",
+              "code": "def calc_equation(equations, values, queries):\n    parent, weight = {}, {}            # weight[x] = x / parent[x]\n\n    def find(x):\n        if parent[x] != x:\n            root = find(parent[x])\n            weight[x] *= weight[parent[x]]   # now x / root\n            parent[x] = root\n        return parent[x]\n\n    for (a, b), v in zip(equations, values):\n        for x in (a, b):\n            if x not in parent:\n                parent[x], weight[x] = x, 1.0\n        ra, rb = find(a), find(b)\n        if ra != rb:\n            parent[ra] = rb\n            weight[ra] = v * weight[b] / weight[a]   # ra / rb\n\n    res = []\n    for a, b in queries:\n        if a not in parent or b not in parent or find(a) != find(b):\n            res.append(-1.0)\n        else:\n            res.append(weight[a] / weight[b])\n    return res",
               "traps": []
             },
             {
@@ -3162,7 +3162,7 @@
                 }
               ],
               "why": "The graph is complete, so generating edges lazily from the heap beats materialising all n² of them.",
-              "code": "pop (cost, u);\nif (seen[u]) continue;\nseen[u] = true; total += cost;\nfor (v unvisited) push(manhattan(u, v), v);",
+              "code": "import heapq\n\ndef min_cost_connect_points(points):\n    n = len(points)\n    visited = set()\n    heap = [(0, 0)]                    # (cost to attach, point)\n    total = 0\n    while len(visited) < n:\n        cost, i = heapq.heappop(heap)\n        if i in visited:\n            continue\n        visited.add(i)\n        total += cost\n        xi, yi = points[i]\n        for j in range(n):\n            if j not in visited:\n                xj, yj = points[j]\n                heapq.heappush(heap, (abs(xi - xj) + abs(yi - yj), j))\n    return total",
               "traps": []
             }
           ]
@@ -3199,7 +3199,7 @@
                 }
               ],
               "why": "Non-negative weights let you finalise on pop instead of re-relaxing repeatedly.",
-              "code": "pop (d, u);\nif (seen[u]) continue;\nseen[u] = true; ans = max(ans, d);\nfor ((v, w) : adj[u]) push(d + w, v);",
+              "code": "import heapq\nfrom collections import defaultdict\n\ndef network_delay_time(times, n, k):\n    graph = defaultdict(list)\n    for u, v, w in times:\n        graph[u].append((v, w))\n    dist = {}                          # finalised shortest distances\n    heap = [(0, k)]\n    while heap:\n        d, node = heapq.heappop(heap)\n        if node in dist:\n            continue\n        dist[node] = d\n        for nxt, w in graph[node]:\n            if nxt not in dist:\n                heapq.heappush(heap, (d + w, nxt))\n    return max(dist.values()) if len(dist) == n else -1",
               "traps": []
             },
             {
@@ -3230,7 +3230,7 @@
                 }
               ],
               "why": "The hop limit is literally a round counter here, and Dijkstra's finalise-on-pop is unsound once stops constrain the path.",
-              "code": "for (round = 0; round <= k; round++) {\n  tmp = dist.clone();\n  for ((u, v, w) : flights) tmp[v] = min(tmp[v], dist[u] + w);\n  dist = tmp;\n}",
+              "code": "def find_cheapest_price(n, flights, src, dst, k):\n    INF = float('inf')\n    dist = [INF] * n\n    dist[src] = 0\n    for _ in range(k + 1):             # k stops = at most k+1 edges\n        prev = dist[:]                 # snapshot: one more edge per round\n        for u, v, w in flights:\n            if prev[u] + w < dist[v]:\n                dist[v] = prev[u] + w\n    return -1 if dist[dst] == INF else dist[dst]",
               "traps": [
                 "Forget the clone and one round can chain multiple edges, silently exceeding k stops."
               ]
@@ -3263,7 +3263,7 @@
                 }
               ],
               "why": "A minimax path is just Dijkstra with + replaced by max — same proof, same finalise-on-pop.",
-              "code": "pop (h, r, c); ans = max(ans, h);\nif (r == n-1 && c == n-1) return ans;\nfor (nb) push(max(h, grid[nb]), nb);",
+              "code": "import heapq\n\ndef swim_in_water(grid):\n    n = len(grid)\n    heap = [(grid[0][0], 0, 0)]        # (max elevation on the path, r, c)\n    seen = {(0, 0)}\n    while heap:\n        t, r, c = heapq.heappop(heap)\n        if (r, c) == (n - 1, n - 1):\n            return t\n        for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):\n            if 0 <= nr < n and 0 <= nc < n and (nr, nc) not in seen:\n                seen.add((nr, nc))\n                heapq.heappush(heap, (max(t, grid[nr][nc]), nr, nc))",
               "traps": []
             }
           ]
@@ -3299,7 +3299,7 @@
                   "winner": true
                 }
               ],
-              "code": "for (x : a) r ^= x;\nreturn r;",
+              "code": "def single_number(nums):\n    acc = 0\n    for x in nums:\n        acc ^= x                       # pairs cancel: a ^ a = 0\n    return acc",
               "traps": []
             },
             {
@@ -3330,7 +3330,7 @@
                 }
               ],
               "why": "Iterations scale with the number of set bits rather than the word width.",
-              "code": "while (n != 0) { n &= n - 1; count++; }",
+              "code": "def hamming_weight(n):\n    count = 0\n    while n:\n        n &= n - 1                     # clears the lowest set bit\n        count += 1\n    return count",
               "traps": []
             },
             {
@@ -3361,7 +3361,7 @@
                 }
               ],
               "why": "Each answer is one addition away from an answer you already have.",
-              "code": "dp[i] = dp[i >> 1] + (i & 1);",
+              "code": "def count_bits(n):\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i >> 1] + (i & 1)   # i = (i // 2) with one more low bit\n    return dp",
               "traps": []
             },
             {
@@ -3385,7 +3385,7 @@
                   "winner": true
                 }
               ],
-              "code": "for (i = 0; i < 32; i++) { r = (r << 1) | (n & 1); n >>>= 1; }",
+              "code": "def reverse_bits(n):\n    res = 0\n    for _ in range(32):\n        res = (res << 1) | (n & 1)     # push n's lowest bit onto res\n        n >>= 1\n    return res",
               "traps": [
                 "Use the unsigned shift &gt;&gt;&gt; — a signed &gt;&gt; smears the sign bit forever."
               ]
@@ -3418,7 +3418,7 @@
                 }
               ],
               "why": "The mod-3 counter runs bitwise-parallel across all 32 positions at once.",
-              "code": "ones = (ones ^ x) & ~twos;\ntwos = (twos ^ x) & ~ones;\nreturn ones;",
+              "code": "def single_number(nums):\n    ones = twos = 0                    # per-bit count mod 3\n    for x in nums:\n        ones = (ones ^ x) & ~twos\n        twos = (twos ^ x) & ~ones\n    return ones",
               "traps": [
                 "Order matters: update ones first, then twos using the NEW ones."
               ]
@@ -3444,7 +3444,7 @@
                   "winner": true
                 }
               ],
-              "code": "while (b != 0) { carry = (a & b) << 1; a = a ^ b; b = carry; }\nreturn a;",
+              "code": "def get_sum(a, b):\n    MASK = 0xFFFFFFFF                  # Python ints are unbounded: emulate 32 bits\n    a, b = a & MASK, b & MASK\n    while b:\n        a, b = (a ^ b) & MASK, ((a & b) << 1) & MASK   # sum without carry, carry\n    return a if a <= 0x7FFFFFFF else ~(a ^ MASK)       # back to a signed int",
               "traps": []
             }
           ]
@@ -3487,7 +3487,7 @@
                 }
               ],
               "why": "Same cost, but the recursion is the shape the harder variants build on.",
-              "code": "res.add(copy(path));\nfor (j = i; j < n; j++) {\n  path.add(a[j]); dfs(j + 1); path.removeLast();\n}",
+              "code": "def subsets(nums):\n    res, path = [], []\n\n    def dfs(i):\n        if i == len(nums):\n            res.append(path[:])\n            return\n        path.append(nums[i])           # include nums[i]\n        dfs(i + 1)\n        path.pop()\n        dfs(i + 1)                     # exclude nums[i]\n\n    dfs(0)\n    return res",
               "traps": []
             },
             {
@@ -3512,7 +3512,7 @@
                 }
               ],
               "why": "The j &gt; i guard is what distinguishes \"same value at this level\" from \"same value deeper down\".",
-              "code": "sort(a);\nfor (j = i; j < n; j++) {\n  if (j > i && a[j] == a[j-1]) continue;\n  path.add(a[j]); dfs(j + 1); path.removeLast();\n}",
+              "code": "def subsets_with_dup(nums):\n    nums.sort()\n    res, path = [], []\n\n    def dfs(start):\n        res.append(path[:])\n        for j in range(start, len(nums)):\n            if j > start and nums[j] == nums[j - 1]:\n                continue               # same value already tried at this depth\n            path.append(nums[j])\n            dfs(j + 1)\n            path.pop()\n\n    dfs(0)\n    return res",
               "traps": []
             },
             {
@@ -3537,7 +3537,7 @@
                 }
               ],
               "why": "dfs(j) vs dfs(j+1) is the single character that separates unbounded from 0/1 here.",
-              "code": "if (rem == 0) { emit(path); return; }\nfor (j = i; j < n; j++) {\n  if (a[j] > rem) continue;\n  path.add(a[j]); dfs(j, rem - a[j]); path.removeLast();\n}",
+              "code": "def combination_sum(candidates, target):\n    res, path = [], []\n\n    def dfs(i, remaining):\n        if remaining == 0:\n            res.append(path[:])\n            return\n        for j in range(i, len(candidates)):\n            if candidates[j] <= remaining:\n                path.append(candidates[j])\n                dfs(j, remaining - candidates[j])   # j, not j+1: reuse allowed\n                path.pop()\n\n    dfs(0, target)\n    return res",
               "traps": []
             },
             {
@@ -3562,7 +3562,7 @@
                 }
               ],
               "why": "It is Subsets II and Combination Sum composed — both guards, together.",
-              "code": "sort(a);\nfor (j = i; j < n; j++) {\n  if (j > i && a[j] == a[j-1]) continue;\n  if (a[j] > rem) break;                  // sorted, so prune the rest\n  path.add(a[j]); dfs(j + 1, rem - a[j]); path.removeLast();\n}",
+              "code": "def combination_sum2(candidates, target):\n    candidates.sort()\n    res, path = [], []\n\n    def dfs(i, remaining):\n        if remaining == 0:\n            res.append(path[:])\n            return\n        for j in range(i, len(candidates)):\n            if j > i and candidates[j] == candidates[j - 1]:\n                continue               # skip sibling duplicates\n            if candidates[j] > remaining:\n                break                  # sorted: nothing later fits either\n            path.append(candidates[j])\n            dfs(j + 1, remaining - candidates[j])   # each element used once\n            path.pop()\n\n    dfs(0, target)\n    return res",
               "traps": []
             },
             {
@@ -3586,7 +3586,7 @@
                   "winner": true
                 }
               ],
-              "code": "if (i == digits.length()) { emit(path); return; }\nfor (c : map[digits[i]]) { path += c; dfs(i + 1); path.pop(); }",
+              "code": "def letter_combinations(digits):\n    if not digits:\n        return []\n    keypad = {'2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',\n              '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}\n    res, path = [], []\n\n    def dfs(i):                        # i = which digit we are choosing for\n        if i == len(digits):\n            res.append(''.join(path))\n            return\n        for ch in keypad[digits[i]]:\n            path.append(ch)\n            dfs(i + 1)\n            path.pop()\n\n    dfs(0)\n    return res",
               "traps": []
             },
             {
@@ -3617,7 +3617,7 @@
                 }
               ],
               "why": "The two counters make invalid branches unreachable rather than filtered afterwards.",
-              "code": "if (path.length() == 2*n) { emit(path); return; }\nif (open  < n)    { dfs(open + 1, close); }\nif (close < open) { dfs(open, close + 1); }",
+              "code": "def generate_parenthesis(n):\n    res, path = [], []\n\n    def dfs(opened, closed):\n        if len(path) == 2 * n:\n            res.append(''.join(path))\n            return\n        if opened < n:                 # can still open\n            path.append('(')\n            dfs(opened + 1, closed)\n            path.pop()\n        if closed < opened:            # can only close what is open\n            path.append(')')\n            dfs(opened, closed + 1)\n            path.pop()\n\n    dfs(0, 0)\n    return res",
               "traps": []
             },
             {
@@ -3642,7 +3642,7 @@
                 }
               ],
               "why": "Precomputing an isPal[i][j] table turns the guard into O(1) if you need the constant factor.",
-              "code": "for (end = start; end < n; end++) {\n  if (!isPal(start, end)) continue;\n  path.add(s[start..end]); dfs(end + 1); path.removeLast();\n}",
+              "code": "def partition(s):\n    res, path = [], []\n\n    def dfs(start):\n        if start == len(s):\n            res.append(path[:])\n            return\n        for end in range(start + 1, len(s) + 1):\n            piece = s[start:end]\n            if piece == piece[::-1]:   # recurse only on palindromic prefixes\n                path.append(piece)\n                dfs(end)\n                path.pop()\n\n    dfs(0)\n    return res",
               "traps": []
             }
           ]
@@ -3679,7 +3679,7 @@
                 }
               ],
               "why": "The swap version needs no auxiliary array — the array itself carries the state.",
-              "code": "if (i == n) { emit(copy(a)); return; }\nfor (j = i; j < n; j++) {\n  swap(a[i], a[j]); dfs(i + 1); swap(a[i], a[j]);\n}",
+              "code": "def permute(nums):\n    res = []\n\n    def dfs(i):                        # nums[:i] is fixed\n        if i == len(nums):\n            res.append(nums[:])\n            return\n        for j in range(i, len(nums)):\n            nums[i], nums[j] = nums[j], nums[i]   # choose nums[j] for slot i\n            dfs(i + 1)\n            nums[i], nums[j] = nums[j], nums[i]   # undo\n\n    dfs(0)\n    return res",
               "traps": []
             },
             {
@@ -3704,7 +3704,7 @@
                 }
               ],
               "why": "Only one canonical consumption order per duplicate group is allowed, so each permutation is generated once.",
-              "code": "sort(a);\nfor (j = 0; j < n; j++) {\n  if (used[j]) continue;\n  if (j > 0 && a[j] == a[j-1] && !used[j-1]) continue;\n  used[j] = true; path.add(a[j]); dfs(); path.removeLast(); used[j] = false;\n}",
+              "code": "def permute_unique(nums):\n    nums.sort()\n    res, path, used = [], [], [False] * len(nums)\n\n    def dfs():\n        if len(path) == len(nums):\n            res.append(path[:])\n            return\n        for i in range(len(nums)):\n            if used[i]:\n                continue\n            if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:\n                continue               # use equal values only left to right\n            used[i] = True\n            path.append(nums[i])\n            dfs()\n            path.pop()\n            used[i] = False\n\n    dfs()\n    return res",
               "traps": [
                 "The swap trick from Permutations does NOT dedupe — you need sorted + used[] here."
               ]
@@ -3736,7 +3736,7 @@
                   "winner": true
                 }
               ],
-              "code": "k = (r / 3) * 3 + c / 3;\nif (!rows[r].add(v) || !cols[c].add(v) || !boxes[k].add(v)) return false;",
+              "code": "def is_valid_sudoku(board):\n    rows = [set() for _ in range(9)]\n    cols = [set() for _ in range(9)]\n    boxes = [set() for _ in range(9)]\n    for r in range(9):\n        for c in range(9):\n            v = board[r][c]\n            if v == '.':\n                continue\n            b = (r // 3) * 3 + c // 3  # box index 0..8\n            if v in rows[r] or v in cols[c] or v in boxes[b]:\n                return False\n            rows[r].add(v)\n            cols[c].add(v)\n            boxes[b].add(v)\n    return True",
               "traps": []
             },
             {
@@ -3761,7 +3761,7 @@
                 }
               ],
               "why": "Restoring on backtrack is the difference between \"visited on this path\" and \"visited ever\".",
-              "code": "tmp = grid[r][c]; grid[r][c] = '#';\nfound = dfs(r±1, c) || dfs(r, c±1);\ngrid[r][c] = tmp;",
+              "code": "def exist(board, word):\n    m, n = len(board), len(board[0])\n\n    def dfs(r, c, i):\n        if i == len(word):\n            return True\n        if r < 0 or r >= m or c < 0 or c >= n or board[r][c] != word[i]:\n            return False\n        board[r][c] = '#'              # mark: can't reuse this cell\n        found = (dfs(r + 1, c, i + 1) or dfs(r - 1, c, i + 1)\n                 or dfs(r, c + 1, i + 1) or dfs(r, c - 1, i + 1))\n        board[r][c] = word[i]          # restore on the way out\n        return found\n\n    return any(dfs(r, c, 0) for r in range(m) for c in range(n))",
               "traps": []
             },
             {
@@ -3792,7 +3792,7 @@
                 }
               ],
               "why": "<code>r-c</code> and <code>r+c</code> are constant along a diagonal, which turns the conflict test into an array lookup.",
-              "code": "for (c = 0; c < n; c++) {\n  if (col[c] || diag[r - c + n] || anti[r + c]) continue;\n  set all three; place(r, c); dfs(r + 1); unset; undo;\n}",
+              "code": "def solve_n_queens(n):\n    cols, diag, anti = set(), set(), set()   # c, r - c, r + c\n    board = [['.'] * n for _ in range(n)]\n    res = []\n\n    def dfs(r):\n        if r == n:\n            res.append([''.join(row) for row in board])\n            return\n        for c in range(n):\n            if c in cols or r - c in diag or r + c in anti:\n                continue\n            cols.add(c)\n            diag.add(r - c)\n            anti.add(r + c)\n            board[r][c] = 'Q'\n            dfs(r + 1)\n            cols.remove(c)\n            diag.remove(r - c)\n            anti.remove(r + c)\n            board[r][c] = '.'\n\n    dfs(0)\n    return res",
               "traps": []
             },
             {
@@ -3817,7 +3817,7 @@
                 }
               ],
               "why": "Dropping the board construction is the whole difference, and it is where the constant factor goes.",
-              "code": "if (r == n) { count++; return; }",
+              "code": "def total_n_queens(n):\n    cols, diag, anti = set(), set(), set()\n\n    def dfs(r):\n        if r == n:\n            return 1\n        count = 0\n        for c in range(n):\n            if c in cols or r - c in diag or r + c in anti:\n                continue\n            cols.add(c)\n            diag.add(r - c)\n            anti.add(r + c)\n            count += dfs(r + 1)\n            cols.remove(c)\n            diag.remove(r - c)\n            anti.remove(r + c)\n        return count\n\n    return dfs(0)",
               "traps": []
             }
           ]
@@ -3860,7 +3860,7 @@
                 }
               ],
               "why": "The recurrence reaches back only two steps, so only two values need to exist.",
-              "code": "for (i = 2; i <= n; i++) { c = a + b; a = b; b = c; }",
+              "code": "def climb_stairs(n):\n    a, b = 1, 1                        # ways to reach step i-1, step i\n    for _ in range(n - 1):\n        a, b = b, a + b\n    return b",
               "traps": []
             },
             {
@@ -3884,7 +3884,7 @@
                   "winner": true
                 }
               ],
-              "code": "cur = cost[i] + min(prev1, prev2);\nprev2 = prev1; prev1 = cur;\nreturn min(prev1, prev2);",
+              "code": "def min_cost_climbing_stairs(cost):\n    a = b = 0                          # min cost to stand on step i-2, i-1\n    for i in range(2, len(cost) + 1):\n        a, b = b, min(b + cost[i - 1], a + cost[i - 2])\n    return b",
               "traps": []
             },
             {
@@ -3908,7 +3908,7 @@
                   "winner": true
                 }
               ],
-              "code": "take = skip + a[i];\nskip = max(skip, rob);\nrob  = take;\nreturn max(rob, skip);",
+              "code": "def rob(nums):\n    rob_i, skip_i = 0, 0               # best including / excluding the last house\n    for x in nums:\n        rob_i, skip_i = skip_i + x, max(rob_i, skip_i)\n    return max(rob_i, skip_i)",
               "traps": []
             },
             {
@@ -3933,7 +3933,7 @@
                 }
               ],
               "why": "Fixing the exclusion up front removes the circularity entirely.",
-              "code": "if (n == 1) return a[0];\nreturn max(robLine(a, 0, n - 2), robLine(a, 1, n - 1));",
+              "code": "def rob(nums):\n    def line(houses):\n        take, skip = 0, 0\n        for x in houses:\n            take, skip = skip + x, max(take, skip)\n        return max(take, skip)\n\n    if len(nums) == 1:\n        return nums[0]\n    return max(line(nums[:-1]), line(nums[1:]))   # never both first and last",
               "traps": []
             },
             {
@@ -3957,7 +3957,7 @@
                   "winner": true
                 }
               ],
-              "code": "one = (s[i] != '0') ? prev1 : 0;\ntwo = (10 <= val(s[i-1], s[i]) && val <= 26) ? prev2 : 0;\ncur = one + two;",
+              "code": "def num_decodings(s):\n    two, one = 1, (0 if s[0] == '0' else 1)   # ways for s[:i-2], s[:i-1]\n    for i in range(2, len(s) + 1):\n        cur = 0\n        if s[i - 1] != '0':\n            cur += one                 # last digit alone\n        if 10 <= int(s[i - 2:i]) <= 26:\n            cur += two                 # last two digits together\n        two, one = one, cur\n    return one",
               "traps": [
                 "'0' is only ever valid as the second digit of 10 or 20 — leading zeros kill the whole branch."
               ]
@@ -3990,7 +3990,7 @@
                 }
               ],
               "why": "Bottom-up removes the recursion and makes the memo dimension explicit.",
-              "code": "dp[0] = true;\nfor (i = 1; i <= n; i++)\n  for (j = 0; j < i; j++)\n    if (dp[j] && dict.contains(s[j..i])) { dp[i] = true; break; }",
+              "code": "def word_break(s, word_dict):\n    words = set(word_dict)\n    longest = max(map(len, words))\n    dp = [True] + [False] * len(s)     # dp[i]: s[:i] can be segmented\n    for i in range(1, len(s) + 1):\n        for j in range(max(0, i - longest), i):\n            if dp[j] and s[j:i] in words:\n                dp[i] = True\n                break\n    return dp[-1]",
               "traps": []
             },
             {
@@ -4015,7 +4015,7 @@
                 }
               ],
               "why": "Drawing the three-state machine once makes the recurrence unforgettable.",
-              "code": "nHold = max(hold, rest - p);\nnSold = hold + p;\nnRest = max(rest, sold);\nhold = nHold; sold = nSold; rest = nRest;",
+              "code": "def max_profit(prices):\n    hold, sold, rest = float('-inf'), 0, 0\n    for p in prices:\n        # buy only from rest; sell from hold; rest after a sale or a rest\n        hold, sold, rest = max(hold, rest - p), hold + p, max(rest, sold)\n    return max(sold, rest)",
               "traps": []
             }
           ]
@@ -4052,7 +4052,7 @@
                 }
               ],
               "why": "Descending order reads only previous-row values — that is exactly what makes it 0/1 and not unbounded.",
-              "code": "if (total % 2 != 0) return false;\ndp[0] = true;\nfor (x : a) for (s = T; s >= x; s--) dp[s] |= dp[s - x];\nreturn dp[T];",
+              "code": "def can_partition(nums):\n    total = sum(nums)\n    if total % 2:\n        return False\n    S = total // 2\n    dp = [True] + [False] * S          # dp[s]: some subset sums to s\n    for x in nums:\n        for s in range(S, x - 1, -1):  # downward: each x used at most once\n            dp[s] = dp[s] or dp[s - x]\n    return dp[S]",
               "traps": [
                 "Ascend the inner loop and you silently solve the unbounded version instead."
               ]
@@ -4085,7 +4085,7 @@
                 }
               ],
               "why": "The reduction turns a sign-assignment search into one counting DP over sums.",
-              "code": "if ((total + target) % 2 != 0 || abs(target) > total) return 0;\ndp[0] = 1;\nfor (x : a) for (s = P; s >= x; s--) dp[s] += dp[s - x];\nreturn dp[P];",
+              "code": "def find_target_sum_ways(nums, target):\n    total = sum(nums)\n    if abs(target) > total or (total + target) % 2:\n        return 0\n    P = (total + target) // 2          # sum of the '+' group\n    dp = [1] + [0] * P                 # dp[s]: subsets summing to s\n    for x in nums:\n        for s in range(P, x - 1, -1):\n            dp[s] += dp[s - x]\n    return dp[P]",
               "traps": []
             }
           ]
@@ -4122,7 +4122,7 @@
                 }
               ],
               "why": "Same complexity, no queue — and the loop direction is the only difference from 0/1.",
-              "code": "fill(dp, INF); dp[0] = 0;\nfor (c : coins) for (s = c; s <= A; s++) dp[s] = min(dp[s], dp[s - c] + 1);\nreturn dp[A] == INF ? -1 : dp[A];",
+              "code": "def coin_change(coins, amount):\n    INF = amount + 1\n    dp = [0] + [INF] * amount          # dp[a]: fewest coins for amount a\n    for c in coins:\n        for a in range(c, amount + 1): # ascending: coin c can repeat\n            dp[a] = min(dp[a], dp[a - c] + 1)\n    return dp[amount] if dp[amount] <= amount else -1",
               "traps": []
             },
             {
@@ -4147,7 +4147,7 @@
                 }
               ],
               "why": "Loop order is the entire semantics here — memorise the order, not the recurrence.",
-              "code": "dp[0] = 1;\nfor (c : coins) for (s = c; s <= A; s++) dp[s] += dp[s - c];\nreturn dp[A];",
+              "code": "def change(amount, coins):\n    dp = [1] + [0] * amount            # dp[a]: combinations making a\n    for c in coins:                    # coins outside: counts sets, not orders\n        for a in range(c, amount + 1):\n            dp[a] += dp[a - c]\n    return dp[amount]",
               "traps": [
                 "Swap the two loops and you count ordered sequences — a different (and wrong) answer."
               ]
@@ -4186,7 +4186,7 @@
                 }
               ],
               "why": "Each cell reads only the previous row and the cell to its left.",
-              "code": "dp[i][j] = (a[i-1] == b[j-1])\n         ? dp[i-1][j-1] + 1\n         : max(dp[i-1][j], dp[i][j-1]);",
+              "code": "def longest_common_subsequence(a, b):\n    if len(a) < len(b):\n        a, b = b, a                    # roll over the shorter string\n    prev = [0] * (len(b) + 1)\n    for i in range(1, len(a) + 1):\n        cur = [0] * (len(b) + 1)\n        for j in range(1, len(b) + 1):\n            if a[i - 1] == b[j - 1]:\n                cur[j] = prev[j - 1] + 1\n            else:\n                cur[j] = max(prev[j], cur[j - 1])\n        prev = cur\n    return prev[-1]",
               "traps": []
             },
             {
@@ -4211,7 +4211,7 @@
                 }
               ],
               "why": "Seeding row 0 and column 0 with i and j (pure inserts/deletes) is half the correctness.",
-              "code": "dp[i][j] = (a[i-1] == b[j-1])\n         ? dp[i-1][j-1]\n         : 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);",
+              "code": "def min_distance(a, b):\n    prev = list(range(len(b) + 1))     # \"\" → b[:j] costs j inserts\n    for i in range(1, len(a) + 1):\n        cur = [i] + [0] * len(b)\n        for j in range(1, len(b) + 1):\n            if a[i - 1] == b[j - 1]:\n                cur[j] = prev[j - 1]\n            else:                      # replace, delete, insert\n                cur[j] = 1 + min(prev[j - 1], prev[j], cur[j - 1])\n        prev = cur\n    return prev[-1]",
               "traps": []
             },
             {
@@ -4242,7 +4242,7 @@
                 }
               ],
               "why": "Recognising <code>k = i+j</code> is what collapses a three-index problem to two.",
-              "code": "dp[i][j] = (dp[i-1][j] && a[i-1] == c[i+j-1])\n        || (dp[i][j-1] && b[j-1] == c[i+j-1]);",
+              "code": "def is_interleave(a, b, c):\n    m, n = len(a), len(b)\n    if m + n != len(c):\n        return False\n    dp = [False] * (n + 1)             # dp[j] for the current row i\n    for i in range(m + 1):\n        for j in range(n + 1):\n            if i == 0 and j == 0:\n                dp[j] = True\n                continue\n            k = i + j - 1              # next char of c to match\n            from_a = i > 0 and dp[j] and a[i - 1] == c[k]\n            from_b = j > 0 and dp[j - 1] and b[j - 1] == c[k]\n            dp[j] = from_a or from_b\n    return dp[n]",
               "traps": [
                 "If len(a) + len(b) != len(c), return false immediately."
               ]
@@ -4269,7 +4269,7 @@
                 }
               ],
               "why": "Descending j is what keeps dp[j-1] on the previous row, as in 0/1 knapsack.",
-              "code": "dp[0] = 1;\nfor (c : s)\n  for (j = t.length(); j >= 1; j--)\n    if (c == t[j-1]) dp[j] += dp[j-1];\nreturn dp[t.length()];",
+              "code": "def num_distinct(s, t):\n    dp = [1] + [0] * len(t)            # dp[j]: ways to form t[:j]\n    for ch in s:\n        for j in range(len(t), 0, -1): # downward: use ch once per step\n            if t[j - 1] == ch:\n                dp[j] += dp[j - 1]\n    return dp[-1]",
               "traps": []
             },
             {
@@ -4294,7 +4294,7 @@
                 }
               ],
               "why": "The star's two branches — zero copies vs one more copy — are the whole recurrence.",
-              "code": "if (p[j-1] == '*')\n  dp[i][j] = dp[i][j-2] || (match(s[i-1], p[j-2]) && dp[i-1][j]);\nelse\n  dp[i][j] = match(s[i-1], p[j-1]) && dp[i-1][j-1];",
+              "code": "def is_match(s, p):\n    m, n = len(s), len(p)\n    dp = [[False] * (n + 1) for _ in range(m + 1)]   # dp[i][j]: s[:i] ~ p[:j]\n    dp[0][0] = True\n    for j in range(2, n + 1):\n        if p[j - 1] == '*':\n            dp[0][j] = dp[0][j - 2]    # \"a*\" can match empty\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if p[j - 1] == '*':\n                zero = dp[i][j - 2]\n                more = p[j - 2] in (s[i - 1], '.') and dp[i - 1][j]\n                dp[i][j] = zero or more\n            else:\n                dp[i][j] = p[j - 1] in (s[i - 1], '.') and dp[i - 1][j - 1]\n    return dp[m][n]",
               "traps": [
                 "Seed dp[0][j] so patterns like a*b*c* can match the empty string."
               ]
@@ -4333,7 +4333,7 @@
                 }
               ],
               "why": "Keeping only the smallest tail per length keeps the array sorted, which is what licenses the binary search.",
-              "code": "i = lowerBound(tails, x);\nif (i == tails.size()) tails.add(x); else tails[i] = x;\nreturn tails.size();",
+              "code": "from bisect import bisect_left\n\ndef length_of_lis(nums):\n    tails = []                         # tails[k]: smallest tail of a length-k+1 run\n    for x in nums:\n        i = bisect_left(tails, x)\n        if i == len(tails):\n            tails.append(x)            # extends the longest run\n        else:\n            tails[i] = x               # a smaller tail for length i+1\n    return len(tails)",
               "traps": [
                 "Use lowerBound for strictly increasing, upperBound for non-decreasing."
               ]
@@ -4372,7 +4372,7 @@
                 }
               ],
               "why": "Each cell reads only above and left, both of which live in one row buffer.",
-              "code": "fill(dp, 1);\nfor (i = 1; i < m; i++) for (j = 1; j < n; j++) dp[j] += dp[j-1];\nreturn dp[n-1];",
+              "code": "def unique_paths(m, n):\n    row = [1] * n                      # first row: one way to each cell\n    for _ in range(1, m):\n        for j in range(1, n):\n            row[j] += row[j - 1]       # from above (old row[j]) + from the left\n    return row[-1]",
               "traps": []
             },
             {
@@ -4396,7 +4396,7 @@
                   "winner": true
                 }
               ],
-              "code": "dp[j] = (grid[i][j] == 1) ? 0 : dp[j] + dp[j-1];",
+              "code": "def unique_paths_with_obstacles(grid):\n    n = len(grid[0])\n    row = [1] + [0] * (n - 1)\n    for cells in grid:\n        for j in range(n):\n            if cells[j] == 1:\n                row[j] = 0             # obstacle: no paths through here\n            elif j > 0:\n                row[j] += row[j - 1]\n    return row[-1]",
               "traps": [
                 "An obstacle in the first row or column zeroes everything after it — handle the seeding carefully."
               ]
@@ -4422,7 +4422,7 @@
                   "winner": true
                 }
               ],
-              "code": "dp[j] = grid[i][j] + min(dp[j] /*above*/, dp[j-1] /*left*/);",
+              "code": "def min_path_sum(grid):\n    n = len(grid[0])\n    row = [0] + [float('inf')] * (n - 1)\n    for cells in grid:\n        row[0] += cells[0]\n        for j in range(1, n):\n            row[j] = cells[j] + min(row[j], row[j - 1])   # from above or left\n    return row[-1]",
               "traps": []
             },
             {
@@ -4447,7 +4447,7 @@
                 }
               ],
               "why": "Anchoring at the bottom-right corner is what makes the three-neighbour minimum well defined.",
-              "code": "if (grid[i][j] == '1')\n  dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);\nbest = max(best, dp[i][j]);   // answer is best * best",
+              "code": "def maximal_square(matrix):\n    n = len(matrix[0])\n    dp = [0] * (n + 1)                 # dp[j]: side of the square ending here\n    best = 0\n    for row in matrix:\n        diag = 0                       # dp value up-left of the current cell\n        for j in range(1, n + 1):\n            up = dp[j]\n            if row[j - 1] == '1':\n                dp[j] = 1 + min(dp[j], dp[j - 1], diag)\n                best = max(best, dp[j])\n            else:\n                dp[j] = 0\n            diag = up\n    return best * best",
               "traps": []
             },
             {
@@ -4478,7 +4478,7 @@
                 }
               ],
               "why": "Strict increase rules out cycles, so memoised DFS needs no cycle bookkeeping at all.",
-              "code": "if (memo[r][c] != 0) return memo[r][c];\nbest = 1;\nfor (nb) if (grid[nb] > grid[r][c]) best = max(best, 1 + dfs(nb));\nreturn memo[r][c] = best;",
+              "code": "from functools import lru_cache\n\ndef longest_increasing_path(matrix):\n    m, n = len(matrix), len(matrix[0])\n\n    @lru_cache(maxsize=None)\n    def dfs(r, c):                     # longest path starting at (r, c)\n        best = 1\n        for nr, nc in ((r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)):\n            if 0 <= nr < m and 0 <= nc < n and matrix[nr][nc] > matrix[r][c]:\n                best = max(best, 1 + dfs(nr, nc))\n        return best\n\n    return max(dfs(r, c) for r in range(m) for c in range(n))",
               "traps": []
             }
           ]
@@ -4515,7 +4515,7 @@
                 }
               ],
               "why": "No table needed — centre expansion visits the same states in constant space.",
-              "code": "for (c = 0; c < n; c++) { expand(c, c); expand(c, c + 1); }   // odd and even",
+              "code": "def longest_palindrome(s):\n    start, length = 0, 0\n    for center in range(2 * len(s) - 1):   # n letters + n-1 gaps\n        l, r = center // 2, (center + 1) // 2\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            l -= 1\n            r += 1\n        if r - l - 1 > length:\n            start, length = l + 1, r - l - 1\n    return s[start:start + length]",
               "traps": []
             },
             {
@@ -4539,7 +4539,7 @@
                   "winner": true
                 }
               ],
-              "code": "while (l >= 0 && r < n && s[l] == s[r]) { count++; l--; r++; }",
+              "code": "def count_substrings(s):\n    count = 0\n    for center in range(2 * len(s) - 1):\n        l, r = center // 2, (center + 1) // 2\n        while l >= 0 and r < len(s) and s[l] == s[r]:\n            count += 1                 # every successful step is a palindrome\n            l -= 1\n            r += 1\n    return count",
               "traps": []
             },
             {
@@ -4570,7 +4570,7 @@
                 }
               ],
               "why": "Choosing the last burst rather than the first makes the two subproblems independent.",
-              "code": "for (k = i + 1; k < j; k++)\n  dp[i][j] = max(dp[i][j], a[i]*a[k]*a[j] + dp[i][k] + dp[k][j]);",
+              "code": "def max_coins(nums):\n    a = [1] + nums + [1]               # padded ends\n    n = len(a)\n    dp = [[0] * n for _ in range(n)]   # dp[i][j]: best for the open interval (i, j)\n    for length in range(2, n):\n        for i in range(n - length):\n            j = i + length\n            for k in range(i + 1, j):  # k is the LAST balloon burst in (i, j)\n                dp[i][j] = max(dp[i][j], dp[i][k] + a[i] * a[k] * a[j] + dp[k][j])\n    return dp[0][n - 1]",
               "traps": [
                 "Pick the FIRST balloon to burst and the subproblems stay coupled — the DP breaks."
               ]
@@ -4615,7 +4615,7 @@
                 }
               ],
               "why": "Only the maximum reach matters, never which index produced it.",
-              "code": "for (i = 0; i < n; i++) {\n  if (i > far) return false;\n  far = max(far, i + a[i]);\n}\nreturn true;",
+              "code": "def can_jump(nums):\n    far = 0                            # farthest index reachable so far\n    for i, x in enumerate(nums):\n        if i > far:\n            return False\n        far = max(far, i + x)\n    return True",
               "traps": []
             },
             {
@@ -4646,7 +4646,7 @@
                 }
               ],
               "why": "Within a level only the farthest reach matters, so the whole level collapses to one number.",
-              "code": "for (i = 0; i < n - 1; i++) {\n  far = max(far, i + a[i]);\n  if (i == curEnd) { jumps++; curEnd = far; }\n}",
+              "code": "def jump(nums):\n    jumps = cur_end = far = 0\n    for i in range(len(nums) - 1):\n        far = max(far, i + nums[i])\n        if i == cur_end:               # end of this BFS level: must jump\n            jumps += 1\n            cur_end = far\n    return jumps",
               "traps": []
             },
             {
@@ -4677,7 +4677,7 @@
                 }
               ],
               "why": "A failing prefix rules out every start inside it, not just the one you tried.",
-              "code": "tank += g[i] - c[i]; total += g[i] - c[i];\nif (tank < 0) { start = i + 1; tank = 0; }\nreturn total >= 0 ? start : -1;",
+              "code": "def can_complete_circuit(gas, cost):\n    total = tank = start = 0\n    for i in range(len(gas)):\n        surplus = gas[i] - cost[i]\n        total += surplus\n        tank += surplus\n        if tank < 0:                   # can't reach i+1 from start: restart there\n            start, tank = i + 1, 0\n    return start if total >= 0 else -1",
               "traps": []
             },
             {
@@ -4701,7 +4701,7 @@
                   "winner": true
                 }
               ],
-              "code": "end = max(end, last[s[i]]);\nif (i == end) { emit(i - start + 1); start = i + 1; }",
+              "code": "def partition_labels(s):\n    last = {c: i for i, c in enumerate(s)}\n    res, start, end = [], 0, 0\n    for i, c in enumerate(s):\n        end = max(end, last[c])        # partition must reach c's last copy\n        if i == end:\n            res.append(end - start + 1)\n            start = i + 1\n    return res",
               "traps": []
             },
             {
@@ -4726,7 +4726,7 @@
                 }
               ],
               "why": "Forced moves need no search — the smallest card removes all the branching.",
-              "code": "k = minKey();\nfor (j = k; j < k + W; j++) {\n  if (cnt[j] < cnt[k]) return false;\n  cnt[j] -= cnt[k];\n}",
+              "code": "import heapq\nfrom collections import Counter\n\ndef is_n_straight_hand(hand, group_size):\n    if len(hand) % group_size:\n        return False\n    count = Counter(hand)\n    heap = list(count)                 # distinct card values, smallest first\n    heapq.heapify(heap)\n    while heap:\n        first = heap[0]                # smallest card must start a group\n        for card in range(first, first + group_size):\n            if count[card] == 0:\n                return False\n            count[card] -= 1\n            if count[card] == 0:\n                if card != heap[0]:\n                    return False       # a smaller card would be left stranded\n                heapq.heappop(heap)\n    return True",
               "traps": []
             },
             {
@@ -4757,7 +4757,7 @@
                 }
               ],
               "why": "The constraint decomposes into two independent one-directional passes.",
-              "code": "L->R: if (r[i] > r[i-1]) c[i] = c[i-1] + 1;\nR->L: if (r[i] > r[i+1]) c[i] = max(c[i], c[i+1] + 1);",
+              "code": "def candy(ratings):\n    n = len(ratings)\n    candies = [1] * n\n    for i in range(1, n):              # left neighbour rule\n        if ratings[i] > ratings[i - 1]:\n            candies[i] = candies[i - 1] + 1\n    for i in range(n - 2, -1, -1):     # right neighbour rule, keep both\n        if ratings[i] > ratings[i + 1]:\n            candies[i] = max(candies[i], candies[i + 1] + 1)\n    return sum(candies)",
               "traps": []
             }
           ]
@@ -4794,7 +4794,7 @@
                 }
               ],
               "why": "The complement lookup replaces the entire inner loop.",
-              "code": "if (seen.has(t - a[i])) return {seen[t - a[i]], i};\nseen[a[i]] = i;",
+              "code": "def two_sum(nums, target):\n    seen = {}                          # value → index\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return [seen[target - x], i]\n        seen[x] = i\n    return []",
               "traps": []
             },
             {
@@ -4825,7 +4825,7 @@
                 }
               ],
               "why": "With a fixed alphabet, counting is strictly less work than sorting.",
-              "code": "if (s.length() != t.length()) return false;\ncnt[s[i]]++; cnt[t[i]]--;\nreturn all counts are zero;",
+              "code": "def is_anagram(s, t):\n    if len(s) != len(t):\n        return False\n    count = [0] * 26\n    for a, b in zip(s, t):\n        count[ord(a) - 97] += 1\n        count[ord(b) - 97] -= 1\n    return all(c == 0 for c in count)",
               "traps": []
             },
             {
@@ -4856,7 +4856,7 @@
                 }
               ],
               "why": "The count signature avoids sorting every word.",
-              "code": "key = \"#a#b#c...\" built from count[26];\nmap.computeIfAbsent(key, ...).add(word);",
+              "code": "from collections import defaultdict\n\ndef group_anagrams(strs):\n    groups = defaultdict(list)\n    for s in strs:\n        count = [0] * 26\n        for ch in s:\n            count[ord(ch) - 97] += 1\n        groups[tuple(count)].append(s) # letter counts are the signature\n    return list(groups.values())",
               "traps": []
             },
             {
@@ -4880,7 +4880,7 @@
                   "winner": true
                 }
               ],
-              "code": "if (!set.add(x)) return true;",
+              "code": "def contains_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False",
               "traps": []
             }
           ]
@@ -4917,7 +4917,7 @@
                 }
               ],
               "why": "Interviewers want the pointer surgery — <code>remove(node)</code> and <code>insertAtHead(node)</code>.",
-              "code": "get(k): node = map[k]; remove(node); insertHead(node); return node.val;\nput(k,v): if exists remove; insertHead(new);\n          if (map.size() > cap) evict(tail.prev);",
+              "code": "class Node:\n    def __init__(self, key=0, val=0):\n        self.key, self.val = key, val\n        self.prev = self.next = None\n\n\nclass LRUCache:\n    def __init__(self, capacity):\n        self.cap = capacity\n        self.map = {}                  # key → node\n        self.head, self.tail = Node(), Node()   # dummies; head.next = most recent\n        self.head.next, self.tail.prev = self.tail, self.head\n\n    def _remove(self, node):\n        node.prev.next, node.next.prev = node.next, node.prev\n\n    def _add_front(self, node):\n        node.prev, node.next = self.head, self.head.next\n        self.head.next.prev = node\n        self.head.next = node\n\n    def get(self, key):\n        if key not in self.map:\n            return -1\n        node = self.map[key]\n        self._remove(node)\n        self._add_front(node)\n        return node.val\n\n    def put(self, key, value):\n        if key in self.map:\n            self._remove(self.map[key])\n        node = Node(key, value)\n        self.map[key] = node\n        self._add_front(node)\n        if len(self.map) > self.cap:\n            lru = self.tail.prev       # least recently used\n            self._remove(lru)\n            del self.map[lru.key]",
               "traps": [
                 "Dummy head and tail nodes remove every null check from remove/insert."
               ]
@@ -4944,7 +4944,7 @@
                 }
               ],
               "why": "Density is the requirement; the swap is the only way to delete from the middle in O(1).",
-              "code": "i = map[v]; last = list.get(list.size() - 1);\nlist.set(i, last); map[last] = i;\nlist.removeLast(); map.remove(v);",
+              "code": "import random\n\nclass RandomizedSet:\n    def __init__(self):\n        self.values = []\n        self.index = {}                # value → position in values\n\n    def insert(self, val):\n        if val in self.index:\n            return False\n        self.index[val] = len(self.values)\n        self.values.append(val)\n        return True\n\n    def remove(self, val):\n        if val not in self.index:\n            return False\n        i, last = self.index[val], self.values[-1]\n        self.values[i], self.index[last] = last, i   # move last into the hole\n        self.values.pop()\n        del self.index[val]\n        return True\n\n    def getRandom(self):\n        return random.choice(self.values)",
               "traps": [
                 "Update map[last] BEFORE removing — and handle the case where v is itself the last element."
               ]
@@ -4973,7 +4973,7 @@
                 }
               ],
               "why": "Recognising it as k-way merge is the whole trick — the rest is bookkeeping.",
-              "code": "seed heap with each followee's newest tweet;\npop 10 times, pushing that user's next tweet each time;",
+              "code": "import heapq\nfrom collections import defaultdict\n\nclass Twitter:\n    def __init__(self):\n        self.time = 0\n        self.tweets = defaultdict(list)    # user → [(time, tweetId)], oldest first\n        self.following = defaultdict(set)\n\n    def postTweet(self, userId, tweetId):\n        self.time += 1\n        self.tweets[userId].append((self.time, tweetId))\n\n    def getNewsFeed(self, userId):\n        heap = []                          # newest tweet of each followee list\n        for user in self.following[userId] | {userId}:\n            if self.tweets[user]:\n                i = len(self.tweets[user]) - 1\n                time, tweet = self.tweets[user][i]\n                heap.append((-time, tweet, user, i))\n        heapq.heapify(heap)\n        feed = []\n        while heap and len(feed) < 10:\n            _, tweet, user, i = heapq.heappop(heap)\n            feed.append(tweet)\n            if i > 0:                      # advance that user's list\n                time, older = self.tweets[user][i - 1]\n                heapq.heappush(heap, (-time, older, user, i - 1))\n        return feed\n\n    def follow(self, followerId, followeeId):\n        if followerId != followeeId:\n            self.following[followerId].add(followeeId)\n\n    def unfollow(self, followerId, followeeId):\n        self.following[followerId].discard(followeeId)",
               "traps": []
             }
           ]
@@ -5010,7 +5010,7 @@
                 }
               ],
               "why": "Two trivially-correct passes beat one index-juggling pass you will get wrong under pressure.",
-              "code": "for (i = 0; i < n; i++) for (j = i+1; j < n; j++) swap(m[i][j], m[j][i]);\nfor (row : m) reverse(row);",
+              "code": "def rotate(matrix):\n    n = len(matrix)\n    for i in range(n):                 # transpose\n        for j in range(i + 1, n):\n            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]\n    for row in matrix:                 # then mirror each row\n        row.reverse()",
               "traps": [
                 "Anticlockwise is transpose then reverse COLUMNS (or reverse rows first, then transpose)."
               ]
@@ -5036,7 +5036,7 @@
                   "winner": true
                 }
               ],
-              "code": "-> top row,    top++;\nv  right col,  right--;\nif (top <= bottom) <- bottom row, bottom--;\nif (left <= right) ^  left col,   left++;",
+              "code": "def spiral_order(matrix):\n    res = []\n    top, bottom, left, right = 0, len(matrix) - 1, 0, len(matrix[0]) - 1\n    while top <= bottom and left <= right:\n        for c in range(left, right + 1):\n            res.append(matrix[top][c])\n        top += 1\n        for r in range(top, bottom + 1):\n            res.append(matrix[r][right])\n        right -= 1\n        if top <= bottom:              # a row is still left\n            for c in range(right, left - 1, -1):\n                res.append(matrix[bottom][c])\n            bottom -= 1\n        if left <= right:              # a column is still left\n            for r in range(bottom, top - 1, -1):\n                res.append(matrix[r][left])\n            left += 1\n    return res",
               "traps": [
                 "Skipping the two mid-loop guards double-counts the last row/column on non-square matrices."
               ]
@@ -5069,7 +5069,7 @@
                 }
               ],
               "why": "The matrix already contains two spare lines to store the flags in.",
-              "code": "mark pass -> set m[i][0] and m[0][j];\nfill from (1,1) outward;\nfinally handle row 0 and column 0, using the separate col0 flag.",
+              "code": "def set_zeroes(matrix):\n    m, n = len(matrix), len(matrix[0])\n    col0 = False                       # row 0 / col 0 cells are the markers\n    for i in range(m):\n        if matrix[i][0] == 0:\n            col0 = True\n        for j in range(1, n):\n            if matrix[i][j] == 0:\n                matrix[i][0] = matrix[0][j] = 0\n    for i in range(m - 1, -1, -1):     # bottom-up so row 0 markers survive\n        for j in range(n - 1, 0, -1):\n            if matrix[i][0] == 0 or matrix[0][j] == 0:\n                matrix[i][j] = 0\n        if col0:\n            matrix[i][0] = 0",
               "traps": []
             },
             {
@@ -5100,7 +5100,7 @@
                 }
               ],
               "why": "Each squaring doubles the exponent already covered.",
-              "code": "if (n < 0) { x = 1 / x; N = -(long) n; }\nwhile (N > 0) { if ((N & 1) == 1) r *= x; x *= x; N >>= 1; }",
+              "code": "def my_pow(x, n):\n    if n < 0:\n        x, n = 1 / x, -n\n    result = 1.0\n    while n:\n        if n & 1:                      # this bit of n contributes x^(2^k)\n            result *= x\n        x *= x\n        n >>= 1\n    return result",
               "traps": [
                 "Negate n as a long — -Integer.MIN_VALUE overflows back to itself."
               ]
@@ -5132,7 +5132,7 @@
                   "winner": true
                 }
               ],
-              "code": "while (a != null || b != null || carry != 0) {\n  s = (a != null ? a.val : 0) + (b != null ? b.val : 0) + carry;\n  carry = s / 10;\n  tail.next = new Node(s % 10); tail = tail.next;\n  advance a and b if non-null;\n}",
+              "code": "def add_two_numbers(l1, l2):\n    dummy = tail = ListNode()\n    carry = 0\n    while l1 or l2 or carry:\n        total = carry + (l1.val if l1 else 0) + (l2.val if l2 else 0)\n        carry, digit = divmod(total, 10)\n        tail.next = ListNode(digit)\n        tail = tail.next\n        l1 = l1.next if l1 else None\n        l2 = l2.next if l2 else None\n    return dummy.next",
               "traps": []
             },
             {
@@ -5163,7 +5163,7 @@
                 }
               ],
               "why": "The interleaving itself encodes the mapping, so the hash map disappears.",
-              "code": "pass 1: a.next = new Node(a.val, a.next);\npass 2: if (a.random != null) a.next.random = a.random.next;\npass 3: unweave into two independent lists;",
+              "code": "def copy_random_list(head):\n    if not head:\n        return None\n    cur = head                         # 1. interleave: A → A' → B → B'\n    while cur:\n        cur.next = Node(cur.val, cur.next)\n        cur = cur.next.next\n    cur = head                         # 2. wire randoms: A'.random = A.random'\n    while cur:\n        if cur.random:\n            cur.next.random = cur.random.next\n        cur = cur.next.next\n    cur, copy_head = head, head.next   # 3. split the two lists apart\n    while cur:\n        copy = cur.next\n        cur.next = copy.next\n        copy.next = copy.next.next if copy.next else None\n        cur = cur.next\n    return copy_head",
               "traps": [
                 "Pass 3 must fully restore the original list, not just extract the copy."
               ]

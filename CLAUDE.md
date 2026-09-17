@@ -6,7 +6,8 @@ Guidance for Claude Code in this repo.
 
 A React site that publishes the **AlgoHandbook** notes vault
 (`~/Desktop/java/Spring Boot/AlgoHandbook`) section by section. Content is pulled from the vault
-by a script and committed as JSON. The vault itself is never edited from here.
+by a script and committed as JSON. The vault is only written by `npm run vault:walkthroughs`
+(cold recall walkthroughs, see below); everything else in it is read-only from here.
 
 Deploy: `npm run build`, then drag the `dist/` folder onto Netlify (manual deploy).
 `public/_redirects` is copied into `dist/` so deep links work.
@@ -16,6 +17,7 @@ Deploy: `npm run build`, then drag the `dist/` folder onto Netlify (manual deplo
 ```bash
 npm run dev       # dev server
 npm run ingest    # re-read the vault → src/content/generated/*.json (VAULT_DIR=… to override path)
+npm run vault:walkthroughs  # write src/content/deep walkthroughs into the vault's dsa-cold-recall.html, then run ingest
 npm run build     # type-check + production build to dist/
 npm run preview   # serve dist/ locally
 npm run lint      # oxlint
@@ -34,6 +36,9 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded).
   A section with `pages: []` shows as "Soon".
 - `src/content/generated/` — output of `scripts/ingest-vault.mjs`. Don't hand-edit; re-run ingest.
   `manifest.json` is small and imported by the main bundle; the other JSON files are imported only by lazy pages.
+- `src/content/deep/` — cold recall approach walkthroughs (naive → best: points, time/space, code, diagram specs),
+  keyed by problem id. The site renders them with `RecallDiagram`; the vault page gets the same SVG from
+  `src/lib/recallDiagramSvg.ts`. Keep that file and the data files free of runtime imports — Node loads them directly.
 - `src/components/layout/` — app bar, `SideNav` section sidebar (permanent at `lg`+, inside `NavDrawer` below), global search.
 - `src/components/content/` — `PageContainer`, `PageHeader`, `HtmlContent` (renders vault HTML with
   diagrams, highlighting, copy buttons), `TableOfContents`, `articleStyles`.

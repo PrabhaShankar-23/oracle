@@ -25,6 +25,48 @@ export type Problem = {
 }
 
 export type Pattern = { id: string; name: string; problems: Problem[] }
+
+/* ---------------- Cold recall: approach walkthroughs with diagrams ---------------- */
+
+export type DiagramTone = 'primary' | 'secondary' | 'success' | 'error' | 'warning'
+/** dim = discarded/skipped, match = checked and good, miss = checked and bad, active = in focus. */
+export type CellState = 'dim' | 'match' | 'miss' | 'active'
+export type DiagramPointer = { at: number; label: string; tone?: DiagramTone }
+
+/** One step of an array walk: a row of cells with pointers above and an optional bracket below. */
+export type CellsRow = {
+  caption?: string
+  cells: (string | number)[]
+  pointers?: DiagramPointer[]
+  states?: Partial<Record<number, CellState>>
+  span?: { from: number; to: number; label: string }
+  note?: string
+}
+
+/** One frame of a height chart (walls, water, containers). */
+export type BarsRow = {
+  caption?: string
+  heights: number[]
+  water?: number[]
+  pointers?: DiagramPointer[]
+  box?: { from: number; to: number; height: number; label: string }
+  levels?: { value: number; from: number; to: number; label: string; tone?: DiagramTone }[]
+  dim?: number[]
+  note?: string
+}
+
+export type Diagram = { kind: 'cells'; rows: CellsRow[] } | { kind: 'bars'; rows: BarsRow[] }
+
+export type ApproachWalkthrough = {
+  name: string
+  time: string
+  space: string
+  best?: boolean
+  /** 4–6 short lines: the idea, the moves, why it is correct or where it wastes work. */
+  points: string[]
+  code: string
+  diagrams: Diagram[]
+}
 export type Family = { id: string; name: string; patterns: Pattern[] }
 export type ColdRecall = { title: string; intro: string; families: Family[] }
 
