@@ -156,3 +156,37 @@ export type Manifest = {
   aiSystems: Omit<VaultDoc, 'html'>[]
   dsaUtils: { lang: UtilsLang; id: string; name: string; section: string }[]
 }
+
+/* ---------------- DSA thinking playbook (hand-written, not from the vault) ---------------- */
+
+export type PlaybookTone = 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'error'
+
+/** Rendering blocks for the playbook. Each section is a short stack of these. */
+export type PlaybookBlock =
+  /** A left-to-right pipeline (wraps to a column on compact). */
+  | { kind: 'flow'; title?: string; steps: string[]; note?: string }
+  /** Things to say out loud / tick off before coding. */
+  | { kind: 'checklist'; title?: string; items: string[]; note?: string }
+  /** `mono` lists the column indexes rendered in the monospace face. */
+  | { kind: 'table'; title?: string; columns: string[]; rows: string[][]; mono?: number[]; note?: string }
+  | { kind: 'cards'; title?: string; items: { title: string; text: string; code?: string; lang?: string }[] }
+  | { kind: 'bullets'; title?: string; items: string[] }
+  | { kind: 'compare'; title?: string; columns: { title: string; tone: PlaybookTone; items: string[] }[] }
+  | { kind: 'code'; title?: string; lang: string; code: string; note?: string }
+  | { kind: 'callout'; tone: PlaybookTone; title?: string; text: string }
+
+export type PlaybookSection = {
+  id: string
+  title: string
+  lede?: string
+  /** Optional "go and drill this" pointer to another page. */
+  link?: { label: string; to: string }
+  blocks: PlaybookBlock[]
+}
+
+export type Playbook = {
+  title: string
+  subtitle: string
+  intro: string[]
+  sections: PlaybookSection[]
+}

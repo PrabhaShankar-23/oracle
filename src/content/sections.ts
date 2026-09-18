@@ -19,6 +19,7 @@ import StorageOutlined from '@mui/icons-material/StorageOutlined'
 import TerminalOutlined from '@mui/icons-material/TerminalOutlined'
 import WebOutlined from '@mui/icons-material/WebOutlined'
 import manifestJson from './generated/manifest.json'
+import { playbookIndex } from './playbookIndex'
 import { shortTitle } from './titles'
 import type { Manifest } from './types'
 
@@ -56,6 +57,12 @@ export const sections: Section[] = [
         path: '/dsa/cold-recall',
         description: `${manifest.dsa.problems.length} problems across ${manifest.dsa.patterns.length} patterns — state, invariant, approaches, code.`,
         group: 'Recall',
+      },
+      {
+        title: 'Thinking playbook',
+        path: '/dsa/playbook',
+        description: `${playbookIndex.length} rituals — sizing from constraints, invariants, pre-checks, the dry run and what to say out loud.`,
+        group: 'Toolkits',
       },
       {
         title: 'Python helpers',
@@ -192,6 +199,13 @@ export const searchIndex: SearchItem[] = [
       group: 'AI systems',
     })),
   ),
+  ...playbookIndex.map((s) => ({
+    key: `playbook:${s.id}`,
+    label: s.title,
+    secondary: 'Thinking playbook',
+    path: `/dsa/playbook#${s.id}`,
+    group: 'DSA playbook',
+  })),
   ...manifest.dsaUtils.map((h) => ({
     key: `utils:${h.lang}:${h.id}`,
     label: h.name,
