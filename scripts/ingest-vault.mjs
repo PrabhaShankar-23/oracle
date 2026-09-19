@@ -681,6 +681,7 @@ const AGENTIC_SECTIONS = {
   '07-durable-execution': 'Durable execution',
   '08-reliability': 'Reliability engineering',
   '09-latency': 'Latency & streaming',
+  '10-cost': 'Cost modelling & optimisation',
 }
 
 /** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */
@@ -696,6 +697,18 @@ function parseDecisionMeta(blockquoteText) {
     tier: (fields['depth tier'] ?? '').toUpperCase(),
     created: fields['created'],
   }
+}
+
+/**
+ * `marked` turns a ```mermaid fence into `<pre><code class="language-mermaid">`, which renders
+ * as source. The site draws diagrams from `.mermaid` inside a `figure`, so promote them.
+ */
+function promoteMermaidFences($, body) {
+  body.find('pre > code.language-mermaid').each((_, node) => {
+    const code = $(node)
+    const figure = $('<figure></figure>').append($('<div class="mermaid"></div>').text(code.text()))
+    code.parent().replaceWith(figure)
+  })
 }
 
 async function ingestAgenticDecisions() {
@@ -753,6 +766,7 @@ async function ingestAgenticDecisions() {
     })
     rewriteLinks($, body)
     body.html(flattenVaultRefs(inner(body)))
+    promoteMermaidFences($, body)
 
     const section = sections.find((s) => s.id === note.dir) ?? { id: note.dir, title: note.sectionTitle, notes: [] }
     if (!sections.includes(section)) sections.push(section)

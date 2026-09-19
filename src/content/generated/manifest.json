@@ -3309,6 +3309,54 @@
       "relevance": "Medium",
       "section": "09-latency",
       "sectionTitle": "Latency & streaming"
+    },
+    {
+      "slug": "the-steps-squared-term",
+      "title": "Which factor of the steps² term you attack",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-cost",
+      "sectionTitle": "Cost modelling & optimisation"
+    },
+    {
+      "slug": "model-routing",
+      "title": "Route by step, cascade on failure, or stay on one model",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-cost",
+      "sectionTitle": "Cost modelling & optimisation"
+    },
+    {
+      "slug": "caching-tiers",
+      "title": "Which cache tier, and where each one stops being safe",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-cost",
+      "sectionTitle": "Cost modelling & optimisation"
+    },
+    {
+      "slug": "spend-caps",
+      "title": "Where the spend cap is enforced, and at what scope",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-cost",
+      "sectionTitle": "Cost modelling & optimisation"
+    },
+    {
+      "slug": "unit-economics",
+      "title": "Cost per call, per task, or per successful task",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "10-cost",
+      "sectionTitle": "Cost modelling & optimisation"
+    },
+    {
+      "slug": "batch-and-self-host",
+      "title": "Batch API, sync API, or your own weights",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "10-cost",
+      "sectionTitle": "Cost modelling & optimisation"
     }
   ],
   "gameDayDocs": [
