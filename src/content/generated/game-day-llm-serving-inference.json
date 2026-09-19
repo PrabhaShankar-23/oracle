@@ -902,9 +902,9 @@
       ]
     },
     {
-      "id": "llm-serving-inference-merged-from-jbtiqllmmd-19-sep-2026",
+      "id": "llm-serving-inference-more",
       "letter": null,
-      "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
+      "name": "More questions",
       "questions": [
         {
           "id": "llm-serving-inference-q26",
@@ -997,14 +997,7 @@
           ],
           "badge": "Trending — provider-failure resilience recurs across LLMOps discourse (2025–26)",
           "oneLiner": "Breakers and pre-evaled fallback chains for outages, backpressure and load-shedding for capacity, pinned versions plus eval tripwires for silent behavior changes — a hosted model is a critical dependency you don't control, so the resilience is built before the bad day."
-        }
-      ]
-    },
-    {
-      "id": "llm-serving-inference-merged-from-jbtiqdlmd-19-sep-2026",
-      "letter": null,
-      "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
-      "questions": [
+        },
         {
           "id": "llm-serving-inference-q30",
           "number": 30,

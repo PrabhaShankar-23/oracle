@@ -2359,9 +2359,9 @@
           "count": 1
         },
         {
-          "id": "python-merged-from-jbtiqpymd-24-aug-2026",
+          "id": "python-more",
           "letter": null,
-          "name": "Merged from JBTIQ_PY.md — 24 Aug 2026",
+          "name": "More questions",
           "count": 4
         }
       ]
@@ -2482,16 +2482,10 @@
           "count": 1
         },
         {
-          "id": "llm-foundations-merged-from-jbtiqllmmd-19-sep-2026",
+          "id": "llm-foundations-more",
           "letter": null,
-          "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
-          "count": 15
-        },
-        {
-          "id": "llm-foundations-merged-from-jbtiqdlmd-19-sep-2026",
-          "letter": null,
-          "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
-          "count": 5
+          "name": "More questions",
+          "count": 20
         }
       ]
     },
@@ -2539,15 +2533,15 @@
           "count": 1
         },
         {
-          "id": "rag-added-from-the-aug-2026-trend-scan-24-aug",
+          "id": "rag-trend-scan",
           "letter": null,
-          "name": "Added from the Aug 2026 trend scan — 24 Aug",
+          "name": "Trend scan — Aug 2026",
           "count": 7
         },
         {
-          "id": "rag-merged-from-jbtiqragmd-19-sep-2026",
+          "id": "rag-more",
           "letter": null,
-          "name": "Merged from jbtiq_rag.md — 19 Sep 2026",
+          "name": "More questions",
           "count": 15
         }
       ]
@@ -2602,9 +2596,9 @@
           "count": 1
         },
         {
-          "id": "agentic-ai-merged-from-jbtiqagenticmd-19-sep-2026",
+          "id": "agentic-ai-more",
           "letter": null,
-          "name": "Merged from jbtiq_agentic.md — 19 Sep 2026",
+          "name": "More questions",
           "count": 21
         }
       ]
@@ -2674,16 +2668,10 @@
           "count": 1
         },
         {
-          "id": "llm-serving-inference-merged-from-jbtiqllmmd-19-sep-2026",
+          "id": "llm-serving-inference-more",
           "letter": null,
-          "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
-          "count": 4
-        },
-        {
-          "id": "llm-serving-inference-merged-from-jbtiqdlmd-19-sep-2026",
-          "letter": null,
-          "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
-          "count": 1
+          "name": "More questions",
+          "count": 5
         }
       ]
     },
@@ -2725,16 +2713,10 @@
           "count": 1
         },
         {
-          "id": "ml-dl-merged-from-jbtiqmlmd-19-sep-2026",
+          "id": "ml-dl-more",
           "letter": null,
-          "name": "Merged from jbtiq_ml.md — 19 Sep 2026",
-          "count": 29
-        },
-        {
-          "id": "ml-dl-merged-from-jbtiqdlmd-19-sep-2026",
-          "letter": null,
-          "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
-          "count": 18
+          "name": "More questions",
+          "count": 47
         }
       ]
     },

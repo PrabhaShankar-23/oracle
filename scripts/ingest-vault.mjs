@@ -613,6 +613,27 @@ async function ingestGameDay() {
       }
     }
 
+    // "Merged from jbtiq_ml.md — 19 Sep 2026" is vault bookkeeping, not something to read on the
+    // day. Those questions are part of the topic: fold every such band into one neutral group.
+    // "Added from the Aug 2026 trend scan — 24 Aug" says something useful; keep it, but say it plainly.
+    for (const b of bands) {
+      const scan = /^Added from the (\w+ \d{4}) trend scan/i.exec(b.name)
+      if (scan) {
+        b.name = `Trend scan — ${scan[1]}`
+        b.id = `${slug}-trend-scan`
+      }
+    }
+
+    const isProvenance = (b) => /^Merged from/i.test(b.name)
+    const merged = bands.filter(isProvenance)
+    if (merged.length > 0) {
+      const first = merged[0]
+      first.name = 'More questions'
+      first.id = `${slug}-more`
+      first.questions = merged.flatMap((b) => b.questions)
+      for (const extra of merged.slice(1)) extra.questions = []
+    }
+
     const withQuestions = bands.filter((b) => b.questions.length > 0)
     const count = withQuestions.reduce((n, b) => n + b.questions.length, 0)
     topics.push({ slug, number, icon, title, meta, bands: withQuestions })

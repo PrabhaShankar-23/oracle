@@ -284,28 +284,28 @@
     "text": "(D) \"Your multiprocessing code works on Linux, breaks on Mac. Why?",
     "topic": "python",
     "topicTitle": "Python",
-    "band": "Merged from JBTIQ_PY.md — 24 Aug 2026"
+    "band": "More questions"
   },
   {
     "id": "python-q42",
     "text": "(C) \"Why is pickle dangerous, and what do you use instead?",
     "topic": "python",
     "topicTitle": "Python",
-    "band": "Merged from JBTIQ_PY.md — 24 Aug 2026"
+    "band": "More questions"
   },
   {
     "id": "python-q43",
     "text": "(C) \"@cached_property, @lru_cache, functools.cache — which and when?",
     "topic": "python",
     "topicTitle": "Python",
-    "band": "Merged from JBTIQ_PY.md — 24 Aug 2026"
+    "band": "More questions"
   },
   {
     "id": "python-q44",
     "text": "(C) \"CPython, PyPy, or compiled Python?",
     "topic": "python",
     "topicTitle": "Python",
-    "band": "Merged from JBTIQ_PY.md — 24 Aug 2026"
+    "band": "More questions"
   },
   {
     "id": "fastapi-q1",
@@ -1047,140 +1047,140 @@
     "text": "🗣️ (jbtiq_llm Q6 · S3 Pretraining) \"Perplexity: what does it measure, when is it the right metric, and when is a lower perplexity model worse for you?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q27",
     "text": "🗣️ (jbtiq_llm Q7 · S3 Pretraining) \"Data pipeline for a pretraining run: what are the stages, and which two failures poison the model permanently?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q28",
     "text": "🗣️ (jbtiq_llm Q18 · S8 Long Context & Memory) \"Mamba, SSMs, linear attention — why do these architectures keep almost winning, and what keeps transformers on top?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q29",
     "text": "🗣️ (jbtiq_llm Q22 · S10 Evaluation) \"Why is LLM evaluation fundamentally harder than classical ML evaluation — and what does a production eval stack look like because of it?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q30",
     "text": "🗣️ (jbtiq_llm Q23 · S10 Evaluation) \"LLM-as-judge: which biases are documented, and how do you make a judge trustworthy enough to gate releases?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q31",
     "text": "🗣️ (jbtiq_llm Q25 · S11 Hallucination, Safety & Guardrails) \"Design the content-safety pipeline for a consumer LLM product — layers, trade-offs, and the metric war between safety and usefulness.",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q32",
     "text": "🗣️ (jbtiq_llm Q36 · S13 Cross-Cutting & Frontier) \"RLAIF and Constitutional AI: what problem in the RLHF pipeline do they attack, and what's the catch?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q33",
     "text": "🗣️ (jbtiq_llm Q37 · S13 Cross-Cutting & Frontier) \"Multimodal LLMs: how do images actually get into a language model, and what changes operationally when you ship vision?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q34",
     "text": "🗣️ (jbtiq_llm Q39 · S13 Cross-Cutting & Frontier) \"Memorization and PII: when does a model regurgitate training data, and what does that mean for training on customer data?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q35",
     "text": "🗣️ (jbtiq_llm Q40 · S13 Cross-Cutting & Frontier) \"Pick benchmarks for a model-selection decision: what does the public leaderboard tell you, and what's your private protocol?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q36",
     "text": "🗣️ (jbtiq_llm Q41 · S13 Cross-Cutting & Frontier) \"The residual stream: give me the mental model, and one practical thing it explains about model behavior.",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q37",
     "text": "🗣️ (jbtiq_llm Q42 · S13 Cross-Cutting & Frontier) \"Training-run engineering: you're running a multi-week training job on hundreds of GPUs. What actually goes wrong, and what does the discipline look like?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q38",
     "text": "🗣️ (jbtiq_llm Q43 · S13 Cross-Cutting & Frontier) \"Beyond LoRA: what's in the wider PEFT toolbox, and when would you pick something other than LoRA?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q39",
     "text": "🗣️ (jbtiq_llm Q44 · S13 Cross-Cutting & Frontier) \"Calibration and uncertainty: how do you get a trustworthy 'how sure is the model' signal out of an LLM system?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q40",
     "text": "🗣️ (jbtiq_llm Q45 · S13 Cross-Cutting & Frontier) \"Close it out: two model generations from now, which parts of your LLM architecture survive unchanged — and how does that shape what you build today?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q41",
     "text": "🗣️ (jbtiq_dl Q13 · S3 Transformer Architecture Core) \"Why the √d_k in scaled dot-product attention — what actually breaks without it?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q42",
     "text": "🗣️ (jbtiq_dl Q14 · S3 Transformer Architecture Core) \"Why multiple attention heads instead of one big head with the same total dimension?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q43",
     "text": "🗣️ (jbtiq_dl Q16 · S3 Transformer Architecture Core) \"Pre-norm vs post-norm — and why LayerNorm instead of BatchNorm in transformers in the first place?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q44",
     "text": "🗣️ (jbtiq_dl Q17 · S3 Transformer Architecture Core) \"Thought experiment: you delete every residual connection from a 24-layer transformer. What happens when you train it, and why?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-foundations-q45",
     "text": "🗣️ (jbtiq_dl Q23 · S4 Modern Transformer Variants) \"Your PM wants a million-token context window. What breaks first, and what are the architectural levers?",
     "topic": "llm-foundations",
     "topicTitle": "LLM Foundations",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q1",
@@ -1467,154 +1467,154 @@
     "text": "🆕🎯 (B) \"Similarity score vs relevance score — what's the difference?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q42",
     "text": "🆕🎯 (B) \"Which vector is longer — dense or sparse?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q43",
     "text": "🆕 (C) \"When should the system refuse to answer, and what does it owe the user instead?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q44",
     "text": "🎯 (D) \"Ten chunks are relevant. Your retriever returns two. Fix the pipeline.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q45",
     "text": "🎯 (C) \"How does the embedding model change your chunk size — and how do you pick the pair?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q46",
     "text": "🎯 (C) \"You used knowledge graphs. What did construction actually cost you?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q47",
     "text": "🎯 (E) \"Legal documents, end to end — sections, tables, clause references. Design it.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Added from the Aug 2026 trend scan — 24 Aug"
+    "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q48",
     "text": "🗣️ (jbtiq_rag Q1 · S1 Foundations) \"What problem does RAG actually solve that a bigger prompt or a better model doesn't? You have 30 seconds.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q49",
     "text": "🗣️ (jbtiq_rag Q4 · S1 Foundations) \"Give me three situations where you'd talk a team out of building RAG.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q50",
     "text": "🗣️ (jbtiq_rag Q5 · S2 Ingestion & Parsing) \"Your PDF ingestion 'works,' but every question about a table gets a confidently wrong answer. What happened upstream?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q51",
     "text": "🗣️ (jbtiq_rag Q6 · S2 Ingestion & Parsing) \"When does layout-aware parsing earn its cost over plain text extraction?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q52",
     "text": "🗣️ (jbtiq_rag Q8 · S3 Chunking) \"Why chunk at all — why not embed each document whole?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q53",
     "text": "🗣️ (jbtiq_rag Q12 · S4 Embeddings) \"What is an embedding, mechanically — and why is cosine similarity between two of them a meaningful number?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q54",
     "text": "🗣️ (jbtiq_rag Q15 · S4 Embeddings) \"Your vector storage and memory bill is the biggest line item. Walk me through shrinking it without gutting recall.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q55",
     "text": "🗣️ (jbtiq_rag Q20 · S6 Retrieval) \"What does dense bi-encoder retrieval do well — and name two query classes where it reliably loses to keyword search.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q56",
     "text": "🗣️ (jbtiq_rag Q26 · S7 Query Transformation & Routing) \"You have a SQL warehouse, a document index, and a web search tool behind one chat box. Design the routing layer — and defend semantic routing vs LLM routing.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q57",
     "text": "🗣️ (jbtiq_rag Q33 · S9 Generation & Augmentation) \"Citations in RAG answers: how do you make them load-bearing rather than decorative?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q58",
     "text": "🗣️ (jbtiq_rag Q38 · S11 Evaluation) \"Recall@k, precision@k, MRR, nDCG, hit rate — which metric answers which question about your retriever?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q59",
     "text": "🗣️ (jbtiq_rag Q39 · S11 Evaluation) \"Walk me through the RAG triad — and how does a framework like RAGAS actually compute faithfulness under the hood?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q60",
     "text": "🗣️ (jbtiq_rag Q40 · S11 Evaluation) \"Your LLM-as-judge scores look great. Why don't you trust them yet?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q61",
     "text": "🗣️ (jbtiq_rag Q41 · S11 Evaluation) \"New domain, zero labeled data. Build me a golden set I can trust — then use it to judge a chunking change.",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "rag-q62",
     "text": "🗣️ (jbtiq_rag Q45 · S12 Production RAG Systems) \"Six months live, no deploys, and users say answers got worse. What drifted — and what monitoring would have caught it before the complaints?",
     "topic": "rag",
     "topicTitle": "RAG",
-    "band": "Merged from jbtiq_rag.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q1",
@@ -1796,147 +1796,147 @@
     "text": "🗣️ (jbtiq_agentic Q8 · S3 Tool Use & Function Calling) \"What actually happens, wire-level, in a function call round trip? And who executes the function?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q27",
     "text": "🗣️ (jbtiq_agentic Q11 · S3 Tool Use & Function Calling) \"CodeAct: why do serious agent systems increasingly have the model write code instead of emitting JSON tool calls?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q28",
     "text": "🗣️ (jbtiq_agentic Q18 · S7 Frameworks & Orchestration) \"LangGraph models agents as state machines. What does that representation actually buy you in production?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q29",
     "text": "🗣️ (jbtiq_agentic Q19 · S7 Frameworks & Orchestration) \"Framework or no framework for your agent runtime — how do you make that call, and where's the lock-in actually located?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q30",
     "text": "🗣️ (jbtiq_agentic Q20 · S8 Agentic RAG & Knowledge) \"Agentic RAG vs classic RAG — what changes when retrieval becomes a tool the agent controls?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q31",
     "text": "🗣️ (jbtiq_agentic Q21 · S8 Agentic RAG & Knowledge) \"When do you put a knowledge graph behind an agent instead of (or beside) a vector store?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q32",
     "text": "🗣️ (jbtiq_agentic Q24 · S9 Evaluation & Observability) \"What does observability mean for an agent system — beyond logging? What do you trace and what do you alert on?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q33",
     "text": "🗣️ (jbtiq_agentic Q27 · S10 Safety, Security & Guardrails) \"What's in your guardrail stack, and what can guardrails NOT do?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q34",
     "text": "🗣️ (jbtiq_agentic Q31 · S11 Production Agentic Systems) \"How do you version and roll out changes to a production agent, when a 'change' might be a prompt, a model, a tool, or the graph?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q35",
     "text": "🗣️ (jbtiq_agentic Q32 · S11 Production Agentic Systems) \"Build vs buy for the agent platform layer — where's the durable value, and what do you refuse to outsource?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q36",
     "text": "🗣️ (jbtiq_agentic Q33 · S12 Applied & Domain Patterns) \"Why did coding agents become the first agent category that really works — and what generalizes from them?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q37",
     "text": "🗣️ (jbtiq_agentic Q34 · S12 Applied & Domain Patterns) \"Design a customer-support agent that deflects tickets without destroying CSAT. Where do the boundaries go?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q38",
     "text": "🗣️ (jbtiq_agentic Q35 · S12 Applied & Domain Patterns) \"A text-to-SQL analyst agent for executives: what makes this deceptively hard, and what's the safety architecture?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q39",
     "text": "🗣️ (jbtiq_agentic Q36 · S12 Applied & Domain Patterns) \"Voice agents: what changes architecturally when the interface is a phone call instead of a chat box?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q40",
     "text": "🗣️ (jbtiq_agentic Q37 · S12 Applied & Domain Patterns) \"Deep-research agents: what's the architecture behind 'go research X and write me a report'?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q41",
     "text": "🗣️ (jbtiq_agentic Q38 · S13 Framework Fluency & Cross-Cutting) \"Where does LangChain end and LangGraph begin? What's LCEL still for?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q42",
     "text": "🗣️ (jbtiq_agentic Q39 · S13 Framework Fluency & Cross-Cutting) \"Structured output: how do you actually guarantee the model returns valid JSON matching your schema — and what can still go wrong?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q43",
     "text": "🗣️ (jbtiq_agentic Q41 · S13 Framework Fluency & Cross-Cutting) \"Define autonomy levels for agents the way you'd present them to a risk committee.",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q44",
     "text": "🗣️ (jbtiq_agentic Q43 · S13 Framework Fluency & Cross-Cutting) \"Two of your agents keep undoing each other's work on shared records. Diagnose the coordination problem class and fix it.",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q45",
     "text": "🗣️ (jbtiq_agentic Q44 · S13 Framework Fluency & Cross-Cutting) \"CoT, ToT, GoT — the reasoning-structure zoo. What survives contact with production, and what did reasoning models change?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "agentic-ai-q46",
     "text": "🗣️ (jbtiq_agentic Q45 · S13 Framework Fluency & Cross-Cutting) \"Close it out: how do you, as the architect, frame agentic AI to a skeptical CTO — what's real, what's hype, what do you commit to?",
     "topic": "agentic-ai",
     "topicTitle": "Agentic AI",
-    "band": "Merged from jbtiq_agentic.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "mcp-context-engineering-q1",
@@ -2293,35 +2293,35 @@
     "text": "🗣️ (jbtiq_llm Q26 · S12 LLMOps & Production Systems) \"Sketch the reference architecture for a serious LLM application — the layers between the user and the model API.",
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-serving-inference-q27",
     "text": "🗣️ (jbtiq_llm Q29 · S12 LLMOps & Production Systems) \"What does observability mean for an LLM system beyond request logs — what do you capture, and what do you alert on?",
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-serving-inference-q28",
     "text": "🗣️ (jbtiq_llm Q30 · S12 LLMOps & Production Systems) \"Design rate limiting and quotas for a multi-tenant LLM API — what's different from limiting a normal REST API?",
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-serving-inference-q29",
     "text": "🗣️ (jbtiq_llm Q32 · S12 LLMOps & Production Systems) \"Your model provider has a bad day: elevated latency, intermittent 529s, and a silent model update that changed behavior. What did the resilient version of your system already have?",
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
-    "band": "Merged from jbtiq_llm.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "llm-serving-inference-q30",
     "text": "🗣️ (jbtiq_dl Q37 · S7 Inference Optimization) \"Your inference GPUs idle at 15% utilization while a request queue builds. Batch size is hard-coded to 8. Diagnose and fix.",
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q1",
@@ -2503,329 +2503,329 @@
     "text": "🗣️ (jbtiq_ml Q4 · S1 Foundations & Generalization) \"Parametric vs non-parametric, and instance-based vs model-based — why do these distinctions matter operationally?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q27",
     "text": "🗣️ (jbtiq_ml Q5 · S1 Foundations & Generalization) \"Your training set doesn't fit in memory and new data arrives continuously. Batch, online, or out-of-core — how do you decide, and what breaks in each?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q28",
     "text": "🗣️ (jbtiq_ml Q8 · S2 Data, EDA, Splits & Leakage) \"You've got a new 40-million-row, 300-column dataset and one day. What's your EDA plan, and what are you actually looking for?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q29",
     "text": "🗣️ (jbtiq_ml Q10 · S3 Feature Engineering) \"When does feature scaling actually matter, and when is it a no-op? Give me the rule, not the ritual.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q30",
     "text": "🗣️ (jbtiq_ml Q12 · S3 Feature Engineering) \"Why do sklearn Pipelines and ColumnTransformer matter architecturally — beyond code tidiness?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q31",
     "text": "🗣️ (jbtiq_ml Q13 · S4 Missing Data & Outliers) \"MCAR, MAR, MNAR — why does the mechanism of missingness change what you're allowed to do?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q32",
     "text": "🗣️ (jbtiq_ml Q14 · S4 Missing Data & Outliers) \"Your fraud model's key feature has 30% missing values in production but only 2% in training. What went wrong and what do you do?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q33",
     "text": "🗣️ (jbtiq_ml Q15 · S4 Missing Data & Outliers) \"When do you remove an outlier, when do you cap it, and when is the outlier the whole point?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q34",
     "text": "🗣️ (jbtiq_ml Q16 · S5 Dimensionality Reduction & Feature Selection) \"The curse of dimensionality — what concretely breaks as dimensions grow, and which model families suffer first?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q35",
     "text": "🗣️ (jbtiq_ml Q17 · S5 Dimensionality Reduction & Feature Selection) \"Explain PCA well enough that I trust you with it: what it optimizes, what it assumes, and where it silently fails.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q36",
     "text": "🗣️ (jbtiq_ml Q18 · S5 Dimensionality Reduction & Feature Selection) \"A colleague clusters customers on a t-SNE plot and reports the segment sizes and distances to stakeholders. What do you tell them?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q37",
     "text": "🗣️ (jbtiq_ml Q19 · S6 Regression, Optimization & Losses) \"Which linear regression assumptions actually matter in practice, and what breaks when each fails?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q38",
     "text": "🗣️ (jbtiq_ml Q20 · S6 Regression, Optimization & Losses) \"Ridge vs Lasso vs Elastic Net — mechanism, geometry, and when each wins.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q39",
     "text": "🗣️ (jbtiq_ml Q21 · S6 Regression, Optimization & Losses) \"Batch, stochastic, and mini-batch gradient descent — and why does Adam exist? Keep it mechanical.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q40",
     "text": "🗣️ (jbtiq_ml Q22 · S6 Regression, Optimization & Losses) \"Your regression target is order value: mostly small, occasionally huge, and the business cares about under-forecasting more than over-forecasting. Choose a loss.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q41",
     "text": "🗣️ (jbtiq_ml Q23 · S7 Classification: Models, Metrics & Thresholds) \"Why is logistic regression still the first model you train in 2026? And what's it actually doing — no hand-waving about 'squashing'.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q42",
     "text": "🗣️ (jbtiq_ml Q26 · S7 Classification: Models, Metrics & Thresholds) \"Decision tree, kNN, naive Bayes — each has one killer property and one disqualifying weakness. Rapid fire.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q43",
     "text": "🗣️ (jbtiq_ml Q29 · S8 Ensemble Methods) \"Stacking added 0.4 AUC points over your best single model. Argue both sides of shipping it.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q44",
     "text": "🗣️ (jbtiq_ml Q30 · S8 Ensemble Methods) \"XGBoost's feature importances and your SHAP values rank features differently. Which do you trust and why?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q45",
     "text": "🗣️ (jbtiq_ml Q31 · S9 Unsupervised Learning) \"K-Means: what is it secretly assuming about your clusters, and how do you pick K without fooling yourself?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q46",
     "text": "🗣️ (jbtiq_ml Q32 · S9 Unsupervised Learning) \"DBSCAN found 40% of your points are 'noise'. Is that a bug? Walk me through what its parameters actually control.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q47",
     "text": "🗣️ (jbtiq_ml Q33 · S9 Unsupervised Learning) \"You have no labels. How do you evaluate a clustering well enough to defend it to a skeptical stakeholder?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q48",
     "text": "🗣️ (jbtiq_ml Q35 · S10 Model Selection, Validation & Tuning) \"Grid search, random search, Bayesian optimization, Hyperband — when does each earn its cost?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q49",
     "text": "🗣️ (jbtiq_ml Q36 · S10 Model Selection, Validation & Tuning) \"Model A scores 0.847, model B scores 0.851 on the test set. Your PM wants to ship B. What do you say?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q50",
     "text": "🗣️ (jbtiq_ml Q38 · S11 Interpretability & Responsible ML) \"Your lending model can't satisfy demographic parity and equalized odds at once. Why not, and what do you do as the architect?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q51",
     "text": "🗣️ (jbtiq_ml Q39 · S12 Time Series) \"Why does ordinary K-fold CV lie for time series, and what does honest validation look like?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q52",
     "text": "🗣️ (jbtiq_ml Q40 · S12 Time Series) \"ARIMA, Prophet, or gradient boosting with lag features — how do you choose for a real forecasting problem?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q53",
     "text": "🗣️ (jbtiq_ml Q41 · S13 Recommender Systems) \"Collaborative filtering vs content-based vs matrix factorization — mechanisms and the cold-start story for each.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q54",
     "text": "🗣️ (jbtiq_ml Q45 · S14 ML Systems & Architecture) \"Fraud team wants a model. Walk me through build vs buy vs fine-tune — and the cost-of-error analysis that anchors it.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_ml.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q55",
     "text": "🗣️ (jbtiq_dl Q2 · S0 Math / DL Foundations) \"Your softmax layer starts returning NaN once logits get large. What's happening mathematically, and what's the standard fix?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q56",
     "text": "🗣️ (jbtiq_dl Q3 · S1 Foundations) \"Why does a neural net need nonlinear activations at all — and how do you actually pick one today?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q57",
     "text": "🗣️ (jbtiq_dl Q6 · S1 Foundations) \"What actually is an embedding — and why not just one-hot vectors?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q58",
     "text": "🗣️ (jbtiq_dl Q7 · S1 Foundations) \"The universal approximation theorem says one hidden layer is enough. So why is everything deep?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q59",
     "text": "🗣️ (jbtiq_dl Q9 · S2 Why Transformers Won) \"LSTM in 60 seconds: what does each gate buy you?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q60",
     "text": "🗣️ (jbtiq_dl Q10 · S2 Why Transformers Won) \"Before transformers existed — what specific problem did attention originally solve in seq2seq, and how?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q61",
     "text": "🗣️ (jbtiq_dl Q11 · S2 Why Transformers Won) \"Give me the three real reasons transformers beat LSTMs — 'attention is all you need' is not an answer.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q62",
     "text": "🗣️ (jbtiq_dl Q25 · S5 Training Mechanics) \"Adam vs AdamW — what does each moment do mechanically, and why did 'decoupling' weight decay matter enough to rename the optimizer?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q63",
     "text": "🗣️ (jbtiq_dl Q26 · S5 Training Mechanics) \"Every transformer recipe starts with LR warmup. What actually goes wrong in the first thousand steps without it?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q64",
     "text": "🗣️ (jbtiq_dl Q28 · S5 Training Mechanics) \"Modern LLMs use GELU or SwiGLU in the FFN instead of ReLU. What's actually better about them — and is anything worse?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q65",
     "text": "🗣️ (jbtiq_dl Q29 · S6 Training at Scale) \"Rough out the training-memory budget for a 7B-parameter model with AdamW in mixed precision. Where does it all go?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q66",
     "text": "🗣️ (jbtiq_dl Q30 · S6 Training at Scale) \"Mid-training in fp16 your loss goes NaN; the identical run in bf16 is fine. Explain the difference and where loss scaling fits.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q67",
     "text": "🗣️ (jbtiq_dl Q31 · S6 Training at Scale) \"Your recipe calls for a batch of 4M tokens; your hardware fits an eighth of that. Separately, training occasionally hits a violent loss spike. Which two knobs, and how do they interact?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q68",
     "text": "🗣️ (jbtiq_dl Q32 · S6 Training at Scale) \"The model no longer fits on one GPU. Walk me up the parallelism ladder — data, tensor, pipeline — and where ZeRO/FSDP fits in.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q69",
     "text": "🗣️ (jbtiq_dl Q41 · S9 Diagnostics & Engineering Judgement) \"Your loss spikes at step 40k and never recovers — triage it.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q70",
     "text": "🗣️ (jbtiq_dl Q42 · S9 Diagnostics & Engineering Judgement) \"Offline eval says the model is great; production quality is clearly worse. Where do DL-specific train–serve skews hide?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q71",
     "text": "🗣️ (jbtiq_dl Q44 · S10 Adjacent Coverage) \"Why do CNNs still beat vision transformers on small datasets — what's the inductive-bias story?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "ml-dl-q72",
     "text": "🗣️ (jbtiq_dl Q45 · S11 Mechanistic Interpretability) \"Users report the model consistently asserts one specific false fact. Beyond 'finetune it away' — how would you locate where that fact lives and reason about editing it?",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
-    "band": "Merged from jbtiq_dl.md — 19 Sep 2026"
+    "band": "More questions"
   },
   {
     "id": "real-time-systems-q1",

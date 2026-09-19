@@ -179,6 +179,9 @@ sections (`♻️ Merged from…`) · back/forward between topics · keyboard-on
 - **Vault titles normalised at ingest.** The h1s are shouty ("🧠 LLM FOUNDATIONS"); `prettifyTitle` splits the emoji into `icon` and title-cases the rest against an acronym set, so nav and cards read as names.
 - **Wiki refs flattened for the prose docs.** `[[04-RAG/…/Naive RAG pipeline]]` becomes a styled `.vault-ref` span, not a dead link. Flattening runs on the DOM *before* `collectHeadings`, or the TOC keeps the brackets.
 
+- **Vault bookkeeping kept off the page.** `Merged from jbtiq_ml.md — 19 Sep 2026` is provenance, not something to read on the day, so every such band folds into one neutral **More questions** group per topic (three topics had two apiece). `Added from the Aug 2026 trend scan` says something useful, so it stays, renamed to **Trend scan — Aug 2026**.
+- **Correction to an earlier assumption:** a band with no letter is *not* an appendix. Most letterless bands — `Framing`, `Tools`, `Transport`, NLP's `Section 1–12` — are real topical sections. Only `Merged from…` is bookkeeping, so only it is folded.
+
 ## 7. Follow-ups
 
 - Add the Vitest + RTL harness (deferred F0) and port the JSON checks to real unit tests.

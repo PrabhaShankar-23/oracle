@@ -1071,9 +1071,9 @@
       ]
     },
     {
-      "id": "llm-foundations-merged-from-jbtiqllmmd-19-sep-2026",
+      "id": "llm-foundations-more",
       "letter": null,
-      "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
+      "name": "More questions",
       "questions": [
         {
           "id": "llm-foundations-q26",
@@ -1432,14 +1432,7 @@
           ],
           "badge": "Trending — the strategy synthesis senior LLM loops end on (2025–26)",
           "oneLiner": "Scaffolding that substitutes for capability depreciates; evals, retrieval, tools and governance appreciate — so I keep compensating machinery thin, make model swap a config-plus-eval-run event, and run upgrades as a scheduled process, because the fastest-improving component in the stack is the one I don't build."
-        }
-      ]
-    },
-    {
-      "id": "llm-foundations-merged-from-jbtiqdlmd-19-sep-2026",
-      "letter": null,
-      "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
-      "questions": [
+        },
         {
           "id": "llm-foundations-q41",
           "number": 41,

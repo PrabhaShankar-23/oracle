@@ -1669,9 +1669,9 @@
       ]
     },
     {
-      "id": "rag-added-from-the-aug-2026-trend-scan-24-aug",
+      "id": "rag-trend-scan",
       "letter": null,
-      "name": "Added from the Aug 2026 trend scan — 24 Aug",
+      "name": "Trend scan — Aug 2026",
       "questions": [
         {
           "id": "rag-q41",
@@ -1854,9 +1854,9 @@
       ]
     },
     {
-      "id": "rag-merged-from-jbtiqragmd-19-sep-2026",
+      "id": "rag-more",
       "letter": null,
-      "name": "Merged from jbtiq_rag.md — 19 Sep 2026",
+      "name": "More questions",
       "questions": [
         {
           "id": "rag-q48",

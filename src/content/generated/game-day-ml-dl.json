@@ -1176,9 +1176,9 @@
       ]
     },
     {
-      "id": "ml-dl-merged-from-jbtiqmlmd-19-sep-2026",
+      "id": "ml-dl-more",
       "letter": null,
-      "name": "Merged from jbtiq_ml.md — 19 Sep 2026",
+      "name": "More questions",
       "questions": [
         {
           "id": "ml-dl-q26",
@@ -1927,14 +1927,7 @@
           ],
           "badge": "Trending — build-vs-buy framing recurs in AI-Architect JDs (2025–26)",
           "oneLiner": "Price the two error types first — they define the bar; then buy where vendors have cross-network signal you can't build, build where your patterns are proprietary, and in practice blend a vendor score into your own model while owning monitoring, because fraud drifts adversarially."
-        }
-      ]
-    },
-    {
-      "id": "ml-dl-merged-from-jbtiqdlmd-19-sep-2026",
-      "letter": null,
-      "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
-      "questions": [
+        },
         {
           "id": "ml-dl-q55",
           "number": 55,
