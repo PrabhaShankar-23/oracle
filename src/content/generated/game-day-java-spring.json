@@ -1,0 +1,938 @@
+{
+  "slug": "java-spring",
+  "number": 3,
+  "title": "☕ JAVA & SPRING",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "Bullets are <strong>keywords and flows</strong>, not explanations. If you need the explanation, you're in the wrong file — go to the note.",
+    "⭐ = decides the round. 🔥 = trending 2026. 📍 = <em>you</em> were asked this. 🏢 = reported asked in a named real loop (not yours — see [[TREND-SCAN-2026-08]]). 📝 = no vault note yet.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> <code>05-java/</code> + <code>06-spring/</code> · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]"
+  ],
+  "bands": [
+    {
+      "id": "java-spring-a",
+      "letter": "A",
+      "name": "Openers",
+      "questions": [
+        {
+          "id": "java-spring-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"How does HashMap work internally, and what happens when two keys collide?",
+          "points": [
+            "Array of buckets; index from <code>hash(key)</code> <strong>spread</strong> (XOR high bits) to reduce clustering",
+            "Collision → <strong>linked list</strong> in the bucket → <strong>red-black tree</strong> at threshold 8 (and ≥64 buckets)",
+            "Resize at load factor 0.75 → capacity doubles → entries rehashed",
+            "Treeification is a defence against hash-collision DoS, not a normal path",
+            "Not thread-safe; concurrent resize historically caused infinite loops"
+          ],
+          "links": [
+            {
+              "label": "HashMap Internals",
+              "target": "05-java/07-Collections/34-HashMap-Internals"
+            }
+          ],
+          "flow": "hash → spread → bucket → list → tree at 8 → resize at 0.75",
+          "trap": "stopping at \"it's a hash table with linked lists\" — the treeify threshold is the follow-up"
+        },
+        {
+          "id": "java-spring-q2",
+          "number": 2,
+          "marks": [],
+          "text": "🏢 \"What happens if you use a mutable object as a HashMap key?",
+          "points": [
+            "Hash is computed <strong>at insert</strong>; mutating the key changes the hash afterwards",
+            "Entry is now in the wrong bucket → <code>get</code> misses, <code>containsKey</code> false, entry unreachable",
+            "Effectively a <strong>memory leak</strong> — it can't be found or removed",
+            "Hence: keys should be immutable, or at least never mutated while in a map",
+            "Same reason <code>equals</code>/<code>hashCode</code> must be consistent and use the same fields"
+          ],
+          "links": [
+            {
+              "label": "equals hashCode compareTo Contracts",
+              "target": "05-java/01-Core-language &amp; Object Model/01-equals-hashCode-compareTo-Contracts"
+            }
+          ],
+          "flow": "hash captured at insert → mutation moves the true hash → lookup probes wrong bucket → stranded entry",
+          "trap": "saying \"it just won't be found\" without naming the leak"
+        },
+        {
+          "id": "java-spring-q3",
+          "number": 3,
+          "marks": [],
+          "text": "🏢 \"Fail-fast vs fail-safe iterators.",
+          "points": [
+            "<strong>Fail-fast</strong> (<code>ArrayList</code>, <code>HashMap</code>) — <code>modCount</code> checked; structural change → <code>ConcurrentModificationException</code>",
+            "It's <strong>best-effort</strong>, not a guarantee — never build logic on catching CME",
+            "<strong>Fail-safe</strong> (<code>CopyOnWriteArrayList</code>, <code>ConcurrentHashMap</code>) — iterate a snapshot or weakly-consistent view",
+            "Cost: COW copies the whole array per write; CHM iterator may miss concurrent updates",
+            "Single-threaded CME is usually <code>list.remove()</code> inside a for-each → use <code>Iterator.remove</code> or <code>removeIf</code>"
+          ],
+          "links": [
+            {
+              "label": "Fail Fast vs Fail Safe Iteration",
+              "target": "05-java/07-Collections/37-Fail-Fast-vs-Fail-Safe-Iteration"
+            }
+          ],
+          "flow": "modCount → CME (best effort) · snapshot/weakly-consistent → no CME but stale",
+          "trap": "calling fail-safe \"thread-safe iteration with full consistency\""
+        },
+        {
+          "id": "java-spring-q4",
+          "number": 4,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"What is a Spring bean, and what is the container actually doing?",
+          "points": [
+            "Bean = object whose <strong>lifecycle the container owns</strong> — creation, wiring, destruction",
+            "IoC: you declare dependencies, the container resolves and supplies them",
+            "Definitions from component scan / <code>@Bean</code> methods / imports → <code>BeanDefinition</code> registry",
+            "<strong>Constructor injection</strong> is the default recommendation — immutable, testable, fails fast on cycles",
+            "Not magic: it's a registry, a graph resolve, and often a proxy on top"
+          ],
+          "links": [
+            {
+              "label": "ioc dependency injection",
+              "target": "06-spring/01-container/01-ioc-dependency-injection"
+            }
+          ],
+          "flow": "definitions registered → graph resolved → instantiate → inject → post-process → ready",
+          "trap": "\"a bean is any object\" — ownership of the lifecycle is the distinction"
+        },
+        {
+          "id": "java-spring-q5",
+          "number": 5,
+          "marks": [],
+          "text": "Bean scopes — and the trap in the common one.",
+          "points": [
+            "<code>singleton</code> (default, one per container) · <code>prototype</code> (new each request) · web: <code>request</code>, <code>session</code>, <code>application</code>",
+            "<strong>The trap:</strong> a singleton injecting a prototype gets it <strong>once</strong> — it never gets a fresh one",
+            "Fixes: <code>ObjectProvider</code> / <code>@Lookup</code> / scoped <strong>proxy</strong>",
+            "Singleton beans must be stateless, or you've built a shared-mutable-state bug",
+            "Scoped proxies are how a request-scoped bean survives injection into a singleton"
+          ],
+          "links": [
+            {
+              "label": "bean scopes",
+              "target": "06-spring/01-container/04-bean-scopes"
+            }
+          ],
+          "flow": "singleton default → prototype injected once → use provider or scoped proxy",
+          "trap": "expecting a prototype to refresh per call inside a singleton"
+        },
+        {
+          "id": "java-spring-q6",
+          "number": 6,
+          "marks": [],
+          "text": "🏢 \"A class implements two interfaces with the same default method. What happens?",
+          "points": [
+            "<strong>Compile error</strong> — ambiguous, the compiler will not choose for you",
+            "Resolve explicitly: override and call <code>InterfaceName.super.method()</code>",
+            "Rules: <strong>class wins over interface</strong>; more specific sub-interface wins over super-interface",
+            "Default methods exist for interface evolution without breaking implementors — not for multiple inheritance of state",
+            "Still no state: interfaces have no instance fields, so the diamond problem stays limited"
+          ],
+          "links": [
+            {
+              "label": "Abstract Class vs Interface",
+              "target": "05-java/01-Core-language &amp; Object Model/08-Abstract-Class-vs-Interface"
+            }
+          ],
+          "flow": "ambiguous → compile error → override → <code>X.super.method()</code> · class beats interface",
+          "trap": "guessing a resolution order instead of naming the compile error"
+        }
+      ]
+    },
+    {
+      "id": "java-spring-b",
+      "letter": "B",
+      "name": "Mechanism",
+      "questions": [
+        {
+          "id": "java-spring-q7",
+          "number": 7,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk me through the bean lifecycle.",
+          "points": [
+            "Definition → instantiate → populate (inject) → <code>Aware</code> callbacks",
+            "<code>BeanPostProcessor.before</code> → <code>@PostConstruct</code> / <code>afterPropertiesSet</code> / <code>init-method</code> → <code>.after</code>",
+            "<strong>The <code>after</code> step is where proxies are created</strong> — AOP, <code>@Transactional</code>, <code>@Async</code> all land here",
+            "Destruction: <code>@PreDestroy</code> / <code>DisposableBean</code> — singletons only, prototypes aren't tracked",
+            "<code>BeanFactoryPostProcessor</code> acts earlier, on <em>definitions</em>, before any instantiation"
+          ],
+          "links": [
+            {
+              "label": "bean lifecycle",
+              "target": "06-spring/01-container/02-bean-lifecycle"
+            }
+          ],
+          "flow": "instantiate → inject → aware → BPP.before → init → <strong>BPP.after = proxy</strong> → ready → destroy",
+          "trap": "not knowing proxying happens post-init — it explains every self-invocation bug"
+        },
+        {
+          "id": "java-spring-q8",
+          "number": 8,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"You call a @Transactional method from another method of the same class. Does the transaction work?",
+          "points": [
+            "<strong>No.</strong> Self-invocation goes through <code>this</code>, bypassing the proxy entirely — no advice runs",
+            "Same reason <code>@Async</code>, <code>@Cacheable</code>, <code>@Retryable</code> silently do nothing on internal calls",
+            "Fixes: split into another bean · self-inject · <code>TransactionTemplate</code> · AspectJ weaving",
+            "Also silent: <code>@Transactional</code> on a <strong>private/final</strong> method, or a non-public one",
+            "Rollback default is <strong>unchecked only</strong> — checked exceptions don't roll back unless declared"
+          ],
+          "links": [
+            {
+              "label": "transactional internals",
+              "target": "06-spring/02-aop/11-transactional-internals"
+            }
+          ],
+          "flow": "internal call → <code>this</code>, not proxy → no advice → move it to another bean",
+          "trap": "the checked-exception rollback default — the second half of this question"
+        },
+        {
+          "id": "java-spring-q9",
+          "number": 9,
+          "marks": [],
+          "text": "JDK dynamic proxy or CGLIB — how does Spring choose?",
+          "points": [
+            "Implements an interface → <strong>JDK dynamic proxy</strong> (interface-based) by default",
+            "No interface → <strong>CGLIB</strong> subclass; Boot defaults to CGLIB (<code>proxyTargetClass=true</code>)",
+            "CGLIB can't proxy <code>final</code> classes or <code>final</code>/<code>private</code> methods — advice silently absent",
+            "Proxy means a <strong>wrapper object</strong>: injected type is the proxy, not your instance",
+            "AspectJ weaving avoids proxies entirely, at build/load time — no self-invocation problem"
+          ],
+          "links": [
+            {
+              "label": "proxy mechanics",
+              "target": "06-spring/02-aop/09-proxy-mechanics"
+            }
+          ],
+          "flow": "interface → JDK · else → CGLIB subclass → final/private = no advice → AspectJ to escape",
+          "trap": "a <code>final</code> service class and hours lost to \"why isn't it transactional\""
+        },
+        {
+          "id": "java-spring-q10",
+          "number": 10,
+          "marks": [],
+          "text": "How does Boot auto-configuration actually decide?",
+          "points": [
+            "<code>@EnableAutoConfiguration</code> → candidates from <code>AutoConfiguration.imports</code> (was <code>spring.factories</code>)",
+            "Each gated by <strong><code>@Conditional</code></strong>: <code>OnClass</code>, <code>OnMissingBean</code>, <code>OnProperty</code>, <code>OnWebApplication</code>",
+            "<code>@ConditionalOnMissingBean</code> is why <strong>your</strong> bean silently wins — back-off by design",
+            "Ordering via <code>@AutoConfigureBefore/After</code>; report available via <code>--debug</code> / actuator <code>conditions</code>",
+            "Classpath is the input, so a stray dependency changes behaviour"
+          ],
+          "links": [
+            {
+              "label": "auto configuration internals",
+              "target": "06-spring/04-boot/17-auto-configuration-internals"
+            }
+          ],
+          "flow": "imports listed → conditions evaluated → back off if you defined it → debug report tells you why",
+          "trap": "calling it magic instead of naming <code>@ConditionalOnMissingBean</code>"
+        },
+        {
+          "id": "java-spring-q11",
+          "number": 11,
+          "marks": [
+            "decides"
+          ],
+          "text": "What does volatile guarantee, and what doesn't it?",
+          "points": [
+            "Guarantees <strong>visibility</strong> + ordering (a write happens-before a subsequent read)",
+            "Does <strong>not</strong> give atomicity — <code>count++</code> is read-modify-write, still racy",
+            "Prevents the reordering that breaks double-checked locking",
+            "Happens-before also established by: lock release/acquire, thread start/join, final-field publication",
+            "For atomic counters use <code>AtomicLong</code> / <code>LongAdder</code>, not <code>volatile</code>"
+          ],
+          "links": [
+            {
+              "label": "volatile semantics",
+              "target": "05-java/05-jmm/22-volatile-semantics"
+            }
+          ],
+          "flow": "visibility + ordering → but not atomic → compound ops still need CAS or a lock",
+          "trap": "<code>volatile</code> on a counter and calling it thread-safe"
+        },
+        {
+          "id": "java-spring-q12",
+          "number": 12,
+          "marks": [],
+          "text": "How does ConcurrentHashMap get away without locking reads?",
+          "points": [
+            "Reads are <strong>lock-free</strong> — nodes use <code>volatile</code> fields, so visibility is guaranteed",
+            "Writes lock a <strong>single bin</strong> (<code>synchronized</code> on the head node), not the whole map",
+            "Java 8 dropped segments; resize is <strong>cooperative</strong> — writers help transfer",
+            "<code>size()</code> is an estimate (<code>CounterCell</code>s); iterators are weakly consistent",
+            "Compound ops need the atomic API: <code>compute</code>, <code>merge</code>, <code>putIfAbsent</code> — not get-then-put"
+          ],
+          "links": [
+            {
+              "label": "ConcurrentHashMap Internals",
+              "target": "05-java/06-Concurrency/29-ConcurrentHashMap-Internals"
+            }
+          ],
+          "flow": "volatile reads → per-bin write lock → cooperative resize → use atomic compound methods",
+          "trap": "<code>if (!map.containsKey(k)) map.put(k,v)</code> — still a race"
+        },
+        {
+          "id": "java-spring-q13",
+          "number": 13,
+          "marks": [],
+          "text": "🏢 \"One API calls three services sequentially and it's slow. Fix it.",
+          "points": [
+            "If independent → run <strong>in parallel</strong>: <code>CompletableFuture.supplyAsync</code> × 3 → <code>allOf</code> → join",
+            "Give it an <strong>explicit executor</strong> — the common ForkJoinPool is shared and small",
+            "<code>thenCombine</code> to merge, <code>exceptionally</code>/<code>handle</code> per branch for partial failure",
+            "Total latency becomes max(3), not sum(3) — say that number out loud",
+            "Per-call timeouts (<code>orTimeout</code>) or the slowest dependency defines your SLA"
+          ],
+          "links": [
+            {
+              "label": "CompletableFuture",
+              "target": "05-java/06-Concurrency/30-CompletableFuture"
+            }
+          ],
+          "flow": "independent? → parallel futures on a dedicated pool → allOf → max not sum → per-call timeout",
+          "trap": "parallelising calls that are actually dependent, or using the common pool"
+        },
+        {
+          "id": "java-spring-q14",
+          "number": 14,
+          "marks": [],
+          "text": "Trace a request through Spring MVC.",
+          "points": [
+            "Filters (servlet, incl. security chain) → <strong><code>DispatcherServlet</code></strong>",
+            "<code>HandlerMapping</code> → handler + interceptor chain → <code>HandlerAdapter</code> invokes",
+            "Argument resolvers bind/validate params → your method → return value handlers",
+            "<code>@ResponseBody</code> → <code>HttpMessageConverter</code> (Jackson) → body",
+            "Exceptions → <code>HandlerExceptionResolver</code> → <code>@ControllerAdvice</code> / <code>@ExceptionHandler</code>"
+          ],
+          "links": [
+            {
+              "label": "dispatcherservlet request flow",
+              "target": "06-spring/03-mvc/12-dispatcherservlet-request-flow"
+            }
+          ],
+          "flow": "filters → dispatcher → mapping → adapter → resolvers → handler → converters → advice on error",
+          "trap": "placing <code>@ControllerAdvice</code> outside filters — it cannot catch a security-filter failure"
+        },
+        {
+          "id": "java-spring-q15",
+          "number": 15,
+          "marks": [],
+          "text": "How does Spring Security actually intercept?",
+          "points": [
+            "One servlet <code>Filter</code> (<code>springSecurityFilterChain</code>) delegating to an <strong>ordered chain</strong>",
+            "Authentication filter → <code>AuthenticationManager</code> → provider → <code>SecurityContextHolder</code> (ThreadLocal)",
+            "Authorisation at <code>AuthorizationFilter</code>; method security via <strong>proxies</strong> (so self-invocation applies again)",
+            "ThreadLocal context does <strong>not</strong> propagate to new threads — async/<code>@Async</code> needs explicit propagation",
+            "Stateless JWT: no session, verify signature + <code>exp</code> + <code>aud</code>, cache JWKS"
+          ],
+          "links": [
+            {
+              "label": "security filter chain",
+              "target": "06-spring/06-security/28-security-filter-chain"
+            }
+          ],
+          "flow": "filter chain → authenticate → context (ThreadLocal) → authorise → method security by proxy",
+          "trap": "losing the security context across an async boundary or a thread pool"
+        }
+      ]
+    },
+    {
+      "id": "java-spring-c",
+      "letter": "C",
+      "name": "Trade-offs",
+      "questions": [
+        {
+          "id": "java-spring-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"synchronized or ReentrantLock — where would you use the lock?",
+          "points": [
+            "<code>synchronized</code> — JVM intrinsic, auto-release, biased/thin/fat escalation, simplest and usually right",
+            "<code>ReentrantLock</code> when you need what the keyword can't do: <strong><code>tryLock</code> (with timeout)</strong>, interruptible acquire, fairness, multiple <code>Condition</code>s",
+            "Cost: you own <code>unlock()</code> — must be in <code>finally</code>, or you leak the lock forever",
+            "<code>ReadWriteLock</code> / <code>StampedLock</code> for read-heavy shared state",
+            "Virtual threads changed the calculus — <code>synchronized</code> pinning was the reason to prefer locks; largely addressed in recent JDKs"
+          ],
+          "links": [
+            {
+              "label": "ReentrantLock and AQS",
+              "target": "05-java/06-Concurrency/26-ReentrantLock-and-AQS"
+            }
+          ],
+          "flow": "default synchronized → need timeout/interrupt/fairness/conditions → ReentrantLock in try-finally",
+          "trap": "\"ReentrantLock is faster\" — under low contention they're comparable; it's about capability"
+        },
+        {
+          "id": "java-spring-q17",
+          "number": 17,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"REQUIRED vs REQUIRES_NEW — and when does that bite?",
+          "points": [
+            "<code>REQUIRED</code> (default) — join the caller's transaction, or start one; <strong>inner rollback marks the whole thing</strong>",
+            "<code>REQUIRES_NEW</code> — suspend the outer, run in a genuinely independent transaction, resume after",
+            "Classic use: audit/log rows that must survive a business rollback",
+            "Costs: <strong>two connections held at once</strong> — deadlock and pool-exhaustion risk under load",
+            "<code>NESTED</code> uses savepoints (JDBC only, not JPA-portable); <code>MANDATORY</code>/<code>NEVER</code> are assertions"
+          ],
+          "links": [
+            {
+              "label": "transaction boundary session boundary",
+              "target": "06-spring/05-data/26-transaction-boundary-session-boundary"
+            }
+          ],
+          "flow": "join → REQUIRED · must survive outer rollback → REQUIRES_NEW → but two connections held",
+          "trap": "REQUIRES_NEW in a loop, exhausting the Hikari pool against itself"
+        },
+        {
+          "id": "java-spring-q18",
+          "number": 18,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Virtual threads or reactive?",
+          "points": [
+            "Virtual threads: <strong>blocking code that scales</strong> — keep the imperative style, keep stack traces and debuggers",
+            "Reactive (WebFlux): backpressure as a first-class concept, streaming, composition operators",
+            "VT doesn't help CPU-bound work at all; it's a concurrency-count answer, not a throughput one",
+            "Migration reality: pinning on <code>synchronized</code> (largely resolved), thread-local heavy code, pooled resources still cap you",
+            "Honest 2026 answer: <strong>VT for most services</strong>, reactive where you genuinely need backpressure or streaming semantics"
+          ],
+          "links": [
+            {
+              "label": "Reactive vs Virtual Threads",
+              "target": "05-java/12-Frameworks/58-Reactive-vs-Virtual-Threads"
+            }
+          ],
+          "flow": "blocking + high concurrency → VT · backpressure/streaming → reactive · CPU-bound → neither",
+          "trap": "presenting VT as free throughput, or reactive as generally faster"
+        },
+        {
+          "id": "java-spring-q19",
+          "number": 19,
+          "marks": [],
+          "text": "🏢 \"Two beans depend on each other. How does Spring handle it, and how do you fix it?",
+          "points": [
+            "<strong>Constructor injection → fails at startup</strong> (<code>BeanCurrentlyInCreationException</code>) — it cannot be resolved",
+            "Field/setter injection <em>can</em> resolve via the early-reference cache — it \"works\", which is the trap",
+            "Boot 2.6+ disallows circular refs by default (<code>allow-circular-references</code> to opt back in)",
+            "Real fix is <strong>design</strong>: extract the shared concern into a third bean, or invert with an event",
+            "Escape hatches: <code>@Lazy</code>, <code>ObjectProvider</code> — treat as a smell, not a solution"
+          ],
+          "links": [
+            {
+              "label": "circular dependencies",
+              "target": "06-spring/01-container/05-circular-dependencies"
+            }
+          ],
+          "flow": "constructor → hard fail · field → silently resolves → real fix is extracting the shared piece",
+          "trap": "reaching for <code>@Lazy</code> and calling it fixed"
+        },
+        {
+          "id": "java-spring-q20",
+          "number": 20,
+          "marks": [],
+          "text": "When is a parallel stream the wrong call?",
+          "points": [
+            "Uses the <strong>common ForkJoinPool</strong> — one shared pool for the whole JVM, sized to cores−1",
+            "One slow/blocking parallel stream starves every other user of that pool",
+            "Needs: large N, cheap splitting (array/<code>ArrayList</code> good, <code>LinkedList</code> bad), independent work, no shared mutable state",
+            "Boxing and small N usually make it slower than sequential",
+            "Blocking I/O in a parallel stream is the worst case — never do it"
+          ],
+          "links": [
+            {
+              "label": "Parallel Streams",
+              "target": "05-java/08-Streams-and-Functional/41-Parallel-Streams"
+            }
+          ],
+          "flow": "large N + splittable + CPU-bound + independent → maybe · blocking or shared state → no",
+          "trap": "<code>.parallel()</code> on a stream doing HTTP calls, poisoning the common pool"
+        },
+        {
+          "id": "java-spring-q21",
+          "number": 21,
+          "marks": [],
+          "text": "🏢 \"Find duplicates in a list of integers with the Stream API.",
+          "points": [
+            "<code>groupingBy(identity(), counting())</code> → filter <code>&gt; 1</code> → keys",
+            "Or a <code>Set</code> + <code>filter(n -&gt; !seen.add(n))</code> — one pass, but stateful and unsafe in parallel",
+            "Say the trade-off: grouping is clear and parallel-safe, <code>Set</code> is O(n) with less allocation",
+            "<code>distinct()</code> needs correct <code>equals</code>/<code>hashCode</code> — ties back to #2",
+            "Mention ordering: <code>groupingBy</code> gives a <code>HashMap</code> — use <code>LinkedHashMap</code> if order matters"
+          ],
+          "links": [
+            {
+              "label": "Collectors",
+              "target": "05-java/08-Streams-and-Functional/40-Collectors"
+            }
+          ],
+          "flow": "group by identity → count → filter &gt;1 → keys · or seen-set single pass",
+          "trap": "the stateful-lambda version presented without noting it breaks under <code>.parallel()</code>"
+        },
+        {
+          "id": "java-spring-q22",
+          "number": 22,
+          "marks": [],
+          "text": "Filter, interceptor, or AOP aspect?",
+          "points": [
+            "<strong>Filter</strong> — servlet level, sees every request incl. unmatched; can wrap request/response bodies",
+            "<strong>Interceptor</strong> — Spring MVC level, knows the handler, <code>preHandle</code>/<code>postHandle</code>/<code>afterCompletion</code>",
+            "<strong>Aspect</strong> — any bean method, richest join points, but <strong>proxy-bound</strong> (self-invocation again)",
+            "Security and body/encoding concerns → filter · handler-aware cross-cutting → interceptor · service-layer concerns → aspect",
+            "Each extra layer costs stack depth and debuggability"
+          ],
+          "links": [
+            {
+              "label": "filters vs interceptors",
+              "target": "06-spring/03-mvc/13-filters-vs-interceptors"
+            }
+          ],
+          "flow": "protocol-level → filter · handler-aware → interceptor · method-level → aspect",
+          "trap": "an aspect for auth, then discovering it never fired on an internal call"
+        },
+        {
+          "id": "java-spring-q23",
+          "number": 23,
+          "marks": [],
+          "text": "Checked or unchecked in a service layer?",
+          "points": [
+            "Modern practice leans <strong>unchecked</strong> for the domain — checked exceptions leak through every signature",
+            "Checked is defensible where the caller genuinely can and must recover",
+            "Never <code>catch (Exception e)</code> and swallow; never <code>throws Exception</code> on a public API",
+            "Remember <code>@Transactional</code> rolls back on <strong>unchecked only</strong> by default (see #8) — this choice has transactional consequences",
+            "Design a domain hierarchy and map it to HTTP at the edge, not in the service"
+          ],
+          "links": [
+            {
+              "label": "Custom Exceptions and Design",
+              "target": "05-java/11-Exception-Handling/54-Custom-Exceptions-and-Design"
+            }
+          ],
+          "flow": "domain → unchecked hierarchy → mapped at the edge → rollback semantics follow",
+          "trap": "not connecting the checked/unchecked choice to rollback behaviour"
+        },
+        {
+          "id": "java-spring-q24",
+          "number": 24,
+          "marks": [],
+          "text": "Constructor or field injection? Defend it.",
+          "points": [
+            "<strong>Constructor</strong>: dependencies explicit, fields <code>final</code>, object always valid, trivially testable without Spring",
+            "Field injection hides dependencies, needs reflection to test, and <strong>hides cycles</strong> (see #19)",
+            "A constructor with eight args isn't a DI problem — it's the class telling you it does too much",
+            "Single constructor → <code>@Autowired</code> optional since 4.3",
+            "Setter injection for genuinely optional collaborators only"
+          ],
+          "links": [
+            {
+              "label": "configuration model",
+              "target": "06-spring/01-container/06-configuration-model"
+            }
+          ],
+          "flow": "constructor → final + valid + testable → long arg list is a design signal, not a DI one",
+          "trap": "defending field injection with \"it's less boilerplate\" — Lombok already solved that"
+        },
+        {
+          "id": "java-spring-q25",
+          "number": 25,
+          "marks": [],
+          "text": "Records — where do they fit?",
+          "points": [
+            "Immutable, transparent <strong>data carriers</strong>: final fields, canonical constructor, <code>equals</code>/<code>hashCode</code>/<code>toString</code> generated",
+            "Perfect for DTOs, value objects, events, map keys (ties #2 — immutable key)",
+            "Compact constructor for validation/normalisation; can implement interfaces",
+            "Not for JPA entities — those need a no-arg constructor and mutability",
+            "With sealed types → exhaustive pattern matching, real algebraic modelling"
+          ],
+          "links": [
+            {
+              "label": "Records",
+              "target": "05-java/09-Modern-Java/43-Records"
+            }
+          ],
+          "flow": "immutable data carrier → DTO/event/value → compact constructor for invariants → sealed + switch",
+          "trap": "proposing records as JPA entities"
+        },
+        {
+          "id": "java-spring-q26",
+          "number": 26,
+          "marks": [],
+          "text": "Spring, Quarkus or Micronaut — when would you not pick Spring?",
+          "points": [
+            "Spring: <strong>runtime</strong> DI, reflection-heavy, unmatched ecosystem — the safe default",
+            "Micronaut/Quarkus: <strong>compile-time</strong> DI + AOT → fast startup, low memory, native-image friendly",
+            "That matters for serverless/Lambda, scale-to-zero, dense per-pod deployments",
+            "Spring Boot 3 + AOT/native closed much of the gap — the argument is weaker than in 2022",
+            "Real deciders: hiring pool, library support, team familiarity"
+          ],
+          "links": [
+            {
+              "label": "compile time vs runtime di",
+              "target": "06-spring/07-comparatives/30-compile-time-vs-runtime-di"
+            }
+          ],
+          "flow": "startup/memory critical (serverless) → compile-time DI · else Spring · Boot AOT narrows it",
+          "trap": "framework benchmarks as the argument when hiring and ecosystem decide it"
+        },
+        {
+          "id": "java-spring-q27",
+          "number": 27,
+          "marks": [],
+          "text": "Hibernate caching layers — which do you actually enable?",
+          "points": [
+            "<strong>L1</strong> = persistence context, per-session, always on, not optional",
+            "<strong>L2</strong> = shared across sessions (Ehcache/Infinispan/Redis) — opt in per entity",
+            "<strong>Query cache</strong> needs L2 and is easy to get wrong; invalidation is the hard part",
+            "L2 shines on read-mostly reference data; it's a liability on hot mutable entities",
+            "In a clustered app, L2 needs a distributed/invalidating strategy or nodes diverge"
+          ],
+          "links": [
+            {
+              "label": "caching layers",
+              "target": "06-spring/09-hibernate/43-caching-layers"
+            }
+          ],
+          "flow": "L1 always → L2 for read-mostly reference data → query cache last and carefully",
+          "trap": "enabling L2 globally and creating stale-read bugs across nodes"
+        }
+      ]
+    },
+    {
+      "id": "java-spring-d",
+      "letter": "D",
+      "name": "Scaling & failure",
+      "questions": [
+        {
+          "id": "java-spring-q28",
+          "number": 28,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"What's the N+1 problem in JPA and how do you solve it?",
+          "points": [
+            "One query for the parents, then <strong>one per parent</strong> for a lazy association → N+1 round trips",
+            "Invisible in dev with 10 rows; catastrophic at 10,000",
+            "Fixes: <code>JOIN FETCH</code> · <strong><code>@EntityGraph</code></strong> · <code>@BatchSize</code> · projections/DTOs when you don't need entities",
+            "<code>JOIN FETCH</code> with pagination is a trap — Hibernate may paginate <strong>in memory</strong>",
+            "Detect it: SQL logging, <code>hibernate.generate_statistics</code>, an assertion on query count in tests"
+          ],
+          "links": [
+            {
+              "label": "fetching strategies and entity graphs",
+              "target": "06-spring/09-hibernate/41-fetching-strategies-and-entity-graphs"
+            }
+          ],
+          "flow": "lazy association in a loop → N+1 → EntityGraph / JOIN FETCH / batch size → assert query count in tests",
+          "trap": "switching everything to <code>EAGER</code> — you've traded N+1 for loading the whole graph every time"
+        },
+        {
+          "id": "java-spring-q29",
+          "number": 29,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"Memory climbs and the service dies with OOM every two days. Find it.",
+          "points": [
+            "First: <strong>which</strong> OOM — heap, Metaspace, direct buffers, or native? The message tells you",
+            "Always-on <code>-XX:+HeapDumpOnOutOfMemoryError</code>; analyse in MAT — dominator tree → GC roots",
+            "Usual suspects: unbounded cache/<code>Map</code>, <code>ThreadLocal</code> not cleared on a pooled thread, classloader leak on redeploy, listeners never unregistered",
+            "Confirm with GC logs: live-set after <strong>full</strong> GC trending up = real leak, not just pressure",
+            "Live triage: <code>jcmd GC.heap_info</code>, <code>jmap -histo:live</code>, JFR"
+          ],
+          "links": [
+            {
+              "label": "Diagnosing a Live JVM",
+              "target": "05-java/10-Performance-and-Profiling/51-Diagnosing-a-Live-JVM"
+            }
+          ],
+          "flow": "identify the OOM kind → heap dump → dominator tree → find the GC root holding it",
+          "trap": "raising <code>-Xmx</code> and calling it fixed — that buys days, not a diagnosis"
+        },
+        {
+          "id": "java-spring-q30",
+          "number": 30,
+          "marks": [],
+          "text": "Which collector, and what would you actually tune?",
+          "points": [
+            "<strong>G1</strong> default — region-based, pause-target driven, good general throughput/latency balance",
+            "<strong>ZGC / Shenandoah</strong> — concurrent, sub-millisecond pauses at large heaps, some throughput cost",
+            "Serial/Parallel still right for small containers or batch throughput jobs",
+            "Tune <strong>heap size and pause target</strong> first; resist per-flag micro-tuning without GC logs",
+            "Allocation rate is usually the real lever — fewer garbage objects beats a cleverer collector"
+          ],
+          "links": [
+            {
+              "label": "GC Tuning and Diagnosis",
+              "target": "05-java/04-Garbage-Collection/20-GC-Tuning-and-Diagnosis"
+            }
+          ],
+          "flow": "measure allocation + pauses → G1 default → ZGC for large-heap latency → tune size/target, not flags",
+          "trap": "copying GC flags from a blog post with no GC log to justify them"
+        },
+        {
+          "id": "java-spring-q31",
+          "number": 31,
+          "marks": [],
+          "text": "How big should the connection pool be?",
+          "points": [
+            "Small. Pool size is bounded by <strong>database</strong> cores/disks, not by your thread count",
+            "Real DB load = pool × instances — the pod count is the multiplier people forget",
+            "Hikari: <code>maximumPoolSize</code>, <code>connectionTimeout</code> (fail fast), <code>leakDetectionThreshold</code>",
+            "Symptom of undersizing <em>or</em> of leaks looks identical: connection-timeout errors under load",
+            "Never hold a connection across a remote call — especially not across an LLM call"
+          ],
+          "links": [
+            {
+              "label": "jdbc and pooling",
+              "target": "06-spring/05-data/27-jdbc-and-pooling"
+            }
+          ],
+          "flow": "size to DB capacity → multiply by pods → fail-fast timeout → narrow the hold time",
+          "trap": "growing the pool to fix latency caused by long-held transactions"
+        },
+        {
+          "id": "java-spring-q32",
+          "number": 32,
+          "marks": [],
+          "text": "LazyInitializationException in the controller. Why, and what's the right fix?",
+          "points": [
+            "Session/persistence context closed at the <strong>transaction boundary</strong>; lazy proxy touched after → boom",
+            "Wrong fixes: <code>EAGER</code> everywhere · <code>open-session-in-view</code> (default-on in Boot, and it hides N+1 in the view layer)",
+            "Right fix: fetch what you need <strong>inside</strong> the transaction — <code>@EntityGraph</code>, JOIN FETCH, or a DTO projection",
+            "Cleanest: never let entities cross the service boundary; map to DTOs",
+            "Turn OSIV <strong>off</strong> deliberately so this fails loudly in dev, not silently in prod"
+          ],
+          "links": [
+            {
+              "label": "persistence context and dirty checking",
+              "target": "06-spring/09-hibernate/40-persistence-context-and-dirty-checking"
+            }
+          ],
+          "flow": "context closed → lazy touched later → fetch inside the boundary → return DTOs → disable OSIV",
+          "trap": "leaving OSIV on and shipping a view layer quietly issuing queries"
+        },
+        {
+          "id": "java-spring-q33",
+          "number": 33,
+          "marks": [],
+          "text": "Size a thread pool, and say what happens when it's full.",
+          "points": [
+            "CPU-bound ≈ cores · I/O-bound ≈ cores × (1 + wait/service) — measure, don't guess",
+            "<strong>Bounded</strong> queue always; an unbounded queue converts overload into OOM and hides it",
+            "Rejection policy is a design decision: <code>AbortPolicy</code> (fail fast) · <code>CallerRuns</code> (natural backpressure) · discard (data loss)",
+            "Separate pools per dependency — a <strong>bulkhead</strong>, so one slow upstream can't consume everything",
+            "Name your threads, or the stack dump during an incident tells you nothing"
+          ],
+          "links": [
+            {
+              "label": "Executors and Thread Pools",
+              "target": "05-java/06-Concurrency/28-Executors-and-Thread-Pools"
+            }
+          ],
+          "flow": "measure wait/service → size → bounded queue → explicit rejection → bulkhead per dependency",
+          "trap": "<code>Executors.newCachedThreadPool()</code> in production — unbounded thread creation"
+        },
+        {
+          "id": "java-spring-q34",
+          "number": 34,
+          "marks": [],
+          "text": "🏢 \"One request crosses five services. How do you trace it end to end?",
+          "points": [
+            "<strong>W3C <code>traceparent</code></strong> propagated on every hop — HTTP headers and message headers alike",
+            "Micrometer Tracing / OpenTelemetry auto-instruments the common clients; MDC puts trace ID in logs",
+            "Async and messaging break propagation unless context is explicitly carried across the boundary",
+            "Sample intelligently: head sampling for cost, tail sampling to keep the errors",
+            "Log correlation ID <strong>and</strong> trace ID; span links for queue hops where there's no parent"
+          ],
+          "links": [
+            {
+              "label": "actuator and observability",
+              "target": "06-spring/04-boot/21-actuator-and-observability"
+            }
+          ],
+          "flow": "traceparent at edge → propagate every hop → MDC into logs → carry context across async/queue",
+          "trap": "losing the trace at the first <code>@Async</code> or Kafka boundary"
+        }
+      ]
+    },
+    {
+      "id": "java-spring-e",
+      "letter": "E",
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "java-spring-q35",
+          "number": 35,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"One business transaction spans three microservices. How?",
+          "points": [
+            "Not 2PC — you want <strong>Saga</strong>: local transaction per service + compensating action",
+            "<strong>Choreography</strong> (events, no coordinator, coupling hides in the topology) vs <strong>orchestration</strong> (explicit coordinator, visible state machine)",
+            "<strong>Outbox pattern</strong> for atomic DB-write + event-publish; CDC or a relay ships it",
+            "Consumers must be <strong>idempotent</strong> — delivery is at-least-once (<code>01-PYTHON</code> #24 is the same idea)",
+            "Accept eventual consistency explicitly and say what the user sees in between"
+          ],
+          "links": [
+            {
+              "label": "Resilience Patterns on the JVM",
+              "target": "05-java/12-Frameworks/59-Resilience-Patterns-on-the-JVM"
+            }
+          ],
+          "flow": "local txn + compensations → orchestrate for visibility → outbox for atomicity → idempotent consumers",
+          "trap": "proposing distributed 2PC/XA, or ignoring the compensating path"
+        },
+        {
+          "id": "java-spring-q36",
+          "number": 36,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"Service B is down and Service A keeps calling it. Stop the cascade.",
+          "points": [
+            "<strong>Circuit breaker</strong> — open on failure-rate threshold, half-open probe, close on recovery",
+            "Aggressive <strong>timeouts</strong> first; without them the breaker never trips, threads just pile up",
+            "<strong>Bulkhead</strong> so B's failure can't consume A's whole pool (#33)",
+            "Retry only idempotent calls, bounded, with <strong>jitter</strong> — naive retry amplifies the outage",
+            "Define the fallback: cached value, degraded response, or fail fast — decide, don't default"
+          ],
+          "links": [
+            {
+              "label": "Resilience Patterns on the JVM",
+              "target": "05-java/12-Frameworks/59-Resilience-Patterns-on-the-JVM"
+            }
+          ],
+          "flow": "timeout → breaker → bulkhead → jittered bounded retry → explicit fallback",
+          "trap": "retries without a breaker — you've built a self-inflicted DDoS"
+        },
+        {
+          "id": "java-spring-q37",
+          "number": 37,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "We're a Java shop. Build us RAG on Spring.",
+          "points": [
+            "<strong>Spring AI</strong>: <code>VectorStore</code> abstraction (pgvector, Redis, Qdrant…), <code>EmbeddingModel</code>, <code>ChatClient</code>",
+            "<code>ETL</code>-style ingestion: <code>DocumentReader</code> → <code>TextSplitter</code> → <code>VectorStore.add</code> — run it as a batch job, not in a request",
+            "<code>QuestionAnswerAdvisor</code> wires retrieval into the chat call; <code>ChatClient</code> fluent API composes it",
+            "Same architecture as Python: two pipelines, versioned contract (embed model + chunk scheme + index)",
+            "Java-specific wins: existing transactions, security, observability, and the ops story already exist"
+          ],
+          "links": [
+            {
+              "label": "rag and vector stores",
+              "target": "06-spring/08-ai-mcp/35-rag-and-vector-stores"
+            },
+            {
+              "label": "RAG",
+              "target": "05-RAG"
+            }
+          ],
+          "flow": "reader → splitter → embed → VectorStore ‖ query → advisor → ChatClient → cite",
+          "trap": "treating Spring AI as a different architecture — it's the same design, different bindings"
+        },
+        {
+          "id": "java-spring-q38",
+          "number": 38,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Expose our internal services to an LLM. How?",
+          "points": [
+            "<strong>MCP</strong> — standard protocol for tools/resources/prompts; server exposes, client (the model host) consumes",
+            "Spring AI MCP server: annotate methods as tools, schema derived from types (same idea as <code>01-PYTHON</code> #15)",
+            "Design tools <strong>coarse and intention-shaped</strong>, not one-per-endpoint — the model picks badly from 200 thin tools",
+            "Every tool call is untrusted input <strong>and</strong> a privileged action: authz per call, allowlists, human approval for destructive ops",
+            "Idempotency + timeouts per tool; the model <em>will</em> retry"
+          ],
+          "links": [
+            {
+              "label": "mcp fundamentals",
+              "target": "06-spring/08-ai-mcp/37-mcp-fundamentals"
+            },
+            {
+              "label": "building mcp servers and clients",
+              "target": "06-spring/08-ai-mcp/38-building-mcp-servers-and-clients"
+            }
+          ],
+          "flow": "expose intention-shaped tools → schema from types → authz per call → approve destructive → idempotent",
+          "trap": "auto-exposing your whole REST surface as tools"
+        },
+        {
+          "id": "java-spring-q39",
+          "number": 39,
+          "marks": [
+            "trending"
+          ],
+          "text": "It has to remember the conversation and stay in guardrails.",
+          "points": [
+            "<strong>Advisors</strong> = interceptor chain for the chat call — memory, retrieval, logging, safety all compose here",
+            "<code>ChatMemory</code> implementations: in-memory for dev, JDBC/Redis for real; <strong>window or summary</strong> strategy",
+            "Memory is unbounded cost — cap turns, summarise older context, and say what you drop",
+            "Multi-tenant: memory keyed by conversation <strong>and</strong> tenant, or you leak across users",
+            "Guardrail advisors on both sides — input (injection, abuse) and output (PII, policy)"
+          ],
+          "links": [
+            {
+              "label": "advisors and chat memory",
+              "target": "06-spring/08-ai-mcp/36-advisors-and-chat-memory"
+            }
+          ],
+          "flow": "advisor chain → memory store keyed by tenant+conversation → window/summarise → guardrails both sides",
+          "trap": "unbounded chat memory — cost grows every turn and eventually blows the context window"
+        }
+      ]
+    },
+    {
+      "id": "java-spring-f",
+      "letter": "F",
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "java-spring-q40",
+          "number": 40,
+          "marks": [
+            "decides"
+          ],
+          "text": "Tell me about the hardest production issue you've handled on the JVM.",
+          "points": [
+            "Symptom in business terms — outage, latency, data issue — before any technical detail",
+            "Your first hypothesis and the evidence that killed it (this is the credibility beat)",
+            "The tool that actually found it: heap dump + MAT · GC log · JFR · thread dump",
+            "Fix, plus the <strong>guard</strong> you added so it can't recur silently — alert, test, assertion",
+            "The number: before → after"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "business symptom → wrong hypothesis → evidence → root cause → fix + guard → number",
+          "trap": "a tour of the debugging with no root cause named and no number"
+        }
+      ]
+    }
+  ]
+}

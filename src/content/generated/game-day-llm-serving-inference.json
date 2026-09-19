@@ -1,0 +1,1035 @@
+{
+  "slug": "llm-serving-inference",
+  "number": 8,
+  "title": "🚀 LLM SERVING & INFERENCE",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "⭐ = decides the round. 🔥 = trending 2026. 📍 = <em>you</em> were asked this. 📝 = no vault note yet.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> <code>02-DL/07-Inference Optimization/</code> + <code>02-DL/08-AI systems &amp; serving Architecture/</code> + <code>05-LLM-Production/07,12</code> · <strong>Phrasing drill:</strong> ♻️ the serving halves of <code>jbtiq_llm.md</code> (§6–7, §12) and <code>jbtiq_dl.md</code> (§7–8) <strong>merged into this file 19 Sep 2026</strong> — overlapping questions carry a <strong>🗣️ Phrasing drill</strong> block, the other 5 are appended below · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]"
+  ],
+  "bands": [
+    {
+      "id": "llm-serving-inference-mechanism-know-these-cold",
+      "letter": null,
+      "name": "Mechanism — know these cold",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk me through what happens between a request hitting your endpoint and the first token reaching the user.",
+          "points": [
+            "Gateway → auth, <strong>per-tenant rate limit</strong>, model routing, queue admission",
+            "<strong>Prefill</strong>: tokenize → one parallel pass over the prompt → KV cache written → first token",
+            "<strong>Decode</strong>: one token per step, each re-reading the whole cache → streamed out",
+            "Underneath the scheduler runs <strong>continuous batching</strong> — your request joins mid-flight",
+            "Return path is chunks (SSE/WebSocket), not a response object"
+          ],
+          "links": [
+            {
+              "label": "LLM Serving System End to End",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+            }
+          ],
+          "badge": "Trending — prefill/decode split + disaggregation recurs in serving blogs and LLM-infra interview loops (2025–26)",
+          "flow": "gateway → queue → prefill → decode loop → stream out",
+          "trap": "describing it as one forward pass — prefill and decode are different machines",
+          "drill": {
+            "prompt": "from jbtiq_dl Q38: \"Walk me through one request's life inside an LLM serving system — and why prefill and decode want different hardware behavior.\"",
+            "badge": "Trending — prefill/decode split + disaggregation recurs in serving blogs and LLM-infra interview loops (2025–26)",
+            "hint": "Two phases: one processes n tokens at once, one processes 1 token n times. Which is compute-bound, which is bandwidth-bound — and which user-facing metric does each own?",
+            "points": [
+              "Path: tokenize → admission/scheduling → <strong>prefill</strong> → <strong>decode loop</strong> → detokenize/stream → done or evicted.",
+              "<strong>Prefill</strong>: the whole prompt in one pass — big dense matmuls, <strong>compute-bound</strong>, produces the initial KV cache, and owns <strong>TTFT</strong>.",
+              "<strong>Decode</strong>: one token per step — reads the entire KV cache and weights per step, <strong>memory-bandwidth-bound</strong>, owns <strong>inter-token latency</strong> and throughput.",
+              "Because the two phases stress different resources, mixing them on one pool causes interference (long prefills stall decodes) → <strong>chunked prefill</strong>, and at scale <strong>prefill/decode disaggregation</strong> onto separate pools with KV-cache transfer between them.",
+              "Add <strong>prefix caching</strong>: shared system prompts hit cached KV and skip most of prefill — huge TTFT win for chat products."
+            ],
+            "oneLiner": "A request is a compute-bound prefill that builds the KV cache and sets TTFT, then a bandwidth-bound decode loop that sets tokens-per-second — they contend for different resources, which is why serious stacks chunk or fully disaggregate them.",
+            "links": [
+              {
+                "label": "LLM Serving System End to End",
+                "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q2",
+          "number": 2,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Prefill and decode — which is compute-bound, which is memory-bound?",
+          "points": [
+            "<strong>Prefill</strong> = whole prompt in parallel, n² attention → <strong>compute-bound</strong> → sets <strong>TTFT</strong>",
+            "<strong>Decode</strong> = one token per step, reads the entire KV cache → <strong>memory-bandwidth-bound</strong> → sets <strong>TPOT</strong>",
+            "The KV cache is what converts recompute into memory pressure",
+            "Different bottlenecks → different levers: FlashAttention on prefill, batching + GQA on decode",
+            "Architect line: serving economics is <strong>bandwidth and cache real estate</strong>, not FLOPs"
+          ],
+          "links": [
+            {
+              "label": "Capacity &amp; throughput math",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/03-Capacity &amp; throughput math"
+            }
+          ],
+          "flow": "prefill compute-bound → decode bandwidth-bound → optimise each separately",
+          "trap": "one \"latency number\" covering both phases"
+        },
+        {
+          "id": "llm-serving-inference-q3",
+          "number": 3,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Define TTFT and TPOT. What drives each, and why does improving one hurt the other?",
+          "points": [
+            "<strong>TTFT</strong> = queue wait + prefill; scales with prompt length and scheduler pressure",
+            "<strong>TPOT</strong> = per-decode-step time; degraded by batch contention for bandwidth",
+            "End-to-end ≈ TTFT + TPOT × output length. SLO both at <strong>p99</strong>, never the mean",
+            "Bigger batches → better cost/token, worse queueing (TTFT) and contention (TPOT)",
+            "Chat lives on TTFT; agent loops and batch jobs live on total completion"
+          ],
+          "links": [
+            {
+              "label": "Latency metrics",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/01-Latency metrics"
+            }
+          ],
+          "badge": "Trending — the serving-metrics opener across LLM-infra screens (2025–26)",
+          "flow": "name the phase → name its metric → SLO at p99 per workload tier",
+          "trap": "quoting mean latency for a streaming product",
+          "drill": {
+            "prompt": "from jbtiq_llm Q14: \"TTFT and TPOT: define them, tell me what drives each, and why optimizing one can hurt the other.\"",
+            "badge": "Trending — the serving-metrics opener across LLM-infra screens (2025–26)",
+            "hint": "Map each metric to its phase — and then think about what batching does to each.",
+            "points": [
+              "<strong>TTFT</strong> (time to first token) = queueing + <strong>prefill</strong>: compute-bound, scales with prompt length (that n² attention) and scheduler wait. <strong>TPOT</strong> (time per output token) = <strong>decode</strong> step time: memory-bandwidth-bound, degraded by batch contention for bandwidth and KV-cache reads. End-to-end latency ≈ TTFT + TPOT × output length.",
+              "Which matters is a product question: streaming chat lives on TTFT (perceived responsiveness) then readable TPOT; agent loops and batch jobs care about total completion; APIs should SLO both <strong>at p99</strong>, not mean.",
+              "The tension: <strong>throughput optimizations raise batch sizes</strong>, which improves GPU utilization and cost-per-token but adds queueing (TTFT) and bandwidth contention (TPOT) — the classic latency-throughput frontier, navigated per workload tier rather than solved.",
+              "Specific couplings to name: long prompts inflate everyone's TTFT when prefill hogs the GPU (hence <strong>chunked prefill</strong> interleaving prefill with decode steps); speculative decoding cuts TPOT but costs extra compute; prompt caching cuts TTFT by skipping repeated prefill.",
+              "Capacity math in one line: concurrency is capped by <strong>KV-cache memory</strong> (context × batch), and goodput — useful tokens meeting SLO — is the metric that reconciles latency and throughput for planning."
+            ],
+            "oneLiner": "TTFT is queue plus compute-bound prefill, TPOT is bandwidth-bound decode — batching buys cost-per-token at the expense of both, so you tier workloads, chunk prefill, cache prompts, and set SLOs on p99 goodput rather than picking one number.",
+            "links": [
+              {
+                "label": "Latency metrics",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/01-Latency metrics"
+              },
+              {
+                "label": "Capacity &amp; throughput math",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/03-Capacity &amp; throughput math"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q4",
+          "number": 4,
+          "marks": [
+            "decides"
+          ],
+          "text": "What actually limits how many concurrent requests one GPU can serve?",
+          "points": [
+            "Not FLOPs — <strong>KV-cache memory</strong>: layers × K/V heads × head_dim × context × batch × 2",
+            "VRAM split: weights (fixed) + KV cache (grows with traffic) + activations",
+            "Long contexts crowd out concurrency — one 128k session costs many short ones",
+            "Shrink the cache: <strong>GQA/MQA</strong>, KV quantisation, offload, paging",
+            "That number <em>is</em> your capacity plan; everything else is scheduling"
+          ],
+          "links": [
+            {
+              "label": "Kv cache and mitigations",
+              "target": "02-DL/03-Transformer Architecture Core/09-Kv cache and mitigations"
+            }
+          ],
+          "flow": "weights fixed → cache scales with context × batch → cache caps concurrency",
+          "trap": "sizing capacity from GPU utilisation %"
+        },
+        {
+          "id": "llm-serving-inference-q5",
+          "number": 5,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Continuous batching and PagedAttention — what problem did each solve?",
+          "points": [
+            "<strong>Static batching</strong> waited for the <em>longest</em> sequence → finished slots sat idle",
+            "<strong>Continuous batching</strong> schedules per decode step: done exits, queued joins immediately",
+            "Contiguous KV allocation forced <strong>worst-case reservation</strong> → fragmentation capped batch size",
+            "<strong>PagedAttention</strong> = fixed-size blocks + indirection table — virtual memory for the cache",
+            "Together: more tokens/sec on the <em>same</em> hardware, no model change — the vLLM story"
+          ],
+          "links": [
+            {
+              "label": "Serving Schedulers",
+              "target": "02-DL/07-Inference Optimization/00-Serving Schedulers"
+            }
+          ],
+          "badge": "Trending — vLLM internals are now standard interview fare (2025–26)",
+          "flow": "schedule per step → page the cache → bigger effective batch → throughput",
+          "trap": "calling these model optimisations — they're scheduler and allocator work",
+          "drill": {
+            "prompt": "from jbtiq_llm Q15: \"Continuous batching and PagedAttention: what problem did each solve? Explain like you're justifying vLLM to an infra team.\"",
+            "badge": "Trending — vLLM internals are now standard interview fare (2025–26)",
+            "hint": "One fixes a scheduling waste, one fixes a memory waste. What did static batching waste, and what did contiguous KV allocation waste?",
+            "points": [
+              "<strong>Continuous (in-flight) batching</strong> fixes scheduling: static batching held the whole batch until the <em>longest</em> sequence finished — short completions left GPU slots idle. Continuous batching operates <strong>per decode step</strong>: finished sequences exit, queued ones join immediately — utilization and throughput jump with no model change.",
+              "<strong>PagedAttention</strong> fixes memory: contiguous per-request KV allocation forced worst-case reservation (max context), fragmenting VRAM and capping concurrency. Paging the KV cache into <strong>fixed-size blocks with an indirection table</strong> (virtual memory, applied to attention) allocates on demand — near-zero fragmentation → bigger effective batches → more throughput from the same GPU.",
+              "Bonus from paging: <strong>prefix sharing</strong> — common prefixes (system prompts, few-shot blocks) map to the same physical blocks across requests, multiplying the value of prompt caching.",
+              "The composite pitch: same hardware, same model, materially more tokens/sec and concurrency, purely from scheduler + allocator engineering — the canonical proof that <strong>LLM serving is a systems problem</strong>, not a model problem.",
+              "Round out the stack when asked: quantized serving, GQA models, speculative decoding, chunked prefill — each attacks a different term in the latency/throughput/memory triangle."
+            ],
+            "oneLiner": "Continuous batching stopped waiting for the slowest sequence by scheduling per decode step, and PagedAttention stopped worst-case KV reservation by paging the cache like virtual memory — together they turn stranded GPU time and fragmented VRAM into throughput, which is the whole vLLM story.",
+            "links": [
+              {
+                "label": "Advanced scheduling",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/02-Advanced scheduling"
+              },
+              {
+                "label": "Capacity &amp; throughput math",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/03-Capacity &amp; throughput math"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q6",
+          "number": 6,
+          "marks": [
+            "trending"
+          ],
+          "text": "What is prefix caching, and when does it silently stop firing?",
+          "points": [
+            "Shared prompt prefix → reuse its KV blocks, skip that prefill entirely",
+            "Huge for system prompts, few-shot blocks, multi-turn chat, agent scratchpads",
+            "<strong>Breaks on any byte change at the front</strong> — a timestamp, a user name, reordered tools",
+            "Design for it: static content first, volatile content last",
+            "Distinct from a <strong>semantic cache</strong> (answer-level, embedding match, staleness risk)"
+          ],
+          "links": [
+            {
+              "label": "Serving Schedulers",
+              "target": "02-DL/07-Inference Optimization/00-Serving Schedulers"
+            },
+            {
+              "label": "Caching Layers — Embedding, Retrieval &amp; Semantic Answer Cache",
+              "target": "04-RAG/12-Production RAG Systems (arch lens)/04-Caching Layers — Embedding, Retrieval &amp; Semantic Answer Cache"
+            }
+          ],
+          "flow": "stable prefix first → volatile last → hit skips prefill entirely",
+          "trap": "injecting a timestamp into the system prompt"
+        },
+        {
+          "id": "llm-serving-inference-q7",
+          "number": 7,
+          "marks": [
+            "trending"
+          ],
+          "text": "How does streaming actually work, and what breaks it in production?",
+          "points": [
+            "Server yields per token → <strong>SSE</strong> or WebSocket → client renders incrementally",
+            "TTFT becomes the <em>perceived</em> latency; total time matters far less",
+            "Breaks: <strong>buffering proxy / load balancer</strong>, idle timeouts, no backpressure, half-parsed JSON",
+            "A mid-stream error has no status code — needs an in-band error event",
+            "Cancellation must actually free the <strong>GPU slot</strong>, not just close the socket"
+          ],
+          "links": [
+            {
+              "label": "Token Streaming Mechanics",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/01-Token Streaming Mechanics"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "token → chunk → client render; cancel must free the slot",
+          "trap": "a buffering proxy in front — TTFT looks fine locally, dies in prod",
+          "drill": {
+            "prompt": "from jbtiq_dl Q39: \"Product says: 'the text must start appearing instantly and flow smoothly.' Turn that into SLOs and tell me which engineering lever moves each one.\"",
+            "badge": "Evergreen",
+            "hint": "Three numbers: time to the first token, time between tokens, tokens per second per GPU. Different levers move each — and one pair trades against the other.",
+            "points": [
+              "<strong>TTFT</strong> (\"starts instantly\"): prefill compute + queueing → levers: prefix caching, chunked prefill priority, admission control, shorter effective prompts.",
+              "<strong>Inter-token latency / TPOT</strong> (\"flows smoothly\"): decode bandwidth + batch contention → levers: GQA, quantized weights/KV, speculative decoding, capping batch size.",
+              "<strong>Throughput</strong> (cost side): bigger continuous batches — which <em>directly degrades</em> inter-token latency; state the trade explicitly and pick the operating point per SLO tier.",
+              "Streaming mechanics that bite in production: SSE/streamed token events, <strong>detokenization edge cases</strong> (multi-token unicode — never flush partial UTF-8), cancellation on client disconnect to reclaim KV memory, <strong>p95/p99 not means</strong>."
+            ],
+            "oneLiner": "'Instant' is TTFT — a prefill and queueing problem; 'smooth' is inter-token latency — a decode bandwidth problem; and both trade against throughput per GPU, so the SLO tier picks the batch operating point.",
+            "links": [
+              {
+                "label": "Token Streaming Mechanics",
+                "target": "02-DL/08-AI systems &amp; serving Architecture/01-Token Streaming Mechanics"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "llm-serving-inference-trade-offs-the-senior-signal",
+      "letter": null,
+      "name": "Trade-offs — the senior signal",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q8",
+          "number": 8,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Throughput or latency — why do people optimise 'goodput' instead?",
+          "points": [
+            "Raw throughput is gameable: huge batches → great tokens/sec, violated SLOs",
+            "<strong>Goodput</strong> = tokens/sec <em>from requests that met their SLO</em> — the honest number",
+            "The latency–throughput frontier is navigated <strong>per workload tier</strong>, not solved",
+            "Levers along it: chunked prefill, tier separation, admission control, max-batch caps",
+            "Capacity planning uses goodput; the finance conversation uses cost per token"
+          ],
+          "links": [
+            {
+              "label": "LLM Serving System End to End",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+            }
+          ],
+          "flow": "SLO per tier → measure goodput → tune batch to the frontier",
+          "trap": "reporting tokens/sec with no SLO attached"
+        },
+        {
+          "id": "llm-serving-inference-q9",
+          "number": 9,
+          "marks": [
+            "decides"
+          ],
+          "text": "Deploy a 70B cheaply without a visible quality drop — what's your quantisation plan?",
+          "points": [
+            "Start <strong>weight-only</strong> (W4A16 / W8A16); 8-bit then 4-bit are the practical rungs",
+            "The win is <strong>memory + bandwidth</strong> — exactly what decode is bound by",
+            "Validate on <em>your</em> task, not perplexity: task evals, side-by-side, long-tail prompts",
+            "Watch the regressions that hide: long context, code, arithmetic, non-English",
+            "Keep the unquantised model routable for a one-flag rollback"
+          ],
+          "links": [
+            {
+              "label": "Quantization",
+              "target": "02-DL/07-Inference Optimization/01-Quantization"
+            }
+          ],
+          "badge": "Trending — recurs across inference-optimization blogs + Devinterview LLM repos + on-device/serving JDs (2025–26)",
+          "flow": "weight-only first → task eval not perplexity → rollback path stays open",
+          "trap": "accepting a published benchmark instead of running your own eval",
+          "drill": {
+            "prompt": "from jbtiq_dl Q34: \"You must serve a 70B model on hardware that holds half its fp16 weights. Quantization: what exactly do you quantize, and what breaks first?\"",
+            "badge": "Trending — recurs across inference-optimization blogs + Devinterview LLM repos + on-device/serving JDs (2025–26)",
+            "hint": "What's being compressed (weights? activations? KV cache?), and what's the only honest way to know if quality survived?",
+            "points": [
+              "What it buys: smaller weights → less VRAM (bigger batch/context on the same GPU, or a smaller GPU), and less memory traffic → faster bandwidth-bound decode. Distinguish <strong>weight-only</strong> quantization (most common for LLMs), weight+activation (harder, needs calibration), and <strong>KV-cache quantization</strong> (attacks the other memory hog).",
+              "Degradation pattern: benign at 8-bit for most models, task-dependent at 4-bit — the <em>average</em> benchmark hit is small but the tails aren't uniform: long-form coherence, math/reasoning chains, and low-resource languages degrade first; outlier activation channels are the known technical culprit (hence methods like GPTQ/AWQ-style outlier handling).",
+              "The decision procedure: quantize → run <strong>your own eval suite</strong> (not perplexity alone — it under-detects task regressions) → compare per-dimension (reasoning, factuality, format compliance) against the FP baseline → ship the lowest precision that passes <em>your</em> gates.",
+              "Deployment realities: kernel/hardware support determines actual speedups (FP8 on modern GPUs, INT4 kernels vary), and quantization composes with LoRA (QLoRA at training, quantized base + adapters at serving).",
+              "Say the framing: quantization is a <strong>quality-for-economics trade with task-specific fine print</strong> — the fine print is why the eval suite, not the paper's benchmark table, makes the call."
+            ],
+            "oneLiner": "Quantization trades precision for VRAM and bandwidth — usually free at 8-bit, task-dependent at 4 — and since degradation concentrates in reasoning, long-form and rare-language tails, the only honest gate is your own per-dimension eval suite, not perplexity.",
+            "links": [
+              {
+                "label": "Cost optimization",
+                "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/03-Cost optimization"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q10",
+          "number": 10,
+          "marks": [
+            "trending"
+          ],
+          "text": "Why weight-only quantisation instead of quantising activations too?",
+          "points": [
+            "Decode is <strong>bandwidth-bound</strong> — shrinking the weights is where the win lives",
+            "Activations carry <strong>outlier channels</strong>; naive INT8 activations wreck quality",
+            "W8A8 needs calibration, per-channel scaling, outlier handling — much more machinery",
+            "Activation quantisation pays in <strong>compute-bound prefill</strong>, which is the smaller half",
+            "Kernel and hardware maturity decide this as much as theory does"
+          ],
+          "links": [
+            {
+              "label": "Quantization",
+              "target": "02-DL/07-Inference Optimization/01-Quantization"
+            }
+          ],
+          "flow": "bandwidth is the bottleneck → shrink weights → activations have outliers",
+          "trap": "assuming \"more bits removed = more speed\""
+        },
+        {
+          "id": "llm-serving-inference-q11",
+          "number": 11,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Speculative decoding does more total FLOPs. Why is it faster — and when does that break?",
+          "points": [
+            "Small <strong>draft</strong> model proposes k tokens → target model <strong>verifies in one pass</strong>",
+            "Decode was bandwidth-bound with idle compute; spec decoding spends the spare FLOPs",
+            "The acceptance test <strong>preserves the output distribution</strong> — not an approximation",
+            "Breaks when the GPU is already <strong>compute-saturated</strong> (large batch) — then it costs you",
+            "Also breaks on low acceptance: mismatched draft model, unusual domain, high temperature"
+          ],
+          "links": [
+            {
+              "label": "Speculative Decoding",
+              "target": "02-DL/07-Inference Optimization/03-Speculative Decoding"
+            }
+          ],
+          "badge": "Trending — recurs on LLM interview repos + serving-stack blogs; standard question for inference roles (2025–26)",
+          "flow": "draft k → verify once → spare compute buys latency, only while batch is small",
+          "trap": "enabling it fleet-wide, including the throughput tier",
+          "drill": {
+            "prompt": "from jbtiq_dl Q36: \"Speculative decoding speeds up generation substantially without changing the output distribution at all. Explain why that isn't a contradiction.\"",
+            "badge": "Trending — recurs on LLM interview repos + serving-stack blogs; standard question for inference roles (2025–26)",
+            "hint": "A small model guesses, a big model checks — but why is checking k tokens cheaper than generating k tokens?",
+            "points": [
+              "Mechanism: a cheap <strong>draft model</strong> proposes k tokens autoregressively; the target model <strong>verifies all k in one parallel forward pass</strong> — accepting the longest prefix consistent with its own distribution and resampling at the first divergence (the acceptance rule is constructed so the output distribution is provably identical to the target model's).",
+              "Why it wins: decode is <strong>memory-bandwidth-bound</strong> — one big-model pass over k tokens costs little more than over one token; you convert k serial passes into one, gated by the <strong>acceptance rate</strong> (how often the draft guesses right).",
+              "The economics: speedup ≈ acceptance rate × draft cheapness — best on predictable text (code, boilerplate, structured output), worst on high-entropy creative text; draft/target alignment (same tokenizer, similar training) drives acceptance.",
+              "Variants worth naming: self-speculation (early-exit or extra decoding heads instead of a separate draft model — Medusa/EAGLE-family ideas), and n-gram/copy-based drafting for retrieval-heavy contexts where output copies input.",
+              "The catch: extra VRAM and complexity for the draft path, batching interactions (spec decode competes with large-batch throughput), so it's a latency tool more than a throughput tool."
+            ],
+            "oneLiner": "A draft model proposes k tokens and the target verifies them in one bandwidth-bound parallel pass, with an acceptance rule that preserves the exact output distribution — so you win serial steps on predictable text and win nothing on high-entropy prose.",
+            "links": [
+              {
+                "label": "Advanced scheduling",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/02-Advanced scheduling"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q12",
+          "number": 12,
+          "marks": [
+            "decides"
+          ],
+          "text": "Self-host the model or call a provider API?",
+          "points": [
+            "API wins: time to market, frontier quality, no GPU on-call, elastic burst",
+            "Self-host wins: <strong>data residency</strong>, cost at high steady volume, latency floor, <strong>model pinning</strong>",
+            "The real trigger is usually compliance or a volume curve crossing — rarely preference",
+            "Hidden self-host cost: GPU on-call, eval infra, the upgrade treadmill",
+            "Usual production answer: <strong>abstraction layer + route</strong> — self-host the high-volume cheap path"
+          ],
+          "links": [
+            {
+              "label": "Self hosted vs API — build vs buy",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/06-Self-hosted vs API — build vs buy"
+            }
+          ],
+          "badge": "Evergreen — the build-vs-buy of this pillar.",
+          "flow": "compliance? → volume crossing? → otherwise API behind a routing layer",
+          "trap": "comparing price per token and ignoring the ops headcount",
+          "drill": {
+            "prompt": "from jbtiq_llm Q31: \"Self-hosted open-weights vs API models: run the real decision, not the ideological one.\"",
+            "badge": "Evergreen — the build-vs-buy of this pillar.",
+            "hint": "The API price is not the comparison. What's the fully-loaded self-hosting cost, and which four requirements force self-hosting regardless?",
+            "points": [
+              "The honest cost comparison: API price-per-token vs <strong>fully-loaded self-hosting</strong> — GPUs (bought or rented, at realistic <em>utilization</em>, which is the number everyone fudges), serving engineering, upgrades chasing the frontier, on-call, and eval/safety work the provider was doing for you. Low or spiky utilization wrecks self-hosting economics; high steady throughput is where it wins.",
+              "Forcing functions for self-hosting: <strong>data residency/compliance</strong> (regulated data that can't leave), <strong>deep customization</strong> (custom fine-tunes, decoding control, adapter multiplexing), <strong>latency floors</strong> (on-prem/edge), and <strong>strategic independence</strong> (no provider dependency/rug-pull risk).",
+              "Forcing functions for API: frontier capability gap (open weights trail on the hardest tasks — check <em>your</em> task, the gap varies), instant scaling, zero infra team, and capability upgrades arriving for free.",
+              "The middle path most orgs land on: <strong>API-first with an abstraction layer</strong>, self-host the narrow high-volume commodity workloads (classification, extraction, embeddings) where small open models are as-good and utilization is steady — a portfolio, not a religion.",
+              "Re-run the decision periodically: open-weights quality, serving tooling, and GPU economics all move fast enough that last year's answer expires."
+            ],
+            "oneLiner": "Compare API tokens against fully-loaded self-hosting at your real utilization — self-host when residency, customization or steady high volume force it; stay API for frontier capability and spiky loads; and in practice run a portfolio behind one abstraction, re-decided yearly.",
+            "links": [
+              {
+                "label": "Self hosted vs API — build vs buy",
+                "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/06-Self-hosted vs API — build vs buy"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q13",
+          "number": 13,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Model routing — how do you decide which request gets the expensive model?",
+          "points": [
+            "Difficulty is heavily <strong>skewed</strong>: most traffic is easy, frontier spend is mostly wasted",
+            "Signals: <strong>task type</strong> (static rules) · learned difficulty classifier · tenant/SLA tier",
+            "Cascade shape: cheap model first, escalate on low confidence or failed validation",
+            "Escalation must be <strong>bounded</strong> — a cascade that always escalates is worse than no routing",
+            "Measure quality <strong>per route</strong>, or the router hides a regression inside an average"
+          ],
+          "links": [
+            {
+              "label": "Model routing",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/02-Model routing"
+            }
+          ],
+          "badge": "Trending — routing/cascades recur across LLMOps JDs (2025–26)",
+          "flow": "cheap path by default → escalate on signal → bound the escalation rate",
+          "trap": "routing on prompt length as a proxy for difficulty",
+          "drill": {
+            "prompt": "from jbtiq_llm Q27: \"Model routing: how do you decide per-request which model serves it, and what's the payoff curve?\"",
+            "badge": "Trending — routing/cascades recur across LLMOps JDs (2025–26)",
+            "hint": "Three routing signals, two routing architectures — and the payoff comes from the shape of the difficulty distribution.",
+            "points": [
+              "The economics: request difficulty is heavily skewed — most requests are easy; serving everything with the frontier model wastes most of the spend. Routing captures that skew: <strong>small model for the bulk, big model for the hard tail</strong>.",
+              "Signals: <strong>task type</strong> (extraction vs open reasoning — static rules), <strong>learned difficulty classifiers</strong> (a cheap model predicts required capability), and <strong>tenant/latency tier</strong> (paid SLA gets the better model).",
+              "Architectures: <strong>pre-routing</strong> (classify then dispatch — one inference, needs a good classifier) vs <strong>cascade</strong> (try cheap, escalate on low confidence or failed validation — no classifier, but adds latency on escalations and needs a reliable confidence signal, e.g. logprobs or a verifier).",
+              "Guards: route-quality drift monitoring per route (a model update changes what \"easy\" means), per-route evals, and an override path — routing bugs manifest as <em>mysterious quality complaints from a subset of traffic</em>, which is miserable to debug without route logging in traces.",
+              "Extension worth naming: reasoning-budget routing (thinking tokens only for hard requests) is the same pattern one level down."
+            ],
+            "oneLiner": "Difficulty is skewed, so route the easy bulk to cheap models and the hard tail to frontier ones — by task rules, learned difficulty, or a confidence-based cascade — with per-route evals and route IDs in every trace, because routing bugs look like random quality complaints.",
+            "links": [
+              {
+                "label": "Model routing",
+                "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/02-Model routing"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q14",
+          "number": 14,
+          "marks": [
+            "trending"
+          ],
+          "text": "MQA shrinks the KV cache most — so why is GQA the default?",
+          "points": [
+            "MHA: every head its own K/V · <strong>MQA</strong>: one shared K/V · <strong>GQA</strong>: groups share",
+            "Cache shrinks with the number of <strong>K/V heads</strong> → directly buys batch concurrency",
+            "MQA costs measurable quality, and the choice is baked in at <strong>pretraining</strong>",
+            "GQA is the equilibrium: most of the memory win, little of the quality loss",
+            "Not a serving knob — it's a <strong>model-selection</strong> constraint you inherit"
+          ],
+          "links": [
+            {
+              "label": "Kv cache and mitigations",
+              "target": "02-DL/03-Transformer Architecture Core/09-Kv cache and mitigations"
+            }
+          ],
+          "badge": "Trending — recurs on LLM interview repos + inference blogs; named in Llama-class model cards, so JDs expect it (2025–26)",
+          "flow": "fewer K/V heads → smaller cache → more batch; GQA is the balance point",
+          "trap": "discussing it as something you switch on at deploy time",
+          "drill": {
+            "prompt": "from jbtiq_dl Q21: \"MQA and GQA — what gets shared, what does it save, and what do you give up?\"",
+            "badge": "Trending — recurs on LLM interview repos + inference blogs; named in Llama-class model cards, so JDs expect it (2025–26)",
+            "hint": "Which of Q, K, V actually sits in the decode-time cache? Sharing what you cache is the whole idea.",
+            "points": [
+              "KV-cache size and decode bandwidth scale with the <strong>number of KV heads</strong> — queries are computed fresh each step, K/V are the cached, re-read part.",
+              "<strong>MQA</strong>: all query heads share <strong>one</strong> K/V head → maximum cache and bandwidth saving, measurable quality dip.",
+              "<strong>GQA</strong>: query heads share K/V in <strong>groups</strong> (e.g., 8:1) → near-MHA quality with a several-fold KV reduction — the standard compromise in modern open-weight LLMs.",
+              "What you give up: less diversity in <em>what can be looked up</em> (fewer key/value subspaces), though query-side diversity is preserved.",
+              "The architectural moral: this is an <strong>inference-cost decision made at pretraining time</strong> — serving economics now design the architecture."
+            ],
+            "oneLiner": "GQA and MQA shrink the number of KV heads — the thing you actually cache and re-read every decode step — trading a little lookup diversity for a several-fold cut in cache size and bandwidth.",
+            "followUp": "\"Why not just prune KV heads after training?\" → head-sharing needs to be trained in (or carefully uptrained); it changes what the heads learn.",
+            "links": [
+              {
+                "label": "Kv cache and mitigations",
+                "target": "02-DL/03-Transformer Architecture Core/09-Kv cache and mitigations"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q15",
+          "number": 15,
+          "marks": [
+            "decides"
+          ],
+          "text": "Distil a small model, or just fine-tune a small model on the same data?",
+          "points": [
+            "Distillation trains on the teacher's <strong>full distribution</strong> — soft targets carry more signal",
+            "Wins when real labels are thin and teacher outputs are cheap to generate",
+            "Plain fine-tuning wins when you already have abundant real labels for the task",
+            "Practical route: teacher generates data → fine-tune student → eval <strong>student vs teacher</strong>",
+            "Cost model: one-off training against forever-cheaper inference — volume decides"
+          ],
+          "links": [
+            {
+              "label": "Knowledge Distillation",
+              "target": "02-DL/07-Inference Optimization/02-Knowledge Distillation"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "teacher labels → student trains → eval student against teacher on your task",
+          "trap": "distilling before checking the task even needs the big model",
+          "drill": {
+            "prompt": "from jbtiq_dl Q35: \"Knowledge distillation in 60 seconds — what actually transfers, and why does temperature matter?\"",
+            "badge": "Evergreen",
+            "hint": "What does a teacher's wrong-answer probabilities encode that a one-hot label doesn't — and what does dividing logits by T reveal?",
+            "points": [
+              "Train a small <strong>student</strong> to match a large <strong>teacher's soft output distribution</strong> (usually blended with the hard labels) — compressing capability into a cheaper model.",
+              "What transfers is the <strong>relative structure of the wrong answers</strong> (\"dark knowledge\"): the teacher saying <em>tiger</em> is a far better mistake than <em>truck</em> is information a one-hot label simply doesn't contain.",
+              "<strong>Temperature</strong> divides the logits before softmax: T&gt;1 flattens the near-one-hot distribution so those small-probability relationships become visible to the student's loss.",
+              "Variants worth naming: logit/hidden-state matching, and — dominant in the LLM era — <strong>sequence-level distillation</strong>: train the student on teacher-generated outputs.",
+              "When you reach for it: a hard latency/cost budget where a from-scratch small model underperforms one taught by a big one."
+            ],
+            "oneLiner": "Distillation trains a student on the teacher's softened distribution — temperature exposes the ranking of wrong answers, which is the knowledge one-hot labels throw away.",
+            "links": [
+              {
+                "label": "Knowledge Distillation",
+                "target": "02-DL/07-Inference Optimization/02-Knowledge Distillation"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "Hundreds of tenants each want their own tuned model. How do you serve that?",
+          "points": [
+            "Never N full fine-tunes — N × weights in VRAM is the naive killer",
+            "<strong>LoRA adapters over one shared base</strong>: small, hot-swappable, batched multi-adapter serving",
+            "<strong>Merge</strong> for the few hot tenants (zero overhead), multiplex the tail",
+            "Isolation still required: per-tenant quota, cache partitioning, noisy-neighbour caps",
+            "Often the honest answer is <strong>prompt + RAG per tenant</strong>, not a tuned model"
+          ],
+          "links": [
+            {
+              "label": "LoRA serving",
+              "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/04-LoRA serving"
+            },
+            {
+              "label": "Multi Tenant Serving",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/02-Multi-Tenant Serving"
+            }
+          ],
+          "flow": "one base in VRAM → adapters multiplexed → merge only the hot tenants",
+          "trap": "promising per-tenant fine-tunes before asking whether prompting suffices"
+        }
+      ]
+    },
+    {
+      "id": "llm-serving-inference-scaling-failure",
+      "letter": null,
+      "name": "Scaling & failure",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q17",
+          "number": 17,
+          "marks": [
+            "decides"
+          ],
+          "text": "📝 \"What would you do if your application hits a token-limit-exceeded error?",
+          "points": [
+            "They want the <strong>runtime catch path</strong>, not prevention — answer that first",
+            "Budget upfront: tokenizer-accurate count, <strong>reserve for output</strong>, fail fast before the call",
+            "Ladder: trim oldest turns → <strong>summarise history</strong> → drop lowest-ranked chunks → longer-context model → <strong>map-reduce</strong>",
+            "Never silently truncate the system prompt or the citation set — correctness bug",
+            "Return a <strong>typed</strong> error the caller can act on; log the request shape"
+          ],
+          "links": [],
+          "flow": "budget upfront → summarise/drop → escalate model → map-reduce → typed error",
+          "trap": "answering only \"use a bigger context window\""
+        },
+        {
+          "id": "llm-serving-inference-q18",
+          "number": 18,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you handle cold start when deploying a 70B model?",
+          "points": [
+            "Cold start here is <strong>minutes</strong>: pull multi-GB weights, load VRAM, warm kernels/CUDA graphs",
+            "So reactive autoscaling always lags a spike → <strong>warm pool</strong> + predictive/scheduled scaling",
+            "Shave the constant: weights cached on fast local disk, weight streaming, a smaller quantised copy",
+            "Demand side beats supply side: admission control, backpressure, <strong>degrade to a smaller model</strong>",
+            "Interactive traffic never scales the last replica to zero"
+          ],
+          "links": [
+            {
+              "label": "Autoscaling LLM workloads",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/04-Autoscaling LLM workloads"
+            }
+          ],
+          "flow": "warm pool → predictive scale → degrade under load rather than cold-start into it",
+          "trap": "quoting container start time as the cold-start number"
+        },
+        {
+          "id": "llm-serving-inference-q19",
+          "number": 19,
+          "marks": [
+            "decides"
+          ],
+          "text": "Why can't you autoscale LLM serving on CPU utilisation?",
+          "points": [
+            "The binding resource is <strong>KV-cache occupancy / free batch slots</strong> — not CPU, not even GPU %",
+            "Honest signals: queue depth, TTFT SLO violations, cache utilisation, admission rejects",
+            "Requests are <strong>long-lived and stateful</strong> — the cache lives on that replica",
+            "Scale-down must <strong>drain</strong>: stop admitting, let generations finish, grace &gt; longest stream",
+            "At size, prefill-heavy and decode-heavy traffic get <strong>separate pools</strong>"
+          ],
+          "links": [
+            {
+              "label": "Autoscaling LLM workloads",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/04-Autoscaling LLM workloads"
+            }
+          ],
+          "badge": "Trending — recurs in LLM-infra JDs (2025–26)",
+          "flow": "scale on queue depth + KV occupancy → drain on scale-down, never kill mid-stream",
+          "trap": "a CPU-based HPA in front of a GPU workload",
+          "drill": {
+            "prompt": "from jbtiq_llm Q16: \"Autoscaling LLM serving is nothing like autoscaling web servers. Walk me through what breaks and how you actually do it.\"",
+            "badge": "Trending — recurs in LLM-infra JDs (2025–26)",
+            "hint": "Three differences: what \"load\" means, how long a replica takes to become useful, and what happens to in-flight work on scale-down.",
+            "points": [
+              "<strong>CPU% is meaningless</strong> here: the binding resource is <strong>KV-cache occupancy / batch slots</strong>; the honest scaling signals are queue depth, TTFT SLO violations, and cache utilization — scale on those, not on generic host metrics.",
+              "<strong>Cold starts are minutes, not seconds</strong>: pulling multi-GB weights and warming a replica means reactive scaling always lags a spike — you need <strong>predictive/scheduled scaling</strong>, a warm pool, and honest overprovisioning headroom; weight streaming and fast-attach storage shave the constant.",
+              "<strong>Requests are long-lived and stateful</strong> (KV cache lives on the replica): scale-down must <strong>drain</strong> — stop admitting, let generations finish within a grace window; killing a replica mid-stream is a user-visible failure, and long streams can exceed naive grace periods.",
+              "Heterogeneity: prefill-heavy and decode-heavy traffic stress different resources — larger deployments split <strong>prefill/decode tiers</strong> or route long-context traffic to dedicated pools; multi-model fleets add bin-packing of models onto GPUs (consolidation vs interference).",
+              "The demand-side levers are part of autoscaling too: admission control + queue with backpressure, per-tenant rate limits, and <strong>load shedding to a smaller model</strong> under pressure often beat buying burst GPUs."
+            ],
+            "oneLiner": "Scale on queue depth and KV occupancy, not CPU; assume minutes-long cold starts so scaling is predictive with a warm pool; drain long-lived streams on scale-down; and remember admission control and degradation to a smaller model are cheaper than burst capacity.",
+            "links": [
+              {
+                "label": "Autoscaling LLM workloads",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/04-Autoscaling LLM workloads"
+              },
+              {
+                "label": "Rate limiting quota &amp; API level multi tenancy",
+                "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/05-Rate limiting quota &amp; API-level multi-tenancy"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q20",
+          "number": 20,
+          "marks": [
+            "trending"
+          ],
+          "text": "One tenant's 100k-token prompts are wrecking everyone's TTFT. What's happening?",
+          "points": [
+            "Long <strong>prefill hogs the GPU</strong> — everyone else's decode steps stall behind it",
+            "Head-of-line blocking: invisible in the average, obvious at p99",
+            "<strong>Chunked prefill</strong> — split the prompt, interleave its chunks with decode steps",
+            "Structural fixes: separate long-context pool, per-tenant <strong>token</strong>-rate limits, priority queues",
+            "Cap max prompt length per tier and put it in the contract"
+          ],
+          "links": [
+            {
+              "label": "Advanced scheduling",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/02-Advanced scheduling"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "long prefill blocks decode → chunk it → tier or cap long-context traffic",
+          "trap": "adding replicas — it moves the blocking, doesn't remove it",
+          "drill": {
+            "prompt": "from jbtiq_dl Q40: \"Design multi-tenant LLM serving where one customer's 500-page-prompt traffic can't wreck everyone else's latency.\"",
+            "badge": "Evergreen",
+            "hint": "Name the two shared resources being contended (one compute-phase, one memory), then the isolation mechanism for each, then the cross-tenant safety question about caching.",
+            "points": [
+              "Identify the noisy-neighbor mechanisms: giant <strong>prefills</strong> monopolize compute steps, and giant <strong>KV footprints</strong> monopolize the memory that everyone's batch slots need.",
+              "Compute isolation: per-tenant <strong>rate limits/token budgets</strong>, weighted-fair scheduling, <strong>chunked prefill</strong> so no prompt hogs a full step — or a dedicated long-context pool for the heavy tenant.",
+              "Memory isolation: <strong>per-tenant KV caps</strong>, preemption with <strong>evict-and-recompute</strong> (possible because prefill can rebuild state deterministically), admission control that sheds load before the GPU OOMs.",
+              "<strong>Prefix cache across tenants</strong>: dedupe by content hash for shared boilerplate, but treat cache hits as a potential <strong>cross-tenant side channel</strong> — scope caches per tenant unless you've explicitly reasoned about leakage.",
+              "Round it out: SLO tiers (interactive vs batch), per-tenant observability so you can <em>attribute</em> degradation, and chargeback on tokens-and-KV-residency, not requests."
+            ],
+            "oneLiner": "Isolate the two contended resources — chunked, budgeted prefill for compute and capped, preemptible KV for memory — then tier the SLOs and scope the prefix cache per tenant so sharing never becomes a side channel.",
+            "links": [
+              {
+                "label": "Multi Tenant Serving",
+                "target": "02-DL/08-AI systems &amp; serving Architecture/02-Multi-Tenant Serving"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q21",
+          "number": 21,
+          "marks": [
+            "decides"
+          ],
+          "text": "p99 is 5× p50 and the GPU isn't saturated. Where do you look?",
+          "points": [
+            "Split the metric first: is the tail in <strong>TTFT</strong> or in <strong>TPOT</strong>?",
+            "TTFT tail → queueing, a cold replica, prefix-cache misses, a long-prompt neighbour",
+            "TPOT tail → batch contention, KV pressure forcing <strong>preemption/recompute</strong>, cache eviction",
+            "Neither → it's outside the model: gateway, retrieval hop, tokenizer, buffering proxy",
+            "Instrument <strong>per-stage spans</strong> or you're guessing; utilisation % is not a latency signal"
+          ],
+          "links": [
+            {
+              "label": "Failure modes &amp; resilience",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/08-Failure modes &amp; resilience"
+            }
+          ],
+          "flow": "TTFT or TPOT? → queue vs contention vs outside the model → per-stage spans",
+          "trap": "reading GPU utilisation and concluding there's headroom"
+        },
+        {
+          "id": "llm-serving-inference-q22",
+          "number": 22,
+          "marks": [
+            "decides"
+          ],
+          "text": "Apart from horizontal scaling, what would you optimise in each service on the path?",
+          "points": [
+            "Per hop: gateway (connection reuse, no buffering) · retrieval (ANN params) · model (batch, quantise)",
+            "Kill sequential work — parallel retrieval/tool calls, overlap embedding with rerank",
+            "Cache at every level, different keys: prefix · embedding · retrieval · semantic answer",
+            "Cheapest optimisation is <strong>not calling the model</strong> — rules, classifier, cached answer",
+            "Then shrink the payload: fewer chunks, tighter prompt, hard output cap"
+          ],
+          "links": [
+            {
+              "label": "Latency Budget — Where Time Goes",
+              "target": "04-RAG/12-Production RAG Systems (arch lens)/03-Latency Budget — Where Time Goes"
+            }
+          ],
+          "flow": "measure per hop → remove calls → cache → shrink tokens → only then add replicas",
+          "trap": "tuning the model when the latency budget is being spent in retrieval"
+        }
+      ]
+    },
+    {
+      "id": "llm-serving-inference-architect",
+      "letter": null,
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q23",
+          "number": 23,
+          "marks": [
+            "decides"
+          ],
+          "text": "One GPU fleet, two workloads: chat with a tight TTFT SLO and a bulk document API. Design it.",
+          "points": [
+            "<strong>Tiers, not clusters</strong> — priority classes on a shared pool, chat pre-empts batch",
+            "Chat: small batch cap, chunked prefill, streaming, warm replicas reserved",
+            "Bulk: large batches, offline queue, no TTFT SLO — it absorbs the slack",
+            "Admission control at the gate; batch work is <strong>shed first</strong> under pressure",
+            "Split pools only when interference is <em>measured</em>"
+          ],
+          "links": [
+            {
+              "label": "LLM Serving System End to End",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+            }
+          ],
+          "flow": "shared pool → priority classes → chat pre-empts → batch absorbs the slack",
+          "trap": "two static clusters — you then pay for the peak of each"
+        },
+        {
+          "id": "llm-serving-inference-q24",
+          "number": 24,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "1M queries a day and the bill is out of control. Where do you cut?",
+          "points": [
+            "Measure first: <strong>cost per route</strong>, not total spend — the tail is usually one feature",
+            "Leverage order: don't call · cache · route down · shorten tokens · quantise · self-host",
+            "Output tokens cost more than input — cap <code>max_tokens</code>, cut rambling prompts",
+            "<strong>Prefix caching the system prompt</strong> is often the biggest one-line win",
+            "Per-tenant budgets and circuit breakers <em>before</em> the invoice, not after"
+          ],
+          "links": [
+            {
+              "label": "Cost optimization",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/03-Cost optimization"
+            }
+          ],
+          "badge": "Trending — cost-drift scenarios recur across LLMOps screens (2025–26)",
+          "flow": "cost per route → remove calls → cache → route down → cap tokens → then hardware",
+          "trap": "starting with GPU shopping instead of token accounting",
+          "drill": {
+            "prompt": "from jbtiq_llm Q28: \"Your monthly model bill doubled with flat traffic. Walk me through the systematic cost investigation and the levers, biggest first.\"",
+            "badge": "Trending — cost-drift scenarios recur across LLMOps screens (2025–26)",
+            "hint": "Cost = requests × tokens/request × price/token. Flat traffic means one of the other two moved — where do you look?",
+            "points": [
+              "Attribute first: per-feature/per-tenant cost dashboards from trace data (tokens × price per request). Flat requests + doubled bill = <strong>tokens per request grew</strong> (prompt edit, context bloat, retrieval returning more chunks, output verbosity change, agent loops iterating more) or <strong>mix shifted</strong> (more traffic on the expensive model/route — a routing regression) or a <strong>cache stopped hitting</strong> (prompt-cache invalidated by a prefix change is the classic silent one).",
+              "Lever 1 — <strong>prompt/prefix caching</strong>: static system prompts and few-shot blocks are the most re-sent tokens in any system; a one-token change at the top of the prefix invalidates everything after it — prefix stability is a design discipline.",
+              "Lever 2 — <strong>shrink the context</strong>: retrieval precision over volume, tool-output truncation, history compaction, output length caps.",
+              "Lever 3 — <strong>routing and model choice</strong> (previous question), batch APIs for non-interactive work, semantic caching where tolerance allows.",
+              "Institutionalize: cost-per-task SLO with drift alerts, token budgets in CI for prompt changes (a PR that doubles tokens should fail loudly), and cost as a first-class column in every eval report."
+            ],
+            "oneLiner": "Attribute cost per feature from traces, then hunt the usual suspects — a prefix edit that killed prompt caching, context bloat, or a routing shift — and institutionalize token budgets in CI so a prompt PR that doubles cost fails before merge, not on the invoice.",
+            "links": [
+              {
+                "label": "Cost optimization",
+                "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/03-Cost optimization"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "llm-serving-inference-your-story",
+      "letter": null,
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q25",
+          "number": 25,
+          "marks": [
+            "decides"
+          ],
+          "text": "Tell me about a time you made an inference path meaningfully faster or cheaper.",
+          "points": [
+            "Pick one where you <strong>measured before touching anything</strong> — the number is the story",
+            "Name the metric you moved: TTFT, p99, cost per request, GPU-hours per million tokens",
+            "The diagnosis beat: what you assumed it was, what the trace actually showed",
+            "The lever you chose <strong>and one you rejected</strong>, with the reason",
+            "Before → after, and what regressed — there is always something"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "symptom → measurement → wrong hypothesis → real cause → lever + rejected lever → number",
+          "trap": "a fix with no before-number — it reads as a guess that happened to work"
+        }
+      ]
+    },
+    {
+      "id": "llm-serving-inference-merged-from-jbtiqllmmd-19-sep-2026",
+      "letter": null,
+      "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q26",
+          "number": 26,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q26 · S12 LLMOps & Production Systems) \"Sketch the reference architecture for a serious LLM application — the layers between the user and the model API.",
+          "points": [
+            "Inbound layers: <strong>gateway</strong> (auth, per-tenant rate limits/quotas), <strong>input guardrails</strong> (moderation, injection screening, PII redaction), <strong>context assembly</strong> (retrieval, memory, few-shot, tool schemas — the context engineering layer), and a <strong>router</strong> (model choice by task/difficulty/tenant tier).",
+            "The model tier sits behind a <strong>provider abstraction</strong>: unified interface over multiple providers/self-hosted, with fallback chains, timeout/retry policy, and prompt+model version pinning — the model is a swappable dependency, not a hardcoded call.",
+            "Outbound: <strong>output validation</strong> (schema, groundedness, safety), post-processing, and <strong>streaming</strong> plumbing end-to-end (SSE with mid-stream error semantics).",
+            "Cross-cutting: <strong>caching</strong> at multiple levels (prompt/prefix, response, semantic), <strong>observability</strong> (traces with prompt version, tokens, cost, latency per span), <strong>eval pipeline</strong> wired to production traffic, and budget enforcement per tenant.",
+            "The claim to make: this scaffolding — not the model call — is where reliability, cost, and iteration speed live; the model API is one box in a twelve-box diagram."
+          ],
+          "links": [
+            {
+              "label": "LLM application architecture",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/01-LLM application architecture"
+            }
+          ],
+          "badge": "Trending — the standard system-design opener in LLM loops (2025–26)",
+          "oneLiner": "Gateway, guardrails, context assembly and routing on the way in; provider abstraction with fallbacks in the middle; validation, streaming, caching, tracing and budget enforcement on the way out — the model is one swappable box in the diagram."
+        },
+        {
+          "id": "llm-serving-inference-q27",
+          "number": 27,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q29 · S12 LLMOps & Production Systems) \"What does observability mean for an LLM system beyond request logs — what do you capture, and what do you alert on?",
+          "points": [
+            "Capture per request: full <strong>trace</strong> (prompt version, model+params, retrieved context IDs, tool calls, completion, token counts, cost, latency split TTFT/TPOT) — with PII discipline (hash/redact content, keep structure). Sampling for payloads, 100% for metadata.",
+            "The LLM-specific layer: <strong>quality signals in production</strong> — guardrail trigger rates, schema-validation failures, refusal rates, groundedness/judge scores on a sampled stream, and <em>user</em> signals (regenerations, edits, thumbs, abandonment) as the honest quality proxy.",
+            "Alert on <strong>drift and rates, not single events</strong>: cost-per-task slope, validation-failure spikes (often the first sign a provider silently changed the model), refusal-rate jumps per category, retrieval-relevance drops, route-mix shifts, and p99 TTFT SLO breaches.",
+            "Close the loop: flagged traces flow into review queues and become eval cases (the same flywheel as agents); dashboards slice by prompt version and model version so regressions attribute in minutes.",
+            "The reframe worth saying: model behavior can change <em>under you</em> (provider updates) — observability is your only tripwire for changes you didn't deploy."
+          ],
+          "links": [
+            {
+              "label": "Observability",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/04-Observability"
+            },
+            {
+              "label": "Production eval",
+              "target": "05-LLM-Production/10-Evaluation/06-Production eval"
+            }
+          ],
+          "badge": "Evergreen (now table stakes in LLMOps JDs)",
+          "oneLiner": "Trace everything with prompt and model versions plus token economics, sample a quality-scored stream, and alert on rates and drift — validation failures, refusals, cost slope — because with hosted models, behavior changes you didn't ship are a when, not an if."
+        },
+        {
+          "id": "llm-serving-inference-q28",
+          "number": 28,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q30 · S12 LLMOps & Production Systems) \"Design rate limiting and quotas for a multi-tenant LLM API — what's different from limiting a normal REST API?",
+          "points": [
+            "The unit is <strong>tokens, not requests</strong>: one request can be 100 or 100,000 tokens — limit on <strong>tokens per minute</strong> (input and output separately, since they cost differently) alongside requests per minute; token-bucket algorithms port cleanly with tokens as the literal currency.",
+            "The <strong>noisy-neighbor problem is worse</strong> than in stateless APIs: capacity is batch slots and KV memory — one tenant's long-context flood inflates everyone's TTFT. Needs per-tenant admission control, fair-share scheduling/weighted queues, and isolation tiers (dedicated capacity for premium tenants).",
+            "Quota design: monthly budgets with burst allowances, <strong>429 with Retry-After</strong> plus meaningful headroom headers, degradation options before hard rejection (queue it, route to a smaller model, truncate context — with tenant consent).",
+            "The estimation wrinkle: <strong>output tokens are unknown at admission</strong> — enforce via max_tokens caps, reserve-then-reconcile accounting, or streaming cutoffs; naive post-hoc billing lets a tenant blow the budget mid-stream.",
+            "Say the fairness principle: rate limiting protects the <em>platform</em>; scheduling fairness protects <em>tenants from each other</em> — both are needed, and they live at different layers."
+          ],
+          "links": [
+            {
+              "label": "Rate limiting quota &amp; API level multi tenancy",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/05-Rate limiting quota &amp; API-level multi-tenancy"
+            }
+          ],
+          "badge": "Trending — LLM multi-tenancy questions recur in platform JDs (2025–26)",
+          "oneLiner": "Limit tokens, not requests — input and output separately, with output enforced by caps since it's unknown at admission — and pair platform-protecting rate limits with fair-share scheduling, because in a batched serving world one greedy tenant taxes everyone's TTFT."
+        },
+        {
+          "id": "llm-serving-inference-q29",
+          "number": 29,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q32 · S12 LLMOps & Production Systems) \"Your model provider has a bad day: elevated latency, intermittent 529s, and a silent model update that changed behavior. What did the resilient version of your system already have?",
+          "points": [
+            "<strong>Availability failures</strong> (529s/outage): retries with jittered backoff and budgets, <strong>circuit breakers</strong> per provider, and a <strong>fallback chain</strong> — alternate provider, smaller model, cached/degraded response — behind the provider abstraction; failover is only real if the <em>prompts and evals were tested</em> on the fallback model beforehand.",
+            "<strong>Capacity/latency degradation</strong>: timeout discipline shorter than the user's patience, queue with backpressure, load-shed to degraded mode rather than pile up, and streaming so partial progress reaches users.",
+            "<strong>Behavioral change (the silent one)</strong>: <strong>pin model versions</strong> where the provider allows; where they don't, your tripwires are validation-failure and eval-score monitors on production samples — behavior drift shows up there first. Re-run the eval gate on any provider-announced update; treat unannounced drift as an incident with evidence from traces.",
+            "Graceful-degradation hierarchy designed in advance: full capability → smaller model → cached/templated responses → honest unavailability messaging; product decides the rungs, engineering builds them cold.",
+            "The meta-point: a hosted model is a <strong>dependency you don't control</strong> — architect with the same paranoia you'd apply to any third-party critical path, plus behavioral monitoring that normal APIs don't need."
+          ],
+          "links": [
+            {
+              "label": "Failure modes &amp; resilience",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/08-Failure modes &amp; resilience"
+            },
+            {
+              "label": "Versioning &amp; rollout",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/07-Versioning &amp; rollout"
+            }
+          ],
+          "badge": "Trending — provider-failure resilience recurs across LLMOps discourse (2025–26)",
+          "oneLiner": "Breakers and pre-evaled fallback chains for outages, backpressure and load-shedding for capacity, pinned versions plus eval tripwires for silent behavior changes — a hosted model is a critical dependency you don't control, so the resilience is built before the bad day."
+        }
+      ]
+    },
+    {
+      "id": "llm-serving-inference-merged-from-jbtiqdlmd-19-sep-2026",
+      "letter": null,
+      "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q30",
+          "number": 30,
+          "marks": [],
+          "text": "🗣️ (jbtiq_dl Q37 · S7 Inference Optimization) \"Your inference GPUs idle at 15% utilization while a request queue builds. Batch size is hard-coded to 8. Diagnose and fix.",
+          "points": [
+            "Diagnosis: <strong>static batching</strong> — the batch of 8 waits for its <em>longest</em> sequence to finish; finished slots sit idle, new requests queue, and padding to the longest prompt burns memory. Utilization collapses exactly this way.",
+            "Fix 1 — <strong>continuous (iteration-level) batching</strong>: the scheduler admits and evicts requests <strong>every decode step</strong>, so a finishing sequence's slot is refilled immediately.",
+            "Fix 2 — <strong>PagedAttention</strong>: allocate KV cache in fixed-size <strong>pages</strong> instead of contiguous max-length arenas — kills fragmentation and over-reservation, which is what actually caps effective batch size.",
+            "Fix 3 — schedule <strong>prefill separately</strong> (chunked prefill) so a long incoming prompt doesn't stall every in-flight decode stream.",
+            "Say the metrics: <strong>tokens/s/GPU</strong>, TTFT, and inter-token latency — batching trades the last one for the first, and the SLO decides where you sit."
+          ],
+          "links": [
+            {
+              "label": "Serving Schedulers",
+              "target": "02-DL/07-Inference Optimization/00-Serving Schedulers"
+            },
+            {
+              "label": "Inference Ecosystem Flashcards",
+              "target": "02-DL/07-Inference Optimization/04-Inference Ecosystem Flashcards"
+            }
+          ],
+          "badge": "Trending — continuous batching / PagedAttention recurs in serving blogs + LLM-infra JDs (2025–26)",
+          "oneLiner": "Static batching serializes on the slowest sequence and naive KV allocation wastes the memory that would let you batch bigger — continuous batching plus paged KV is the standard fix, tuned against TTFT and inter-token SLOs."
+        }
+      ]
+    }
+  ]
+}

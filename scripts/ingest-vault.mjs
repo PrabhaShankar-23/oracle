@@ -14,6 +14,7 @@ const OUT = path.resolve(import.meta.dirname, '../src/content/generated')
 
 const CASE_STUDIES_DIR = '01-System Design/07-Design-problems/html'
 const AI_SYSTEMS_DIR = '01-System Design/06-ai-systems'
+const GAME_DAY_DIR = '02-Game-Day'
 const CASE_STUDY_ROUTE = '/system-design/case-studies'
 
 const load = async (rel) => cheerio.load(await readFile(path.join(VAULT, rel), 'utf8'))
@@ -364,9 +365,200 @@ async function ingestAiSystems() {
   return data
 }
 
+/* ---------------- Game Day recall (02-Game-Day) ---------------- */
+
+// Source files are Q&A recall grids: `## <emoji> A — Openers` bands, `###### 1. ⭐ "question"`,
+// then a <details> holding the keyword bullets plus Flow / Trap / a vault link.
+const GAME_DAY_FILES = [
+  '01-PYTHON.md',
+  '02-FASTAPI.md',
+  '03-JAVA-SPRING.md',
+  '04-LLM-FOUNDATIONS.md',
+  '05-RAG.md',
+  '06-AGENTIC-AI.md',
+  '07-MCP-CONTEXT-ENGINEERING.md',
+  '08-LLM-SERVING-INFERENCE.md',
+  '11-ML-DL.md',
+  '15-REAL-TIME-SYSTEMS.md',
+  '17-NLP-CLASSICAL.md',
+]
+
+const GAME_DAY_MARKS = { '⭐': 'decides', '🔥': 'trending', '📍': 'asked' }
+
+/** `## 🎬 A — Openers` → letter + name. Appendix headings (♻️, 📝) have no letter. */
+function parseBandHeading(raw) {
+  const cleaned = raw.replace(/^[^\p{Letter}\p{Number}]+/u, '').trim()
+  const band = /^([A-F])\s+—\s+(.*)$/.exec(cleaned)
+  return band ? { letter: band[1], name: band[2] } : { letter: null, name: cleaned }
+}
+
+/** `1. ⭐ 🔥 "How do you pick?"` → number, marks, text. */
+function parseQuestionHeading(raw) {
+  const numbered = /^(\d+)\.\s*(.*)$/.exec(raw.trim())
+  if (!numbered) return null
+  let rest = numbered[2]
+  const marks = []
+  for (const [glyph, mark] of Object.entries(GAME_DAY_MARKS)) {
+    if (rest.includes(glyph)) {
+      marks.push(mark)
+      rest = rest.split(glyph).join('')
+    }
+  }
+  return {
+    number: Number(numbered[1]),
+    marks,
+    text: rest.trim().replace(/^["“”]+|["“”]+$/g, '').trim(),
+  }
+}
+
+/** `[[04-RAG/01-foundations/02-Naive RAG pipeline]]` → a readable label. No site route resolves yet. */
+function parseVaultLinks(line) {
+  return [...line.matchAll(/\[\[([^\]]+)\]\]/g)].map((m) => {
+    const target = m[1].split('|')[0].trim()
+    const leaf = target.split('/').pop() ?? target
+    return { label: leaf.replace(/^\d+[a-z]?-/, '').replace(/-/g, ' ').trim(), target }
+  })
+}
+
+async function ingestGameDay() {
+  const topics = []
+
+  for (const file of GAME_DAY_FILES) {
+    const md = await readFile(path.join(VAULT, GAME_DAY_DIR, file), 'utf8')
+    const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+    const body = $('body')
+
+    const title = text(body.find('h1').first()).replace(/\s*—\s*Interview Day Recall\s*$/i, '')
+    const lead = body.find('blockquote').first()
+    const meta = lead
+      .find('p')
+      .toArray()
+      .flatMap((p) => inner($(p)).split('\n'))
+      .map((l) => l.trim())
+      .filter(Boolean)
+
+    const number = Number(/^(\d+)/.exec(file)?.[1] ?? 0)
+    const slug = slugify(file.replace(/^\d+-/, '').replace(/\.md$/, ''))
+
+    const bands = []
+    let band = null
+    let question = null
+
+    body.children().each((_, node) => {
+      const el = $(node)
+      const tag = (node.tagName ?? '').toLowerCase()
+
+      if (tag === 'h2') {
+        const { letter, name } = parseBandHeading(text(el))
+        band = { id: `${slug}-${letter ? letter.toLowerCase() : slugify(name)}`, letter, name, questions: [] }
+        bands.push(band)
+        question = null
+        return
+      }
+
+      if (tag === 'h6') {
+        const parsed = parseQuestionHeading(text(el))
+        if (!parsed || !band) return
+        question = { id: `${slug}-q${parsed.number}`, ...parsed, points: [], links: [], blocks: [] }
+        band.questions.push(question)
+        return
+      }
+
+      if (!question) return
+
+      // A question owns everything up to the next heading: a badge blockquote, the recall
+      // <details>, and — where a phrasing drill was folded in — a Hint and a Recall-points block.
+      if (tag === 'blockquote') {
+        question.badge = text(el).replace(/^[^\p{Letter}\p{Number}]+/u, '').trim() || undefined
+      } else if (tag === 'p' && /Phrasing drill/i.test(text(el))) {
+        question.drillPrompt = text(el).replace(/^.*?Phrasing drill\s*—?\s*/i, '').trim()
+      } else if (tag === 'details') {
+        question.blocks.push(el)
+      }
+    })
+
+    // Fold each question's <details> blocks into one answer shape.
+    for (const b of bands) {
+      for (const q of b.questions) {
+        const blocks = q.blocks
+        delete q.blocks
+        const find = (re) => blocks.find((el) => re.test(text(el.find('> summary').first())))
+        const recall = blocks.find((el) => text(el.find('> summary').first()).trim() === '🔑')
+        const hint = find(/Hint/i)
+        const points = find(/Recall points/i)
+
+        const readBlock = (el) => {
+          if (!el) return null
+          const out = {
+            points: el.find('> ul > li').toArray().map((li) => inner($(li))),
+            links: [],
+          }
+          for (const para of el.find('> p').toArray()) {
+            for (const line of ($(para).html() ?? '').split('\n')) {
+              const m = /^<strong>(?:<b>)?([^<]+)(?:<\/b>)?<\/strong>\s*(.*)$/.exec(line.trim())
+              if (!m) continue
+              const [, key, value] = m
+              if (/^Flow/i.test(key)) out.flow = value.trim()
+              else if (/^Trap/i.test(key)) out.trap = value.trim()
+              else if (/^One-liner/i.test(key)) out.oneLiner = value.trim().replace(/^["“”]+|["“”]+$/g, '')
+              else if (/^Follow-up/i.test(key)) out.followUp = value.trim()
+              else if (key.includes('→') || /^Note/i.test(key)) out.links.push(...parseVaultLinks(value))
+            }
+          }
+          return out
+        }
+
+        // Primary answer: the 🔑 recall block, or the drill's recall points when that is all there is.
+        const primary = readBlock(recall) ?? readBlock(points)
+        if (primary) {
+          q.points = primary.points
+          q.links = primary.links
+          if (primary.flow) q.flow = primary.flow
+          if (primary.trap) q.trap = primary.trap
+          if (primary.oneLiner) q.oneLiner = primary.oneLiner
+        }
+
+        // A drill only survives separately when it sits alongside a real recall block.
+        if (recall && points) {
+          const d = readBlock(points)
+          q.drill = {
+            prompt: q.drillPrompt,
+            badge: q.badge,
+            hint: hint ? text(hint).replace(/^💡\s*Hint\s*/i, '').trim() : undefined,
+            points: d.points,
+            oneLiner: d.oneLiner,
+            followUp: d.followUp,
+            links: d.links,
+          }
+        }
+        delete q.drillPrompt
+      }
+    }
+
+    const withQuestions = bands.filter((b) => b.questions.length > 0)
+    const count = withQuestions.reduce((n, b) => n + b.questions.length, 0)
+    topics.push({ slug, number, title, meta, bands: withQuestions })
+    console.log(`  parsed ${file} → ${count} questions in ${withQuestions.length} bands`)
+  }
+
+  for (const topic of topics) await write(`game-day-${topic.slug}.json`, topic)
+
+  // Question text is ~76 KB — too much for manifest.json, which ships in the main bundle.
+  // It lives in its own file, loaded lazily by global search.
+  await write(
+    'game-day-search.json',
+    topics.flatMap((t) =>
+      t.bands.flatMap((b) =>
+        b.questions.map((q) => ({ id: q.id, text: q.text, topic: t.slug, topicTitle: t.title, band: b.letter ?? b.name })),
+      ),
+    ),
+  )
+  return topics
+}
+
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay) {
   await write('manifest.json', {
     dsa: {
       patterns: dsa.families.flatMap((f) =>
@@ -387,6 +579,13 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems) {
       ...doc,
       headings: doc.headings.filter((h) => h.level === 2),
     })),
+    gameDay: gameDay.map((t) => ({
+      slug: t.slug,
+      number: t.number,
+      title: t.title,
+      count: t.bands.reduce((n, b) => n + b.questions.length, 0),
+      bands: t.bands.map((b) => ({ id: b.id, letter: b.letter, name: b.name, count: b.questions.length })),
+    })),
     dsaUtils: utils.flatMap((u) =>
       u.sections.flatMap((s) =>
         s.helpers.filter((h) => h.id).map((h) => ({ lang: u.lang, id: h.id, name: h.name, section: s.title })),
@@ -405,4 +604,5 @@ await writeManifest(
   await ingestWebRtc(),
   utils,
   await ingestAiSystems(),
+  await ingestGameDay(),
 )

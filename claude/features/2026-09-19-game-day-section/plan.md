@@ -3,7 +3,7 @@
 **Track:** L — new ingest shape, 474 questions across 11 source files, new types, new routes,
 nav + search changes, and more than one viable page design.
 
-**Status:** Gate A — awaiting plan approval. No production code written.
+**Status:** M1 complete (F1–F4 + nav/topic search). Remaining: F5 runbook, F6 stories, F7 per-question search, F8 polish.
 
 **Naming.** The vault folder was renamed `02-Interview` → `02-Game-Day` on 19 Sep 2026; section title **Game Day**, route prefix `/game-day`. Section description: *"474 recall questions, trend-scanned. Question visible — answer out loud, then expand."*
 
@@ -108,6 +108,7 @@ no answer body rather than throwing.
 - Structured JSON over article HTML for the 11 recall files — the source is regular and the UI needs per-question state. *Rejected: dumping HTML, which would make band filtering and search impossible.*
 - Native `<details>` over a JS accordion — the reveal interaction is exactly disclosure, it is keyboard- and screen-reader-correct for free, and it satisfies "no hover-only reveal". *Rejected: MUI `Accordion` — heavier, and 474 of them would be slow.*
 - Per-topic JSON files, not one `interview.json` — keeps the largest payload ~72 questions. *Rejected: single file, which would load 474 questions to read one topic.*
+- **F0 (Vitest + RTL) skipped at the user's direction, 19 Sep 2026.** The parse is verified by inspecting the generated JSON and its `git diff` instead. Unit-level criteria in the test plan drop to that check; component and manual criteria are unaffected. *Rejected: adding the harness first, which front-loads setup before anything renders.* Logged as a follow-up.
 - Vault links resolved against a route map at ingest time. *Rejected: resolving in the browser, which would need the whole site map in the main bundle.*
 
 ---
@@ -116,8 +117,7 @@ no answer body rather than throwing.
 
 | ID | Slice | Behaviour | Size | Depends |
 | --- | --- | --- | --- | --- |
-| F0 | Test harness | `npx vitest run` executes; Vitest + RTL + jsdom installed | S | — |
-| F1 | Ingest one topic | `npm run ingest` emits `game-day-python.json` with 44 questions, bands, marks | M | F0 |
+| F1 | Ingest one topic | `npm run ingest` emits `game-day-python.json` with 44 questions, bands, marks | M | — |
 | F2 | Topic page | `/game-day/recall/python` renders bands and collapsed answers | M | F1 |
 | F3 | All 11 topics | every recall file ingested; nav lists them | M | F2 |
 | F4 | Phrasing drills | nested drill renders inside its question | M | F3 |
@@ -126,7 +126,7 @@ no answer body rather than throwing.
 | F7 | Search + manifest | topics and question text findable in global search | S | F3 |
 | F8 | Responsive & polish | band filter, expand/collapse all, 360/390px, light + dark | M | F4–F7 |
 
-**M0 — walking skeleton** (F0, F1, F2): one topic page live end to end. *Exit:* `/game-day/recall/python`
+**M0 — walking skeleton** (F1, F2): one topic page live end to end. *Exit:* `/game-day/recall/python`
 shows 44 questions in 6 bands, answers collapsed; `tsc -b`, lint, build green. Proves the parse and the route.
 
 **M1 — full recall** (F3, F4). *Exit:* all 474 questions render, drills included, no console errors.
@@ -141,10 +141,10 @@ shows 44 questions in 6 bands, answers collapsed; `tsc -b`, lint, build green. P
 
 | Criterion | Level | Check |
 | --- | --- | --- |
-| SC2 bands/marks | unit | `ingest-game-day.test.ts › parses bands A–F and ⭐🔥📍 marks` |
-| SC2 count | unit | `› extracts 44 questions from 01-PYTHON.md` |
-| SC4 links | unit | `› resolves a vault link that maps to a route, leaves the rest as text` |
-| SC5 drills | unit | `› attaches a phrasing drill to its parent question` |
+| SC2 bands/marks | JSON | `game-day-python.json` has 6 bands A–F; marks array populated on ⭐🔥📍 questions |
+| SC2 count | JSON | question count in JSON equals `grep -c '^###### '` on the source, per file |
+| SC4 links | JSON | links with a `to` resolve to a real route; the rest have no `to` |
+| SC5 drills | JSON | drill count in JSON equals nested-`<details>` count in source |
 | SC3 reveal | component | `GameDayRecallPage.test.tsx › answer is hidden until the summary is activated` |
 | SC3 keyboard | component | `› summary is reachable by Tab and toggles on Enter` |
 | SC6 search | component | `› question text appears in the search index` |
@@ -161,18 +161,24 @@ sections (`♻️ Merged from…`) · back/forward between topics · keyboard-on
 
 ## 6. Progress
 
-- [ ] F0 Test harness
-- [ ] F1 Ingest one topic
-- [ ] F2 Topic page
-- [ ] F3 All 11 topics
-- [ ] F4 Phrasing drills
+- [x] F1 Ingest one topic
+- [x] F2 Topic page
+- [x] F3 All 11 topics
+- [x] F4 Phrasing drills
 - [ ] F5 Runbook page
 - [ ] F6 Stories page
-- [ ] F7 Search + manifest
+- [~] F7 Search — topics done; per-question index written but not wired
 - [ ] F8 Responsive & polish
+
+## 6b. Deviations from plan
+
+- **F1 and F3 merged.** The parse was the whole risk, so it ran against all 11 files immediately rather than one — more signal for the same work.
+- **Two question shapes, not one.** The plan assumed every question was `🔑` + bullets + Flow/Trap. 153 of 474 are actually *drill-shaped* (badge → `💡 Hint` → `🔑 Recall points` → One-liner), and `17-NLP-CLASSICAL` is 100% that shape. The first JSON check caught it: those questions parsed with zero points. The parser now reads both and promotes a standalone drill to the primary answer, keeping `drill` as a separate object only where a real recall block sits beside it. **This is what F0 would have caught; the JSON diff caught it instead.**
+- **Question text moved out of `manifest.json`.** Putting all 474 in the manifest took it from 88 KB to 196 KB, and the manifest ships in the main bundle. It now carries topics + bands only (+12 KB) and question text lives in `game-day-search.json` (116 KB), to be lazy-loaded by search in F7.
 
 ## 7. Follow-ups
 
+- Add the Vitest + RTL harness (deferred F0) and port the JSON checks to real unit tests.
 - Publish `POPULAR-QUESTIONS`, `War-Stories`, `Weak-Queue`, `TREND-SCAN-2026-08`.
 - Scoring / weak-queue tracking (needs persistence — an artifact capability or localStorage).
 - Search inside answer bodies, not just question text.

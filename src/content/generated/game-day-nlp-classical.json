@@ -1,0 +1,1172 @@
+{
+  "slug": "nlp-classical",
+  "number": 17,
+  "title": "🔤 NLP (Classical)",
+  "meta": [
+    "<strong>Single home for the NLP pillar.</strong> Absorbed <code>jbtiq_nlp.md</code> on 19 Sep 2026 — that drill was the one orphan with no recall file among the 17, so rather than splitting it, the whole thing became this file. Nothing was dropped.",
+    "<strong>Format kept from the drill:</strong> question visible, 💡 Hint and 🔑 Recall points hidden under <code>&lt;details&gt;</code>. <strong>One-liner:</strong> is the script you actually say.",
+    "<strong>The rule:</strong> read question → answer OUT LOUD, 60–90s → <em>then</em> expand → grade what you missed. If you expand before speaking, the rep doesn't count.",
+    "<strong>Session cap:</strong> ~8–10 questions per sitting, not the whole file in one go.",
+    "<strong>Concept pillar — no MCQ.</strong> Scenario and mechanism prose only.",
+    "<strong>Depth:</strong> <code>05-AI-ML/06-NLP-Classical/</code> · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Adjacent recall files:</strong> [[05-RAG]] (BM25, hybrid, embeddings — §8 here is the classical-IR half of it), [[04-LLM-FOUNDATIONS]] (tokenization, LM lineage), [[11-ML-DL]] (sequence models).",
+    "<strong>Trend basis:</strong> sourced July 2026 from LeetCode Discuss, GfG, Medium/LinkedIn trend scan, and current NLP / AI-Engineer job descriptions. In 2026 classical NLP is interviewed mostly as the <em>complement</em> to LLMs — BM25 in hybrid retrieval, tokenization mechanics, cheap production alternatives to an LLM call. Re-scan before each interview cycle."
+  ],
+  "bands": [
+    {
+      "id": "nlp-classical-section-1-foundations-preprocessing-01-foundations-02-preprocessing",
+      "letter": null,
+      "name": "Section 1 — Foundations & Preprocessing (01-Foundations, 02-Preprocessing)",
+      "questions": [
+        {
+          "id": "nlp-classical-q1",
+          "number": 1,
+          "marks": [],
+          "text": "Stemming vs lemmatization in 30 seconds — and name a production case where each is the right call.",
+          "points": [
+            "<strong>Stemming</strong>: rule-based suffix chopping (Porter-style) — fast, no dictionary, output often isn't a word (\"studies\"→\"studi\"). <strong>Lemmatization</strong>: vocabulary + morphology (needs POS) mapping to the dictionary lemma (\"better\"→\"good\") — slower, linguistically correct.",
+            "Both exist to <strong>collapse inflectional variants</strong> so \"run/runs/running\" match — a recall device for sparse-feature systems.",
+            "Stemming's home: <strong>search indexing</strong> at scale — recall matters, users never see the stems, throughput is high. Lemmatization's home: anywhere output or features are <strong>human-visible or semantically sensitive</strong> (linguistic features, aspect extraction).",
+            "The modern caveat that scores points: <strong>subword tokenization and contextual models made both largely obsolete</strong> in the neural path — you normalize much less aggressively for transformer inputs, because the model handles morphology; over-normalization now <em>destroys</em> signal (negations, case, morphology).",
+            "So the honest 2026 answer: they survive in the <strong>sparse/BM25 side</strong> of hybrid stacks and in low-resource/cheap pipelines — know them as index-time analyzers, not as default preprocessing."
+          ],
+          "links": [
+            {
+              "label": "Stemming vs Lemmatization",
+              "target": "06-NLP-Classical/02-Preprocessing/01-Stemming vs Lemmatization"
+            },
+            {
+              "label": "Tokenization &amp; Normalization",
+              "target": "06-NLP-Classical/02-Preprocessing/00-Tokenization &amp; Normalization"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Stemming chops fast for search indexes where recall wins, lemmatization maps to real lemmas where humans see the output — and in the neural path both mostly retired, because subwords and context handle morphology better than destructive normalization."
+        },
+        {
+          "id": "nlp-classical-q2",
+          "number": 2,
+          "marks": [],
+          "text": "BPE, WordPiece, Unigram — how do subword tokenizers differ, and why did subwords win over words and characters?",
+          "points": [
+            "Why subwords won: word vocabularies <strong>can't cover open vocabulary</strong> (OOV → UNK destroys information; vocabulary explodes across morphology); characters cover everything but produce <strong>long sequences</strong> with weak units. Subwords interpolate: common words stay whole, rare words decompose into meaningful pieces — no UNK, bounded vocab, tractable lengths.",
+            "<strong>BPE</strong>: start from characters, greedily <strong>merge the most frequent pair</strong> repeatedly until vocab size — simple, deterministic; byte-level BPE guarantees coverage of any string.",
+            "<strong>WordPiece</strong>: merges chosen by <strong>likelihood gain</strong> on a language model objective rather than raw frequency (BERT-family).",
+            "<strong>Unigram</strong>: start big, <strong>prune tokens to maximize corpus likelihood</strong> under a unigram model — probabilistic, supports sampling multiple segmentations (subword regularization) as augmentation. SentencePiece packages Unigram/BPE language-agnostically (no pre-tokenization by spaces — matters for Japanese/Chinese/Thai).",
+            "Production consequences to voice: vocabulary is <strong>frozen with the model</strong> (domain drift → fragmenting of your key terms → more tokens, worse cost/quality), and tokenizer mismatch between components (embedder vs generator) is a real integration bug class."
+          ],
+          "links": [
+            {
+              "label": "Subword Tokenization (BPE, WordPiece, Unigram)",
+              "target": "06-NLP-Classical/02-Preprocessing/03-Subword Tokenization (BPE, WordPiece, Unigram)"
+            }
+          ],
+          "badge": "Trending — subword mechanics recur on LeetCode Discuss + every LLM-adjacent screen (2025–26)",
+          "oneLiner": "Subwords beat words on OOV and characters on sequence length — BPE merges by frequency, WordPiece by likelihood gain, Unigram prunes a big vocab probabilistically — and since the vocab freezes with the model, domain-term fragmentation becomes a cost and quality tax you should check on your own corpus."
+        },
+        {
+          "id": "nlp-classical-q3",
+          "number": 3,
+          "marks": [],
+          "text": "Your team preprocesses text with lowercase + stopword removal + stemming before feeding a transformer. Review that pipeline.",
+          "points": [
+            "The pipeline is <strong>cargo-culted from the sparse era</strong> — those steps fought BoW/TF-IDF sparsity by collapsing variants. Transformers were <em>pretrained on raw-ish text</em>: matching the pretraining distribution matters more than shrinking the feature space.",
+            "What each step destroys: <strong>lowercasing</strong> kills case signal (NER, acronyms, \"US\" vs \"us\") if the model is cased; <strong>stopword removal</strong> deletes exactly the function words transformers use for syntax and negation (\"not good\" → \"good\" is a sentiment-flipping bug); <strong>stemming</strong> feeds the tokenizer malformed strings it fragments into junk subwords.",
+            "The correct transformer-side preprocessing is minimal: Unicode normalization, whitespace cleanup, handling encoding junk, maybe URL/emoji policy decisions — then <strong>let the model's own tokenizer do its job</strong>.",
+            "The nuance that shows seniority: the <em>sparse arm</em> of a hybrid system (BM25 index) still legitimately uses aggressive analyzers — different representation, different rules; the bug is applying one arm's preprocessing to the other.",
+            "Verify empirically: A/B the pipeline on your eval set — over-preprocessing usually costs measurable accuracy, and that number ends the debate faster than doctrine."
+          ],
+          "links": [
+            {
+              "label": "Stopwords &amp; Spelling Correction",
+              "target": "06-NLP-Classical/02-Preprocessing/02-Stopwords &amp; Spelling Correction"
+            },
+            {
+              "label": "Three Eras &amp; the Classical Pipeline",
+              "target": "06-NLP-Classical/01-Foundations/02-Three Eras &amp; the Classical Pipeline"
+            }
+          ],
+          "badge": "Trending — the \"legacy preprocessing habits\" trap recurs on interview roundups (2025–26)",
+          "oneLiner": "That's sparse-era preprocessing applied to a model pretrained on raw text — lowercasing kills case signal, stopword removal deletes negation, stemming feeds the tokenizer junk — so keep transformer input minimal and save the aggressive analyzers for the BM25 arm where they belong."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-2-representation-similarity-03-representation",
+      "letter": null,
+      "name": "Section 2 — Representation & Similarity (03-Representation)",
+      "questions": [
+        {
+          "id": "nlp-classical-q4",
+          "number": 4,
+          "marks": [],
+          "text": "TF-IDF: derive the intuition for both terms, and tell me why it's still in production everywhere in 2026.",
+          "points": [
+            "<strong>TF</strong>: a term matters more in a document the more it appears there (usually dampened — log/sublinear — because the 10th occurrence adds less than the 1st). <strong>IDF</strong>: a term matters less globally the more documents contain it — log(N/df) → stopwords score ~0, rare discriminative terms score high. The product weights \"characteristic of this document\".",
+            "Why it survives: <strong>near-zero cost</strong> at enormous scale, fully <strong>interpretable</strong> (you can read why a document matched), no training required, and it handles <strong>exact/rare tokens</strong> — IDs, SKUs, error codes, names — that dense embeddings blur. Plus it's the feature layer for logistic-regression baselines that still win on cost for many classification tasks.",
+            "Its blind spots define its complement: no synonymy (\"car\" ≠ \"automobile\"), no word order, no context — exactly what dense vectors provide, which is why <strong>hybrid sparse+dense</strong> is the modern equilibrium rather than either alone.",
+            "Know the lineage: TF-IDF's probabilistic descendant is <strong>BM25</strong> (saturation + length normalization) — in interviews, moving fluidly from TF-IDF to BM25 is expected.",
+            "Related classics one sentence deep: <strong>PMI/PPMI</strong> (association strength between words), <strong>LSA</strong> (SVD over the term-doc matrix — the ancestor of embeddings)."
+          ],
+          "links": [
+            {
+              "label": "TF IDF",
+              "target": "06-NLP-Classical/03-Representation/01-TF-IDF"
+            },
+            {
+              "label": "PMI PPMI &amp; LSA",
+              "target": "06-NLP-Classical/03-Representation/02-PMI-PPMI &amp; LSA"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "TF says important-in-this-document, IDF says informative-across-the-corpus — and it survives because it's free, interpretable, and exact-match-faithful on the rare tokens embeddings blur, which is precisely the half of hybrid retrieval that dense vectors can't do."
+        },
+        {
+          "id": "nlp-classical-q5",
+          "number": 5,
+          "marks": [],
+          "text": "Cosine vs Jaccard vs Euclidean for text similarity — when does the choice actually change the answer?",
+          "points": [
+            "<strong>Cosine</strong> compares <em>direction</em>, ignoring vector length — the default for TF-IDF and embeddings because document length shouldn't dominate similarity; a tweet and an essay about the same topic can still align.",
+            "<strong>Euclidean</strong> mixes direction with <strong>magnitude</strong> — on unnormalized counts, long documents drift far from everything; note the equivalence worth saying: on <strong>L2-normalized vectors, cosine and Euclidean give identical rankings</strong>, so the fight only matters unnormalized.",
+            "<strong>Jaccard</strong> operates on <strong>sets</strong> (overlap/union of tokens or shingles) — no weights, no geometry; the right tool for <strong>near-duplicate detection</strong> and short-text overlap, and it's what MinHash approximates at scale for dedup.",
+            "Where the choice bites in production: ANN indexes are built for a specific metric (cosine/inner-product/L2) — index metric must match the embedding model's training metric or rankings quietly degrade; and inner product ≠ cosine when vectors aren't normalized (recommendation embeddings often exploit magnitude deliberately).",
+            "The interview move: state that for embeddings the <em>model's</em> training objective decides the metric — you don't choose it aesthetically."
+          ],
+          "links": [
+            {
+              "label": "Document Similarity (Cosine vs Jaccard)",
+              "target": "06-NLP-Classical/03-Representation/03-Document Similarity (Cosine vs Jaccard)"
+            },
+            {
+              "label": "Text Pipelines at Scale (Dedup MinHash LSH, PII)",
+              "target": "06-NLP-Classical/13-Production-Multilingual-NLP/02-Text Pipelines at Scale (Dedup MinHash-LSH, PII)"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Cosine compares direction and forgives length, Euclidean punishes magnitude unless you've normalized — at which point they rank identically — and Jaccard is set overlap for dedup; in production the embedding model's training metric decides, and the ANN index must match it."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-3-embeddings-04-embeddings",
+      "letter": null,
+      "name": "Section 3 — Embeddings (04-Embeddings)",
+      "questions": [
+        {
+          "id": "nlp-classical-q6",
+          "number": 6,
+          "marks": [],
+          "text": "Word2Vec: skip-gram, negative sampling, and why any of this still matters in the contextual-embedding era.",
+          "points": [
+            "The premise: the <strong>distributional hypothesis</strong> — words in similar contexts mean similar things — operationalized as a prediction task. <strong>Skip-gram</strong>: predict context words from the center word (better for rare words); <strong>CBOW</strong>: predict center from averaged context (faster).",
+            "<strong>Negative sampling</strong> is the scalability trick: full softmax over the vocabulary is intractable, so replace it with binary classification — real (word, context) pairs vs k sampled fake ones — turning each update into k+1 logistic regressions. This trick (contrastive learning against negatives) is the direct ancestor of <strong>modern embedding-model training</strong> — that lineage is the answer's payoff.",
+            "<strong>GloVe</strong> gets similar vectors from global co-occurrence-matrix factorization; <strong>fastText</strong> adds character n-grams — subword composition gives vectors for unseen/misspelled words, still uniquely handy for noisy text.",
+            "The structural limit that ended the era: <strong>one vector per type</strong> — \"bank\" has a single point regardless of sentence; contextual models (ELMo onward) give tokens <em>context-dependent</em> vectors.",
+            "Why it still matters practically: static embeddings remain unbeatable on <strong>cost</strong> for lightweight similarity, cold-start features, and edge deployment — and the negative-sampling/contrastive framing is the conceptual key to everything from sentence embeddings to retrieval bi-encoders."
+          ],
+          "links": [
+            {
+              "label": "Word2Vec",
+              "target": "06-NLP-Classical/04-Embeddings/01-Word2Vec"
+            },
+            {
+              "label": "GloVe &amp; FastText",
+              "target": "06-NLP-Classical/04-Embeddings/02-GloVe &amp; FastText"
+            },
+            {
+              "label": "Static to Contextual (ELMo)",
+              "target": "06-NLP-Classical/04-Embeddings/05-Static to Contextual (ELMo)"
+            }
+          ],
+          "badge": "Evergreen — still the canonical \"do you understand embeddings\" question.",
+          "oneLiner": "Word2Vec turns the distributional hypothesis into predict-your-context, made tractable by negative sampling — contrastive learning that today's embedding models still descend from — with its one-vector-per-word limit being exactly what contextual models fixed."
+        },
+        {
+          "id": "nlp-classical-q7",
+          "number": 7,
+          "marks": [],
+          "text": "Sentence embeddings: why does averaging BERT token vectors give bad similarity, and what fixed it?",
+          "points": [
+            "The failure: vanilla BERT token-averaging (or [CLS]) produces vectors that cluster by <strong>surface artifacts</strong> — the space is anisotropic and was never optimized so that <em>similar meaning → nearby points</em>; cosine over raw BERT often loses to TF-IDF.",
+            "The fix (Sentence-BERT lineage): <strong>contrastive fine-tuning</strong> — siamese/bi-encoder training on pairs (paraphrases, question-answer, positives + hard negatives) that explicitly pulls related sentences together and pushes unrelated apart. The objective, not the architecture, creates the similarity geometry.",
+            "<strong>Hard negatives are the secret ingredient</strong>: training against near-misses (same topic, wrong answer) is what makes retrieval embeddings sharp; random negatives are too easy and produce mushy spaces.",
+            "Consequence for practitioners: pick embedding models by <strong>retrieval benchmarks and your own eval</strong>, not by base-model prestige; and note the task-prefix era (models trained with \"query:\" / \"passage:\" asymmetry) — using them without the prefixes silently degrades.",
+            "Evaluation habit: intrinsic scores (STS correlations) are hints; <strong>your corpus's recall@k</strong> is the decision metric — embedding leaderboards suffer the same contamination/mismatch caveats as LLM ones."
+          ],
+          "links": [
+            {
+              "label": "Doc &amp; Sentence Embeddings",
+              "target": "06-NLP-Classical/04-Embeddings/04-Doc &amp; Sentence Embeddings"
+            },
+            {
+              "label": "Evaluating Embeddings",
+              "target": "06-NLP-Classical/04-Embeddings/03-Evaluating Embeddings"
+            }
+          ],
+          "badge": "Trending — the bi-encoder training story recurs in retrieval-heavy screens (2025–26)",
+          "oneLiner": "Raw BERT averaging fails because nothing in pretraining made sentence vectors comparable — contrastive bi-encoder fine-tuning with hard negatives builds the similarity geometry, which is why embedding models are chosen by retrieval evals and used with the exact query-passage conventions they were trained on."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-4-language-modeling-sequence-models-05-language-modeling-06-sequence-models",
+      "letter": null,
+      "name": "Section 4 — Language Modeling & Sequence Models (05-Language-Modeling, 06-Sequence-Models)",
+      "questions": [
+        {
+          "id": "nlp-classical-q8",
+          "number": 8,
+          "marks": [],
+          "text": "N-gram language models and smoothing: what problem does smoothing solve, and what's the one smoothing idea worth remembering?",
+          "points": [
+            "N-gram LMs estimate P(word | previous n−1 words) from counts under a Markov assumption. The fatal flaw: any <strong>unseen n-gram gets probability zero</strong>, and one zero annihilates the whole sentence product — with sparsity guaranteeing unseen n-grams everywhere at any n.",
+            "Smoothing redistributes probability mass to the unseen: <strong>add-one/add-k</strong> (crude — steals far too much mass at vocabulary scale), <strong>interpolation/backoff</strong> (blend or fall back to lower-order models when higher-order counts are thin).",
+            "The idea worth remembering: <strong>Kneser-Ney</strong> — back off not by raw unigram frequency but by <strong>continuation probability</strong> (how many <em>distinct contexts</em> a word appears in). The \"Francisco\" example: frequent but only ever after \"San\", so it deserves low backoff weight. That's the interview answer.",
+            "Why n-grams still matter in 2026: they're the <strong>cheap fluency signal</strong> — autocomplete layers, ASR/spell-correction rescoring, data-quality filters, and the n-gram overlap machinery inside BLEU/ROUGE; plus they're the conceptual baseline neural LMs are measured against (perplexity carries over directly).",
+            "One breath of lineage: fixed-window neural LMs → RNNs (unbounded context, vanishing gradients) → attention — the whole arc is \"widen the usable context\"."
+          ],
+          "links": [
+            {
+              "label": "Smoothing",
+              "target": "06-NLP-Classical/05-Language-Modeling/01-Smoothing"
+            },
+            {
+              "label": "N gram Language Models",
+              "target": "06-NLP-Classical/05-Language-Modeling/00-N-gram Language Models"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Without smoothing an unseen n-gram zeroes the whole sentence, so mass gets redistributed — and Kneser-Ney's insight is to back off by how many distinct contexts a word appears in, not raw frequency, which is why 'Francisco' gets almost none."
+        },
+        {
+          "id": "nlp-classical-q9",
+          "number": 9,
+          "marks": [],
+          "text": "Seq2seq with Bahdanau attention: what bottleneck did attention fix, and how is that the origin story of everything since?",
+          "points": [
+            "The bottleneck: encoder-decoder RNNs compressed the entire source sentence into <strong>one fixed-size vector</strong> — translation quality degraded sharply with sentence length because the vector saturates; early tricks (reversing input order) were symptoms of the disease.",
+            "<strong>Attention's fix</strong>: keep <em>all</em> encoder states; at each decode step, compute relevance scores of every source position to the current decoder state, softmax them, and read a <strong>weighted context vector</strong> — the decoder gets random access to the source instead of a summary. Bahdanau = learned additive scoring; Luong = dot-product variants (the direct ancestor of QK-dot-product).",
+            "The origin story to tell: attention started as a <strong>patch on RNNs</strong>; the transformer's move was deleting the RNN and keeping only attention (\"attention is all you need\") — self-attention as random access within the sequence, parallel across positions. Every modern model is downstream of this one repair.",
+            "Bonus fluency: attention weights gave the first useful alignment visualizations (soft word alignment in MT), and cross-attention in today's encoder-decoder and multimodal models is <em>exactly</em> Bahdanau's mechanism, matured.",
+            "Decoding strategies ride along: greedy vs beam for MT-class tasks (beam helps constrained generation, causes degeneration in open-ended text — same facts as the LLM pillar, older clothes)."
+          ],
+          "links": [
+            {
+              "label": "Attention (Bahdanau &amp; Luong)",
+              "target": "06-NLP-Classical/06-Sequence-Models/03-Attention (Bahdanau &amp; Luong)"
+            },
+            {
+              "label": "Seq2Seq Encoder Decoder",
+              "target": "06-NLP-Classical/06-Sequence-Models/02-Seq2Seq Encoder-Decoder"
+            }
+          ],
+          "badge": "Evergreen — the lineage question that tests whether you understand why transformers exist.",
+          "oneLiner": "Attention fixed the fixed-vector bottleneck by giving the decoder weighted random access to all encoder states — and the transformer is just that repair promoted to the whole architecture, with the RNN deleted."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-5-sequence-labeling-07-sequence-labeling",
+      "letter": null,
+      "name": "Section 5 — Sequence Labeling (07-Sequence-Labeling)",
+      "questions": [
+        {
+          "id": "nlp-classical-q10",
+          "number": 10,
+          "marks": [],
+          "text": "Why does a CRF beat per-token softmax for NER — and when is the CRF layer still worth adding in 2026?",
+          "points": [
+            "The failure of independent per-token softmax: it can emit <strong>structurally invalid sequences</strong> — I-PER following B-ORG, I-tags starting entities — because nothing models label-to-label dependencies. BIO/BILOU schemes have hard transition constraints that per-token decisions ignore.",
+            "A <strong>linear-chain CRF</strong> models the <em>joint</em> probability of the whole label sequence: emission scores per token plus <strong>learned transition scores</strong> between adjacent labels, globally normalized; <strong>Viterbi</strong> decodes the best valid path. Invalid transitions get effectively forbidden; borderline token decisions get resolved by sequence context.",
+            "Lineage one breath deep: HMM (generative, models P(words|tags)) → MEMM (discriminative but suffers label bias from local normalization) → <strong>CRF (global normalization fixes label bias)</strong> — that progression is a classic interview probe.",
+            "2026 relevance: transformer encoders made emissions so good that the CRF's marginal gain shrank — but it still pays where <strong>strict schema validity matters</strong> (structured extraction feeding databases), on <strong>small training sets</strong>, and in lightweight non-transformer stacks; the cheap alternative is constrained decoding masks that just forbid invalid transitions.",
+            "The framing that generalizes: CRF is <em>structured prediction</em> — enforcing output validity in the model rather than post-hoc — the same idea as constrained decoding for LLM JSON output; drawing that line shows architecture-level understanding."
+          ],
+          "links": [
+            {
+              "label": "CRFs (HMM vs MEMM vs CRF)",
+              "target": "06-NLP-Classical/07-Sequence-Labeling/02-CRFs (HMM vs MEMM vs CRF)"
+            },
+            {
+              "label": "NER (BIO BILOU &amp; BiLSTM CRF)",
+              "target": "06-NLP-Classical/07-Sequence-Labeling/03-NER (BIO-BILOU &amp; BiLSTM-CRF)"
+            }
+          ],
+          "badge": "Trending — CRF-vs-softmax recurs on LeetCode Discuss NLP threads + extraction-heavy JDs (2025–26)",
+          "oneLiner": "Per-token softmax can emit I-PER after B-ORG because each decision is independent — a CRF scores whole label paths with learned transitions and Viterbi-decodes the best valid one; today it earns its place where schema validity and small data matter, and it's the same structured-prediction idea as constrained LLM decoding."
+        },
+        {
+          "id": "nlp-classical-q11",
+          "number": 11,
+          "marks": [],
+          "text": "Viterbi in one minute: what does it compute, and what's the trick that makes it tractable?",
+          "points": [
+            "The problem: find the <strong>single most probable tag sequence</strong> given observations — naive enumeration is K^T paths (K tags, T tokens), exponential.",
+            "The trick is <strong>dynamic programming on the Markov property</strong>: the best path to tag k at position t only depends on the best paths to each tag at t−1 — so keep, per position, just <strong>K best-path scores plus backpointers</strong>; recurse forward, then trace back. O(T·K²) instead of K^T.",
+            "Say the distinction that filters candidates: Viterbi finds the <strong>best joint path</strong> (max-product); the <strong>forward algorithm</strong> computes the <em>total</em> probability over all paths (sum-product) — same recursion, max swapped for sum; posterior per-token marginals need forward-backward.",
+            "Where it lives today: CRF/HMM decoding, ASR and spell-correction lattices, any pipeline with chain-structured outputs — and conceptually it's beam search's exact ancestor (beam = approximate Viterbi when the state space is too big to be exact).",
+            "If asked to code it: a T×K score table, a backpointer table, careful log-space arithmetic — that's the whole implementation."
+          ],
+          "links": [
+            {
+              "label": "Viterbi Algorithm",
+              "target": "06-NLP-Classical/07-Sequence-Labeling/01-Viterbi Algorithm"
+            },
+            {
+              "label": "POS Tagging &amp; HMMs",
+              "target": "06-NLP-Classical/07-Sequence-Labeling/00-POS Tagging &amp; HMMs"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Viterbi finds the most probable tag path by dynamic programming — the Markov property means the best path to each state at time t needs only the best paths at t−1, collapsing K-to-the-T enumeration into T-by-K-squared with backpointers."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-6-syntax-semantics-applied-tasks-08-syntax-semantics-09-applied-tasks",
+      "letter": null,
+      "name": "Section 6 — Syntax, Semantics & Applied Tasks (08-Syntax-Semantics, 09-Applied-Tasks)",
+      "questions": [
+        {
+          "id": "nlp-classical-q12",
+          "number": 12,
+          "marks": [],
+          "text": "Relation extraction and entity linking: what's the difference, and how do you build a knowledge-base population pipeline today?",
+          "points": [
+            "Definitions crisply: <strong>NER</strong> finds mentions; <strong>entity linking</strong> disambiguates a mention to a KB identity (\"Paris\" → city vs person — candidate generation by alias tables, disambiguation by context vs entity descriptions); <strong>relation extraction</strong> classifies the semantic relation between entity pairs (\"works_for\", \"acquired\") — coreference resolution ties mentions across sentences so relations aggregate correctly.",
+            "Pipeline shape: document → NER → coreference → entity linking → relation extraction → <strong>validation → KB write</strong>. Errors <em>cascade</em> — a wrong link poisons every downstream relation — so per-stage precision thresholds and confidence propagation matter more than any single model's F1.",
+            "The 2026 build: LLMs do zero/few-shot RE and linking surprisingly well (schema-guided extraction into JSON), but at corpus scale the cost ladder reasserts itself — <strong>classical/fine-tuned small models for the bulk, LLM for the hard residual</strong>, and always schema-validated output with provenance kept per fact.",
+            "The senior warnings: extraction quality is <strong>domain-fragile</strong> (fine-tune or few-shot on your text, not news benchmarks), and the KB needs <strong>entity resolution hygiene</strong> (dedup, canonical IDs) or it silently forks entities — the same dedup discipline as everywhere else.",
+            "Tie it upward: this pipeline is exactly how the knowledge graphs behind KG-RAG and agent traversal get built — classical NLP is the <em>supply chain</em> of the fancy stuff."
+          ],
+          "links": [
+            {
+              "label": "Relation Extraction &amp; Entity Linking",
+              "target": "06-NLP-Classical/08-Syntax-Semantics/02-Relation Extraction &amp; Entity Linking"
+            },
+            {
+              "label": "Semantic Tasks (WSD, SRL, Coreference)",
+              "target": "06-NLP-Classical/08-Syntax-Semantics/01-Semantic Tasks (WSD, SRL, Coreference)"
+            }
+          ],
+          "badge": "Trending — KB-population questions recur with the KG-RAG wave (2025–26)",
+          "oneLiner": "Linking decides which real-world entity a mention is, relation extraction decides how two entities connect — the pipeline cascades NER, coref, linking and RE into a validated KB write, with cheap models for the bulk and LLMs for the hard residual, because this supply chain is what KG-RAG runs on."
+        },
+        {
+          "id": "nlp-classical-q13",
+          "number": 13,
+          "marks": [],
+          "text": "Extractive vs abstractive summarization: mechanisms, failure modes, and which one you ship for legal documents.",
+          "points": [
+            "<strong>Extractive</strong> selects existing sentences (TextRank-style graph centrality over sentence similarity, or supervised selection) — output is <strong>verbatim-faithful by construction</strong>; failure modes are incoherence between stitched sentences and missing cross-sentence synthesis.",
+            "<strong>Abstractive</strong> generates new text (seq2seq → today's LLMs) — fluent, synthesizing, compressible to any length; the failure mode is the deal-breaker: <strong>hallucinated content presented as summary</strong> — unfaithful claims, subtly shifted numbers/qualifiers.",
+            "The legal call: <strong>extractive (or extract-then-verify hybrid)</strong> — a lawyer can tolerate clunky prose, not an invented qualifier in a liability clause; verbatim traceability to source sentences is itself a requirement (citations = the extractive property).",
+            "The production hybrid worth describing: extract candidate spans → LLM rewrites for coherence → <strong>faithfulness check</strong> (NLI/judge verifying each claim maps to a source span) → render with linked citations; you get fluency with an audit trail.",
+            "Evaluation honesty: ROUGE measures n-gram overlap with references, <strong>not faithfulness</strong> — a fluent hallucination scores fine; faithfulness needs entailment-style checks or human audit, and saying so is the difference between knowing the metric and trusting it."
+          ],
+          "links": [
+            {
+              "label": "Summarization (TextRank vs Abstractive)",
+              "target": "06-NLP-Classical/09-Applied-Tasks/03-Summarization (TextRank vs Abstractive)"
+            },
+            {
+              "label": "Generation Metrics (BLEU, ROUGE, BERTScore)",
+              "target": "06-NLP-Classical/12-Evaluation-Metrics/00-Generation Metrics (BLEU, ROUGE, BERTScore)"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Extractive is faithful by construction but clunky, abstractive is fluent but can invent — so legal gets extract-then-rewrite with per-claim faithfulness checks and linked citations, and ROUGE never decides, because overlap can't see hallucination."
+        },
+        {
+          "id": "nlp-classical-q14",
+          "number": 14,
+          "marks": [],
+          "text": "Sentiment analysis in production: when does a lexicon (VADER) or a small classifier still beat an LLM call — and what does aspect-based add?",
+          "points": [
+            "The cost ladder is the answer's spine: <strong>lexicon (VADER)</strong> — zero training, zero inference cost, milliseconds, decent on social-media English (handles negation, intensifiers, emoji heuristically); <strong>TF-IDF + logistic regression / small fine-tuned transformer</strong> — cheap, fast, <em>domain-tuned</em> (learns that \"sick\" is positive in sneaker reviews); <strong>LLM</strong> — best zero-shot quality and nuance (sarcasm, mixed sentiment), orders of magnitude more expensive per document.",
+            "The decision variables: <strong>volume</strong> (millions of documents/day amortize a trained model; LLM bills scale linearly), latency budget, domain drift cadence, and whether you need <strong>explanations</strong> vs a score.",
+            "Streaming/dashboard analytics over social firehoses → classical wins on economics; low-volume, high-stakes, nuanced judgments (exec-escalation triage) → LLM earns it. The hybrid: cheap model scores everything, <strong>LLM adjudicates the uncertain band</strong> — the cascade pattern again.",
+            "<strong>Aspect-based sentiment</strong> fixes the resolution problem: \"food great, service awful\" is not \"neutral\" — extract (aspect, sentiment) pairs so the signal is actionable per dimension; classically a pipeline (aspect extraction + polarity per aspect), today often one schema-guided LLM extraction on sampled data.",
+            "The labeling truth: sentiment ground truth is noisy (human agreement is imperfect, sarcasm and mixed cases dominate errors) — report agreement alongside accuracy or the number overpromises."
+          ],
+          "links": [
+            {
+              "label": "Sentiment Analysis (VADER &amp; Aspect Based)",
+              "target": "06-NLP-Classical/09-Applied-Tasks/01-Sentiment Analysis (VADER &amp; Aspect-Based)"
+            },
+            {
+              "label": "Text Classification",
+              "target": "06-NLP-Classical/09-Applied-Tasks/00-Text Classification"
+            }
+          ],
+          "badge": "Trending — the cost-ladder framing recurs in applied-NLP JDs (2025–26)",
+          "oneLiner": "It's a cost ladder — VADER for free at firehose scale, a domain-tuned small classifier for the daily millions, LLMs for the nuanced low-volume band or as adjudicator in a cascade — and aspect-based extraction is what turns 'neutral overall' into 'food great, service awful', which is the signal anyone actually acts on."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-7-topic-modeling-10-topic-modeling",
+      "letter": null,
+      "name": "Section 7 — Topic Modeling (10-Topic-Modeling)",
+      "questions": [
+        {
+          "id": "nlp-classical-q15",
+          "number": 15,
+          "marks": [],
+          "text": "LDA vs clustering embeddings with BERTopic-style pipelines: how does each find 'topics', and which do you reach for now?",
+          "points": [
+            "<strong>LDA's generative story</strong>: each document is a <strong>mixture of topics</strong> (Dirichlet-distributed proportions), each topic a distribution over words; inference reverses the story from observed words. Strengths: documents get <em>soft multi-topic</em> membership, fully interpretable word distributions, no embeddings needed. Weaknesses: bag-of-words blindness to semantics (synonyms split topics), K chosen by hand, notorious instability across runs, and short texts starve it.",
+            "<strong>Embedding-cluster pipelines</strong> (BERTopic-shape): embed documents → reduce (UMAP) → cluster (HDBSCAN) → label clusters by class-based TF-IDF keywords. Strengths: contextual semantics (synonyms merge), no fixed K, handles short text, outliers get a noise bucket. Weaknesses: hard single-assignment by default, stochastic stack (seed sensitivity), and the \"topics\" are cluster summaries, not a generative model.",
+            "Evaluation is the same discipline either way: <strong>coherence metrics as a filter, human interpretability as the bar</strong> — and the t-SNE/UMAP warnings from the ML pillar apply verbatim to the visualization step.",
+            "The 2026 reach: embedding pipelines are the practical default for exploration and voice-of-customer work; LDA survives where you need soft mixtures, a probabilistic model, or auditability of the generative assumptions.",
+            "The honest caveat for both: topic models generate <em>hypotheses</em>, not truth — stability across seeds/samples and downstream usefulness are the real tests, same as clustering anywhere."
+          ],
+          "links": [
+            {
+              "label": "LDA (Generative Story, Dirichlet &amp; NMF)",
+              "target": "06-NLP-Classical/10-Topic-Modeling/00-LDA (Generative Story, Dirichlet &amp; NMF)"
+            },
+            {
+              "label": "Choosing Topics &amp; Pitfalls (Coherence, BERTopic)",
+              "target": "06-NLP-Classical/10-Topic-Modeling/01-Choosing Topics &amp; Pitfalls (Coherence, BERTopic)"
+            }
+          ],
+          "badge": "Evergreen (with a modern second half interviewers now expect)",
+          "oneLiner": "LDA reverses a generative story — documents as Dirichlet mixtures over word distributions — while BERTopic-style pipelines cluster contextual embeddings and name the clusters; embeddings win the practical default on semantics and short text, LDA keeps soft mixtures and auditability, and both are hypothesis generators judged by stability and use."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-8-information-retrieval-search-11-information-retrieval-search-architect-core",
+      "letter": null,
+      "name": "Section 8 — Information Retrieval & Search (11-Information-Retrieval-Search) — architect core",
+      "questions": [
+        {
+          "id": "nlp-classical-q16",
+          "number": 16,
+          "marks": [],
+          "text": "BM25: walk me through the formula's two ideas beyond TF-IDF, and why it's still 'the baseline to beat' in 2026.",
+          "points": [
+            "Idea 1 — <strong>term-frequency saturation</strong> (k1): TF's contribution is bounded — the 20th occurrence of a term adds almost nothing beyond the 5th (asymptotic curve, not linear or log). Keyword-stuffing stops paying; k1 tunes how quickly the curve flattens.",
+            "Idea 2 — <strong>length normalization</strong> (b): long documents accumulate term matches by sheer bulk — BM25 normalizes TF by document length relative to the corpus average; b dials from no normalization (0) to full (1). Together with IDF, that's the whole formula, conceptually.",
+            "Why still the baseline to beat: zero training, interpretable, blazing on inverted indexes at web scale, robust <strong>out-of-domain</strong> (dense retrievers trained on one distribution degrade on another; BM25 doesn't care), and unbeatable on <strong>exact/rare tokens</strong> — IDs, code, names, jargon.",
+            "The 2026 framing: it's not BM25 <em>vs</em> dense — production retrieval is <strong>hybrid</strong> (BM25 + dense, fused) because their failure modes are complementary: BM25 misses synonyms/paraphrase, dense misses exact rare strings. Any RAG design answer that drops BM25 entirely is suspect.",
+            "Fluency details worth having: default-ish parameters (k1 around 1.2–2, b around 0.75) exist but tuning on your corpus matters; and BM25 scores are corpus-relative — not comparable across indexes without normalization (a fusion gotcha)."
+          ],
+          "links": [
+            {
+              "label": "BM25 (Formula, k1 b, Baseline to Beat)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/01-BM25 (Formula, k1-b, Baseline to Beat)"
+            },
+            {
+              "label": "Inverted Index &amp; Boolean Retrieval",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/00-Inverted Index &amp; Boolean Retrieval"
+            }
+          ],
+          "badge": "Trending — BM25-in-hybrid-retrieval is a fixture of RAG-era screens (2025–26)",
+          "oneLiner": "BM25 adds two ideas to TF-IDF — saturating term frequency so stuffing stops paying, and length normalization so bulk doesn't win — and it's still the baseline because it's free, interpretable, domain-robust, and exact-match-faithful, which is precisely the half of hybrid retrieval dense vectors can't cover."
+        },
+        {
+          "id": "nlp-classical-q17",
+          "number": 17,
+          "marks": [],
+          "text": "Your semantic search misses exact SKU codes that keyword search finds instantly. Explain, then design the fix.",
+          "points": [
+            "The mechanism: \"SKU-X99-4B\" carries <strong>no distributional semantics</strong> — the embedding model fragments it into junk subwords and maps it to a semantically meaningless region; nearest-neighbor search then retrieves by topic vibes, not by the identifier. Dense retrieval is structurally blind to arbitrary exact strings — this isn't a tuning problem.",
+            "The fix is <strong>hybrid retrieval</strong>: a sparse/BM25 arm (inverted index catches exact tokens with high IDF) plus the dense arm (paraphrase and intent), fused — <strong>RRF (reciprocal rank fusion)</strong> is the robust default because it merges <em>ranks</em>, sidestepping incomparable score scales; weighted score fusion when you've calibrated.",
+            "Engineering details that show production experience: keep the identifier fields <strong>analyzed minimally</strong> in the sparse index (don't stem SKUs), consider field boosts (exact match in title/ID field outranks body), and add a <strong>reranker</strong> on the fused candidates for final precision.",
+            "Detect the failure class systematically: slice your retrieval eval by <strong>query type</strong> (identifier lookups vs natural-language) — aggregate recall hides that one slice is broken; this is the same slicing discipline as everywhere else.",
+            "Say the general law: sparse and dense fail on <em>complementary</em> query classes — which is why the answer to \"which retriever?\" in production is nearly always \"both, fused\"."
+          ],
+          "links": [
+            {
+              "label": "Sparse vs Dense vs Hybrid Retrieval (RRF)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/03-Sparse vs Dense vs Hybrid Retrieval (RRF)"
+            },
+            {
+              "label": "BM25 (Formula, k1 b, Baseline to Beat)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/01-BM25 (Formula, k1-b, Baseline to Beat)"
+            }
+          ],
+          "badge": "Trending — the canonical hybrid-retrieval scenario, recurs everywhere (2025–26)",
+          "oneLiner": "Embeddings map an unseen SKU to semantic noise — dense retrieval is structurally blind to arbitrary exact strings — so the fix is hybrid: a minimally-analyzed BM25 arm for identifiers fused with the dense arm by RRF, a reranker on top, and retrieval evals sliced by query type so this failure class can't hide in the average."
+        },
+        {
+          "id": "nlp-classical-q18",
+          "number": 18,
+          "marks": [],
+          "text": "MRR, MAP, NDCG, recall@k — which IR metric for which system, and what's the trap in each?",
+          "points": [
+            "<strong>Recall@k</strong>: fraction of relevant items in the top k — <em>the</em> metric when a downstream stage consumes the whole top-k, which is exactly <strong>RAG retrieval</strong> (the generator can use anything in context; missing it entirely is the unrecoverable failure). Trap: says nothing about position or precision — fine for RAG, wrong for humans.",
+            "<strong>MRR</strong>: reciprocal rank of the <em>first</em> relevant result — for known-item search and question answering where one hit satisfies (autocomplete, \"find the doc\"). Trap: blind to everything after the first hit — wrong for multi-answer needs.",
+            "<strong>MAP</strong>: mean of precision at each relevant hit — rewards putting <em>all</em> relevant items high; classic for literature/e-discovery-style search. Trap: assumes binary relevance and users who care about completeness.",
+            "<strong>NDCG</strong>: graded relevance with position discounting — the metric for <strong>human-facing ranked pages</strong> (web/product search) where \"somewhat relevant at rank 2\" beats \"perfect at rank 9\". Trap: needs graded judgments (expensive labels) and the discount curve is a modeling choice.",
+            "The system mapping to recite: RAG → recall@k (+ a precision-ish signal if context is tight); QA/known-item → MRR; completeness search → MAP; commercial ranked UX → NDCG. And always with <strong>confidence intervals over query sets</strong> — per-query variance in IR is huge, and single-number deltas are usually noise."
+          ],
+          "links": [
+            {
+              "label": "IR Evaluation (Precision@K, MRR, MAP, NDCG)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/02-IR Evaluation (Precision@K, MRR, MAP, NDCG)"
+            }
+          ],
+          "badge": "Evergreen — the metric-selection probe for anything retrieval-shaped.",
+          "oneLiner": "Match the metric to the consumer: recall@k when an LLM eats the whole top-k, MRR when the first hit satisfies, MAP when completeness matters, NDCG for graded human-facing rankings — and report intervals over the query set, because per-query variance swallows small deltas."
+        },
+        {
+          "id": "nlp-classical-q19",
+          "number": 19,
+          "marks": [],
+          "text": "Learning to rank: pointwise, pairwise, listwise — what's the actual difference, and where does LTR sit in a modern search stack?",
+          "points": [
+            "<strong>Pointwise</strong>: regress/classify each (query, doc) relevance independently — simple, but optimizing per-item scores ≠ optimizing the <em>ordering</em>. <strong>Pairwise</strong>: learn from preferences — doc A above doc B for this query (RankNet lineage) — closer to the goal, dominant in practice (LambdaMART-style gradient-boosted trees remain workhorses). <strong>Listwise</strong>: optimize a list-level objective approximating NDCG directly (LambdaRank's trick: weight pairwise gradients by their NDCG impact).",
+            "Where it sits: the <strong>multi-stage funnel</strong> — cheap candidate generation (BM25 + dense retrieval, thousands of candidates) → LTR/reranker over hundreds (rich features: text scores, freshness, popularity, personalization, click signals) → optional final neural/cross-encoder rerank over tens. LTR is the <em>feature-fusion</em> stage where business signals join text relevance.",
+            "The data reality: labels come from <strong>clicks, not judgments</strong>, at scale — and clicks carry <strong>position bias</strong> (people click what's ranked high), so counterfactual/unbiased LTR (propensity weighting) is the difference between learning relevance and learning your old ranker. Same off-policy trap as recommenders.",
+            "The 2026 note: cross-encoder/LLM rerankers absorbed the top of the funnel in RAG stacks, but classic feature-based LTR still owns commercial search's middle stage — business features don't live in an embedding.",
+            "Interview move: name the funnel and put each technique at its stage — that structure answers most search-design questions by itself."
+          ],
+          "links": [
+            {
+              "label": "Learning to Rank (Pointwise, Pairwise, Listwise)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/04-Learning to Rank (Pointwise, Pairwise, Listwise)"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Pointwise scores items, pairwise learns orderings, listwise optimizes the list metric directly — and LTR lives mid-funnel, fusing text scores with business features over candidate sets, trained on click data that must be de-biased for position or you're just relearning the old ranker."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-9-evaluation-metrics-12-evaluation-metrics",
+      "letter": null,
+      "name": "Section 9 — Evaluation Metrics (12-Evaluation-Metrics)",
+      "questions": [
+        {
+          "id": "nlp-classical-q20",
+          "number": 20,
+          "marks": [],
+          "text": "BLEU, ROUGE, BERTScore: what does each actually measure, and why should none of them gate a release alone?",
+          "points": [
+            "<strong>BLEU</strong>: n-gram <strong>precision</strong> against references with a brevity penalty — MT's historical metric; punishes valid paraphrase, blind to meaning-preserving reorderings. <strong>ROUGE</strong>: n-gram/longest-common-subsequence <strong>recall</strong> — summarization's historical metric; rewards covering reference content, blind to whether covered content is <em>faithful</em>. <strong>BERTScore</strong>: token-level embedding similarity — forgives paraphrase, but rewards semantic <em>proximity</em>, which fluently-wrong text also has.",
+            "The shared failure that matters: <strong>none detects hallucination or factual error</strong> — a confident fabrication scores well on all three if it's topically adjacent and fluent. Overlap and similarity are not truth.",
+            "Also shared: reference dependence — one or two references can't span the space of valid outputs, so all three systematically undervalue legitimate diversity; scores are comparable only within same-dataset, same-reference setups.",
+            "What they're still <em>for</em>: cheap regression tracking during development (did the change move the needle directionally?), corpus-level comparisons of similar systems — as <strong>one signal among several</strong>, never the gate.",
+            "The gating stack (same shape as the LLM pillar): programmatic assertions + faithfulness/entailment checks + calibrated LLM-judge rubrics + sampled human eval — with error analysis by slice, because the aggregate hides which segment broke. Saying \"BLEU for the dashboard, judges and humans for the gate\" is the expected level."
+          ],
+          "links": [
+            {
+              "label": "Generation Metrics (BLEU, ROUGE, BERTScore)",
+              "target": "06-NLP-Classical/12-Evaluation-Metrics/00-Generation Metrics (BLEU, ROUGE, BERTScore)"
+            },
+            {
+              "label": "Task Metrics Roundup &amp; Human Eval",
+              "target": "06-NLP-Classical/12-Evaluation-Metrics/01-Task Metrics Roundup &amp; Human Eval"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "BLEU counts n-gram precision, ROUGE counts recall, BERTScore counts embedding similarity — and all three score a fluent hallucination happily, which is why they track regressions on a dashboard but never gate a release without faithfulness checks and human-calibrated judgment on top."
+        },
+        {
+          "id": "nlp-classical-q21",
+          "number": 21,
+          "marks": [],
+          "text": "Your NLP model's aggregate F1 went up but users are complaining more. What does your error-analysis discipline look like?",
+          "points": [
+            "<strong>Slice first</strong>: aggregate F1 is a weighted average that can rise while a user-visible segment collapses — cut by input length, language/dialect, entity type, class, source channel, time period, and <em>user-facing surface</em>. The complaint demographic tells you which slice to cut. Rare-but-critical classes (the safety-relevant intent, the VIP entity type) need their own tracked metrics, or the average launders their failure.",
+            "<strong>Significance second</strong>: was the F1 gain real? <strong>Bootstrap the test set</strong> for intervals; paired tests on per-example outcomes for model comparisons — the same discipline as the ML pillar, applied to text. Small deltas on modest eval sets are routinely noise.",
+            "<strong>Read the errors</strong>: sample false positives/negatives per slice and <em>categorize by hand</em> — annotation errors, genuine ambiguity, preprocessing bugs, distribution shift, systematic model blind spots. A hundred hand-read errors beat another metric; the categories become the roadmap.",
+            "Check <strong>eval-production mismatch</strong>: your test set is last year's distribution — complaints may reflect drift the frozen eval can't see. Sample production traffic, label it fresh, compare against the static set.",
+            "Institutionalize: slice dashboards in every eval report, a \"no launch if any protected slice regresses\" rule, and complaint-to-eval-case triage — the flywheel again."
+          ],
+          "links": [
+            {
+              "label": "Error Analysis &amp; Significance (Slicing, Bootstrap)",
+              "target": "06-NLP-Classical/12-Evaluation-Metrics/02-Error Analysis &amp; Significance (Slicing, Bootstrap)"
+            }
+          ],
+          "badge": "Trending — slicing-and-significance questions recur across applied-NLP screens (2025–26)",
+          "oneLiner": "Aggregate F1 launders slice failures and small deltas are often bootstrap noise — so I slice by segment and surface, test significance on paired outcomes, hand-categorize a sample of errors, and re-label fresh production traffic, because the complaint stream is telling me which of those the frozen eval missed."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-10-production-multilingual-nlp-13-production-multilingual-nlp",
+      "letter": null,
+      "name": "Section 10 — Production & Multilingual NLP (13-Production-Multilingual-NLP)",
+      "questions": [
+        {
+          "id": "nlp-classical-q22",
+          "number": 22,
+          "marks": [],
+          "text": "You have 400 labeled examples and a deadline. Walk me through augmentation and weak supervision — and their failure modes.",
+          "points": [
+            "<strong>Augmentation</strong> transforms existing examples: synonym/word swaps (EDA-style), <strong>back-translation</strong> (round-trip through another language for natural paraphrase), and today <strong>LLM paraphrase/generation</strong> — the strongest option, generating labeled variants or entirely synthetic examples from class descriptions.",
+            "Augmentation's failure mode: <strong>label-breaking transforms</strong> — a synonym swap flips sentiment (\"not bad\"→\"not good\"-class bugs), paraphrase drifts across class boundaries; augment conservatively on tasks where meaning is label-critical, and spot-check a sample by hand.",
+            "<strong>Weak supervision</strong> (Snorkel-shape): write <strong>labeling functions</strong> — heuristics, keyword rules, distant supervision from KBs, model votes — and combine their noisy votes into probabilistic labels via a label model that learns each function's accuracy and correlations. Scales labels without annotators; failure mode is <strong>correlated noise</strong> — functions sharing a bias fool the combiner into confident wrong labels.",
+            "The LLM-era twist: <strong>LLM-as-annotator</strong> is now the dominant weak-labeler — cheap bulk labeling, but audit against a human-labeled gold slice (biases are systematic, not random, so they don't wash out), then train a small fast model on the LLM labels — distillation of judgment into economics.",
+            "The discipline regardless of method: keep a <strong>human-labeled, untouched eval set</strong> — synthetic anything in the eval set and you're grading the generator, not the model."
+          ],
+          "links": [
+            {
+              "label": "Text Augmentation &amp; Weak Supervision",
+              "target": "06-NLP-Classical/13-Production-Multilingual-NLP/00-Text Augmentation &amp; Weak Supervision"
+            }
+          ],
+          "badge": "Trending — low-label-budget scenarios recur on applied-NLP screens (2025–26)",
+          "oneLiner": "Augment with back-translation or LLM paraphrase but spot-check for label-breaking transforms, weak-supervise with labeling functions or LLM annotation audited against a human gold slice — and keep the eval set human-labeled and synthetic-free, or you're measuring the generator."
+        },
+        {
+          "id": "nlp-classical-q23",
+          "number": 23,
+          "marks": [],
+          "text": "Your English-trained pipeline hits Hinglish, emoji-dense, code-mixed support tickets. What breaks, and what's the triage?",
+          "points": [
+            "<strong>Language identification breaks first</strong>: LID assumes monolingual documents; code-mixed text (\"yaar this app is bakwas\") confuses document-level detectors — you need token/span-level LID or a router that has a code-mixed class at all. Misrouted text then hits the wrong everything downstream.",
+            "<strong>Tokenization/normalization breaks quietly</strong>: romanized Hindi has no canonical spelling (\"bahut/bohot/bht\"), emoji and elongations (\"sooooo\") explode variants; English-centric subword vocabs fragment it into junk — the same tokenizer-inequity mechanics as the LLM pillar, now at pipeline scale.",
+            "Model triage ladder: <strong>multilingual pretrained models</strong> (XLM-R-class, or multilingual LLMs) handle code-mixing far better than translate-then-process (translation destroys the mixing signal itself, and MT on noisy romanized input is garbage-in anyway); fine-tune on <em>your</em> actual tickets — a few thousand in-domain code-mixed labels beat any amount of clean-English data.",
+            "<strong>Evaluation must be sliced by language mix</strong> — aggregate metrics hide that the Hinglish slice is at chance; build a labeled eval slice per major mix, and monitor the mix distribution over time (it drifts with your user base).",
+            "The architect's framing: multilingual isn't a model choice, it's a <strong>pipeline audit</strong> — LID, normalization policy, vocab coverage, labeled slices, and a fallback route (low-confidence → human or LLM) per stage."
+          ],
+          "links": [
+            {
+              "label": "Multilingual &amp; Noisy Text (Code Mixing, LID)",
+              "target": "06-NLP-Classical/13-Production-Multilingual-NLP/01-Multilingual &amp; Noisy Text (Code-Mixing, LID)"
+            }
+          ],
+          "badge": "Trending — code-mixing/noisy-text questions recur in global-product JDs (2025–26)",
+          "oneLiner": "Code-mixed text breaks LID first, then the tokenizer, then every English assumption downstream — the fix is span-level LID, minimal normalization, a multilingual model fine-tuned on your real tickets rather than translate-then-process, and eval slices per language mix so the failure can't hide in the aggregate."
+        },
+        {
+          "id": "nlp-classical-q24",
+          "number": 24,
+          "marks": [],
+          "text": "Design the text pipeline that deduplicates a billion documents and strips PII — the algorithms, not the buzzwords.",
+          "points": [
+            "<strong>Exact dedup</strong>: normalize → hash (content fingerprint) → drop collisions. Trivial and insufficient — the web's duplication is <em>near</em>-duplication (boilerplate variants, timestamps, minor edits).",
+            "<strong>Near-dup at scale = MinHash + LSH</strong>: shingle documents (word/char n-grams) → <strong>MinHash</strong> signatures (k independent min-hashes approximate Jaccard similarity in compact form) → <strong>LSH banding</strong> hashes signature bands into buckets so documents above a similarity threshold <em>collide with high probability</em> — candidate pairs come from shared buckets only, turning O(n²) comparison into near-linear. Band/row parameters tune the similarity threshold's S-curve. That's the answer they're probing for.",
+            "Verify candidates with exact Jaccard/edit checks; cluster and keep one canonical doc per group (provenance retained). Semantic near-dup (paraphrased duplicates) → embedding-cluster dedup as a second pass, budget permitting.",
+            "<strong>PII layering</strong>: regex/validators for structured PII (emails, phones, cards — with checksum validation to cut false positives), <strong>NER-based detection</strong> for names/addresses/orgs, context rules for ambiguity (a name in a byline vs in a medical record), then policy per class: drop, mask, or pseudonymize consistently (same entity → same token, preserving utility). Measure both precision <em>and recall</em> on a labeled audit slice — silent PII leakage is the asymmetric risk.",
+            "Pipeline hygiene: idempotent stages, sampled QA at every stage, and stats dashboards (dedup rate, PII hit rate per class) — a sudden shift in either is an upstream-change alarm. This exact pipeline is also LLM-pretraining data discipline — same machinery, higher stakes."
+          ],
+          "links": [
+            {
+              "label": "Text Pipelines at Scale (Dedup MinHash LSH, PII)",
+              "target": "06-NLP-Classical/13-Production-Multilingual-NLP/02-Text Pipelines at Scale (Dedup MinHash-LSH, PII)"
+            }
+          ],
+          "badge": "Trending — MinHash/dedup questions recur in data-engineering-for-AI JDs (2025–26)",
+          "oneLiner": "Exact hashing catches identical docs; near-dup needs MinHash signatures approximating Jaccard plus LSH banding so similar documents collide into candidate buckets — near-linear instead of quadratic — and PII gets layered regex-plus-NER detection with consistent pseudonymization, both audited on labeled slices because silent leakage is the asymmetric failure."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-11-system-architecture-lens-14-system-architecture-lens",
+      "letter": null,
+      "name": "Section 11 — System & Architecture Lens (14-System-Architecture-Lens)",
+      "questions": [
+        {
+          "id": "nlp-classical-q25",
+          "number": 25,
+          "marks": [],
+          "text": "Design a text-classification system from zero labels to production — the cold-start, the labeling budget, and the retraining loop.",
+          "points": [
+            "<strong>Phase 1, zero labels</strong>: ship a baseline this week — rules/keywords for the obvious classes, or <strong>LLM zero-shot classification</strong> as the cold-start model (expensive per call but instant coverage); either way it's simultaneously your first labeling machine, generating weak labels + surfacing the taxonomy's real shape (classes always change once real data arrives).",
+            "<strong>Phase 2, spend the budget smartly</strong>: human labels go where they're worth most — <strong>active learning</strong> (label what the current model is least certain about), disagreement sampling (where LLM and rules disagree), and per-class coverage floors for rare classes. Build the <strong>gold eval set first</strong> — a small trusted eval beats more training labels for decision-making.",
+            "<strong>Phase 3, the economic swap</strong>: distill to a small fast model (fine-tuned transformer or even TF-IDF+LR for high-volume) trained on accumulated labels — LLM cost at cold start, classical economics at scale; keep the LLM as fallback for low-confidence and as a periodic auditor.",
+            "<strong>The retraining loop</strong>: production sampling → labeling queue → drift monitors (input distribution, class balance, confidence histograms) → scheduled or triggered retrain through the same eval gate; taxonomy evolution (new classes appearing) is the change that breaks silently, so watch the \"other/low-confidence\" bucket's growth rate.",
+            "Throughout: confidence thresholds route uncertain traffic to humans — the system is a <strong>cascade with a human floor</strong>, not a lone classifier."
+          ],
+          "links": [
+            {
+              "label": "Design a Text Classification System (Cold Start, Labeling Budget, Retraining)",
+              "target": "06-NLP-Classical/14-System-Architecture-Lens/00-Design a Text Classification System (Cold Start, Labeling Budget, Retraining)"
+            },
+            {
+              "label": "Text Classification",
+              "target": "06-NLP-Classical/09-Applied-Tasks/00-Text Classification"
+            }
+          ],
+          "badge": "Trending — the canonical applied-NLP system-design question (2025–26)",
+          "oneLiner": "Cold-start with rules or LLM zero-shot to ship and generate weak labels, spend human labels on a gold eval set plus active-learning picks, distill to a cheap model at volume with the LLM as low-confidence fallback — and keep it alive with drift monitors and a watched other-bucket, because taxonomies rot before models do."
+        },
+        {
+          "id": "nlp-classical-q26",
+          "number": 26,
+          "marks": [],
+          "text": "Design search with autocomplete for a product catalog — indexing, ranking layers, and the latency budget.",
+          "points": [
+            "<strong>Two systems</strong>: autocomplete fires per keystroke — single-digit-to-tens of ms, served from <strong>prefix structures</strong> (tries/FSTs, or edge-n-gram indexes) over queries and product names, ranked by popularity + personalization priors, with fuzzy tolerance for typos (edit-distance-bounded). Search fires on submit — a ~100–300 ms budget through the full funnel.",
+            "<strong>Indexing</strong>: inverted index with per-field analyzers (minimal analysis on SKUs/brand, standard on descriptions — the Q17 lesson), plus a dense embedding index for semantic recall; near-real-time index updates for price/stock (staleness here is a business bug, not a relevance bug).",
+            "<strong>Ranking funnel</strong>: candidate generation (BM25 + dense, union via RRF; thousands) → <strong>LTR mid-stage</strong> fusing text scores with business features (popularity, margin, stock, personalization; hundreds) → optional cross-encoder top-k polish (tens) — each stage 10x cheaper per doc than the next, which is the whole point of the funnel.",
+            "<strong>Query understanding</strong> on the way in: spell-correction (noisy-channel/edit distance), LID if multilingual, category/intent detection routing (\"red nike shoes size 10\" → filters + text), synonym expansion on the sparse arm.",
+            "<strong>Evaluation and feedback</strong>: offline NDCG on judged sets sliced by query type (head vs tail vs identifier), online CTR/conversion A/Bs, and click-through feeding LTR with position-bias correction — the loop from Q19. Zero-result-rate and reformulation-rate are the underrated health metrics."
+          ],
+          "links": [
+            {
+              "label": "Design a Search &amp; Autocomplete System (Indexing, Ranking Layers, Latency)",
+              "target": "06-NLP-Classical/14-System-Architecture-Lens/01-Design a Search &amp; Autocomplete System (Indexing, Ranking Layers, Latency)"
+            },
+            {
+              "label": "Learning to Rank (Pointwise, Pairwise, Listwise)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/04-Learning to Rank (Pointwise, Pairwise, Listwise)"
+            }
+          ],
+          "badge": "Trending — search-system design remains a staple loop question (2025–26)",
+          "oneLiner": "Autocomplete is its own millisecond system on prefix structures; search runs query understanding into a hybrid-recall, LTR-mid, rerank-top funnel where each stage is an order cheaper per document — evaluated by NDCG per query-type slice offline and conversion online, with zero-result rate as the canary."
+        },
+        {
+          "id": "nlp-classical-q27",
+          "number": 27,
+          "marks": [],
+          "text": "Design a content-moderation pipeline where precision-recall tuning is a business decision, not a modeling detail.",
+          "points": [
+            "<strong>The business framing first</strong>: each category has its own cost asymmetry — CSAM/violence: recall at almost any precision cost (a miss is catastrophic, an over-block is an apology); borderline spam: precision-lean (over-blocking legitimate users bleeds the platform). So thresholds are <strong>set per category by policy owners</strong> against measured FP/FN costs, not globally by F1 — that reframing is the question's point.",
+            "<strong>The cascade for economics</strong>: cheap always-on layers (hash-matching against known-bad content, keyword/regex, lightweight classifiers) filter the firehose; heavier models (transformers, multimodal for image+text) score the residual; <strong>LLM or human judgment for the ambiguous band</strong>. Volume drops orders of magnitude per stage — the only way moderation scales.",
+            "<strong>Humans by design</strong>: uncertain-band review queues with severity-based SLAs, appeal flows (an appeals overturn rate is your FP monitor), and reviewer wellbeing engineering (exposure limits, blurring) — mention it; it's a real architectural constraint.",
+            "<strong>Adversarial reality</strong>: evasion evolves (leetspeak, re-encoding, image-text smuggling) — so normalization layers, continuous red-teaming, fresh-labeled drift monitoring, and fast rule-deployment paths for emerging patterns; moderation is a <em>pursuit</em>, not a model.",
+            "<strong>Metrics that matter</strong>: per-category precision/recall on fresh labeled samples, prevalence (what slips through, measured by random-sample audit — not by what gets reported), time-to-action by severity, appeal overturn rates. Prevalence-by-audit is the honest north star, and knowing that separates practitioners from tourists."
+          ],
+          "links": [
+            {
+              "label": "Design a Content Moderation Pipeline (Precision Recall as Business, HITL)",
+              "target": "06-NLP-Classical/14-System-Architecture-Lens/02-Design a Content Moderation Pipeline (Precision-Recall as Business, HITL)"
+            },
+            {
+              "label": "Text Similarity, Paraphrase &amp; Moderation",
+              "target": "06-NLP-Classical/09-Applied-Tasks/05-Text Similarity, Paraphrase &amp; Moderation"
+            }
+          ],
+          "badge": "Trending — moderation-system design recurs in platform JDs (2025–26)",
+          "oneLiner": "Set thresholds per category from the business's asymmetric costs — recall-at-all-costs for severe harm, precision-lean for spam — behind a hash-rules-model-human cascade that survives the volume, with appeals as your false-positive monitor and random-sample prevalence as the honest north star in an adversarial pursuit."
+        },
+        {
+          "id": "nlp-classical-q28",
+          "number": 28,
+          "marks": [],
+          "text": "Give me your cost-latency-quality framework for 'classical NLP vs LLM API' — the one you'd actually run a decision through.",
+          "points": [
+            "<strong>The economics line</strong>: classical has training cost but near-zero marginal cost; LLM APIs are the inverse — so the decision pivot is <strong>volume × lifetime</strong>: millions of documents daily for years → the trained model's economics are untouchable; hundreds daily or a two-month project → API wins on engineering time alone. Latency mirrors it: microseconds-to-ms (classical) vs hundreds of ms (API) — real-time paths (autocomplete, inline moderation) often <em>can't</em> take an LLM call.",
+            "<strong>The task-shape line</strong>: fixed-taxonomy, high-volume, stable tasks (classification, NER on known types, dedup, search scoring) are classical territory — quality parity at a fraction of the cost once you have labels; open-ended generation, reasoning, zero-shot flexibility, and long-tail nuance are LLM territory where classical simply can't play.",
+            "<strong>The data line</strong>: no labels and need it now → LLM; labels exist or can be distilled (LLM labels → small model, Q25's swap) → classical inherits the quality at classical prices. Distillation is the bridge that makes this a lifecycle, not a fork.",
+            "<strong>The default architecture is the cascade</strong>: cheap model handles the confident bulk, LLM takes the uncertain band and the audit role — you buy LLM quality at near-classical average cost; plus governance factors (on-prem/PII → local classical or self-hosted; provider dependency risk) as tiebreakers.",
+            "Re-run the numbers periodically: API prices fall, small open models improve — the frontier between the territories moves yearly, and last year's build-vs-call answer expires like the self-hosting one."
+          ],
+          "links": [
+            {
+              "label": "Classical NLP vs LLM API (Cost Latency Quality Framework)",
+              "target": "06-NLP-Classical/14-System-Architecture-Lens/03-Classical NLP vs LLM API (Cost-Latency-Quality Framework)"
+            }
+          ],
+          "badge": "Trending — the decision-framework question of this pillar (2025–26)",
+          "oneLiner": "Volume times lifetime sets the economics, task shape sets the capability boundary, and label availability sets the path — with distillation converting LLM judgment into classical economics and the cascade buying LLM quality at bulk-classical prices, re-priced yearly because the frontier moves."
+        },
+        {
+          "id": "nlp-classical-q29",
+          "number": 29,
+          "marks": [],
+          "text": "Embedding infrastructure: versioning, ANN serving, and drift — what does mature embedding ops look like?",
+          "points": [
+            "<strong>The cardinal rule</strong>: query and document vectors must come from the <strong>same model version</strong> — vectors from different models (or versions) live in incompatible spaces, and mixed-version similarity is silent garbage. Version-tag every vector and every index; enforce compatibility at query time, not by convention.",
+            "<strong>Upgrades mean re-embedding the corpus</strong>: an embedding-model change forces full corpus re-embedding into a <strong>new index, blue-green swapped</strong> after side-by-side retrieval eval (recall@k on your golden queries, old vs new) — never in-place drift between spaces. That re-embedding cost is why embedding-model churn is an architectural decision, not a pip upgrade.",
+            "<strong>ANN serving trade-offs</strong>: HNSW-class indexes trade recall against latency/memory via build and search parameters — measure <em>ANN recall against exact search</em> on your data (the index introduces its own miss rate on top of the model's); watch index freshness (streaming upserts vs periodic rebuilds, tombstone accumulation), and filters (pre vs post-filtering changes both latency and effective recall).",
+            "<strong>Drift monitoring</strong>: input-text distribution drift (new domains fragment differently), retrieval-quality drift (golden-query recall tracked over time), and usage drift (query length/type mix). Embedding spaces don't drift by themselves — your <em>data</em> drifts around a frozen model, which shows up as slowly decaying retrieval metrics.",
+            "Operational completeness: vector-store cost scales with dimensions × corpus (dimension choice and quantized/compressed vectors are real levers), per-tenant isolation for multi-tenant indexes, and deletion compliance (vectors of deleted source docs must go too — vectors are data)."
+          ],
+          "links": [
+            {
+              "label": "Embedding Infra &amp; Monitoring (Versioning, ANN Serving, Drift)",
+              "target": "06-NLP-Classical/14-System-Architecture-Lens/04-Embedding Infra &amp; Monitoring (Versioning, ANN Serving, Drift)"
+            }
+          ],
+          "badge": "Trending — embedding-ops questions recur in RAG-platform JDs (2025–26)",
+          "oneLiner": "One embedding space per index, version-enforced at query time; model upgrades mean re-embed-everything into a blue-green index gated by golden-query recall; ANN parameters are a measured recall-latency trade on your data; and drift is your corpus moving around a frozen model, caught by tracked retrieval metrics — plus remembering vectors are data with deletion obligations."
+        }
+      ]
+    },
+    {
+      "id": "nlp-classical-section-12-cross-cutting-backfill-remaining-notes-across-folders",
+      "letter": null,
+      "name": "Section 12 — Cross-Cutting & Backfill (remaining notes across folders)",
+      "questions": [
+        {
+          "id": "nlp-classical-q30",
+          "number": 30,
+          "marks": [],
+          "text": "Extractive, abstractive, open-domain QA — map the lineage from SQuAD-era systems to RAG.",
+          "points": [
+            "<strong>Extractive QA</strong>: answer is a <strong>span in a given passage</strong> — model predicts start/end positions (BERT-era SQuAD systems); precise, citable, cheap, but can't synthesize across passages or answer anything not verbatim present.",
+            "<strong>Abstractive QA</strong>: generate the answer in natural language — handles synthesis and phrasing, inherits the hallucination risk; quality became an LLM story.",
+            "<strong>Open-domain QA</strong>: no passage given — <strong>retrieve then read</strong>: sparse (BM25) then dense retrieval (DPR lineage — bi-encoders trained for QA relevance) feeding a reader/generator. Say the punchline: <strong>open-domain QA with a generative reader <em>is</em> RAG</strong> — the RAG paper literally formalized retriever+generator; today's stacks are this architecture scaled.",
+            "What each era contributed to the modern stack: extractive left <strong>span-grounding and citations</strong>, DPR left <strong>trained retrievers and hard-negative discipline</strong>, abstractive left the generator — a modern RAG answer with cited spans is all three eras composed.",
+            "Evaluation carried over too: exact-match/F1 from SQuAD for short answers, retrieval recall@k for the retriever stage, faithfulness checks for the generated layer — the metric per stage, not one number."
+          ],
+          "links": [
+            {
+              "label": "Question Answering (Extractive vs Abstractive vs Open Domain)",
+              "target": "06-NLP-Classical/09-Applied-Tasks/02-Question Answering (Extractive vs Abstractive vs Open-Domain)"
+            }
+          ],
+          "badge": "Evergreen (the lineage version is how it's asked now)",
+          "oneLiner": "Extractive points at a span, abstractive writes the answer, open-domain retrieves first — and retrieve-then-generate open-domain QA is literally RAG's origin, with modern stacks composing all three eras: trained retrieval, generated answers, span-grounded citations."
+        },
+        {
+          "id": "nlp-classical-q31",
+          "number": 31,
+          "marks": [],
+          "text": "What did machine translation teach NLP? Walk the SMT→NMT arc and name the lessons that generalized.",
+          "points": [
+            "<strong>SMT era</strong>: translation as noisy-channel decoding — phrase tables (learned alignments), a language model for fluency, log-linear feature combination, beam-search decoding. Powerful, but a pipeline of separately-trained pieces with hand-tuned glue.",
+            "<strong>NMT</strong>: one end-to-end seq2seq network — first RNN encoder-decoder (the fixed-vector bottleneck), then <strong>attention</strong> (invented <em>for</em> MT, Q9), then the <strong>transformer</strong> (built <em>for</em> MT — the original paper's task). Quality jumped, the pipeline collapsed into one model.",
+            "Lessons that generalized: <strong>subword tokenization</strong> (BPE entered NLP through NMT's open-vocabulary problem), <strong>attention → the universal mechanism</strong>, <strong>beam search + its degeneration quirks</strong>, <strong>BLEU and the whole reference-based-metric debate</strong>, back-translation as augmentation (Q22), and the meta-lesson — <strong>end-to-end learning beats hand-assembled pipelines when data suffices</strong> — which is the LLM thesis in miniature.",
+            "Today's state: MT is largely an LLM capability (translation as prompting), with dedicated NMT systems surviving on cost at massive scale and in low-resource specialization; low-resource languages remain the honest frontier (data scarcity, evaluation scarcity).",
+            "Interview positioning: MT history answers \"why is the field shaped like this\" — attention, subwords, BLEU skepticism, and end-to-end-ism all trace to one task's pressure."
+          ],
+          "links": [
+            {
+              "label": "Machine Translation (SMT to NMT)",
+              "target": "06-NLP-Classical/09-Applied-Tasks/04-Machine Translation (SMT to NMT)"
+            },
+            {
+              "label": "Attention (Bahdanau &amp; Luong)",
+              "target": "06-NLP-Classical/06-Sequence-Models/03-Attention (Bahdanau &amp; Luong)"
+            }
+          ],
+          "badge": "Evergreen (MT is the field's history exam — and its lessons are current events)",
+          "oneLiner": "MT went from noisy-channel phrase pipelines to end-to-end seq2seq, inventing attention, mainstreaming BPE and back-translation, and teaching the field that end-to-end beats assembled pipelines given data — the transformer itself was built for translation, so modern NLP is MT's lessons generalized."
+        },
+        {
+          "id": "nlp-classical-q32",
+          "number": 32,
+          "marks": [],
+          "text": "Neural LM lineage: fixed-window → RNN → LSTM → attention. What killed each stage?",
+          "points": [
+            "<strong>Fixed-window neural LMs</strong> (Bengio-lineage): embed n previous words, MLP predicts the next — proved distributed representations beat count-based sparsity, died of the <strong>hard context window</strong> (n fixed, no long dependencies) and parameter growth with window size.",
+            "<strong>Vanilla RNNs</strong>: recurrence gives unbounded context in principle — died of <strong>vanishing/exploding gradients</strong>: error signal decays across timesteps, so \"unbounded\" context was theoretical; long dependencies untrainable.",
+            "<strong>LSTMs/GRUs</strong>: gating (input/forget/output) creates a protected cell-state highway for gradients — genuinely fixed trainability at range, ruled for a decade — died of <strong>sequential computation</strong>: each step waits for the previous, so no parallelism across the sequence during training; long-range information still degrades through repeated state compression.",
+            "<strong>Attention/transformers</strong>: direct position-to-position connections — path length 1 between any tokens (vs n for recurrence), fully parallel training — traded it for <strong>O(n²) cost</strong>, which is the constraint the current era engineers around (the LLM pillar's whole serving section).",
+            "The pattern worth voicing: each transition solved the predecessor's <em>training</em> bottleneck (capacity → gradients → parallelism) — and the SSM/Mamba conversation is the same loop attacking the transformer's quadratic term; history hasn't stopped."
+          ],
+          "links": [
+            {
+              "label": "Neural LM Lineage",
+              "target": "06-NLP-Classical/05-Language-Modeling/03-Neural LM Lineage"
+            },
+            {
+              "label": "Text as Sequences",
+              "target": "06-NLP-Classical/06-Sequence-Models/00-Text as Sequences"
+            }
+          ],
+          "badge": "Evergreen — the \"do you know why, not just what\" architecture-history probe.",
+          "oneLiner": "Fixed windows died of the hard context limit, RNNs of vanishing gradients, LSTMs — after gating fixed trainability — of sequential non-parallelism, and transformers bought parallel training and unit path-length at quadratic cost, which is exactly the term today's SSM work is trying to kill next."
+        },
+        {
+          "id": "nlp-classical-q33",
+          "number": 33,
+          "marks": [],
+          "text": "Constituency vs dependency parsing — and who actually consumes a parse tree in 2026?",
+          "points": [
+            "<strong>Constituency parsing</strong>: nested phrase structure (NP/VP trees) from a grammar — linguistics-native, the classic representation for syntactic theory. <strong>Dependency parsing</strong>: directed head→dependent arcs with typed relations (nsubj, dobj) — flatter, word-centric, cross-lingually more natural, and far more <em>usable</em> programmatically (\"find the subject of this verb\" is one arc lookup).",
+            "Dependency won the applied war: spaCy-class pipelines ship dependency parses; typical consumers today — <strong>rule-based extraction in high-precision domains</strong> (legal/biomedical patterns over arcs beat black-box recall when a miss is expensive), aspect-sentiment linking (\"battery\" ← \"terrible\"), query understanding, and linguistically-informed feature engineering where training data is scarce.",
+            "The honest 2026 status: transformers learn syntax <strong>implicitly</strong> (probing finds it in attention/representations), so explicit parsing vanished from most neural pipelines — parses survive where you need <strong>inspectable, guaranteed structure</strong> (auditability, rules) rather than implicit competence.",
+            "The evaluation vocabulary if probed: labeled/unlabeled attachment score (LAS/UAS) for dependencies; and transition-based vs graph-based parsers as the two algorithm families — one sentence each is enough.",
+            "Frame it as the recurring theme: explicit structure vs learned competence — the same trade as CRF-vs-softmax and rules-vs-LLM; classical structure survives at the <strong>precision-and-audit</strong> end of every one of these."
+          ],
+          "links": [
+            {
+              "label": "Parsing (Constituency vs Dependency)",
+              "target": "06-NLP-Classical/08-Syntax-Semantics/00-Parsing (Constituency vs Dependency)"
+            }
+          ],
+          "badge": "Evergreen (tests whether classical knowledge comes with honest currency)",
+          "oneLiner": "Constituency nests phrases, dependency draws typed head-to-dependent arcs — dependency won production because arcs are queryable — and in 2026 parses survive where inspectable structure beats implicit competence: high-precision rule extraction, aspect linking, and anywhere audit matters more than recall."
+        },
+        {
+          "id": "nlp-classical-q34",
+          "number": 34,
+          "marks": [],
+          "text": "WSD, SRL, coreference — the classical semantic tasks. Which did LLMs absorb, and what's left standing?",
+          "points": [
+            "The tasks in one line each: <strong>WSD</strong> — which sense of \"bank\" is this occurrence; <strong>SRL</strong> — who did what to whom (predicate-argument structure: agent, patient, instrument); <strong>coreference</strong> — which mentions refer to the same entity across a text.",
+            "<strong>WSD got absorbed almost completely</strong>: contextual embeddings <em>are</em> sense disambiguation — every token vector is already context-conditioned; nobody ships a standalone WSD component anymore. It survives as a probe task and in lexicography.",
+            "<strong>SRL mostly absorbed as competence</strong>, but survives as explicit structure where downstream systems consume frames — event extraction in finance/pharma (\"who acquired whom for how much\"), where you want typed, schema-validated outputs rather than prose understanding. Increasingly done by schema-guided LLM extraction — the <em>task</em> survives, the dedicated model rarely.",
+            "<strong>Coreference is the survivor</strong>: KB population and entity-centric pipelines (Q12) need explicit mention clusters — aggregating facts per entity requires knowing which \"he/the company/Apple\" corefer; long-document coref remains genuinely imperfect even for LLMs, and errors cascade into every entity-level aggregate.",
+            "The pattern to state: semantic tasks survived in proportion to whether their <strong>output is consumed by machines</strong> — implicit competence killed the human-invisible ones; explicit-structure consumers keep the rest alive as extraction schemas."
+          ],
+          "links": [
+            {
+              "label": "Semantic Tasks (WSD, SRL, Coreference)",
+              "target": "06-NLP-Classical/08-Syntax-Semantics/01-Semantic Tasks (WSD, SRL, Coreference)"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "WSD dissolved into contextual embeddings, SRL survives as schema-guided event extraction where machines consume the frames, and coreference is the real survivor because entity-centric pipelines need explicit mention clusters — the rule being that a semantic task outlives absorption only if something downstream eats its structure."
+        },
+        {
+          "id": "nlp-classical-q35",
+          "number": 35,
+          "marks": [],
+          "text": "You need a labeled corpus for a new task. Walk me through annotation design — guidelines, agreement, and the metrics that tell you the labels are usable.",
+          "points": [
+            "<strong>Guidelines are developed, not written</strong>: draft → pilot round on a shared sample → adjudicate disagreements → <em>revise the guidelines with the hard cases as examples</em> → repeat until agreement stabilizes. Most label noise is guideline ambiguity, not annotator carelessness — edge-case rulings in the doc are the asset.",
+            "<strong>Measure chance-corrected agreement</strong>: raw percent agreement flatters (two annotators agreeing 85% on a 90/10 skewed binary task is barely better than chance) — use <strong>Cohen's kappa</strong> (two annotators), <strong>Fleiss/Krippendorff</strong> (multiple/missing) — and report it per class; aggregate kappa hides that one confusing class is unlabelable.",
+            "<strong>Agreement is your model's ceiling</strong>: if humans agree at 0.7 kappa, a model \"beating\" the implied accuracy is fitting annotator noise — and your eval set's error bars are bounded by label quality, which is why the gold set gets multiple annotations + adjudication while bulk training data can be single-passed.",
+            "<strong>Disagreement is signal</strong>: systematic disagreement flags genuinely ambiguous classes (merge them, or model soft labels), and per-annotator drift/bias monitoring (against gold-seeded items) keeps a long-running effort honest.",
+            "LLM-era addendum: LLM pre-annotation with human correction cuts cost dramatically — but measure human-LLM agreement the same way, and never let the LLM define the gold standard it will later be judged against."
+          ],
+          "links": [
+            {
+              "label": "Corpora &amp; Annotation",
+              "target": "06-NLP-Classical/01-Foundations/04-Corpora &amp; Annotation"
+            },
+            {
+              "label": "Task Metrics Roundup &amp; Human Eval",
+              "target": "06-NLP-Classical/12-Evaluation-Metrics/01-Task Metrics Roundup &amp; Human Eval"
+            }
+          ],
+          "badge": "Trending — annotation-quality questions recur as eval-set building became core work (2025–26)",
+          "oneLiner": "Iterate guidelines through pilot-adjudicate-revise cycles until chance-corrected agreement stabilizes, report kappa per class, and treat human agreement as the model's ceiling and the eval set's error bar — with disagreement mined as signal, because most label noise is guideline ambiguity wearing an annotator's name."
+        },
+        {
+          "id": "nlp-classical-q36",
+          "number": 36,
+          "marks": [],
+          "text": "NLTK vs spaCy vs Hugging Face — the library-selection answer for a production system.",
+          "points": [
+            "<strong>NLTK</strong>: the pedagogical toolkit — every classical algorithm implemented readably, corpora included; right for teaching, prototyping a classical idea, linguistics research. Wrong for production: slow, no unified pipeline, aging maintenance.",
+            "<strong>spaCy</strong>: the production pipeline — fast (Cython), one opinionated API (tokenize→tag→parse→NER in a single <code>nlp()</code> call), pretrained per-language pipelines, built for throughput and deployment (batching, GPU, serialization). The default when you need classical outputs (entities, deps, tokens) at volume.",
+            "<strong>Hugging Face</strong>: the model hub + transformers runtime — any pretrained transformer, fine-tuning infrastructure, tokenizers, datasets. The default when the task needs learned quality over pipeline speed, or any custom fine-tune.",
+            "The stacking reality: production systems <strong>combine</strong> them — spaCy for fast structural preprocessing and rule layers (its transformer-backed pipelines literally wrap HF models), HF for the fine-tuned heavy lifting, NLTK nowhere near prod. Choosing is about the layer, not the brand.",
+            "Selection heuristics to say: throughput-critical + standard outputs → spaCy; custom learned task → HF; and evaluate pretrained pipeline <em>accuracy on your domain</em> before trusting either — news-trained NER on clinical text embarrasses everyone."
+          ],
+          "links": [
+            {
+              "label": "Library Landscape (NLTK vs spaCy vs HF)",
+              "target": "06-NLP-Classical/02-Preprocessing/04-Library Landscape (NLTK vs spaCy vs HF)"
+            }
+          ],
+          "badge": "Evergreen (quick fluency check; the wrong answer is treating them as rivals)",
+          "oneLiner": "NLTK teaches, spaCy ships classical pipelines fast, Hugging Face supplies and fine-tunes the transformers — production stacks layer spaCy's structure and rules over HF's models, and the real decision is which layer your requirement lives in, checked against your domain's accuracy, not the library's fame."
+        },
+        {
+          "id": "nlp-classical-q37",
+          "number": 37,
+          "marks": [],
+          "text": "When are BoW/n-gram features still the right representation in 2026 — not the fallback, the right call?",
+          "points": [
+            "<strong>Interpretability as a requirement</strong>: TF-IDF + linear model gives per-feature coefficients a regulator or auditor can read — \"flagged because 'wire transfer' + 'urgent'\" — model-risk teams in finance/health accept that where they'd fight an embedding. Not a consolation prize; a spec.",
+            "<strong>Exact-token fidelity</strong>: codes, IDs, jargon, rare names — the same property that keeps BM25 alive (Q16/Q17) makes sparse features right for matching-flavored classification (routing by product code, log-line triage).",
+            "<strong>Economics at extreme volume</strong>: microsecond CPU inference, no GPU, trivially shardable — for a billion-events-a-day filter where the task is lexically separable, spending embedding compute is engineering vanity.",
+            "<strong>Tiny-data and drift-transparency regimes</strong>: with hundreds of labels, TF-IDF+LR's low variance often beats fine-tuning; and when the input distribution shifts, sparse-feature drift is <em>legible</em> (new vocabulary appears, coefficients inspectable) versus silent embedding-space rot.",
+            "The test to apply: is the task <strong>lexically separable</strong> (surface words decide) or <strong>semantically separable</strong> (meaning beyond surface decides)? Spam/routing/log-triage lean lexical; intent/nuance/paraphrase lean semantic. Run the cheap baseline first — it prices the problem, same discipline as the ML pillar's logistic-regression rule."
+          ],
+          "links": [
+            {
+              "label": "One Hot, BoW &amp; N grams",
+              "target": "06-NLP-Classical/03-Representation/00-One-Hot, BoW &amp; N-grams"
+            },
+            {
+              "label": "TF IDF",
+              "target": "06-NLP-Classical/03-Representation/01-TF-IDF"
+            }
+          ],
+          "badge": "Evergreen (the anti-hype judgment question)",
+          "oneLiner": "Sparse features are the right call when the requirement is interpretability, exact-token fidelity, microsecond economics, or tiny-data stability — the test is whether the task is lexically or semantically separable, and the TF-IDF baseline is what tells you, which is why it always runs first."
+        },
+        {
+          "id": "nlp-classical-q38",
+          "number": 38,
+          "marks": [],
+          "text": "Spelling correction with the noisy-channel model — the mechanism, and where this exact pattern shows up elsewhere.",
+          "points": [
+            "The <strong>noisy-channel frame</strong>: observed misspelling x, find intended word w maximizing P(w|x) ∝ <strong>P(x|w) · P(w)</strong> — an <strong>error model</strong> (how likely is this typo given that word — keyboard adjacency, phonetic confusion, edit operations) times a <strong>language model prior</strong> (how likely is the word, ideally in context: \"a peace of cake\" needs context to fix, since \"peace\" is a fine word).",
+            "Candidate generation bounds the search: words within <strong>edit distance</strong> 1–2 (insert/delete/substitute/transpose — Damerau-Levenshtein), or phonetic keys (Soundex-family) for sound-alike errors; then the channel model ranks candidates.",
+            "The two error classes worth naming: <strong>non-word errors</strong> (easy to detect — not in vocabulary) vs <strong>real-word errors</strong> (\"their/there\") — the second is undetectable without the contextual prior, which is why context-free spellcheckers miss them.",
+            "Where the pattern recurs — the answer's payoff: <strong>ASR</strong> (acoustic model × language model), <strong>SMT</strong> (translation model × LM — Q31), OCR post-correction, and query correction in search (\"did you mean\") with click-throughs as training data for the error model. Noisy-channel is Bayes' rule as systems architecture.",
+            "Modern status: transformers do correction implicitly (and LLMs do it zero-shot), but the noisy-channel decomposition survives in autocomplete/search stacks for its speed and its <em>tunability</em> — you can adjust the error model without touching the prior."
+          ],
+          "links": [
+            {
+              "label": "Stopwords &amp; Spelling Correction",
+              "target": "06-NLP-Classical/02-Preprocessing/02-Stopwords &amp; Spelling Correction"
+            },
+            {
+              "label": "N gram Language Models",
+              "target": "06-NLP-Classical/05-Language-Modeling/00-N-gram Language Models"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Noisy-channel correction maximizes an error model times a language-model prior over edit-distance candidates — real-word errors force the prior to be contextual — and the same Bayes decomposition is the architecture of ASR, classical MT, and search's did-you-mean, which is why it's worth knowing beyond spellcheck."
+        },
+        {
+          "id": "nlp-classical-q39",
+          "number": 39,
+          "marks": [],
+          "text": "How do you evaluate an embedding model before betting a retrieval system on it — intrinsic vs extrinsic, and the traps?",
+          "points": [
+            "<strong>Intrinsic evals</strong>: similarity/analogy benchmarks for the static era; STS correlation and public retrieval suites (MTEB-class) for sentence embeddings — useful as a <em>shortlist filter</em>, cheap to run, and increasingly gamed/overfit as leaderboards mature (the same contamination-and-mismatch caveats as LLM benchmarks, Q40 of the LLM drill).",
+            "<strong>Extrinsic = your task</strong>: build a golden set of <strong>your real queries against your real corpus</strong> (labeled relevant docs), measure recall@k/MRR per query type — identifier lookups, paraphrase queries, long questions — because models rank differently per slice, and your traffic mix decides the winner.",
+            "The traps: <strong>domain shift</strong> (a general-web champion fumbles clinical or legalese — check vocabulary fragmentation on your corpus as a cheap proxy); <strong>usage-convention mismatch</strong> (query/passage prefixes, max sequence length truncating your documents silently, pooling choice); <strong>metric mismatch</strong> with your ANN index (Q5); and <strong>dimension-cost coupling</strong> — a slightly-better 3072-dim model doubles vector-store cost versus 1536, which at corpus scale is real money against marginal recall.",
+            "Run the bake-off properly: same corpus, same chunking, same index parameters, several candidate models, sliced results with intervals — an afternoon of harness work that regularly overturns the leaderboard ordering.",
+            "Remember the system view: embedding quality is one stage — a mediocre embedder plus a reranker often beats a great embedder alone on final precision; evaluate the <em>pipeline</em>, then attribute."
+          ],
+          "links": [
+            {
+              "label": "Evaluating Embeddings",
+              "target": "06-NLP-Classical/04-Embeddings/03-Evaluating Embeddings"
+            },
+            {
+              "label": "Sparse vs Dense vs Hybrid Retrieval (RRF)",
+              "target": "06-NLP-Classical/11-Information-Retrieval-Search/03-Sparse vs Dense vs Hybrid Retrieval (RRF)"
+            }
+          ],
+          "badge": "Trending — embedding-selection questions recur with every RAG build (2025–26)",
+          "oneLiner": "Intrinsic benchmarks shortlist, but only recall-at-k on your own queries against your own corpus — sliced by query type, with prefixes, truncation, metric and dimension-cost checked — predicts the system, and the bake-off harness that proves it is an afternoon that routinely overturns the leaderboard."
+        },
+        {
+          "id": "nlp-classical-q40",
+          "number": 40,
+          "marks": [],
+          "text": "Paraphrase detection and semantic near-duplicates: how do you build it at scale, and where does it earn money?",
+          "points": [
+            "The task ladder: <strong>semantic textual similarity</strong> (graded 0–5 relatedness) vs <strong>paraphrase detection</strong> (binary same-meaning) vs <strong>entailment/NLI</strong> (directional — \"A implies B\" isn't symmetric); knowing which your product needs prevents building the wrong classifier (duplicate-question detection is paraphrase; contradiction-flagging is NLI).",
+            "The scale architecture is <strong>bi-encoder recall + cross-encoder precision</strong>: embed everything, ANN-search candidate pairs above a similarity floor (this replaces MinHash when duplication is semantic), then a <strong>cross-encoder</strong> (joint encoding of the pair — far more accurate than vector cosine, far too slow for all-pairs) adjudicates candidates. The two-stage pattern is this pillar's recurring funnel, once more.",
+            "Threshold discipline: cosine cut-offs are corpus- and model-relative — calibrate on a labeled pair set per deployment, and expect the hard band (same topic, different claims) to need the cross-encoder or human review; that band is where cosine lies most.",
+            "Where it earns money: duplicate-question/ticket merging (support deflection), <strong>training-and-eval-set decontamination</strong> (semantic leakage that exact hashing misses — Q7 of the LLM drill at your scale), plagiarism and content-farm detection, moderation recidivism (reposting banned content reworded — Q27's adversarial loop), and news/feed clustering.",
+            "The adversarial caveat: paraphrase evasion is deliberate in moderation contexts — monitor the miss rate on reworded-known-bad samples, not just STS benchmarks."
+          ],
+          "links": [
+            {
+              "label": "Text Similarity, Paraphrase &amp; Moderation",
+              "target": "06-NLP-Classical/09-Applied-Tasks/05-Text Similarity, Paraphrase &amp; Moderation"
+            },
+            {
+              "label": "Doc &amp; Sentence Embeddings",
+              "target": "06-NLP-Classical/04-Embeddings/04-Doc &amp; Sentence Embeddings"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Semantic dedup swaps MinHash for a bi-encoder-ANN recall stage with a cross-encoder precision stage on the candidates, thresholds calibrated on your own labeled pairs — and it earns its keep in ticket merging, eval decontamination, and catching banned content that came back reworded."
+        },
+        {
+          "id": "nlp-classical-q41",
+          "number": 41,
+          "marks": [],
+          "text": "HMMs for tagging: the generative story, its two assumptions, and why discriminative models replaced it.",
+          "points": [
+            "The generative story: walk a Markov chain of hidden tags (<strong>transition probabilities</strong> P(tag|previous tag)), and at each tag <em>emit</em> a word (<strong>emission probabilities</strong> P(word|tag)) — the sentence is the emitted sequence; tagging inverts the story with Bayes + Viterbi (Q11).",
+            "The two assumptions: <strong>Markov on tags</strong> (next tag depends only on the previous — defensible-ish) and <strong>emission independence</strong> (a word depends <em>only</em> on its own tag, not on neighbors or other words — linguistically absurd, and the model's real ceiling).",
+            "Why discriminative won: an HMM models the <strong>joint</strong> P(words, tags) — wasteful, you never need to generate sentences — and its emission structure can't absorb rich overlapping features (capitalization, suffixes, word shape, embeddings). Discriminative models (MEMM → <strong>CRF</strong>, Q10) model P(tags|words) directly and eat arbitrary features of the <em>whole</em> observed sentence.",
+            "The generalizable lesson to voice: <strong>model the conditional you actually need</strong> — generative models pay for modeling inputs they'll never predict; the same argument shape appears everywhere from naive Bayes-vs-logistic to why nobody tags with LLM generation when a discriminative head is cheaper and calibrated.",
+            "HMMs' residual value: unsupervised/low-resource settings (EM over unlabeled text), and as the cleanest teaching case for latent-variable inference — plus their machinery (Viterbi, forward-backward) outlived the model itself."
+          ],
+          "links": [
+            {
+              "label": "POS Tagging &amp; HMMs",
+              "target": "06-NLP-Classical/07-Sequence-Labeling/00-POS Tagging &amp; HMMs"
+            },
+            {
+              "label": "CRFs (HMM vs MEMM vs CRF)",
+              "target": "06-NLP-Classical/07-Sequence-Labeling/02-CRFs (HMM vs MEMM vs CRF)"
+            }
+          ],
+          "badge": "Evergreen — the generative-vs-discriminative probe, POS edition.",
+          "oneLiner": "An HMM generates tags by Markov chain and words by per-tag emission — tractable because of two independence assumptions, one absurd — and CRFs replaced it by modeling the conditional you actually need over rich whole-sentence features, while its Viterbi machinery outlived it everywhere."
+        },
+        {
+          "id": "nlp-classical-q42",
+          "number": 42,
+          "marks": [],
+          "text": "CNNs for text had a moment. What were they good at, why did transformers displace them, and what survived?",
+          "points": [
+            "The mechanism: 1-D convolutions over word-embedding sequences — each filter is a learned <strong>n-gram detector</strong> (a width-3 filter learns to fire on \"not very good\"-shaped trigrams); max-pooling asks \"did this pattern appear anywhere\"; stacked widths capture multiple n-gram sizes. Kim-CNN-era text classification.",
+            "Why they worked: parallel (unlike RNNs of the same era), fast, strong at <strong>local-pattern tasks</strong> — sentiment, spam, intent — where a few key phrases decide the label; position-invariance via pooling matched the \"pattern anywhere\" nature of classification.",
+            "The structural limit: a fixed <strong>receptive field</strong> — long-range dependencies need depth (dilated stacks) and arrive degraded; no content-based routing between distant positions, which is exactly what attention provides natively. Transformers displaced them on quality; pretrained transformers made task-specific architectures mostly moot.",
+            "What survived: the <strong>efficiency niche</strong> — character-CNNs inside fastText-era systems, edge/embedded classification at microsecond budgets, and convolutional components inside hybrid architectures; conceptually, \"learned local pattern detector\" survives as the intuition for early transformer layers and for why small local-window models still price well on lexical tasks (Q37's territory).",
+            "Interview use: the CNN story is a clean example of the recurring trade — <strong>inductive bias for efficiency vs generality for quality</strong> — worth telling in one breath when asked \"why did architecture X lose\"."
+          ],
+          "links": [
+            {
+              "label": "CNNs for Text",
+              "target": "06-NLP-Classical/06-Sequence-Models/01-CNNs for Text"
+            }
+          ],
+          "badge": "Evergreen (era-literacy; occasionally a genuine efficiency question)",
+          "oneLiner": "Text CNNs learned n-gram detectors with pooling asking 'did the pattern appear anywhere' — fast and strong for local-pattern classification, structurally blind to long range, displaced by attention's content-based routing — surviving in efficiency niches and as the cleanest parable of inductive bias versus generality."
+        },
+        {
+          "id": "nlp-classical-q43",
+          "number": 43,
+          "marks": [],
+          "text": "Levels of linguistic analysis and the task taxonomy — the 30-second map of the whole field.",
+          "points": [
+            "The levels, climbing: <strong>morphology</strong> (word-internal structure — inflection, derivation), <strong>syntax</strong> (how words combine — the parse layer), <strong>semantics</strong> (literal meaning — senses, roles, relations), <strong>pragmatics/discourse</strong> (meaning in context — coreference, coherence, intent, irony). Phonology below if speech. Each classical subfield (Q1–Q41) sits at one level; ambiguity at every level is <em>why NLP is hard</em> in one word.",
+            "The task taxonomy by output type: <strong>text → label</strong> (classification, sentiment), <strong>text → spans/structure</strong> (NER, parsing, extraction), <strong>text → text</strong> (translation, summarization, QA), <strong>text pair → judgment</strong> (similarity, NLI), <strong>text → ranking</strong> (retrieval). Five shapes cover essentially everything, and each shape carries its own metric family and system pattern — which is why the taxonomy is <em>useful</em>, not just tidy.",
+            "The unifying 2026 observation: LLMs collapsed the <em>modeling</em> across the taxonomy (everything is text→text with the right prompt), but the <strong>shapes still govern evaluation and architecture</strong> — a ranking task still needs ranking metrics and a funnel, whatever model sits inside.",
+            "Use it as an interview instrument: when handed a vague NLP problem, classify it into a shape out loud — the metric, baseline, and system design follow almost mechanically; that move visibly organizes an answer."
+          ],
+          "links": [
+            {
+              "label": "Levels of Linguistic Analysis",
+              "target": "06-NLP-Classical/01-Foundations/01-Levels of Linguistic Analysis"
+            },
+            {
+              "label": "Taxonomy of NLP Tasks",
+              "target": "06-NLP-Classical/01-Foundations/03-Taxonomy of NLP Tasks"
+            }
+          ],
+          "badge": "Evergreen — the warm-up that reveals whether your knowledge has a skeleton.",
+          "oneLiner": "Morphology up through syntax, semantics and discourse — with ambiguity at every level being the field's whole difficulty — and every task maps text to one of five output shapes, which still dictate metrics and architecture even now that one model family serves them all."
+        },
+        {
+          "id": "nlp-classical-q44",
+          "number": 44,
+          "marks": [],
+          "text": "Three eras of NLP — rules, statistics, neural. What did each era get right that the next one kept?",
+          "points": [
+            "<strong>Rule era</strong> (grammars, lexicons, hand-built pipelines): got right that <strong>language has structure worth encoding</strong> — its inheritance is the precision layer that never died: regex and pattern rules in every production system (Q27's cascade floor, Q33's extraction), gazetteer features, and the guardrail habit of deterministic checks around stochastic cores.",
+            "<strong>Statistical era</strong> (counts, probabilistic models, feature engineering): got right that <strong>learning from corpora beats hand-encoding at scale</strong>, and left the durable machinery — the noisy-channel frame (Q38), evaluation discipline (held-out sets, agreement metrics, significance — Q21/Q35), TF-IDF/BM25 (Q16), and the entire habit of <em>measuring</em> instead of asserting.",
+            "<strong>Neural era</strong>: got right that <strong>representations should be learned, not designed</strong> — distributed embeddings through end-to-end transformers; its own inheritance-in-progress is transfer learning: pretrain once, adapt everywhere.",
+            "The synthesis an architect should say: production systems in 2026 are <strong>all three eras stacked</strong> — rules at the precision/guardrail floor, statistical machinery in retrieval and evaluation, neural models in the quality core; era-purism in either direction (all-rules nostalgia or all-LLM maximalism) is how systems get either brittle or unaffordable.",
+            "This question is really \"do you understand <em>why</em> the stack looks like it does\" — answer with the stack, not the dates."
+          ],
+          "links": [
+            {
+              "label": "Three Eras &amp; the Classical Pipeline",
+              "target": "06-NLP-Classical/01-Foundations/02-Three Eras &amp; the Classical Pipeline"
+            },
+            {
+              "label": "What is NLP",
+              "target": "06-NLP-Classical/01-Foundations/00-What is NLP"
+            }
+          ],
+          "badge": "Evergreen (the history question, asked to test judgment rather than trivia)",
+          "oneLiner": "Rules left the precision floor every system still stands on, statistics left the measurement discipline and the retrieval machinery, neural left learned representations — and a serious 2026 system is all three stacked, which is why era-purism in either direction is a design smell."
+        },
+        {
+          "id": "nlp-classical-q45",
+          "number": 45,
+          "marks": [],
+          "text": "Close it out: you're interviewing for AI Architect. Make the case that classical NLP fluency is leverage, not legacy.",
+          "points": [
+            "<strong>The economics argument</strong>: at production volume, the cost ladder (rules → sparse+linear → small transformer → LLM) decides margins — knowing when TF-IDF+LR or a distilled model delivers LLM-grade outcomes at a thousandth the cost (Q14, Q25, Q28, Q37) is a line-item skill; the cascade pattern that captures it <em>is</em> classical NLP judgment.",
+            "<strong>The substrate argument</strong>: the LLM stack runs on classical machinery — BM25 in every hybrid retriever (Q16/17), IR metrics gating every RAG deploy (Q18), MinHash dedup and annotation discipline in every data pipeline (Q24/35), tokenization consequences in every bill (Q2). You can't architect what you can't decompose.",
+            "<strong>The diagnosis argument</strong>: when the fancy system misbehaves, failures localize to classical layers — retrieval slices, tokenizer fragmentation, label noise, eval mismatch (Q17, Q21, Q23, Q39) — and the engineer who can slice, bootstrap, and read errors by hand fixes in days what prompt-tweaking never finds.",
+            "The posture to project: not nostalgia but <strong>portfolio management</strong> — every classical technique is a cost-quality-latency-auditability point, and the architect's job is composing points, LLMs included, against requirements; the drills above are that portfolio, memorized.",
+            "End on the asymmetry: LLM knowledge depreciates with every release; <strong>the substrate — retrieval, evaluation, data discipline, structured prediction — is what every release still runs on.</strong> That's the closing sentence of the interview."
+          ],
+          "links": [
+            {
+              "label": "Classical NLP vs LLM API (Cost Latency Quality Framework)",
+              "target": "06-NLP-Classical/14-System-Architecture-Lens/03-Classical NLP vs LLM API (Cost-Latency-Quality Framework)"
+            },
+            {
+              "label": "Three Eras &amp; the Classical Pipeline",
+              "target": "06-NLP-Classical/01-Foundations/02-Three Eras &amp; the Classical Pipeline"
+            }
+          ],
+          "badge": "Trending — the synthesis close; the framing recurs across senior AI JDs that list 'NLP fundamentals' beside 'LLMs' (2025–26)",
+          "oneLiner": "Classical NLP is the economics of the cost ladder, the substrate under every RAG stack, and the diagnostic toolkit when the black box misbehaves — model knowledge depreciates with every release, but retrieval, evaluation and data discipline are what every release still runs on."
+        }
+      ]
+    }
+  ]
+}

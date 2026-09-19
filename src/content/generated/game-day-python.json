@@ -1,0 +1,1017 @@
+{
+  "slug": "python",
+  "number": 1,
+  "title": "🐍 PYTHON",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "Bullets are <strong>keywords and flows</strong>, not explanations. If you need the explanation, you're in the wrong file — go to the note.",
+    "⭐ = the ones that decide the round. 🔥 = trending 2026. 📍 = you were actually asked this.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> <code>03-python/</code> · <strong>Phrasing drill:</strong> ⚠️ none — <code>JBTIQ_PY.md</code> retired 24 Aug 2026 (was a duplicate recall grid, not a drill); a real <code>jbtiq_python.md</code> is an open gap · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]"
+  ],
+  "bands": [
+    {
+      "id": "python-a",
+      "letter": "A",
+      "name": "Openers",
+      "questions": [
+        {
+          "id": "python-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "What does the GIL actually protect, and when does it stop mattering?",
+          "points": [
+            "Protects <strong>interpreter state</strong> — refcounts, object headers — not <em>your</em> data",
+            "One thread executes <strong>bytecode</strong> at a time; released around I/O and in C extensions",
+            "So: I/O-bound threads scale fine · <strong>CPU-bound Python threads don't</strong>",
+            "NumPy / tokenizers / DB drivers drop it → \"Python is slow\" often isn't the GIL",
+            "Your locks are still needed — GIL ≠ thread safety for compound ops"
+          ],
+          "links": [
+            {
+              "label": "the gil",
+              "target": "03-python/06-concurrency-gil/33-the-gil"
+            }
+          ],
+          "flow": "protects interpreter internals → released on I/O and in C → CPU-bound is the only real victim",
+          "trap": "\"the GIL makes Python single-threaded\""
+        },
+        {
+          "id": "python-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "Threads, processes, or asyncio — how do you pick?",
+          "points": [
+            "<strong>Ask one question first:</strong> where does the time actually go?",
+            "Waiting on network/disk → <strong>asyncio</strong> (thousands of sockets, one thread)",
+            "Waiting, but library is sync-only → <strong>threads</strong> (bounded pool)",
+            "Burning CPU in Python bytecode → <strong>processes</strong>",
+            "Burning CPU in C (NumPy/torch) → threads are fine, GIL is already released"
+          ],
+          "links": [
+            {
+              "label": "async execution model",
+              "target": "03-python/07-async-io/40-async-execution-model"
+            }
+          ],
+          "flow": "profile first → I/O async · sync-lib threads · Python-CPU processes · C-CPU threads",
+          "trap": "answering by taste instead of by where the time goes"
+        },
+        {
+          "id": "python-q3",
+          "number": 3,
+          "marks": [],
+          "text": "Why is a mutable default argument a bug?",
+          "points": [
+            "Default evaluated <strong>once at function definition</strong>, not per call",
+            "The list/dict is then <strong>shared state</strong> across every call",
+            "Classic tell: accumulating results, \"why is my cache global\"",
+            "Fix: <code>None</code> sentinel → build inside the body",
+            "Same root cause as class-attribute-as-mutable"
+          ],
+          "links": [
+            {
+              "label": "mutable vs immutable default trap",
+              "target": "03-python/01-data-model-object-semantics/03-mutable-vs-immutable-default-trap"
+            }
+          ],
+          "flow": "default bound once at def-time → shared object → use None sentinel",
+          "trap": "describing the symptom without naming <em>def-time evaluation</em>"
+        },
+        {
+          "id": "python-q4",
+          "number": 4,
+          "marks": [],
+          "text": "is vs == — and why does is sometimes look right?",
+          "points": [
+            "<code>==</code> → <code>__eq__</code>, value · <code>is</code> → <strong>identity</strong>, same object",
+            "Small ints (−5…256) and some strings are <strong>interned</strong> → <code>is</code> accidentally passes",
+            "Interning is an implementation detail — never a contract",
+            "Legit <code>is</code> uses: <code>None</code>, sentinels, enum members",
+            "<code>==</code> on floats has its own trap (use tolerance)"
+          ],
+          "links": [
+            {
+              "label": "is vs equals identity interning",
+              "target": "03-python/01-data-model-object-semantics/02-is-vs-equals-identity-interning"
+            }
+          ],
+          "flow": "value vs identity → interning makes <code>is</code> a liar → <code>is</code> only for singletons",
+          "trap": "\"<code>is</code> is the faster <code>==</code>\""
+        },
+        {
+          "id": "python-q5",
+          "number": 5,
+          "marks": [],
+          "text": "Why do generators matter once data gets big?",
+          "points": [
+            "<strong>Lazy</strong> — produce on demand, constant memory regardless of length",
+            "Enables pipelines: read → parse → filter → embed, nothing materialised",
+            "Directly relevant to <strong>document ingestion</strong> and batch embedding",
+            "Cost: single-pass, no <code>len()</code>, harder to debug/retry mid-stream",
+            "<code>yield from</code> delegates; generators are also the coroutine ancestor"
+          ],
+          "links": [
+            {
+              "label": "generators lazy evaluation",
+              "target": "03-python/03-iterators-generators-comprehensions/15-generators-lazy-evaluation"
+            }
+          ],
+          "flow": "lazy pull → constant memory → chainable pipeline → but single-pass",
+          "trap": "claiming \"faster\" — it's memory, not speed"
+        },
+        {
+          "id": "python-q6",
+          "number": 6,
+          "marks": [],
+          "text": "Type hints — what do they actually do at runtime?",
+          "points": [
+            "<strong>Nothing</strong>, by default — CPython does not enforce them",
+            "Value is tooling: mypy/pyright, IDEs, refactor safety",
+            "Runtime enforcement only where something <em>reads</em> them — <strong>Pydantic</strong>, FastAPI, dataclasses",
+            "That reading is exactly how LLM tool schemas get generated",
+            "<code>from __future__ import annotations</code> → strings, changes introspection"
+          ],
+          "links": [
+            {
+              "label": "type hints typing",
+              "target": "03-python/08-typing-interfaces/46-type-hints-typing"
+            }
+          ],
+          "flow": "ignored at runtime → static tooling → unless a library introspects them",
+          "trap": "believing annotations validate anything on their own"
+        }
+      ]
+    },
+    {
+      "id": "python-b",
+      "letter": "B",
+      "name": "Mechanism",
+      "questions": [
+        {
+          "id": "python-q7",
+          "number": 7,
+          "marks": [
+            "decides"
+          ],
+          "text": "How does async/await actually work under the hood?",
+          "points": [
+            "Coroutine = <strong>resumable function</strong>; <code>await</code> yields control to the loop",
+            "Single-threaded <strong>event loop</strong> — selector polls ready FDs, resumes callbacks",
+            "No preemption: a coroutine runs until it awaits — <strong>cooperative</strong>",
+            "Concurrency ≠ parallelism; one core, interleaved waits",
+            "<code>await</code> on something not awaitable-and-yielding = no concurrency gained"
+          ],
+          "links": [
+            {
+              "label": "async await coroutines",
+              "target": "03-python/07-async-io/41-async-await-coroutines"
+            }
+          ],
+          "flow": "coroutine suspends at await → loop polls readiness → resumes → cooperative, single thread",
+          "trap": "describing it as \"runs in the background\""
+        },
+        {
+          "id": "python-q8",
+          "number": 8,
+          "marks": [],
+          "text": "What's inside a dict, and why is it ordered now?",
+          "points": [
+            "<strong>Compact dict</strong>: sparse index array → dense entries array",
+            "Dense array is append-order → <strong>insertion order is a side effect made official</strong> (3.7+)",
+            "Open addressing + probing; collisions resolved by probe sequence",
+            "Resize on load factor → rehash, order preserved",
+            "Key must be hashable <strong>and</strong> <code>__hash__</code>/<code>__eq__</code> must agree"
+          ],
+          "links": [
+            {
+              "label": "dict internals",
+              "target": "03-python/04-cpython-object-internals/21-dict-internals"
+            }
+          ],
+          "flow": "sparse indices → dense entries → append order → ordering is structural",
+          "trap": "saying it's a plain hash table with an added ordered list"
+        },
+        {
+          "id": "python-q9",
+          "number": 9,
+          "marks": [],
+          "text": "How does Python free memory?",
+          "points": [
+            "Primary: <strong>reference counting</strong> — freed the instant count hits zero, deterministic",
+            "Refcounts can't see <strong>cycles</strong> → generational <strong>cyclic GC</strong> sweeps those",
+            "Three generations, promoted on survival; can be tuned or disabled",
+            "<code>__del__</code> on cycle members historically blocked collection",
+            "Freed ≠ returned to OS — arenas may retain"
+          ],
+          "links": [
+            {
+              "label": "cyclic garbage collector",
+              "target": "03-python/05-memory-management-gc/29-cyclic-garbage-collector"
+            }
+          ],
+          "flow": "refcount frees eagerly → cycles need the generational GC → arenas may hold pages",
+          "trap": "\"Python has a garbage collector\" as the whole answer — refcounting is the main engine"
+        },
+        {
+          "id": "python-q10",
+          "number": 10,
+          "marks": [],
+          "text": "What happens on obj.attr?",
+          "points": [
+            "Type's <strong>MRO</strong> searched first for a <strong>data descriptor</strong> → wins over instance dict",
+            "Then instance <code>__dict__</code> → then non-data descriptors → then <code>__getattr__</code> fallback",
+            "Methods <em>are</em> descriptors — that's how <code>self</code> gets bound",
+            "<code>@property</code>, <code>classmethod</code>, <code>staticmethod</code>, <code>__slots__</code> all descriptors",
+            "MRO computed by <strong>C3 linearisation</strong>"
+          ],
+          "links": [
+            {
+              "label": "descriptors",
+              "target": "03-python/04-cpython-object-internals/25-descriptors"
+            }
+          ],
+          "flow": "data descriptor → instance dict → non-data descriptor → <code>__getattr__</code>",
+          "trap": "\"instance dict is checked first\" — data descriptors outrank it"
+        },
+        {
+          "id": "python-q11",
+          "number": 11,
+          "marks": [],
+          "text": "Write a decorator that times a function. What breaks if you're careless?",
+          "points": [
+            "Closure over the target + <code>*args, **kwargs</code> passthrough",
+            "<strong><code>functools.wraps</code></strong> or you lose <code>__name__</code>, docstring, <strong>and annotations</strong>",
+            "Losing annotations breaks anything schema-generating downstream",
+            "Async targets need an async wrapper — one decorator can't blindly cover both",
+            "Stacking order = bottom-up application"
+          ],
+          "links": [
+            {
+              "label": "decorators",
+              "target": "03-python/02-functions-scope-closures/12-decorators"
+            }
+          ],
+          "flow": "closure → wraps to preserve metadata → separate async path",
+          "trap": "forgetting <code>functools.wraps</code>, then wondering why FastAPI/Pydantic misreads the signature"
+        },
+        {
+          "id": "python-q12",
+          "number": 12,
+          "marks": [],
+          "text": "Why context managers instead of try/finally?",
+          "points": [
+            "<code>__enter__</code> / <code>__exit__</code> — cleanup travels <strong>with the resource</strong>, not the call site",
+            "<code>__exit__</code> sees the exception and may suppress by returning truthy",
+            "<code>contextlib.contextmanager</code> for the generator form; <code>AsyncExitStack</code> for async",
+            "Composable: nested/stacked acquisition with correct unwind order",
+            "Right home for spans, DB sessions, temp files, model handles"
+          ],
+          "links": [
+            {
+              "label": "context managers",
+              "target": "03-python/09-idiomatic-structural/51-context-managers"
+            }
+          ],
+          "flow": "acquire in enter → guaranteed exit → composable and reusable",
+          "trap": "returning truthy from <code>__exit__</code> by accident and swallowing errors"
+        },
+        {
+          "id": "python-q13",
+          "number": 13,
+          "marks": [
+            "decides"
+          ],
+          "text": "Where does Pydantic sit in a service, and what does v2 change?",
+          "points": [
+            "It's the <strong>boundary</strong> — untrusted in, typed domain objects out",
+            "v2 core in <strong>Rust</strong> → large validation speedup; <code>model_validate</code> / <code>model_dump</code>",
+            "Validate <strong>once at the edge</strong>, not repeatedly in business logic",
+            "<code>ValidationError</code> is structured — map it to a 422, don't stringify",
+            "Same machinery emits <strong>JSON Schema</strong> → LLM tool definitions"
+          ],
+          "links": [
+            {
+              "label": "pydantic validation boundary",
+              "target": "03-python/08-typing-interfaces/50a-pydantic-validation-boundary"
+            }
+          ],
+          "flow": "untrusted edge → validate once → typed core → schema falls out for free",
+          "trap": "scattering <code>model_validate</code> through the domain layer"
+        },
+        {
+          "id": "python-q14",
+          "number": 14,
+          "marks": [],
+          "text": "gather vs TaskGroup — and what happens on cancellation?",
+          "points": [
+            "Coroutine does nothing until scheduled — <strong>Task</strong> is the scheduled unit",
+            "<code>gather(return_exceptions=False)</code> → first error propagates, <strong>siblings keep running</strong>",
+            "<strong><code>TaskGroup</code></strong> (3.11+) → structured: one fails, rest cancelled, errors as a group",
+            "Cancellation is a <code>CancelledError</code> <strong>thrown in</strong> — must be allowed to propagate",
+            "Swallowing <code>CancelledError</code> in a bare <code>except</code> = ungovernable task"
+          ],
+          "links": [
+            {
+              "label": "tasks gather cancellation",
+              "target": "03-python/07-async-io/42-tasks-gather-cancellation"
+            }
+          ],
+          "flow": "coroutine → Task → TaskGroup for structured cancel → never swallow CancelledError",
+          "trap": "bare <code>except Exception</code> that eats cancellation"
+        },
+        {
+          "id": "python-q15",
+          "number": 15,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "The model must return something your code can execute — how do you guarantee shape?",
+          "points": [
+            "Don't parse prose — declare a <strong>schema</strong> and constrain generation",
+            "Pydantic model → <strong>JSON Schema</strong> → tool/function definition",
+            "Provider-side structured output / grammar constraining beats retry-and-hope",
+            "Still validate on receipt: schema-valid ≠ semantically valid",
+            "Failure path: repair prompt → bounded retries → <strong>fail loudly</strong>, never silently coerce"
+          ],
+          "links": [
+            {
+              "label": "structured outputs tool schemas",
+              "target": "03-python/08-typing-interfaces/50b-structured-outputs-tool-schemas"
+            }
+          ],
+          "flow": "schema first → constrain generation → validate on arrival → bounded repair",
+          "trap": "regex-parsing model output, or infinite reask loops"
+        }
+      ]
+    },
+    {
+      "id": "python-c",
+      "letter": "C",
+      "name": "Trade-offs",
+      "questions": [
+        {
+          "id": "python-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "Someone put a blocking call in an async handler. What happens?",
+          "points": [
+            "It blocks the <strong>whole event loop</strong> — every other request stalls, not just this one",
+            "Symptom: p99 collapses under load while CPU looks idle",
+            "Usual culprits: <code>requests</code>, sync DB driver, <code>time.sleep</code>, big CPU loop, file I/O",
+            "Fix: async client, or <strong><code>run_in_executor</code> / <code>asyncio.to_thread</code></strong>",
+            "Detect: <code>loop.slow_callback_duration</code>, debug mode, or latency histograms"
+          ],
+          "links": [
+            {
+              "label": "bridging sync async",
+              "target": "03-python/07-async-io/43-bridging-sync-async"
+            }
+          ],
+          "flow": "one blocking call → loop stalls → all requests → offload to executor or go async",
+          "trap": "blaming worker count instead of naming the stalled loop"
+        },
+        {
+          "id": "python-q17",
+          "number": 17,
+          "marks": [
+            "decides"
+          ],
+          "text": "CPU-heavy preprocessing next to your async API — where does it go?",
+          "points": [
+            "<strong>Never</strong> inline in the handler — it's the blocking case with a nicer name",
+            "Small + C-backed (NumPy, tokenizer) → thread executor, GIL already released",
+            "Pure-Python heavy → <strong>process pool</strong> or a separate worker service",
+            "Truly heavy → <strong>queue + worker fleet</strong>, API returns a job handle",
+            "Deciding axis: does it hold the loop longer than your latency budget?"
+          ],
+          "links": [
+            {
+              "label": "multiprocessing",
+              "target": "03-python/06-concurrency-gil/35-multiprocessing"
+            }
+          ],
+          "flow": "measure hold time → C-backed thread · Python-heavy process · long-running queue",
+          "trap": "process pool for something that pickles badly or is memory-huge"
+        },
+        {
+          "id": "python-q18",
+          "number": 18,
+          "marks": [],
+          "text": "When is __slots__ worth it?",
+          "points": [
+            "Removes per-instance <code>__dict__</code> → <strong>notable memory saving at high instance counts</strong>",
+            "Wins only when you have <em>many</em> small objects — millions of records, not a dozen services",
+            "Costs: no ad-hoc attributes, multiple-inheritance friction, weakref needs declaring",
+            "Often the wrong lever — dataclass/NamedTuple or a columnar store may beat it",
+            "Measure first; this is a profiling-led decision"
+          ],
+          "links": [
+            {
+              "label": "slots instance layout",
+              "target": "03-python/01-data-model-object-semantics/05-slots-instance-layout"
+            }
+          ],
+          "flow": "many small instances → drop per-instance dict → verify with a memory profile",
+          "trap": "applying it everywhere as a style rule"
+        },
+        {
+          "id": "python-q19",
+          "number": 19,
+          "marks": [],
+          "text": "dataclass, Pydantic model, NamedTuple, or plain class?",
+          "points": [
+            "<strong>dataclass</strong> — internal, trusted data; free <code>__init__</code>/<code>__eq__</code>/<code>__repr__</code>, no validation",
+            "<strong>Pydantic</strong> — untrusted boundary; validation + coercion + schema, real cost per object",
+            "<strong>NamedTuple</strong> — immutable, tuple-cheap, positional-friendly",
+            "<strong>Plain class</strong> — behaviour-first, invariants in methods",
+            "Rule: Pydantic at the edge, dataclass in the core"
+          ],
+          "links": [
+            {
+              "label": "dataclasses",
+              "target": "03-python/09-idiomatic-structural/52-dataclasses"
+            }
+          ],
+          "flow": "untrusted → Pydantic · internal → dataclass · immutable value → NamedTuple",
+          "trap": "Pydantic everywhere, paying validation cost on hot internal paths"
+        },
+        {
+          "id": "python-q20",
+          "number": 20,
+          "marks": [],
+          "text": "ORM or raw SQL?",
+          "points": [
+            "ORM wins on CRUD, migrations, identity map, team consistency",
+            "Raw/Core wins on analytics, bulk work, window functions, tuned plans",
+            "The recurring failure is <strong>N+1</strong> — invisible until it's in production",
+            "SQLAlchemy 2.0 lets you mix: ORM for writes, Core for read paths",
+            "Async ORM adds lazy-load hazards — eager-load explicitly"
+          ],
+          "links": [
+            {
+              "label": "sqlalchemy vs raw sql",
+              "target": "03-python/14-applied-adjacent/85-sqlalchemy-vs-raw-sql"
+            }
+          ],
+          "flow": "CRUD → ORM · analytical/bulk → Core → watch N+1 → mix deliberately",
+          "trap": "treating it as ideology; also lazy loading under async"
+        },
+        {
+          "id": "python-q21",
+          "number": 21,
+          "marks": [
+            "trending"
+          ],
+          "text": "Free-threaded CPython — would you adopt it?",
+          "points": [
+            "Removes the GIL → genuine multi-core <strong>Python</strong> threads",
+            "Cost: per-object locking overhead, single-thread regression, ABI churn",
+            "Blocker is the <strong>C-extension ecosystem</strong> — every native dep must support it",
+            "Honest answer: prototype yes, production only when your dep tree is green",
+            "Doesn't change I/O-bound design at all — asyncio still the answer there"
+          ],
+          "links": [
+            {
+              "label": "no gil free threaded cpython",
+              "target": "03-python/06-concurrency-gil/38-no-gil-free-threaded-cpython"
+            }
+          ],
+          "flow": "real threads → but ecosystem gate → prototype now, adopt when deps ready",
+          "trap": "presenting it as free speed, or as relevant to I/O-bound work"
+        },
+        {
+          "id": "python-q22",
+          "number": 22,
+          "marks": [
+            "trending"
+          ],
+          "text": "Sub-interpreters vs multiprocessing?",
+          "points": [
+            "Per-interpreter GIL → parallelism <strong>inside one process</strong>",
+            "Cheaper than processes: no fork cost, shared memory pages, faster startup",
+            "But: no shared objects, explicit channels only; many C extensions unsupported",
+            "Fits many short CPU tasks where process spawn dominates",
+            "Still young — multiprocessing remains the boring correct answer"
+          ],
+          "links": [
+            {
+              "label": "sub interpreters",
+              "target": "03-python/06-concurrency-gil/39-sub-interpreters"
+            }
+          ],
+          "flow": "per-interpreter GIL → in-process parallelism → cheap spawn, but isolation and ext gaps",
+          "trap": "describing them as threads with shared state"
+        },
+        {
+          "id": "python-q23",
+          "number": 23,
+          "marks": [],
+          "text": "Where do you put the cache, and what does it cost you?",
+          "points": [
+            "Layers: in-process (<code>lru_cache</code>) · shared (Redis) · CDN/edge",
+            "In-process is fastest and <strong>wrong the moment you scale horizontally</strong> — N caches, N truths",
+            "Shared cache = network hop + a new failure mode + serialisation cost",
+            "Invalidation strategy chosen <strong>before</strong> the cache: TTL · write-through · versioned key",
+            "For LLM work the interesting ones are embedding and <strong>semantic</strong> caches"
+          ],
+          "links": [
+            {
+              "label": "caching patterns",
+              "target": "03-python/13-production-services/79-caching-patterns"
+            }
+          ],
+          "flow": "pick layer → accept its consistency story → decide invalidation up front",
+          "trap": "<code>lru_cache</code> on a multi-worker service and calling it a cache hit rate"
+        },
+        {
+          "id": "python-q24",
+          "number": 24,
+          "marks": [],
+          "text": "Make this endpoint idempotent.",
+          "points": [
+            "Client sends an <strong>idempotency key</strong>; server stores key → result",
+            "Same key again → <strong>replay the stored response</strong>, don't re-execute",
+            "Key must be persisted <strong>in the same transaction</strong> as the effect, or you get double-writes",
+            "Need a state machine: in-flight vs done — concurrent duplicates must block, not race",
+            "TTL the keys; decide what a <em>conflicting body on the same key</em> means (409)"
+          ],
+          "links": [
+            {
+              "label": "idempotency",
+              "target": "03-python/13-production-services/75-idempotency"
+            }
+          ],
+          "flow": "key in → atomic claim → execute once → store result → replay on repeat",
+          "trap": "storing the key after the side effect — the crash window is exactly the bug"
+        },
+        {
+          "id": "python-q25",
+          "number": 25,
+          "marks": [],
+          "text": "Which rate-limiting algorithm, and why?",
+          "points": [
+            "<strong>Fixed window</strong> — trivial, but boundary burst gives 2× at the edge",
+            "<strong>Sliding window</strong> — smoother, more state",
+            "<strong>Token bucket</strong> — allows controlled burst, the usual right answer for APIs",
+            "<strong>Leaky bucket</strong> — smooths output, good in front of a fragile upstream",
+            "Distributed → shared counter in Redis, atomic Lua; decide fail-open vs fail-closed"
+          ],
+          "links": [
+            {
+              "label": "rate limiting",
+              "target": "03-python/13-production-services/76-rate-limiting"
+            }
+          ],
+          "flow": "burst tolerance? → token bucket → shared atomic counter → pick fail mode",
+          "trap": "per-process limiters that multiply your real limit by worker count"
+        },
+        {
+          "id": "python-q26",
+          "number": 26,
+          "marks": [],
+          "text": "You fan out to five providers and two fail. How do you surface that?",
+          "points": [
+            "<code>TaskGroup</code> + <strong><code>ExceptionGroup</code></strong> — all failures, not just the first",
+            "<code>except*</code> matches by type <em>inside</em> the group",
+            "Preserves partial success — critical for multi-source retrieval and tool fan-out",
+            "Decide the policy explicitly: all-or-nothing vs best-effort-with-report",
+            "Log the group; don't collapse to one error string"
+          ],
+          "links": [
+            {
+              "label": "exception groups",
+              "target": "03-python/09-idiomatic-structural/56-exception-groups"
+            }
+          ],
+          "flow": "TaskGroup → ExceptionGroup → <code>except*</code> → explicit partial-failure policy",
+          "trap": "<code>gather</code> + first-exception, silently losing the other four outcomes"
+        },
+        {
+          "id": "python-q27",
+          "number": 27,
+          "marks": [],
+          "text": "Protocol or ABC?",
+          "points": [
+            "<strong>ABC</strong> = nominal — you must inherit; explicit, discoverable, runtime-enforced",
+            "<strong>Protocol</strong> = structural — shape is enough, no inheritance, no coupling",
+            "Protocol shines for <strong>third-party or swappable</strong> types you don't own",
+            "<code>@runtime_checkable</code> only checks method <em>presence</em>, not signatures",
+            "Practical: Protocol for ports/adapters, ABC when you're also sharing implementation"
+          ],
+          "links": [
+            {
+              "label": "protocols structural typing",
+              "target": "03-python/08-typing-interfaces/48-protocols-structural-typing"
+            }
+          ],
+          "flow": "do I own the type? → no → Protocol · sharing behaviour too → ABC",
+          "trap": "trusting <code>runtime_checkable</code> as real validation"
+        }
+      ]
+    },
+    {
+      "id": "python-d",
+      "letter": "D",
+      "name": "Scaling & failure",
+      "questions": [
+        {
+          "id": "python-q28",
+          "number": 28,
+          "marks": [
+            "decides"
+          ],
+          "text": "Memory climbs until the pod OOMs every couple of days. Find it.",
+          "points": [
+            "Separate the three: <strong>leak</strong> (refs retained) · <strong>fragmentation</strong> (arenas) · <strong>legit growth</strong> (cache with no bound)",
+            "<code>tracemalloc</code> snapshots + diff between two points under load",
+            "<code>gc.get_objects()</code> / referrer chains for what's holding the graph",
+            "Usual suspects: unbounded cache/dict, module-level accumulator, closure capturing a big object, un-awaited tasks",
+            "RSS not falling after free ≠ leak — allocator may retain"
+          ],
+          "links": [
+            {
+              "label": "diagnosing memory",
+              "target": "03-python/05-memory-management-gc/32-diagnosing-memory"
+            }
+          ],
+          "flow": "snapshot → diff under load → find retainer → classify leak vs fragmentation vs unbounded cache",
+          "trap": "reading RSS alone and concluding \"leak\""
+        },
+        {
+          "id": "python-q29",
+          "number": 29,
+          "marks": [
+            "decides"
+          ],
+          "text": "How many workers and threads for this service?",
+          "points": [
+            "ASGI: one <strong>event loop per worker process</strong>; workers ≈ cores for CPU headroom",
+            "Async I/O-bound → few workers, high concurrency each",
+            "Sync framework/handlers → thread pool sizing dominates, not worker count",
+            "Memory is the real ceiling when each worker loads a model — <strong>workers × model size</strong>",
+            "Preload/fork to share read-only pages where the runtime allows"
+          ],
+          "links": [
+            {
+              "label": "asgi wsgi worker model",
+              "target": "03-python/13-production-services/73-asgi-wsgi-worker-model"
+            }
+          ],
+          "flow": "workers ≈ cores → concurrency inside the loop → but memory per worker caps it",
+          "trap": "scaling workers for an async service that's actually blocked on one call"
+        },
+        {
+          "id": "python-q30",
+          "number": 30,
+          "marks": [],
+          "text": "Connection pool under async load — what goes wrong?",
+          "points": [
+            "Pool is <strong>per process</strong>, so real DB load = pool × workers × replicas",
+            "Async lets you accept far more concurrency than the pool can serve → <strong>queueing at checkout</strong>",
+            "Symptom: latency climbs with no DB CPU movement — it's pool wait, not query time",
+            "Always set acquire <strong>timeout</strong>; unbounded wait turns into a hang",
+            "Long transactions hold connections — keep the transaction narrower than the request"
+          ],
+          "links": [
+            {
+              "label": "connection pooling async",
+              "target": "03-python/13-production-services/78-connection-pooling-async"
+            }
+          ],
+          "flow": "pool per process → concurrency exceeds it → checkout queue → cap and time out",
+          "trap": "growing the pool instead of shortening transaction hold time"
+        },
+        {
+          "id": "python-q31",
+          "number": 31,
+          "marks": [
+            "decides"
+          ],
+          "text": "Stream tokens to the browser. What actually bites?",
+          "points": [
+            "<strong>SSE</strong> for one-way token streams; WebSocket only if you need duplex",
+            "Disable proxy buffering or nothing appears until the end (nginx <code>X-Accel-Buffering</code>)",
+            "<strong>Backpressure</strong>: slow client → your generator must not race ahead unbounded",
+            "Client disconnect must <strong>cancel upstream</strong> or you pay for tokens nobody reads",
+            "Errors mid-stream: headers already sent → in-band error event, not a 500"
+          ],
+          "links": [
+            {
+              "label": "streaming transport",
+              "target": "03-python/13-production-services/77-streaming-transport"
+            }
+          ],
+          "flow": "SSE → unbuffer proxy → honour backpressure → cancel on disconnect → in-band errors",
+          "trap": "assuming disconnect stops the upstream LLM call"
+        },
+        {
+          "id": "python-q32",
+          "number": 32,
+          "marks": [],
+          "text": "It's slow. What do you reach for?",
+          "points": [
+            "Measure before guessing — <strong>wall-clock first</strong>, then decide CPU vs wait",
+            "Deterministic (<code>cProfile</code>) for call counts; <strong>sampling</strong> (py-spy) for live prod, no restart",
+            "<code>py-spy dump</code> on a hung process shows where it's actually parked",
+            "Async needs task-aware views — a stalled loop shows as idle CPU",
+            "Optimise the top of the profile, then re-measure; stop when the budget is met"
+          ],
+          "links": [
+            {
+              "label": "profiling the right way",
+              "target": "03-python/10-performance-profiling/59-profiling-the-right-way"
+            }
+          ],
+          "flow": "wall-clock → sample in prod → find the hot frame → fix → re-measure",
+          "trap": "micro-optimising a function that isn't in the top of the profile"
+        },
+        {
+          "id": "python-q33",
+          "number": 33,
+          "marks": [],
+          "text": "When does work move to a queue, and what breaks there?",
+          "points": [
+            "Move when: longer than the request budget · retryable · spiky · needs isolation",
+            "Delivery is <strong>at-least-once</strong> → consumers must be idempotent (see #24)",
+            "Poison messages need a <strong>DLQ</strong> and a bounded retry with backoff",
+            "Visibility timeout must exceed real processing time or you get duplicate work",
+            "Ordering is not free — per-key partitioning if you need it"
+          ],
+          "links": [
+            {
+              "label": "queues background workers",
+              "target": "03-python/13-production-services/80-queues-background-workers"
+            }
+          ],
+          "flow": "exceeds budget → enqueue → idempotent consumer → bounded retry → DLQ",
+          "trap": "assuming exactly-once"
+        },
+        {
+          "id": "python-q34",
+          "number": 34,
+          "marks": [],
+          "text": "One request spans five services. How do you trace it?",
+          "points": [
+            "<strong>Correlation/trace ID</strong> generated at the edge, propagated on every hop",
+            "<code>contextvars</code> carries it across <code>await</code> boundaries — thread-locals do not",
+            "<strong>Structured</strong> logs (JSON) with the ID as a field, not baked into the message",
+            "OpenTelemetry spans give causality and timing, not just breadcrumbs",
+            "Propagate into background tasks explicitly — context does not follow a fire-and-forget task for free"
+          ],
+          "links": [
+            {
+              "label": "structured logging context propagation",
+              "target": "03-python/13-production-services/81-structured-logging-context-propagation"
+            }
+          ],
+          "flow": "ID at edge → contextvars → structured field → spans → propagate into workers",
+          "trap": "thread-locals under asyncio; losing context in background tasks"
+        }
+      ]
+    },
+    {
+      "id": "python-e",
+      "letter": "E",
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "python-q35",
+          "number": 35,
+          "marks": [
+            "decides"
+          ],
+          "text": "Design the Python service in front of an LLM.",
+          "points": [
+            "Edge: validate (Pydantic) → authn/z → <strong>rate limit per tenant</strong> → idempotency key",
+            "Async all the way to the provider; <strong>stream</strong> back via SSE",
+            "Reliability: timeout · bounded retry with jitter · <strong>circuit breaker</strong> · fallback model",
+            "Cost controls: token budget per request, semantic cache, truncate context deliberately",
+            "Observability: tokens in/out, cost, TTFT, p99, cache-hit — per tenant"
+          ],
+          "links": [
+            {
+              "label": "reliability mechanics",
+              "target": "03-python/13-production-services/74-reliability-mechanics"
+            }
+          ],
+          "flow": "validate → limit → async call → stream → breaker + budget → per-tenant metrics",
+          "trap": "designing it like a CRUD API — no TTFT, no token budget, no breaker"
+        },
+        {
+          "id": "python-q36",
+          "number": 36,
+          "marks": [
+            "decides"
+          ],
+          "text": "Same service also does embedding and reranking. Now what?",
+          "points": [
+            "Two <strong>different</strong> workload shapes in one process = the core mistake",
+            "Split: async API tier ‖ CPU/GPU worker tier, queue between them",
+            "Batch embeddings — per-item calls waste both GPU and network",
+            "Model load is memory × workers; load once, share, or isolate the tier entirely",
+            "Backpressure at the queue, not by dropping HTTP requests"
+          ],
+          "links": [
+            {
+              "label": "concurrent futures",
+              "target": "03-python/06-concurrency-gil/36-concurrent-futures"
+            }
+          ],
+          "flow": "separate the tiers → queue between → batch on the worker → bound the queue",
+          "trap": "one process doing both, then tuning workers forever"
+        },
+        {
+          "id": "python-q37",
+          "number": 37,
+          "marks": [],
+          "text": "Dependency management across a team — what's your policy?",
+          "points": [
+            "<strong>Lockfile committed</strong>; the resolver output is the artifact, not the range",
+            "Separate direct deps from transitive — pin apps, range libraries",
+            "One environment per project; reproducible build in CI from the lock",
+            "The AI stack is the hard part: torch/CUDA pins, extras, platform wheels",
+            "Upgrade cadence + a CVE path, or the lock quietly rots"
+          ],
+          "links": [
+            {
+              "label": "virtual environments dependency resolution",
+              "target": "03-python/11-packaging-environments-tooling/65-virtual-environments-dependency-resolution"
+            }
+          ],
+          "flow": "declare ranges → resolve → commit lock → CI builds from lock → scheduled upgrades",
+          "trap": "<code>pip freeze</code> as a lockfile — it can't tell direct from transitive"
+        },
+        {
+          "id": "python-q38",
+          "number": 38,
+          "marks": [],
+          "text": "What do you instrument in an AI backend that you wouldn't in a CRUD one?",
+          "points": [
+            "<strong>TTFT</strong> and inter-token latency — averages hide the experience",
+            "Tokens in/out and <strong>cost per request</strong>, attributed per tenant/feature",
+            "Retrieval quality signals: hit rate, rerank movement, empty-result rate",
+            "Model/prompt <strong>version</strong> on every span — otherwise regressions aren't attributable",
+            "Guardrail and refusal counts as first-class metrics"
+          ],
+          "links": [
+            {
+              "label": "observability instrumentation",
+              "target": "03-python/13-production-services/82-observability-instrumentation"
+            }
+          ],
+          "flow": "latency shape (TTFT) → cost per tenant → retrieval signals → version tag everything",
+          "trap": "p99 latency and error rate only — invisible to quality and cost regressions"
+        },
+        {
+          "id": "python-q39",
+          "number": 39,
+          "marks": [],
+          "text": "When do you drop to C/Rust?",
+          "points": [
+            "Only after profiling says a <strong>tight Python loop</strong> is the bottleneck",
+            "First try: vectorise (NumPy), better algorithm, or an existing native lib",
+            "Real candidates: custom tokenisation, bespoke distance metrics, hot parsers",
+            "Costs: build matrix, wheels per platform, debugging across the boundary, hiring",
+            "Boundary crossing itself costs — batch across it, don't call per item"
+          ],
+          "links": [
+            {
+              "label": "c extension native boundary",
+              "target": "03-python/10-performance-profiling/61-c-extension-native-boundary"
+            }
+          ],
+          "flow": "profile → vectorise/algorithm first → native only for a proven hot loop → batch the boundary",
+          "trap": "rewriting in Rust something that was one bad query all along"
+        }
+      ]
+    },
+    {
+      "id": "python-f",
+      "letter": "F",
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "python-q40",
+          "number": 40,
+          "marks": [
+            "decides"
+          ],
+          "text": "Tell me about a Python performance or concurrency problem you actually fixed.",
+          "points": [
+            "Symptom in <strong>user terms</strong> first — latency, cost, or an outage — never \"the code was slow\"",
+            "What you <em>thought</em> it was, and the measurement that proved you wrong",
+            "The tool that found it — name it (py-spy, tracemalloc, trace view)",
+            "The fix <strong>and</strong> what you deliberately didn't do",
+            "The number: before → after. This is the sentence they remember"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "user-visible symptom → wrong hypothesis → measurement → fix → number",
+          "trap": "narrating the fix with no before/after figure"
+        }
+      ]
+    },
+    {
+      "id": "python-merged-from-jbtiqpymd-24-aug-2026",
+      "letter": null,
+      "name": "Merged from JBTIQ_PY.md — 24 Aug 2026",
+      "questions": [
+        {
+          "id": "python-q41",
+          "number": 41,
+          "marks": [],
+          "text": "(D) \"Your multiprocessing code works on Linux, breaks on Mac. Why?",
+          "points": [
+            "Linux <strong><code>fork</code></strong> — child inherits memory copy-on-write, no pickling",
+            "macOS (3.8+) and Windows <strong><code>spawn</code></strong> — fresh interpreter, re-imports the module",
+            "So spawn needs <strong>picklable args</strong> and the <code>if __name__ == \"__main__\":</code> guard",
+            "Fork + threads is genuinely unsafe — locks can be inherited held",
+            "Loaded ML models: fork shares pages cheaply, spawn reloads per worker"
+          ],
+          "links": [
+            {
+              "label": "multiprocessing",
+              "target": "03-python/06-concurrency-gil/35-multiprocessing"
+            }
+          ],
+          "flow": "fork inherits vs spawn re-imports → picklable args + main guard → memory story differs",
+          "trap": "assuming worker startup cost and memory are the same on both"
+        },
+        {
+          "id": "python-q42",
+          "number": 42,
+          "marks": [],
+          "text": "(C) \"Why is pickle dangerous, and what do you use instead?",
+          "points": [
+            "Unpickling <strong>executes arbitrary code</strong> — it's deserialisation <em>and</em> code execution",
+            "Never unpickle anything crossing a trust boundary: uploads, cache, queue payloads",
+            "Untrusted → JSON / msgpack / protobuf, or <code>model_dump_json()</code>",
+            "Trusted internal (sklearn artifacts) is defensible <strong>with</strong> version pinning + integrity check",
+            "Also brittle: pickles break across library versions"
+          ],
+          "links": [
+            {
+              "label": "serialization",
+              "target": "03-python/12-stdlib-systems/69-serialization"
+            }
+          ],
+          "flow": "unpickle = code execution → never across trust boundary → JSON/msgpack out, pinned artifacts in",
+          "trap": "treating it as \"just a serialisation format choice\""
+        },
+        {
+          "id": "python-q43",
+          "number": 43,
+          "marks": [],
+          "text": "(C) \"@cached_property, @lru_cache, functools.cache — which and when?",
+          "points": [
+            "<strong><code>cached_property</code></strong> — per <em>instance</em>, computed once, lives in <code>__dict__</code>; dies with the object",
+            "<strong><code>lru_cache(maxsize)</code></strong> — per <em>function</em>, keyed on args, <strong>bounded</strong> eviction",
+            "<strong><code>cache</code></strong> — unbounded <code>lru_cache</code>; on a method it pins <code>self</code> forever → <strong>leak</strong>",
+            "Args must be hashable; mutable defaults and unhashable payloads break it",
+            "All are per-process — see #23 before calling it a cache layer"
+          ],
+          "links": [
+            {
+              "label": "functools toolkit",
+              "target": "03-python/02-functions-scope-closures/13-functools-toolkit"
+            }
+          ],
+          "flow": "instance-scoped → cached_property · arg-keyed bounded → lru_cache · unbounded on methods → leak",
+          "trap": "<code>@cache</code> on an instance method, then hunting a memory leak"
+        },
+        {
+          "id": "python-q44",
+          "number": 44,
+          "marks": [],
+          "text": "(C) \"CPython, PyPy, or compiled Python?",
+          "points": [
+            "<strong>CPython</strong> — reference, best C-extension compatibility; the default for AI stacks",
+            "<strong>PyPy</strong> — tracing JIT, big wins on long-running pure-Python; <strong>weak native-ext story</strong>",
+            "<strong>mypyc / Cython</strong> — AOT-compile typed modules, ship as extensions",
+            "3.11+ specialising interpreter narrowed the gap for a lot of workloads",
+            "For AI work the dep tree usually decides it — torch/CUDA pins you to CPython"
+          ],
+          "links": [
+            {
+              "label": "interpreter level speedups",
+              "target": "03-python/10-performance-profiling/62-interpreter-level-speedups"
+            }
+          ],
+          "flow": "pure-Python hot loop → PyPy/mypyc · native deps → CPython → the dep tree usually decides",
+          "trap": "proposing PyPy for a torch service"
+        }
+      ]
+    }
+  ]
+}

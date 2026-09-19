@@ -1,0 +1,1556 @@
+{
+  "slug": "llm-foundations",
+  "number": 4,
+  "title": "🧠 LLM FOUNDATIONS",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "⭐ = decides the round. 🔥 = trending 2026. 📍 = <em>you</em> were asked this. 📝 = no vault note yet.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> <code>05-LLM-Production/</code> + <code>02-DL/03-Transformer Architecture Core/</code> · <strong>Phrasing drill:</strong> ♻️ <code>jbtiq_llm.md</code> + the transformer-core half of <code>jbtiq_dl.md</code> <strong>merged into this file 19 Sep 2026</strong> (serving/inference half → [[08-LLM-SERVING-INFERENCE]], prompt-versioning → [[07-MCP-CONTEXT-ENGINEERING]]) — overlapping questions carry a <strong>🗣️ Phrasing drill</strong> block, the other 20 are appended below · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]"
+  ],
+  "bands": [
+    {
+      "id": "llm-foundations-mechanism-know-these-cold",
+      "letter": null,
+      "name": "Mechanism — know these cold",
+      "questions": [
+        {
+          "id": "llm-foundations-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "Explain self-attention. Why Q, K and V?",
+          "points": [
+            "Each token emits three projections: <strong>query</strong> (what I'm looking for), <strong>key</strong> (what I offer), <strong>value</strong> (what I pass on)",
+            "Scores = Q·Kᵀ, scaled by <strong>√d_k</strong> (stops softmax saturating), masked, softmaxed → weighted sum of V",
+            "Every position attends to every other in <strong>one step</strong> — that's the win over recurrence",
+            "Multi-head = several subspaces in parallel: syntax, coreference, position",
+            "Cost is <strong>O(n²)</strong> in sequence length — the root of every long-context problem"
+          ],
+          "links": [
+            {
+              "label": "Self attention deep dive",
+              "target": "05-LLM-Production/01-Foundations &amp; Architecture/04-Self-attention deep dive"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "project QKV → scaled dot product → mask → softmax → weight V → heads in parallel",
+          "trap": "describing it as \"the model focuses on important words\" — that's the metaphor, not the mechanism",
+          "drill": {
+            "prompt": "from jbtiq_dl Q12: \"Explain Q, K, V to me like I'm a strong backend engineer who has never seen attention.\"",
+            "badge": "Evergreen",
+            "hint": "Split prefill from decode. Which phase is compute-bound, which is memory-bandwidth-bound, and what does the KV cache convert between?",
+            "points": [
+              "Mechanics in one breath: each token's <strong>Q</strong> dots against all <strong>K</strong>s, softmax weights the <strong>V</strong>s — attention is each position querying the whole past. Cost over a sequence of length n is <strong>O(n²)</strong> in compute and the KV tensors grow <strong>O(n)</strong> per layer per head.",
+              "<strong>Prefill</strong> (the prompt pass) does the full n² attention in parallel — <strong>compute-bound</strong>, sets time-to-first-token. <strong>Decode</strong> generates one token at a time, each reading the <em>entire KV cache</em> — <strong>memory-bandwidth-bound</strong>, sets time-per-output-token. Two different bottlenecks, two different optimizations.",
+              "The <strong>KV cache</strong> trades recompute for memory: without it every new token re-encodes the whole prefix; with it, decode is O(n) reads per token but the cache itself becomes the scarce resource — cache size scales with layers × heads × context × batch, and it's what limits concurrent sequences on a GPU.",
+              "This split explains the serving toolbox: batching helps decode (amortize weight reads), <strong>GQA/MQA shrink the KV cache</strong>, FlashAttention reduces memory traffic in prefill, and long contexts hurt <em>both</em> phases in different ways.",
+              "Say the architect's summary: LLM serving economics is mostly <strong>memory bandwidth and KV-cache real estate</strong>, not FLOPs."
+            ],
+            "oneLiner": "Prefill is quadratic and compute-bound, decode is linear per token but memory-bandwidth-bound reading the KV cache — and since the cache scales with context times batch, serving economics is really a KV-cache real-estate problem.",
+            "links": [
+              {
+                "label": "Self attention deep dive",
+                "target": "05-LLM-Production/01-Foundations &amp; Architecture/04-Self-attention deep dive"
+              },
+              {
+                "label": "Capacity &amp; throughput math",
+                "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/03-Capacity &amp; throughput math"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "Why did decoder-only win?",
+          "points": [
+            "One objective — <strong>next-token prediction</strong> — scales on raw unlabelled text with no task design",
+            "Every task becomes generation: classification, extraction, translation, all one interface",
+            "Encoder-decoder still wins where input/output are genuinely distinct and fixed (translation, some seq2seq)",
+            "Encoder-only (BERT) remains right for <strong>embeddings and classification</strong> — that's your retriever",
+            "The win was scaling simplicity, not architectural superiority"
+          ],
+          "links": [
+            {
+              "label": "Why Decoder only won",
+              "target": "05-LLM-Production/01-Foundations &amp; Architecture/03-Why-Decoder-only-won"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "one self-supervised objective → scales on any text → every task is generation",
+          "trap": "claiming decoder-only is strictly better — your embedding model is encoder-only",
+          "drill": {
+            "prompt": "from jbtiq_dl Q20: \"Encoder-only, decoder-only, encoder-decoder — one exemplar each, and when is each family the right call?\"",
+            "badge": "Evergreen",
+            "hint": "Think about the training signal per token, task generality, and what caching needs at inference.",
+            "points": [
+              "<strong>Training efficiency</strong>: next-token prediction gives a loss signal at <strong>every position</strong> of every sequence, on raw text at web scale — no task-specific heads, no span-corruption design choices. Simplicity scaled.",
+              "<strong>Task universality</strong>: everything — translation, QA, classification, dialogue — reduces to <em>continue this text</em>; in-context learning fell out of that framing, and one model serves all tasks without architectural surgery.",
+              "<strong>Inference mechanics</strong>: causal attention makes the <strong>KV cache</strong> trivially incremental — each new token attends to a fixed, append-only past. Encoder-decoder buys bidirectional understanding at the cost of a two-stack pipeline that's harder to serve and doesn't stream as naturally.",
+              "Nuance to say: encoders aren't dead — <strong>embedding and reranking models</strong> are encoder-style because bidirectional context is exactly right for representation, not generation. The victory is per-role, not absolute."
+            ],
+            "oneLiner": "Next-token prediction gives dense supervision on raw text, every task reduces to continuation, and causal attention makes KV caching trivial — decoder-only won generation while encoders kept the representation jobs.",
+            "links": [
+              {
+                "label": "Why Decoder only won",
+                "target": "05-LLM-Production/01-Foundations &amp; Architecture/03-Why-Decoder-only-won"
+              },
+              {
+                "label": "Transformer Recap",
+                "target": "05-LLM-Production/01-Foundations &amp; Architecture/02-Transformer Recap"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q3",
+          "number": 3,
+          "marks": [
+            "decides"
+          ],
+          "text": "What's in the KV cache, and why does it dominate memory?",
+          "points": [
+            "Caches <strong>K and V per token, per layer, per head</strong> so each new token isn't recomputed",
+            "Turns per-token generation from O(n²) recompute into O(n) — without it decoding is unusable",
+            "Size ≈ 2 × layers × heads × head_dim × seq_len × batch × dtype — grows <strong>linearly with context and batch</strong>",
+            "It, not weights, is what caps your concurrency at long context",
+            "Mitigations: <strong>GQA/MQA</strong> (fewer KV heads), quantised cache, paged attention, offload/eviction"
+          ],
+          "links": [
+            {
+              "label": "Kv cache and mitigations",
+              "target": "02-DL/03-Transformer Architecture Core/09-Kv cache and mitigations"
+            }
+          ],
+          "badge": "Trending — recurs on Devinterview LLM repos + inference-optimization blogs (NVIDIA-class) + LLM-infra JDs (2025–26)",
+          "flow": "cache K,V per layer → linear growth with context × batch → GQA + paging to survive it",
+          "trap": "saying \"it caches the prompt\" — it's per-layer tensors, and it's your real memory budget",
+          "drill": {
+            "prompt": "from jbtiq_dl Q18: \"Your chat product's per-token compute is fine, but memory per concurrent conversation is blowing up. What is the KV cache, and why is it the thing that hurts?\"",
+            "badge": "Trending — recurs on Devinterview LLM repos + inference-optimization blogs (NVIDIA-class) + LLM-infra JDs (2025–26)",
+            "hint": "What would each decode step have to recompute without it? Then write the size formula in your head and read off which factors grow.",
+            "points": [
+              "Each decode step attends over <strong>all previous tokens' K and V</strong>. Recomputing them every step is O(n²) per token; <strong>caching K,V per layer per head</strong> makes each new token O(n) — the cache <em>is</em> what makes autoregressive serving viable.",
+              "Size ≈ <strong>2 × layers × kv_heads × head_dim × seq_len × bytes × batch</strong> — linear in context length <em>and</em> in concurrent users. At long context it rivals or exceeds the weights themselves.",
+              "Consequence: decode becomes <strong>memory-bandwidth-bound</strong> — the cache must be re-read every step — so long context is a <em>memory</em> problem, not a compute problem.",
+              "Mitigations ladder (each is its own question): <strong>GQA/MQA</strong> (fewer kv_heads, Q21), <strong>KV quantization</strong> (fewer bytes), <strong>PagedAttention</strong> (no fragmentation, Q37), <strong>sliding-window attention</strong> (bounded seq_len, Q23)."
+            ],
+            "oneLiner": "The KV cache trades memory for compute — O(n) decode instead of O(n²) — and its size grows linearly with context times concurrency, which is exactly why serving memory, not FLOPs, is the binding constraint.",
+            "followUp": "\"So what's the first lever you'd pull?\" → GQA is baked in at pretraining; at serving time, paging + KV quantization.",
+            "links": [
+              {
+                "label": "Kv cache and mitigations",
+                "target": "02-DL/03-Transformer Architecture Core/09-Kv cache and mitigations"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q4",
+          "number": 4,
+          "marks": [
+            "trending"
+          ],
+          "text": "How does the model know token order? Why RoPE?",
+          "points": [
+            "Attention is <strong>permutation-invariant</strong> — position must be injected or it's a bag of words",
+            "Learned absolute embeddings don't extrapolate past training length",
+            "<strong>RoPE</strong> rotates Q and K by position, so the dot product depends on <strong>relative</strong> distance",
+            "That relative property is what makes context extension possible — NTK/YaRN scaling stretch the rotation",
+            "ALiBi takes a different route: a distance penalty on scores"
+          ],
+          "links": [
+            {
+              "label": "positional encodings family",
+              "target": "02-DL/03-Transformer Architecture Core/05-positional encodings family"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "attention has no order → inject position → RoPE makes it relative → rotation can be scaled to extend",
+          "trap": "not connecting RoPE to <em>why</em> long-context extension works at all",
+          "drill": {
+            "prompt": "from jbtiq_dl Q15: \"Attention is permutation-invariant. What are your options for injecting order, and what does modern practice actually use?\"",
+            "badge": "Evergreen",
+            "hint": "Four families: two absolute, two relative. Which one survives in current decoder LLMs, and what property earned it that spot?",
+            "points": [
+              "Without positional information, self-attention sees a <strong>bag of tokens</strong> — \"dog bites man\" ≡ \"man bites dog\".",
+              "<strong>Sinusoidal</strong> (fixed, added to embeddings): parameter-free, in-principle extrapolation. <strong>Learned absolute</strong>: simple, but hard cap at trained length.",
+              "<strong>Relative biases</strong> (ALiBi-style: penalize attention by distance): what matters linguistically is usually <em>offset</em>, not absolute index — and it degrades gracefully past trained length.",
+              "<strong>RoPE</strong>: rotate Q/K pairs by a position-dependent angle so the QK dot product depends only on <strong>relative offset</strong> — relative behavior without extra bias terms, and amenable to context extension by scaling. The modern decoder default.",
+              "Say the meta-point: absolute → relative is the field converging on <em>offset</em> as the right inductive bias."
+            ],
+            "oneLiner": "You inject order via sinusoidal or learned absolute encodings, or relative schemes — and modern LLMs use RoPE, which rotates Q and K so attention scores depend on relative offset.",
+            "links": [
+              {
+                "label": "Positional Encodings Family",
+                "target": "02-DL/03-Transformer Architecture Core/05-Positional Encodings Family"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q5",
+          "number": 5,
+          "marks": [
+            "decides"
+          ],
+          "text": "Tokenization — where does it actually bite you?",
+          "points": [
+            "<strong>BPE/subword</strong>: frequent strings are one token, rare ones fragment",
+            "<strong>Numbers</strong> split unpredictably → arithmetic errors that look like reasoning failures",
+            "Non-English and code cost far more tokens → real cost and context penalty per user",
+            "Token boundaries break exact matching — a reason sparse retrieval still earns its place",
+            "Different tokenizer = different token counts = your cost estimates don't transfer between models"
+          ],
+          "links": [
+            {
+              "label": "Tokenization in practice",
+              "target": "05-LLM-Production/01-Foundations &amp; Architecture/05-Tokenization in practice"
+            }
+          ],
+          "badge": "Trending — tokenization-consequence questions recur on LeetCode Discuss + screens (2025–26)",
+          "flow": "subword merges → rare text fragments → numbers/non-English inflate cost → boundaries break exact match",
+          "trap": "treating tokens as words when estimating cost or context",
+          "drill": {
+            "prompt": "from jbtiq_llm Q3: \"Your model can't spell, fails at arithmetic on large numbers, and a user's name gets mangled in French. One root cause connects all three.\"",
+            "badge": "Trending — tokenization-consequence questions recur on LeetCode Discuss + screens (2025–26)",
+            "hint": "The model never sees characters. What does it see, and how does that unit misalign with letters, digits, and non-English text?",
+            "points": [
+              "Root cause: <strong>subword tokenization (BPE-family)</strong>. The model reasons over token IDs, not characters — \"strawberry\" may be one token, so counting its r's requires knowledge the representation hides. Spelling tasks fail structurally, not from stupidity.",
+              "Arithmetic: digit strings segment <strong>inconsistently</strong> (1234 one token, 12345 split oddly), so positional arithmetic patterns don't align across magnitudes — why digit-level tokenization measurably improves math in models trained that way.",
+              "Multilingual inequity: BPE vocabularies are trained on data mixtures dominated by English — French names and non-Latin scripts fragment into many rare tokens → worse representation <em>and</em> <strong>more tokens per sentence</strong> (higher cost + more context consumed for the same content) for non-English users. That's a product and fairness issue, not a nicety.",
+              "Production consequences beyond quality: cost/billing is per token (the same document costs different amounts by language), context budgeting varies by language, and <strong>token-boundary artifacts</strong> (leading spaces, casing) cause prompt bugs.",
+              "The architect's takeaway: tokenizer choice is frozen at pretraining and haunts everything downstream — you can't fix it at inference; you design around it (tools for math, character-level tricks for spelling)."
+            ],
+            "oneLiner": "All three are tokenization artifacts — the model sees subword IDs, not characters, so spelling and digit alignment are hidden from it, and English-heavy vocabularies fragment other languages into more, rarer tokens with worse quality and higher cost.",
+            "links": [
+              {
+                "label": "Tokenization in practice",
+                "target": "05-LLM-Production/01-Foundations &amp; Architecture/05-Tokenization in practice"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q6",
+          "number": 6,
+          "marks": [
+            "trending"
+          ],
+          "text": "What does FlashAttention actually change?",
+          "points": [
+            "<strong>Not</strong> an approximation — mathematically identical output",
+            "The bottleneck was <strong>memory bandwidth</strong>, not FLOPs: writing the n×n score matrix to HBM",
+            "Tiling + online softmax keeps blocks in SRAM; the full matrix is never materialised",
+            "Result: big speedup <strong>and</strong> memory that scales linearly, not quadratically, in practice",
+            "This is why long context became affordable — it's a systems win, not a modelling one"
+          ],
+          "links": [
+            {
+              "label": "FlashAttention",
+              "target": "02-DL/03-Transformer Architecture Core/10-FlashAttention"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "score matrix never materialised → tile in SRAM → online softmax → same math, bandwidth-bound fixed",
+          "trap": "calling it an approximate or sparse attention method",
+          "drill": {
+            "prompt": "from jbtiq_dl Q19: \"FlashAttention computes exactly the same attention as the naive implementation. So where do the large speedups come from?\"",
+            "badge": "Evergreen",
+            "hint": "Profile the naive version: is it waiting on arithmetic or on memory? And what n×n object does it write that FlashAttention never does?",
+            "points": [
+              "Attention on GPUs is <strong>memory-bandwidth-bound</strong>, not FLOP-bound: the naive version materializes the <strong>n×n score matrix in HBM</strong>, then reads it back for softmax and again for the V product.",
+              "FlashAttention <strong>tiles</strong> Q/K/V blocks into on-chip SRAM and computes softmax <strong>online</strong> (running max + running sum — the log-sum-exp trick streamed), so the n² matrix <strong>never exists</strong> in main memory.",
+              "It's <strong>exact</strong> — an IO-aware reordering, not an approximation. Backward pass <strong>recomputes</strong> attention on the fly instead of storing it → activation memory drops from O(n²) to O(n), unlocking long-context training.",
+              "The transferable lesson interviewers want: on modern accelerators, <strong>count memory traffic, not FLOPs</strong> — kernel fusion beats algorithmic cleverness surprisingly often."
+            ],
+            "oneLiner": "FlashAttention is exact attention reorganized to never materialize the n² matrix — tiled through SRAM with an online softmax — winning because attention is bandwidth-bound, not FLOP-bound.",
+            "links": [
+              {
+                "label": "FlashAttention",
+                "target": "02-DL/03-Transformer Architecture Core/10-FlashAttention"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q7",
+          "number": 7,
+          "marks": [
+            "trending"
+          ],
+          "text": "MoE — what's actually sparse?",
+          "points": [
+            "FFN replaced by <strong>N experts</strong>; a router activates top-k (often 2) per token",
+            "<strong>Total</strong> params huge, <strong>active</strong> params per token small → capacity without proportional compute",
+            "Memory is not saved — all experts must be resident; it's a compute trade, not a memory one",
+            "Training pains: load balancing, router collapse, auxiliary losses",
+            "Serving pains: expert-parallel routing, uneven utilisation, harder batching"
+          ],
+          "links": [
+            {
+              "label": "MoE for LLMs",
+              "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/02-MoE for LLMs"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "router picks top-k experts per token → total ≫ active → compute saved, memory isn't",
+          "trap": "\"MoE models are smaller\" — they need more VRAM, not less",
+          "drill": {
+            "prompt": "from jbtiq_dl Q22: \"You need roughly 10× model capacity but can't afford 10× inference FLOPs. Walk me through the MoE design — and its two classic failure modes.\"",
+            "badge": "Evergreen",
+            "hint": "Separate parameters stored from parameters active per token. Then think about what must be in memory anyway.",
+            "points": [
+              "Mechanism: FFN layers are replaced by many <strong>experts</strong> with a learned <strong>router</strong> sending each token to a small subset (top-k) — so <strong>active parameters per token</strong> are a fraction of total parameters. Compute (and thus much of the bill) scales with active, not total.",
+              "Why it wins: more capacity/knowledge at fixed FLOPs per token — better quality-per-compute at both training and inference, which is why most frontier-scale models went sparse.",
+              "The serving catch: <strong>all experts must sit in GPU memory</strong> — you pay compute for active params but <em>memory</em> for total params; MoE shifts the bottleneck to VRAM and interconnect (expert-parallel all-to-all traffic when experts shard across GPUs).",
+              "Operational quirks: <strong>load balancing</strong> — routers can collapse onto favorite experts (auxiliary balance losses exist for this), batch efficiency depends on tokens distributing across experts, and latency variance rises with routing.",
+              "Architect's rule of thumb: MoE is attractive when you're <strong>compute-constrained but memory-rich</strong>; dense stays attractive for small-footprint deployment and simpler serving."
+            ],
+            "oneLiner": "MoE activates a few experts per token, so you pay compute on active parameters but memory on all of them — quality-per-FLOP goes up while the bottleneck moves to VRAM, interconnect, and router load balance.",
+            "links": [
+              {
+                "label": "MoE for LLMs",
+                "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/02-MoE for LLMs"
+              },
+              {
+                "label": "Model landscape",
+                "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/03-Model landscape"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q8",
+          "number": 8,
+          "marks": [
+            "decides"
+          ],
+          "text": "Scaling laws — what did Chinchilla change?",
+          "points": [
+            "Loss follows a <strong>power law</strong> in params, data and compute — smooth and predictable",
+            "Chinchilla: earlier models were <strong>badly undertrained</strong> — scale data with params (~20 tokens/param)",
+            "Consequence: smaller, longer-trained models beat bigger under-trained ones at equal compute",
+            "Inference cost then argues for going <em>further</em> past compute-optimal — you serve far more than you train",
+            "\"Emergence\" is contested — often a metric artefact rather than a phase change"
+          ],
+          "links": [
+            {
+              "label": "Scaling laws &amp; emergence",
+              "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/01-Scaling laws &amp; emergence"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "power law → data must scale with params → smaller+longer wins → inference economics push further still",
+          "trap": "quoting emergent abilities as settled fact",
+          "drill": {
+            "prompt": "from jbtiq_dl Q33: \"Fixed compute budget: do you train a bigger model or feed more tokens? How do you actually reason about it?\"",
+            "badge": "Evergreen",
+            "hint": "What do scaling laws actually predict smoothly, what appears to jump, and what's the measurement critique of the jumps?",
+            "points": [
+              "Scaling laws: <strong>loss falls smoothly and predictably</strong> as a power law in parameters, data, and compute — the Chinchilla insight being that for a compute budget, models were undertrained on data (parameters and tokens should scale together). That predictability is why frontier training runs are financeable at all.",
+              "\"Emergence\" — capabilities appearing suddenly at scale — is real as a <em>user experience</em> but contested as a <em>measurement</em>: sharp jumps often reflect <strong>discontinuous metrics</strong> (exact-match scoring makes gradual improvement look like a phase change); smoother metrics show smoother gains. Say both sides.",
+              "The honest CTO framing: downstream capability at the task <em>you</em> care about is <strong>not reliably predictable</strong> from loss curves — which is why evals on your task, not benchmark headlines, drive adoption decisions.",
+              "Current-era nuance: pure parameter scaling has diminishing economics — the frontier moved to <strong>data quality, post-training, and test-time compute</strong> (reasoning models trade inference tokens for capability), a second scaling axis with direct serving-cost implications.",
+              "Implication for strategy: plan for capability <em>step-changes</em> arriving via new model generations regardless of your roadmap — architecture that swaps models cheaply captures that upside."
+            ],
+            "oneLiner": "Loss scales predictably — that's what makes training runs financeable — but task-level capability doesn't map cleanly from loss, emergence is partly a metric artifact, and the modern gains come as much from data quality, post-training, and test-time compute as from parameters.",
+            "links": [
+              {
+                "label": "Scaling laws &amp; emergence",
+                "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/01-Scaling laws &amp; emergence"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "llm-foundations-behaviour-control",
+      "letter": null,
+      "name": "Behaviour & control",
+      "questions": [
+        {
+          "id": "llm-foundations-q9",
+          "number": 9,
+          "marks": [
+            "decides"
+          ],
+          "text": "Temperature, top-p, top-k — what do you set for what?",
+          "points": [
+            "Logits → temperature <strong>divides</strong> before softmax: &lt;1 sharpens, &gt;1 flattens",
+            "<strong>top-k</strong> = fixed count · <strong>top-p (nucleus)</strong> = smallest set covering probability mass p — adapts to confidence",
+            "Extraction / tool args / classification → temperature 0 or near it",
+            "Creative / diverse candidates → higher temp + top-p ~0.9",
+            "Repetition penalties are a blunt patch for degeneration, not a quality dial"
+          ],
+          "links": [
+            {
+              "label": "Decoding &amp; sampling",
+              "target": "05-LLM-Production/06-Inference &amp; Decoding/01-Decoding &amp; sampling"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "temp shapes the distribution → top-p adapts the cut → deterministic tasks near 0, generative higher",
+          "trap": "raising temperature to \"make it smarter\" — it makes it less likely, not more correct",
+          "drill": {
+            "prompt": "from jbtiq_llm Q12: \"Temperature, top-p, top-k — what does each mathematically do, and give me your settings for: a JSON extractor, a support bot, and a creative writer.\"",
+            "badge": "Evergreen",
+            "hint": "One reshapes the distribution, two truncate it — by different criteria. Settings follow from how much of the tail each task can tolerate.",
+            "points": [
+              "<strong>Temperature</strong> rescales logits before softmax: T&lt;1 sharpens toward the mode, T&gt;1 flattens toward uniform, T→0 approaches greedy. It reshapes; it never removes options.",
+              "<strong>Top-k</strong> truncates to the k highest-probability tokens (fixed count, blind to how peaked the distribution is); <strong>top-p (nucleus)</strong> truncates to the smallest set whose cumulative mass ≥ p — adaptive: narrow when the model is confident, wide when uncertain. That adaptivity is why top-p aged better than top-k.",
+              "Settings with reasons: <strong>JSON extractor</strong> → T≈0 (determinism and schema fidelity beat diversity; ideally constrained decoding does the guaranteeing). <strong>Support bot</strong> → low-moderate T (~0.3–0.7 territory) — natural variation without policy-adjacent creativity, plus guardrails doing the real safety work. <strong>Creative writer</strong> → higher T with top-p — diversity is the product; the tail is where the interesting tokens live.",
+              "Two caveats that mark seniority: T=0 <strong>does not guarantee reproducibility</strong> across serving stacks (batching and floating-point nondeterminism), and sampling parameters are <strong>shipped configuration</strong> — version them with the prompt, because a silent temperature change is a silent behavior change.",
+              "Greedy/beam search sit at the deterministic end — beam helps constrained tasks like translation and hurts open-ended generation (repetitive, degenerate text)."
+            ],
+            "oneLiner": "Temperature reshapes the distribution, top-k truncates by count, top-p truncates by adaptive mass — so the extractor runs near-zero with constrained decoding, the support bot runs low with guardrails, the writer runs hot with nucleus sampling, and all of it is versioned config.",
+            "links": [
+              {
+                "label": "Decoding &amp; sampling",
+                "target": "05-LLM-Production/06-Inference &amp; Decoding/01-Decoding &amp; sampling"
+              },
+              {
+                "label": "Structured &amp; constrained decoding",
+                "target": "05-LLM-Production/06-Inference &amp; Decoding/02-Structured &amp; constrained decoding"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q10",
+          "number": 10,
+          "marks": [
+            "trending"
+          ],
+          "text": "Temperature is 0 but output still varies. Why?",
+          "points": [
+            "Temperature 0 is greedy — but <strong>greedy isn't bit-reproducible</strong> on a GPU",
+            "Floating-point <strong>non-associativity</strong>: batching and kernel scheduling change reduction order",
+            "Different <strong>batch composition</strong> → different numerics → a different argmax on a near-tie",
+            "MoE routing, speculative decoding and provider-side model updates add more variance",
+            "Design for it: seeds where offered, tolerance-based tests, never assert exact string equality"
+          ],
+          "links": [
+            {
+              "label": "Decoding &amp; sampling",
+              "target": "05-LLM-Production/06-Inference &amp; Decoding/01-Decoding &amp; sampling"
+            }
+          ],
+          "flow": "greedy ≠ deterministic → FP reduction order varies with batching → near-ties flip",
+          "trap": "promising reproducibility because you set temperature to 0"
+        },
+        {
+          "id": "llm-foundations-q11",
+          "number": 11,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "How do you force valid JSON out of a model?",
+          "points": [
+            "<strong>Constrain decoding</strong>, don't post-hoc parse — mask logits to only tokens the grammar allows",
+            "Provider structured outputs / JSON schema mode is the same idea, server-side",
+            "Guarantees <strong>syntactic</strong> validity only — semantic correctness still needs your validation",
+            "Cost: constraint machinery, some quality loss if the schema fights the model's natural phrasing",
+            "Failure path: bounded repair prompt, then fail loudly — never silently coerce"
+          ],
+          "links": [
+            {
+              "label": "Structured &amp; constrained decoding",
+              "target": "05-LLM-Production/06-Inference &amp; Decoding/02-Structured &amp; constrained decoding"
+            }
+          ],
+          "flow": "schema → constrained decode → valid syntax → still validate semantics → bounded repair",
+          "trap": "conflating \"parses\" with \"correct\""
+        },
+        {
+          "id": "llm-foundations-q12",
+          "number": 12,
+          "marks": [
+            "trending"
+          ],
+          "text": "What can you do with logprobs?",
+          "points": [
+            "Per-token log-probability — a <strong>confidence-ish</strong> signal, cheap and already there",
+            "Uses: abstention thresholds, routing to a bigger model, flagging spans for review, classification via option scores",
+            "Big caveat: models are <strong>poorly calibrated</strong> — confident and wrong is the normal failure",
+            "Sequence-level needs length normalisation or long answers always look uncertain",
+            "Not available from every provider — don't design a system that requires them"
+          ],
+          "links": [
+            {
+              "label": "Logprobs",
+              "target": "05-LLM-Production/06-Inference &amp; Decoding/03-Logprobs"
+            }
+          ],
+          "badge": "Trending — logprob-engineering questions recur in LLM-platform JDs (2025–26)",
+          "flow": "token logprobs → normalise → threshold for abstain/escalate → but calibration is weak",
+          "trap": "treating logprob as probability-of-correct",
+          "drill": {
+            "prompt": "from jbtiq_llm Q13: \"What can you build with logprobs that you can't build without them?\"",
+            "badge": "Trending — logprob-engineering questions recur in LLM-platform JDs (2025–26)",
+            "hint": "They're the model's per-token confidence. Think: classification, uncertainty routing, and detection use cases.",
+            "points": [
+              "<strong>Calibrated-ish classification for free</strong>: for label tasks, read the logprobs of the label tokens instead of parsing generated text — you get a score, not just a choice, enabling thresholds and abstention (\"route to human below X confidence\").",
+              "<strong>Uncertainty-based routing and escalation</strong>: low sequence-level likelihood or a flat token distribution flags shaky generations — trigger retrieval, a bigger model, or human review selectively instead of uniformly paying for the expensive path.",
+              "<strong>Hallucination heuristics</strong>: low-confidence spans inside a fluent answer correlate (imperfectly) with fabrication — useful as a <em>signal</em> into verification pipelines, not as a detector on its own; and perplexity-under-the-model supports drift detection on inputs.",
+              "Eval plumbing: score multiple-choice benchmarks by comparing option likelihoods (no parsing fragility), compare prompt variants by likelihood of gold outputs, and detect distribution shift in production traffic.",
+              "Constraints to name: chat APIs expose logprobs unevenly, post-trained models are <strong>systematically overconfident</strong> (calibration eroded by preference tuning), so raw probabilities need recalibration before you treat them as probabilities."
+            ],
+            "oneLiner": "Logprobs turn generation into scored prediction — label classification with abstention thresholds, uncertainty-based routing to bigger models or humans, and weak-but-useful hallucination and drift signals — remembering post-trained models are overconfident, so calibrate before trusting the numbers.",
+            "links": [
+              {
+                "label": "Logprobs",
+                "target": "05-LLM-Production/06-Inference &amp; Decoding/03-Logprobs"
+              },
+              {
+                "label": "Calibration &amp; uncertainty",
+                "target": "05-LLM-Production/10-Evaluation/08-Calibration &amp; uncertainty"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q13",
+          "number": 13,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk the post-training stack.",
+          "points": [
+            "<strong>Pretrain</strong> (next token) → <strong>SFT</strong> (instruction following) → <strong>preference optimisation</strong> (RLHF/DPO) → optional reasoning post-training",
+            "SFT teaches <em>format and task</em>; preference tuning teaches <em>which of two answers people prefer</em>",
+            "Each stage is smaller and more expensive per example than the last",
+            "Reward hacking / specification gaming is the recurring failure of the preference stage",
+            "Most product problems are solved at prompt or SFT level — not by RL"
+          ],
+          "links": [
+            {
+              "label": "The post training stack overview",
+              "target": "05-LLM-Production/04-Post-Training&amp; Alignment/01-The post-training stack overview"
+            }
+          ],
+          "badge": "Trending — the post-training stack is a staple of LLM screens (2025–26)",
+          "flow": "pretrain → SFT for behaviour → preference for ranking → reasoning tuning last",
+          "trap": "describing RLHF as where the model \"learns facts\"",
+          "drill": {
+            "prompt": "from jbtiq_llm Q8: \"SFT → RLHF → DPO: what does each stage actually change in the model, and why did DPO become the default first move?\"",
+            "badge": "Trending — the post-training stack is a staple of LLM screens (2025–26)",
+            "hint": "One stage teaches format, one optimizes against a learned judge, one skips the judge. Where does the instability live?",
+            "points": [
+              "<strong>SFT</strong>: supervised next-token training on curated (instruction, response) pairs — teaches <em>format and behavior</em> (chat style, instruction following). It imitates; it can't express \"this answer is better than that one\".",
+              "<strong>RLHF</strong>: fit a <strong>reward model</strong> on human preference pairs, then RL (PPO-style) optimizes the policy against it with a <strong>KL penalty</strong> anchoring to the SFT model. Powerful but operationally heavy: four models in memory, RL instability, and vulnerability to <strong>reward hacking</strong> — the policy exploits reward-model gaps (verbosity, sycophancy, confident tone) rather than getting better.",
+              "<strong>DPO</strong>: a closed-form reformulation — optimize preference pairs <em>directly</em> with a classification-style loss, no explicit reward model, no RL loop. Stable, cheap, reproducible → the default first move for preference tuning; the trade is less flexibility than online RL (no exploration, quality capped by the static preference set).",
+              "The current-era addendum: <strong>reasoning post-training</strong> — RL against <em>verifiable</em> rewards (math checkers, unit tests) rather than learned preference models — sidesteps reward hacking where verifiers exist and produced the reasoning-model generation.",
+              "Say the failure vocabulary: reward hacking and specification gaming are Goodhart's law applied to a learned metric — the reward model is a proxy, and hard optimization against any proxy eventually optimizes the gap."
+            ],
+            "oneLiner": "SFT teaches format by imitation, RLHF optimizes against a learned reward with all the instability and reward-hacking that implies, and DPO gets most of the preference gain as a stable supervised loss — with the frontier now adding RL against verifiable rewards where checkers exist.",
+            "links": [
+              {
+                "label": "The post training stack overview",
+                "target": "05-LLM-Production/04-Post-Training&amp; Alignment/01-The post-training stack overview"
+              },
+              {
+                "label": "DPO",
+                "target": "05-LLM-Production/04-Post-Training&amp; Alignment/04-DPO"
+              },
+              {
+                "label": "Reward hacking and specification gaming",
+                "target": "05-LLM-Production/04-Post-Training&amp; Alignment/08-Reward hacking and specification gaming"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q14",
+          "number": 14,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "RLHF or DPO?",
+          "points": [
+            "<strong>RLHF</strong>: train a reward model, then PPO against it — powerful, unstable, expensive, many moving parts",
+            "<strong>DPO</strong>: optimise the preference objective <strong>directly</strong> on pairs — no reward model, no RL loop, far simpler",
+            "DPO is the default now for most teams; RLHF retains an edge where online exploration matters",
+            "Both need good preference data — that's the real cost, not the algorithm",
+            "Variants (IPO, KTO, ORPO) trade off overfitting to preferences and data format"
+          ],
+          "links": [
+            {
+              "label": "DPO",
+              "target": "05-LLM-Production/04-Post-Training&amp; Alignment/04-DPO"
+            }
+          ],
+          "flow": "preferences → reward model + PPO (RLHF) <em>or</em> direct objective on pairs (DPO) → data is the real cost",
+          "trap": "framing it as accuracy — the differences are stability, cost and complexity"
+        },
+        {
+          "id": "llm-foundations-q15",
+          "number": 15,
+          "marks": [
+            "decides"
+          ],
+          "text": "How does LoRA work, and why is it cheap?",
+          "points": [
+            "Freeze base weights; learn a <strong>low-rank update</strong> ΔW = B·A with rank r ≪ d",
+            "Trainable params drop by orders of magnitude → optimiser state and memory collapse with them",
+            "<strong>Merged at inference</strong> → zero added latency, or kept separate to swap adapters",
+            "Dials: rank r, alpha, and which modules (attention projections typically)",
+            "Wrong tool for <strong>new knowledge</strong> — it adapts behaviour and style, not facts (see #17)"
+          ],
+          "links": [
+            {
+              "label": "LoRA",
+              "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/02-LoRA"
+            }
+          ],
+          "badge": "Trending — LoRA mechanics are a fixture of LLM screens (2025–26)",
+          "flow": "freeze base → learn low-rank delta → tiny optimiser state → merge or hot-swap",
+          "trap": "proposing LoRA to inject fresh domain knowledge — that's a retrieval problem",
+          "drill": {
+            "prompt": "from jbtiq_llm Q10: \"LoRA: the mechanism, why it works, and the serving superpower nobody mentions in tutorials.\"",
+            "badge": "Trending — LoRA mechanics are a fixture of LLM screens (2025–26)",
+            "hint": "What's the assumption about the rank of the weight update? And at serving time, what can you do with many adapters that you can't do with many full fine-tunes?",
+            "points": [
+              "Mechanism: freeze W, learn the update as a <strong>low-rank factorization</strong> ΔW = BA (rank r ≪ d), injected into attention/FFN projections; train only A and B — a tiny fraction of parameters, dramatically less optimizer memory (which, not gradient compute, is what makes full fine-tuning expensive).",
+              "Why it works: task adaptation empirically lives in a <strong>low-dimensional subspace</strong> of weight space — you rarely need full-rank freedom to shift behavior; r is the capacity dial (too low underfits the adaptation, higher approaches full FT).",
+              "<strong>QLoRA</strong> extends the memory win: quantize the frozen base to 4-bit, train LoRA on top with a paged optimizer — single-GPU fine-tuning of large models, quality close to full-precision fine-tunes.",
+              "The serving superpower: adapters are <strong>small and hot-swappable</strong> — merge into weights for zero overhead, or serve <strong>many adapters over one shared base</strong> (batched multi-adapter serving), which makes per-tenant/per-task customization economically sane: one base model in VRAM, hundreds of personalities.",
+              "Honest limits: LoRA shines for style/format/domain behavior; it's weaker for injecting large bodies of <em>new knowledge</em> (that's continued pretraining or RAG territory), and adapter quality depends on which modules you target."
+            ],
+            "oneLiner": "LoRA learns the weight update as a low-rank product on a frozen base — betting that adaptation lives in a small subspace — which slashes training memory, and at serving time adapters merge to zero overhead or multiplex hundreds of tenants over one base model.",
+            "links": [
+              {
+                "label": "LoRA",
+                "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/02-LoRA"
+              },
+              {
+                "label": "QLoRA",
+                "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/03-QLoRA"
+              },
+              {
+                "label": "LoRA serving",
+                "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/04-LoRA serving"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q16",
+          "number": 16,
+          "marks": [
+            "trending"
+          ],
+          "text": "QLoRA — what's the trick?",
+          "points": [
+            "Base model quantised to <strong>4-bit (NF4)</strong>, frozen; LoRA adapters trained in higher precision on top",
+            "Gradients flow <em>through</em> the quantised base without updating it",
+            "Double quantisation + paged optimisers cut memory further — big models on one GPU",
+            "Cost: some quality loss, slower per step than fp16 LoRA",
+            "Enables fine-tuning at a hardware tier that otherwise couldn't hold the model"
+          ],
+          "links": [
+            {
+              "label": "QLoRA",
+              "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/03-QLoRA"
+            }
+          ],
+          "flow": "4-bit frozen base → backprop through it → train fp16 adapters → single-GPU fine-tune",
+          "trap": "implying the <em>deployed</em> model must stay quantised — adapters can merge into a full-precision base"
+        },
+        {
+          "id": "llm-foundations-q17",
+          "number": 17,
+          "marks": [
+            "decides"
+          ],
+          "text": "Fine-tuning made it worse at everything else. What happened?",
+          "points": [
+            "<strong>Catastrophic forgetting</strong> — narrow data overwrites general capability",
+            "Worse with full fine-tuning, high LR, many epochs, small homogeneous datasets",
+            "Mitigations: <strong>PEFT/LoRA</strong> (base frozen), mix in general data, low LR, early stop, fewer epochs",
+            "Evaluate on a <strong>held-out general</strong> benchmark, not just your task — or you won't see it",
+            "Often the real lesson: the task needed retrieval or prompting, not weights"
+          ],
+          "links": [
+            {
+              "label": "Catastrophic forgetting during fine tuning",
+              "target": "05-LLM-Production/04-Post-Training&amp; Alignment/10-Catastrophic forgetting during fine-tuning"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "narrow data + full FT → general ability degrades → freeze base, mix data, eval broadly",
+          "trap": "measuring only task accuracy and declaring the fine-tune a success",
+          "drill": {
+            "prompt": "from jbtiq_llm Q9: \"After fine-tuning on your domain data, the model is better at your task and noticeably dumber at everything else. What happened and what are the controls?\"",
+            "badge": "Evergreen",
+            "hint": "The weights that moved were load-bearing for other behaviors. Name the phenomenon and three mitigations across data, method, and evaluation.",
+            "points": [
+              "<strong>Catastrophic forgetting</strong>: gradient updates for the narrow task overwrite representations serving general capabilities — the narrower and longer the fine-tune, the worse the erosion; instruction-following and safety behaviors are often the first casualties.",
+              "Data controls: <strong>mix replay data</strong> (general instruction data blended with domain data), keep the fine-tune <em>short and low-LR</em>, and question the premise — if the knowledge is factual, <strong>RAG beats fine-tuning</strong> and forgets nothing.",
+              "Method controls: <strong>PEFT/LoRA</strong> — freezing base weights structurally limits what can be forgotten (adapters nudge, not overwrite); regularization toward the base model (KL/weight anchoring) for full fine-tunes.",
+              "Evaluation control — the one teams skip: hold a <strong>general-capability regression suite</strong> (instruction following, reasoning, safety probes) next to your task eval, and gate the fine-tune on <em>both</em>. Improvement on your metric with silent regression elsewhere is the default outcome, not the exception.",
+              "Decision framing: fine-tune for <em>behavior/format/domain style</em>, RAG for <em>knowledge</em>, prompting for <em>cheap wins first</em> — reach for weights last."
+            ],
+            "oneLiner": "That's catastrophic forgetting — narrow gradients overwrote general behavior — controlled by replay mixtures, LoRA-style frozen bases, short low-LR runs, and a general regression suite gating the release; and if the goal was knowledge rather than behavior, RAG was the right tool anyway.",
+            "links": [
+              {
+                "label": "Catastrophic forgetting during fine tuning",
+                "target": "05-LLM-Production/04-Post-Training&amp; Alignment/10-Catastrophic forgetting during fine-tuning"
+              },
+              {
+                "label": "Continued pretraining vs instruction tuning vs preference tuning",
+                "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/06-Continued pretraining vs instruction tuning vs preference tuning"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q18",
+          "number": 18,
+          "marks": [
+            "decides"
+          ],
+          "text": "What is in-context learning actually doing?",
+          "points": [
+            "No weights change — examples <strong>condition</strong> the forward pass, nothing is learned persistently",
+            "Format and label space matter more than label correctness in many findings",
+            "Sensitive to example order, count and recency — a real source of prompt brittleness",
+            "Costs tokens on <strong>every</strong> call; heavy few-shot is a recurring hidden cost line",
+            "Once examples get numerous and stable, that's the signal to consider SFT"
+          ],
+          "links": [
+            {
+              "label": "In context learning",
+              "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/01-In-context learning"
+            }
+          ],
+          "badge": "Evergreen",
+          "flow": "examples condition the pass → format carries most of the signal → per-call cost → many stable examples → SFT",
+          "trap": "calling it learning — nothing persists past the request",
+          "drill": {
+            "prompt": "from jbtiq_llm Q19: \"Few-shot examples: what is the model actually 'learning' in-context — and what do the examples control that instructions can't?\"",
+            "badge": "Evergreen",
+            "hint": "No weights change. So what mechanism makes examples work, and which properties of the examples carry the signal?",
+            "points": [
+              "No learning in the gradient sense — the forward pass <strong>conditions</strong> on the examples; the mainstream account is task <em>location and format induction</em>: examples activate behavior the pretrained model already has and pin down the output distribution's shape.",
+              "The evidence that shapes practice: <strong>format, label space, and input distribution</strong> of the examples matter enormously — sometimes more than label <em>correctness</em>; examples are unmatched at conveying \"output looks exactly like this\" where prose instructions stay ambiguous.",
+              "Practical handles: order effects are real (recency bias — the last example pulls hardest), diverse examples beat redundant ones, hard/boundary cases teach more than easy ones, and few-shot pairs beautifully with <strong>structured output</strong> (show the exact JSON).",
+              "Costs: examples eat context and per-request tokens forever — <strong>prompt caching</strong> neutralizes the latency/cost hit for static example blocks; and for well-post-trained models on common tasks, zero-shot with a crisp instruction often matches few-shot — measure before paying.",
+              "The senior habit: treat example sets like code — versioned, evaluated (add/remove and re-run the eval), and curated from real failure cases rather than invented."
+            ],
+            "oneLiner": "In-context examples don't update weights — they locate the task and pin the output format, which is why their format and distribution matter as much as their correctness — so I use them where instructions are ambiguous, cache them, and version them like code.",
+            "links": [
+              {
+                "label": "In context learning",
+                "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/01-In-context learning"
+              },
+              {
+                "label": "Prompt engineering",
+                "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/02-Prompt engineering"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q19",
+          "number": 19,
+          "marks": [
+            "trending"
+          ],
+          "text": "Reasoning models and test-time compute — what changed?",
+          "points": [
+            "Spend more compute <strong>at inference</strong>: long chains, sampling, verification, search",
+            "Trained to use that budget well (reasoning post-training), not just prompted to",
+            "Buys accuracy on maths, code and multi-step logic; <strong>buys nothing</strong> on retrieval or formatting tasks",
+            "New cost/latency profile: reasoning tokens you pay for and often never show the user",
+            "Architect judgement: route by task — reasoning model only where the task actually needs it"
+          ],
+          "links": [
+            {
+              "label": "Reasoning models &amp; test time compute",
+              "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/05-Reasoning models &amp; test-time compute"
+            }
+          ],
+          "badge": "Trending — CoT-vs-reasoning-models recurs across screens (2025–26)",
+          "flow": "more inference compute → better multi-step accuracy → but latency + hidden token cost → route selectively",
+          "trap": "defaulting everything to a reasoning model and watching cost and TTFT triple",
+          "drill": {
+            "prompt": "from jbtiq_llm Q20: \"Chain-of-thought and test-time compute: when does 'think step by step' help, when does it hurt, and what did reasoning models change about the trade?\"",
+            "badge": "Trending — CoT-vs-reasoning-models recurs across screens (2025–26)",
+            "hint": "CoT helps a specific problem shape. It hurts two things categorically. And reasoning models moved the dial from prompt to parameter.",
+            "points": [
+              "Helps on <strong>multi-step problems with intermediate state</strong> — math, logic, multi-hop analysis — by externalizing computation into tokens (each step conditions the next; depth the forward pass lacks gets bought as sequence length). <strong>Self-consistency</strong> (sample multiple chains, majority-vote) adds accuracy where answers are checkable/discrete.",
+              "Hurts: <strong>latency and cost always</strong> (more tokens); accuracy on tasks where verbalizing degrades performance (some classification/perception tasks); and the chains themselves are <strong>not faithful explanations</strong> — plausible-sounding reasoning can decorate a wrong (or right) answer, so never sell CoT text as an audit trail.",
+              "Reasoning models internalized the pattern: extended deliberation trained in via RL on verifiable problems, with <strong>thinking budgets</strong> as an API parameter — test-time compute became a <em>dial you buy</em> (quality vs latency/cost) rather than a prompt trick, and \"think step by step\" adds little on top.",
+              "The production decision it created: <strong>routing by problem difficulty</strong> — standard model for the easy 90%, reasoning budget for the hard 10% — since paying thinking-tokens on trivial requests is pure waste.",
+              "Say the eval discipline: measure whether added thinking actually improves <em>your</em> task before paying for it — on retrieval-answerable or format tasks it often doesn't."
+            ],
+            "oneLiner": "CoT buys serial depth with tokens — worth it on multi-step problems, pure cost on easy ones, and never a faithful audit trail — and reasoning models turned that trick into a purchasable thinking budget, making difficulty-based routing the real production skill.",
+            "links": [
+              {
+                "label": "Chain of Thought",
+                "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/03-Chain-of-Thought"
+              },
+              {
+                "label": "Reasoning models &amp; test time compute",
+                "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/05-Reasoning models &amp; test-time compute"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q20",
+          "number": 20,
+          "marks": [
+            "decides"
+          ],
+          "text": "Why do models hallucinate?",
+          "points": [
+            "The objective is <strong>plausibility</strong>, not truth — a fluent guess scores like a fluent fact",
+            "Separate the two: <strong>factuality</strong> (true in the world) vs <strong>faithfulness</strong> (true to the given context)",
+            "RAG targets faithfulness; it does not fix factuality when retrieval misses",
+            "Amplifiers: no abstention path, long context dilution, sycophancy from preference tuning",
+            "Mitigations stack: retrieval + citation + abstention + verification — no single one is enough"
+          ],
+          "links": [
+            {
+              "label": "Hallucination causes &amp; factuality vs faithfulness",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/01-Hallucination causes &amp; factuality vs faithfulness"
+            }
+          ],
+          "badge": "Evergreen — the definitional question that still filters candidates.",
+          "flow": "trained for plausibility → split factuality vs faithfulness → RAG helps the second → add abstention + verify",
+          "trap": "promising RAG \"solves hallucination\"",
+          "drill": {
+            "prompt": "from jbtiq_llm Q24: \"Why do LLMs hallucinate — mechanistically, not morally? Distinguish factuality from faithfulness while you're at it.\"",
+            "badge": "Evergreen — the definitional question that still filters candidates.",
+            "hint": "Start from the training objective: what is the model optimized to produce? And the two terms differ by what the output is checked against.",
+            "points": [
+              "Mechanistic causes: the objective optimizes <strong>plausible continuation, not truth</strong> — likelihood rewards fluent, confident text; the model has no fact/fiction boundary in its representations. Add: <strong>knowledge gaps filled by interpolation</strong> (rare entities, post-cutoff events), <strong>exposure/decoding effects</strong> (sampling can commit to a wrong token early and rationalize onward), and post-training that historically <strong>rewarded confident answers over \"I don't know\"</strong> — calibration eroded in favor of helpfulness.",
+              "The distinction: <strong>factuality</strong> = agreement with world truth; <strong>faithfulness</strong> = agreement with <em>provided source material</em>. RAG converts much of the factuality problem into a faithfulness problem — which is checkable, and that checkability is half the point of RAG.",
+              "Failure taxonomy worth naming: fabricated entities/citations (the classic), subtle numeric/temporal corruption (more dangerous — plausible and wrong), and unfaithful summarization (says what the doc didn't).",
+              "Mitigation stack in one breath: grounding + citation enforcement, faithfulness eval (judge/NLI-style checks against sources), uncertainty signals and abstention paths, tool calls for computable facts (calculator, DB), and UX honesty (citations users can check).",
+              "The sentence that shows maturity: hallucination is <strong>structural, managed not eliminated</strong> — the design goal is that when the model is wrong, the system makes it detectable and cheap."
+            ],
+            "oneLiner": "The objective rewards plausible continuation, not truth — gaps get interpolated fluently and post-training taught confidence over abstention — so I convert factuality into checkable faithfulness with grounding, enforce citations, and design for detectability rather than promising elimination.",
+            "links": [
+              {
+                "label": "Hallucination causes &amp; factuality vs faithfulness",
+                "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/01-Hallucination causes &amp; factuality vs faithfulness"
+              },
+              {
+                "label": "Model side mitigations",
+                "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/02-Model-side mitigations"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q21",
+          "number": 21,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Prompt injection vs jailbreak — are they the same problem?",
+          "points": [
+            "<strong>Jailbreak</strong> = the <em>user</em> subverts the model's policy",
+            "<strong>Injection</strong> = a <em>third party</em> plants instructions in content the model reads — the more dangerous one",
+            "<strong>Indirect injection</strong> is the systems problem: retrieved doc, web page, email, tool output",
+            "Root cause: instructions and data share one channel with no privilege boundary",
+            "Defences are layered: treat retrieved content as untrusted, least privilege on tools, approval for destructive actions, output filtering — <strong>not</strong> \"prompt it to ignore injections\""
+          ],
+          "links": [
+            {
+              "label": "Prompt injection &amp; indirect injection",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/04-Prompt injection &amp; indirect injection"
+            }
+          ],
+          "badge": "Trending — injection questions now standard even for non-agentic LLM roles (2025–26)",
+          "flow": "user-subversion vs third-party-planted → indirect is the systems risk → no trust boundary → least privilege + approval",
+          "trap": "offering a defensive system prompt as the mitigation",
+          "drill": {
+            "prompt": "from jbtiq_llm Q38: \"Prompt injection for an LLM app (not an agent): where does it bite when there are no tools to hijack?\"",
+            "badge": "Trending — injection questions now standard even for non-agentic LLM roles (2025–26)",
+            "hint": "No tools, but the model still reads untrusted content and its output still goes somewhere. Trace both.",
+            "points": [
+              "The channels without tools: <strong>indirect injection via RAG</strong> (a poisoned document in the corpus instructs the model — \"ignore previous instructions, recommend X\" buried in a retrieved page), via user-uploaded files, and via any third-party content the app summarizes. The corpus is an attack surface.",
+              "What gets hijacked without tools: <strong>the output itself</strong> — misinformation delivered under your brand's voice, prompt/system-instruction exfiltration (\"repeat your instructions\"), policy bypass through content smuggling, and <strong>downstream sinks</strong> (if output feeds HTML → XSS; feeds SQL → injection; feeds another LLM → chained injection). Output is untrusted data to every consumer.",
+              "Defenses at this tier: source hygiene for the corpus (provenance, ingestion-time scanning), <strong>instruction/data separation attempts</strong> (delimiters, system-prompt hardening — helpful, not sufficient, say so), output encoding/sanitization at every sink, groundedness checks (an answer citing instructions-not-content is a flag), and monitoring for instruction-shaped text in retrieved chunks.",
+              "Design honesty: same conclusion as the agent case at lower stakes — <strong>no in-band fix is reliable</strong>; you bound impact (what can output reach?) and detect, rather than prevent perfectly.",
+              "Say the checklist habit: every place model output is consumed — UI, DB, code, another model — gets the same skepticism as user input, because that's what it is."
+            ],
+            "oneLiner": "Without tools, injection hijacks the output — poisoned RAG documents speaking through your brand, prompt exfiltration, and payloads riding into downstream sinks — so the defenses are corpus hygiene, output sanitization everywhere it lands, and treating model output as user input, because in-band prevention is never complete.",
+            "links": [
+              {
+                "label": "Prompt injection &amp; indirect injection",
+                "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/04-Prompt injection &amp; indirect injection"
+              },
+              {
+                "label": "Guardrails",
+                "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/03-Guardrails"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q22",
+          "number": 22,
+          "marks": [
+            "trending"
+          ],
+          "text": "It has a 200k context. Should you fill it?",
+          "points": [
+            "<strong>No.</strong> Advertised window ≠ usable window — accuracy degrades well before the limit",
+            "<strong>Lost in the middle</strong>: recall is strong at the start and end, weak in between",
+            "Every token costs money and <strong>prefill latency</strong> — TTFT grows with what you stuff",
+            "Position matters: put the critical material at the edges, order retrieved chunks deliberately",
+            "Long context and RAG are complements — retrieve well, then fill sparingly"
+          ],
+          "links": [
+            {
+              "label": "Context utilization",
+              "target": "05-LLM-Production/08-Long Context &amp; Memory/02-Context utilization"
+            }
+          ],
+          "badge": "Trending — long-context-vs-RAG recurs everywhere (2025–26)",
+          "flow": "usable ≪ advertised → middle degrades → cost + TTFT scale with fill → retrieve, then place deliberately",
+          "trap": "treating a large window as a reason to skip retrieval",
+          "drill": {
+            "prompt": "from jbtiq_llm Q17: \"A million-token context window: what does it actually cost, what does the model actually do with it, and when is it the wrong tool?\"",
+            "badge": "Trending — long-context-vs-RAG recurs everywhere (2025–26)",
+            "hint": "Three angles: the compute/memory bill, the utilization research finding, and the comparison against retrieval.",
+            "points": [
+              "The bill: prefill compute grows <strong>quadratically</strong> with context, KV cache grows <strong>linearly</strong> — a maxed-out window means slow TTFT and a cache that crowds out batch concurrency; per-request cost scales with tokens <em>whether or not they mattered</em>.",
+              "Utilization reality: effective use is uneven — <strong>lost-in-the-middle</strong> (information buried mid-context is recalled worse than at the edges), and long-context benchmarks (needle-in-haystack and beyond) show retrieval ≠ <em>reasoning over</em> the full window; claimed length and usable length differ by task.",
+              "Wrong tool when: the corpus is <strong>larger than any window</strong>, changes frequently (re-prefilling a million tokens per query is absurd — retrieval indexes update incrementally), needs <strong>access control</strong> (RAG filters per user; a stuffed context can't), or when you need citations/auditability.",
+              "Right tool when: genuinely holistic reads (whole-codebase reasoning, full-contract analysis, long-session agents) where cross-references span everything and chunking destroys the object.",
+              "The production pattern is <strong>both</strong>: retrieve to select, long context to reason over the selection generously — plus prompt caching for the stable prefix; and KV-offloading tricks blur the boundary further."
+            ],
+            "oneLiner": "Long context pays quadratic prefill and linear KV for tokens the model may under-use — lost-in-the-middle is real — so retrieval still owns large, fresh, access-controlled corpora, long context owns holistic reads, and production uses retrieval to select then a generous window to reason.",
+            "links": [
+              {
+                "label": "Context utilization",
+                "target": "05-LLM-Production/08-Long Context &amp; Memory/02-Context utilization"
+              },
+              {
+                "label": "KV cache offloading &amp; retrieval augmented context",
+                "target": "05-LLM-Production/08-Long Context &amp; Memory/04-KV cache offloading &amp; retrieval-augmented context"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q23",
+          "number": 23,
+          "marks": [
+            "trending"
+          ],
+          "text": "How do models get extended to long context at all?",
+          "points": [
+            "Training at full length is quadratic and unaffordable — extension is mostly <strong>post-hoc</strong>",
+            "<strong>RoPE scaling</strong> — position interpolation, NTK-aware, YaRN — stretch the rotation, then briefly fine-tune",
+            "Architectural routes: sliding-window/restricted attention, and SSM/linear-attention hybrids (Mamba)",
+            "Systems routes: FlashAttention (#6), KV paging and offload (#3)",
+            "Always ask what the <strong>effective</strong> context is, not the advertised one (#22)"
+          ],
+          "links": [
+            {
+              "label": "Context extension",
+              "target": "05-LLM-Production/08-Long Context &amp; Memory/01-Context extension"
+            }
+          ],
+          "badge": "Evergreen (mechanism check behind the long-context marketing)",
+          "flow": "can't train long → scale RoPE + short fine-tune → plus restricted attention and KV systems work",
+          "trap": "assuming a bigger advertised window was trained at that length",
+          "drill": {
+            "prompt": "from jbtiq_llm Q35: \"Context extension: the model was trained at 8k — what makes it work at 128k, and why doesn't it 'just work'?\"",
+            "badge": "Evergreen (mechanism check behind the long-context marketing)",
+            "hint": "What breaks is the model's sense of position. How is position encoded in modern models, and what do the extension tricks rescale?",
+            "points": [
+              "The core problem: positional encodings — modern models use <strong>RoPE</strong> (rotary embeddings encoding <em>relative</em> position as rotation angles) — are only trained over the pretraining length; beyond it, attention sees angle combinations it never learned → out-of-distribution positions, quality collapse.",
+              "Extension methods rescale the geometry: <strong>position interpolation</strong> (compress new positions into the trained range), <strong>NTK-aware/frequency-based scaling</strong> (rescale RoPE frequencies non-uniformly — high frequencies preserved for local precision, low frequencies stretched for range — the YaRN-family refinement), typically followed by <strong>continued pretraining on long sequences</strong> to adapt.",
+              "Why it doesn't \"just work\": interpolation without fine-tuning blurs positional resolution (nearby-token discrimination suffers); and even adapted models show <strong>uneven utilization</strong> across the window — trained length vs advertised length vs <em>effectively usable</em> length are three different numbers.",
+              "The data problem behind the compute problem: genuinely long, coherent training documents are scarce — much long-context training is synthetic or concatenated, which shapes what \"long-range skill\" the model really has (retrieval across the window ≠ reasoning across it).",
+              "Practical consequence: evaluate long-context claims on <em>your</em> task shape (multi-document synthesis, cross-referencing) rather than needle-in-a-haystack, which is nearly saturated and tests the easiest skill."
+            ],
+            "oneLiner": "Extension is mostly RoPE geometry surgery — interpolating or frequency-rescaling positions into the trained range, then continued pretraining on long sequences — and it doesn't 'just work' because positional resolution and mid-window utilization degrade, making usable length shorter than advertised length.",
+            "links": [
+              {
+                "label": "Context extension",
+                "target": "05-LLM-Production/08-Long Context &amp; Memory/01-Context extension"
+              }
+            ]
+          }
+        },
+        {
+          "id": "llm-foundations-q24",
+          "number": 24,
+          "marks": [
+            "decides"
+          ],
+          "text": "Fine-tune, RAG, or prompt — for this problem?",
+          "points": [
+            "Ask what you're injecting: <strong>knowledge → RAG</strong> · <strong>behaviour/format → fine-tune</strong> · <strong>one document → long context</strong>",
+            "Knowledge that changes, is large, or needs citation is never a fine-tuning problem",
+            "Cost shapes differ: RAG per query · FT once + every refresh · long context every token every call",
+            "Usual production answer: RAG + a <strong>tuned embedding model</strong>, not a tuned LLM",
+            "Cross-ref [[05-RAG]] #2 — same decision from the retrieval side"
+          ],
+          "links": [
+            {
+              "label": "Continued pretraining vs instruction tuning vs preference tuning",
+              "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/06-Continued pretraining vs instruction tuning vs preference tuning"
+            }
+          ],
+          "badge": "Trending — the canonical \"when to fine-tune\" question, still everywhere (2025–26)",
+          "flow": "what am I injecting? → knowledge RAG · behaviour FT · single doc LC → usually RAG + tuned embeddings",
+          "trap": "\"fine-tune it on our docs\" — it learns form, not facts",
+          "drill": {
+            "prompt": "from jbtiq_llm Q11: \"Prompting vs RAG vs LoRA vs full fine-tuning vs continued pretraining — give me the decision procedure you'd defend in an architecture review.\"",
+            "badge": "Trending — the canonical \"when to fine-tune\" question, still everywhere (2025–26)",
+            "hint": "Sort by what you're trying to change: knowledge, behavior, or capability — and by iteration speed and reversibility.",
+            "points": [
+              "The sorting question: <strong>what needs to change?</strong> <em>Knowledge</em> (facts, documents, freshness) → <strong>RAG</strong> — updatable, auditable, citable, no forgetting. <em>Behavior</em> (format, tone, task style, domain dialect) → <strong>prompting first</strong>, <strong>LoRA</strong> when prompt length/consistency/cost make prompts untenable. <em>Capability</em> (fundamentally new skills, deep domain language) → <strong>continued pretraining / full FT</strong> — the expensive last resort.",
+              "Secondary axes that decide ties: <strong>iteration speed</strong> (prompt changes ship in minutes, fine-tunes in days), <strong>reversibility</strong> (prompts and adapters roll back trivially), <strong>data reality</strong> (fine-tuning needs thousands of quality examples — most teams don't have them and should hear that), and evaluation cost (every weight change needs the regression suite).",
+              "Escalation discipline: exhaust prompting (+ few-shot + prompt caching to kill the cost argument) → add RAG for knowledge → LoRA for behavior at scale → full FT/continued pretraining only with a measured gap, a real dataset, and an eval harness.",
+              "Anti-pattern to name: fine-tuning to inject facts — it's lossy, unauditable, ages instantly, and forgets other things while doing it.",
+              "These <strong>compose</strong>: production systems are typically prompt + RAG + (sometimes) a LoRA — it's not a menu of one."
+            ],
+            "oneLiner": "Change knowledge with RAG, behavior with prompts then LoRA, capability with heavier training — escalating only on measured gaps, because prompts iterate in minutes and roll back for free, and fine-tuning facts into weights is the canonical anti-pattern.",
+            "links": [
+              {
+                "label": "Full fine tuning vs PEFT",
+                "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/01-Full fine-tuning vs PEFT"
+              },
+              {
+                "label": "Continued pretraining vs instruction tuning vs preference tuning",
+                "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/06-Continued pretraining vs instruction tuning vs preference tuning"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "llm-foundations-your-story",
+      "letter": null,
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "llm-foundations-q25",
+          "number": 25,
+          "marks": [
+            "decides"
+          ],
+          "text": "Where have you had to reason about model behaviour, not just call an API?",
+          "points": [
+            "Pick a moment the <strong>model itself</strong> was the variable — tokenizer cost, context degradation, decoding config, a bad fine-tune",
+            "Name the observable symptom before the explanation",
+            "The measurement that isolated it to model behaviour rather than your code",
+            "The lever you chose — decoding, context placement, model swap, routing — and the one you rejected",
+            "Number: quality, cost or latency, before → after"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "symptom → isolate to model behaviour → lever chosen + rejected → number",
+          "trap": "a purely conceptual answer with no system you actually touched"
+        }
+      ]
+    },
+    {
+      "id": "llm-foundations-merged-from-jbtiqllmmd-19-sep-2026",
+      "letter": null,
+      "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
+      "questions": [
+        {
+          "id": "llm-foundations-q26",
+          "number": 26,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q6 · S3 Pretraining) \"Perplexity: what does it measure, when is it the right metric, and when is a lower perplexity model worse for you?",
+          "points": [
+            "Definition worth saying precisely: <strong>exponentiated average negative log-likelihood per token</strong> — intuitively, the effective branching factor: \"how many tokens was the model choosing among on average\". Lower = better next-token prediction <em>on that corpus</em>.",
+            "It's the right metric for <strong>pretraining progress</strong> on a held-out slice of the training distribution, comparing checkpoints of the <em>same</em> tokenizer and data recipe.",
+            "Traps: perplexity is <strong>not comparable across tokenizers</strong> (different token counts change per-token averages), and it's corpus-relative — a model can hold lower perplexity on web text yet be worse at your legal-domain task, instruction following, or safety. Post-trained chat models can show <em>worse</em> perplexity while being far more useful.",
+            "Also blind to what you actually ship: hallucination rates, tool-use reliability, refusal behavior — none visible in perplexity.",
+            "The senior sentence: perplexity is a thermometer for pretraining, not a report card for products — task evals decide adoption."
+          ],
+          "links": [
+            {
+              "label": "Pretraining objective &amp; perplexity",
+              "target": "05-LLM-Production/03-Pretraining/01-Pretraining objective &amp; perplexity"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Perplexity is exponentiated per-token negative log-likelihood — the model's average branching factor on a given corpus — great for tracking pretraining, incomparable across tokenizers, and silent about instruction-following, factuality, and your task."
+        },
+        {
+          "id": "llm-foundations-q27",
+          "number": 27,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q7 · S3 Pretraining) \"Data pipeline for a pretraining run: what are the stages, and which two failures poison the model permanently?",
+          "points": [
+            "Stages: <strong>acquisition</strong> (web crawls, code, books, licensed sets) → <strong>quality filtering</strong> (classifier- and heuristic-based junk removal) → <strong>deduplication</strong> (exact + near-dup at document and n-gram level) → <strong>mixture design</strong> (domain weights — code %, multilingual %, etc. — a first-class hyperparameter that shapes downstream ability) → curriculum/ordering decisions.",
+            "Poison #1 — <strong>benchmark contamination</strong>: eval sets leaking into training data inflate scores invisibly; you lose the ability to measure your own model. Decontamination against known evals is now table stakes, and the paranoia extends to <em>your own</em> held-out sets.",
+            "Poison #2 — <strong>PII and memorizable secrets</strong>: models regurgitate rare, repeated strings (keys, personal data) — a privacy/legal exposure baked in at training time; dedup is also the main <em>memorization</em> mitigation, since repetition drives regurgitation.",
+            "Quality beats quantity in the current era: aggressive filtering + dedup on a smaller corpus outperforms raw scale — the \"data wall\" pushed frontier effort into curation and synthetic data, with <strong>model-collapse</strong> risk (training on your own outputs) as the new failure to manage.",
+            "Architect relevance even if you never pretrain: the same discipline applies to <strong>fine-tuning corpora</strong> — contamination, dedup, PII scrubbing, mixture weights — at a scale you <em>will</em> own."
+          ],
+          "links": [
+            {
+              "label": "Data pipeline &amp; mixtures",
+              "target": "05-LLM-Production/03-Pretraining/02-Data pipeline &amp; mixtures"
+            },
+            {
+              "label": "Privacy — memorization, PII extraction &amp; data governance",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/07-Privacy — memorization, PII extraction &amp; data governance"
+            }
+          ],
+          "badge": "Trending — data-quality questions recur in LLM-engineer JDs (2025–26)",
+          "oneLiner": "Filter, dedup, and mix — with the two permanent poisons being benchmark contamination, which blinds your own evals, and repeated PII, which the model will memorize and regurgitate; dedup is quietly the main defense against both memorization and wasted compute."
+        },
+        {
+          "id": "llm-foundations-q28",
+          "number": 28,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q18 · S8 Long Context & Memory) \"Mamba, SSMs, linear attention — why do these architectures keep almost winning, and what keeps transformers on top?",
+          "points": [
+            "The pitch: attention is O(n²) with a KV cache that grows with context; <strong>SSMs/Mamba</strong> process sequences with a <strong>fixed-size recurrent state</strong> — linear-time training, <strong>constant memory per token at inference</strong>, no KV cache growth. For long sequences and streaming, the serving economics are structurally better.",
+            "The catch: a fixed-size state is <strong>lossy compression of the past</strong> — precise random-access recall (find the exact quote, copy a variable name from 50k tokens back) is exactly what attention does natively and compressed states struggle with; in-context learning fidelity historically lagged.",
+            "The equilibrium that emerged: <strong>hybrids</strong> — mostly-SSM/linear layers with a few full-attention layers interleaved — capturing most of the efficiency while retaining recall; production-scale hybrid models exist, but the transformer's ecosystem moat (tooling, serving stacks, operator maturity, sunk optimization like FlashAttention/PagedAttention) keeps it the default.",
+            "Architect's read: watch cost-per-quality trends rather than picking a religious side — if your workload is long-context-heavy and recall-light (streaming logs, audio, agents with external memory), these architectures shift the economics first there."
+          ],
+          "links": [
+            {
+              "label": "Mamba SSMs &amp; linear attention",
+              "target": "05-LLM-Production/08-Long Context &amp; Memory/03-Mamba-SSMs &amp; linear attention"
+            },
+            {
+              "label": "Context extension",
+              "target": "05-LLM-Production/08-Long Context &amp; Memory/01-Context extension"
+            }
+          ],
+          "badge": "Evergreen (the architecture-literacy probe)",
+          "oneLiner": "Linear-time architectures replace the growing KV cache with a fixed compressed state — great economics, weaker exact recall over long ranges — so hybrids with a few attention layers are the practical convergence, and the transformer's real moat right now is its optimization ecosystem."
+        },
+        {
+          "id": "llm-foundations-q29",
+          "number": 29,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q22 · S10 Evaluation) \"Why is LLM evaluation fundamentally harder than classical ML evaluation — and what does a production eval stack look like because of it?",
+          "points": [
+            "What breaks: <strong>open-ended outputs</strong> (many valid answers — no exact-match label), <strong>multidimensional quality</strong> (an answer can be fluent, relevant, and factually wrong — one score lies), and <strong>distribution instability</strong> (benchmark contamination, prompt sensitivity, model updates shifting behavior under you).",
+            "Benchmarks are weak evidence for <em>your</em> product: contamination inflates them, they saturate, and headline scores don't transfer to your domain — the architect's rule is <strong>your task, your data, your eval</strong>.",
+            "The production stack layers: <strong>programmatic assertions</strong> where possible (schema, must-contain, tests pass — cheap, deterministic) → <strong>LLM-as-judge</strong> with rubrics for the fuzzy dimensions, calibrated against human labels and audited for its biases (verbosity, position, self-preference) → <strong>human review</strong> sampled where judgment is expensive → <strong>online signals</strong> (task completion, edits, complaints, A/B) as ground truth.",
+            "Separate the dimensions explicitly — factuality, instruction-following, reasoning, safety evaluated as <em>different suites</em> — because a single \"quality\" number hides which one regressed.",
+            "The flywheel again: production failures → triaged → eval cases; the golden set is grown, not authored in a workshop."
+          ],
+          "links": [
+            {
+              "label": "Why LLM eval is hard",
+              "target": "05-LLM-Production/10-Evaluation/01-Why LLM eval is hard"
+            },
+            {
+              "label": "Production eval",
+              "target": "05-LLM-Production/10-Evaluation/06-Production eval"
+            },
+            {
+              "label": "Evaluating reasoning, factuality &amp; instruction following separately",
+              "target": "05-LLM-Production/10-Evaluation/07-Evaluating reasoning, factuality &amp; instruction-following separately"
+            }
+          ],
+          "badge": "Trending — the eval-philosophy opener across LLM JDs (2025–26)",
+          "oneLiner": "Open-ended outputs, multidimensional quality, and unstable distributions break the one-prediction-one-label paradigm — so the stack layers programmatic checks, calibrated LLM judges per quality dimension, sampled human review, and online signals, all fed by triaged production failures."
+        },
+        {
+          "id": "llm-foundations-q30",
+          "number": 30,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q23 · S10 Evaluation) \"LLM-as-judge: which biases are documented, and how do you make a judge trustworthy enough to gate releases?",
+          "points": [
+            "Documented biases: <strong>position bias</strong> (favoring the first/last option in pairwise comparison — mitigate by swapping orders and averaging), <strong>verbosity bias</strong> (longer answers score higher at equal quality), <strong>self-preference</strong> (models favor their own family's outputs — don't judge a model with itself), and <strong>sycophancy toward confident tone</strong>. Rubric vagueness amplifies all of them.",
+            "Making it trustworthy: <strong>calibrate against human labels</strong> — measure judge-human agreement on a labeled sample (and human-human agreement as the ceiling); if the judge can't match human consistency, it can't gate releases. Re-calibrate when the judge model or rubric changes.",
+            "Design for reliability: <strong>specific rubrics with anchored scales</strong> (described levels, not \"rate 1–10\"), decomposed criteria judged separately (faithfulness separately from completeness), reference-guided judging where a gold answer exists, and pairwise comparison over absolute scoring when ranking is what you need.",
+            "Operational guards: version the judge (model + prompt + rubric) like any component, audit a sample of judgments continuously, and watch for <strong>drift between judge scores and online outcomes</strong> — a judge that diverges from user reality is optimizing you toward the wrong target.",
+            "The framing sentence: a judge is a <strong>learned metric</strong> — Goodhart applies; treat its score as a proxy under continuous audit, not as truth."
+          ],
+          "links": [
+            {
+              "label": "LLM as a Judge",
+              "target": "05-LLM-Production/10-Evaluation/03-LLM-as-a-Judge"
+            },
+            {
+              "label": "Human eval",
+              "target": "05-LLM-Production/10-Evaluation/04-Human eval"
+            }
+          ],
+          "badge": "Trending — judge-reliability questions recur on LeetCode Discuss + JDs (2025–26)",
+          "oneLiner": "Judges carry position, verbosity, and self-preference biases — so anchor the rubric, swap orders, decompose criteria, calibrate against human agreement before letting it gate anything, and keep auditing it against online outcomes, because a judge is a learned metric and Goodhart never sleeps."
+        },
+        {
+          "id": "llm-foundations-q31",
+          "number": 31,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q25 · S11 Hallucination, Safety & Guardrails) \"Design the content-safety pipeline for a consumer LLM product — layers, trade-offs, and the metric war between safety and usefulness.",
+          "points": [
+            "Start with <strong>policy, not models</strong>: a written taxonomy of what's disallowed, by category and severity, with product-context nuance (medical questions ≠ medical advice ≠ self-harm content) — classifiers implement policy; they can't substitute for having one.",
+            "Pipeline layers: <strong>input screening</strong> (moderation classifier + injection/jailbreak heuristics before the model), the model's own trained refusals (necessary, insufficient — jailbreaks exist and always will), <strong>output screening</strong> (category classifiers, PII detection), and <strong>response shaping</strong> — for sensitive-but-legitimate queries, route to safe-completion styles rather than binary block/allow.",
+            "The metric war: <strong>false negatives</strong> (harm gets through) vs <strong>false positives</strong> (over-refusal — legitimate users blocked, product degraded, users route around you). Measure <em>both</em>: violation rate on red-team sets AND refusal rate on benign sets; tune per category severity — asymmetric costs justify asymmetric thresholds.",
+            "Operations: human review queues for edge cases feeding policy refinement, <strong>red-teaming as a continuous program</strong> (adversarial prompts evolve), incident response with category-level rollbacks (tighten one category without lobotomizing the product), and audit trails for regulators.",
+            "Say the architecture principle: safety is a <strong>system property</strong> — model refusals + classifiers + rate limits + UX + policy — no single layer is load-bearing alone."
+          ],
+          "links": [
+            {
+              "label": "Content moderation pipelines &amp; policy enforcement",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/06-Content moderation pipelines &amp; policy enforcement"
+            },
+            {
+              "label": "Jailbreaks &amp; defenses",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/05-Jailbreaks &amp; defenses"
+            },
+            {
+              "label": "Red teaming &amp; adversarial evaluation",
+              "target": "05-LLM-Production/10-Evaluation/09-Red-teaming &amp; adversarial evaluation"
+            }
+          ],
+          "badge": "Trending — moderation-pipeline design recurs in consumer-AI JDs (2025–26)",
+          "oneLiner": "Write the policy first, then layer input screening, trained refusals, output classification, and safe-completion routing — measuring over-refusal on benign traffic as seriously as violations on red-team sets, because a safety system that blocks legitimate users is failing at a different metric, not succeeding."
+        },
+        {
+          "id": "llm-foundations-q32",
+          "number": 32,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q36 · S13 Cross-Cutting & Frontier) \"RLAIF and Constitutional AI: what problem in the RLHF pipeline do they attack, and what's the catch?",
+          "points": [
+            "The attacked bottleneck: <strong>human preference labels</strong> — expensive, slow, inconsistent across annotators, and unscalable to the volume preference optimization wants. <strong>RLAIF</strong> replaces the human preference judgment with an AI judge; label throughput becomes effectively unlimited.",
+            "<strong>Constitutional AI</strong> structures the judge: an explicit set of written principles (the constitution) guides AI self-critique and revision (generate → critique against principles → revise) plus AI preference labeling — making the alignment target <em>inspectable and editable as text</em> rather than implicit in thousands of human choices.",
+            "Why it works at all: models are better at <em>judging</em> outputs against criteria than at generating perfectly — the generate-critique gap is the exploitable asymmetry.",
+            "The catches: <strong>bias inheritance and amplification</strong> (the AI judge's blind spots become the trained policy's blind spots, now at scale), self-preference loops, and the constitution's coverage problem — principles conflict and underdetermine hard cases, so <em>who writes the constitution</em> becomes the governance question.",
+            "Production relevance beyond frontier labs: the same pattern powers <strong>synthetic preference data for domain fine-tunes</strong> and LLM-judged eval pipelines — the scalability/bias trade is one you'll run yourself, in miniature."
+          ],
+          "links": [
+            {
+              "label": "RLAIF and Constitutional AI",
+              "target": "05-LLM-Production/04-Post-Training&amp; Alignment/06-RLAIF and Constitutional AI"
+            },
+            {
+              "label": "Preference optimization variants",
+              "target": "05-LLM-Production/04-Post-Training&amp; Alignment/05-Preference-optimization variants"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "They replace the human-label bottleneck with AI judgment — Constitutional AI making the target an editable text document via critique-and-revise — buying unlimited label throughput at the cost of inheriting and amplifying the judge's biases, which is why judge calibration stays a human job."
+        },
+        {
+          "id": "llm-foundations-q33",
+          "number": 33,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q37 · S13 Cross-Cutting & Frontier) \"Multimodal LLMs: how do images actually get into a language model, and what changes operationally when you ship vision?",
+          "points": [
+            "Mechanism: a <strong>vision encoder</strong> (ViT-family) turns the image into patch embeddings; a <strong>projector/adapter</strong> maps them into the LLM's embedding space; the decoder then attends over image tokens and text tokens in one sequence. Trained by alignment stages (caption/pair data, then multimodal instruction tuning). Native early-fusion architectures exist, but encoder+projector remains the workhorse pattern.",
+            "Operational change #1 — <strong>token economics</strong>: an image becomes hundreds-to-thousands of tokens depending on resolution/tiling; resolution strategy is a cost dial (detail vs bill), and context fills fast with multi-image inputs.",
+            "Operational change #2 — <strong>new failure modes</strong>: visual hallucination (confidently describing what isn't there), OCR brittleness on dense documents, spatial-reasoning weakness, and charts/tables read plausibly-wrong — your eval suite needs <em>visual</em> golden sets, and \"faithfulness\" now means faithful to the pixels.",
+            "Operational change #3 — <strong>safety surface widens</strong>: injection via text embedded in images (screenshot attacks), NSFW/PII in uploads, provenance questions — input moderation must scan the image channel too.",
+            "Architecture note: for document-heavy products, compare VLM-reads-the-page against OCR/layout-parser-then-LLM — the boring pipeline still wins on dense structured documents often enough to prototype both."
+          ],
+          "links": [
+            {
+              "label": "Multimodal LLMs",
+              "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/04-Multimodal LLMs"
+            }
+          ],
+          "badge": "Trending — multimodal serving questions rising across JDs (2025–26)",
+          "oneLiner": "A vision encoder patches the image into embeddings a projector maps into the LLM's token space — after which images are just expensive tokens, bringing resolution-based cost dials, visual hallucination and image-borne injection as the new operational realities."
+        },
+        {
+          "id": "llm-foundations-q34",
+          "number": 34,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q39 · S13 Cross-Cutting & Frontier) \"Memorization and PII: when does a model regurgitate training data, and what does that mean for training on customer data?",
+          "points": [
+            "The predictor is <strong>repetition and distinctiveness</strong>: strings seen many times (or highly unique/high-entropy ones like keys and emails in repeated contexts) get memorized verbatim; larger models memorize more. <strong>Deduplication is the single most effective training-side mitigation</strong> — it attacks the repetition driver directly.",
+            "<strong>Extraction is practical, not theoretical</strong>: adversarial prompting can recover memorized sequences; membership-inference attacks can sometimes establish that a record was trained on — which converts training-set contents into a disclosure risk with regulatory weight (GDPR-class erasure requests are near-impossible to honor inside weights).",
+            "Policy consequences for customer data: default answer is <strong>don't train on raw customer data</strong> — scrub PII at ingestion, aggregate/synthesize, get explicit consent tiers; fine-tunes on tenant data must be <strong>per-tenant isolated</strong> (a shared model fine-tuned on everyone's tickets can leak tenant A's content to tenant B).",
+            "Inference-side controls: output PII detection/redaction as a guardrail layer, canary strings in sensitive corpora to <em>detect</em> memorization empirically, differential-privacy training where the math is worth the utility cost (rarely, but say it exists).",
+            "The governance sentence: weights are a <strong>data store you can't query, audit, or delete from</strong> — classify them accordingly, and let that framing drive what's allowed in."
+          ],
+          "links": [
+            {
+              "label": "Privacy — memorization, PII extraction &amp; data governance",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/07-Privacy — memorization, PII extraction &amp; data governance"
+            }
+          ],
+          "badge": "Evergreen — the privacy-governance question in regulated shops.",
+          "oneLiner": "Repetition drives verbatim memorization and extraction attacks make it a real disclosure channel — so dedup aggressively, keep raw customer PII out of training, isolate per-tenant fine-tunes, and treat weights as an unauditable, undeletable data store when you write the policy."
+        },
+        {
+          "id": "llm-foundations-q35",
+          "number": 35,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q40 · S13 Cross-Cutting & Frontier) \"Pick benchmarks for a model-selection decision: what does the public leaderboard tell you, and what's your private protocol?",
+          "points": [
+            "Leaderboard limits: <strong>contamination</strong> (test sets leak into training — scores inflate unverifiably), <strong>saturation</strong> (top models cluster within noise on old benchmarks), and <strong>task mismatch</strong> (MMLU-style knowledge doesn't predict your extraction accuracy or refusal behavior). Arena-style human preference boards add <strong>preference-for-style bias</strong> (verbosity, formatting) — useful signal for chat, weak for task quality.",
+            "What public numbers are still good for: coarse capability tiering (is the model in the frontier class or not), trend direction across generations, and spotting <em>specialized</em> strengths (code vs math vs multilingual boards diverge).",
+            "The private protocol: build a <strong>held-secret eval set from your real traffic</strong> (golden answers + rubrics), spanning your quality dimensions (task accuracy, format compliance, refusals, latency, cost per task); run candidates blind, same prompts and params; report per-dimension results with CIs, not one average.",
+            "Guard your own set like a benchmark author: never in any prompt or fine-tune, rotate/refresh over time, and re-run on every model-version change (silent updates again).",
+            "The sentence that lands: public benchmarks shortlist, <strong>private evals decide</strong> — anyone choosing a production model off a leaderboard is outsourcing the decision to a contaminated average."
+          ],
+          "links": [
+            {
+              "label": "Benchmark landscape",
+              "target": "05-LLM-Production/10-Evaluation/02-Benchmark landscape"
+            },
+            {
+              "label": "Task specific metrics",
+              "target": "05-LLM-Production/10-Evaluation/05-Task-specific metrics"
+            }
+          ],
+          "badge": "Trending — benchmark-skepticism questions recur in senior LLM screens (2025–26)",
+          "oneLiner": "Leaderboards suffer contamination, saturation, and task mismatch — use them to shortlist a tier, then decide with a held-secret eval from your own traffic, scored per dimension with confidence intervals, and re-run whenever the provider ships a new version."
+        },
+        {
+          "id": "llm-foundations-q36",
+          "number": 36,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q41 · S13 Cross-Cutting & Frontier) \"The residual stream: give me the mental model, and one practical thing it explains about model behavior.",
+          "points": [
+            "The mental model: the transformer isn't a pipeline where each layer transforms the whole representation — there's a <strong>shared residual stream</strong> (the running vector at each position) that every attention head and MLP <strong>reads from and additively writes to</strong>. Layers are contributors to a common workspace, not sequential filters.",
+            "Consequences of additivity: information persists by default (a layer that writes nothing leaves the stream intact), features are <strong>superposed</strong> (more features than dimensions, packed non-orthogonally), and later layers can read early-layer writes directly — the stream is the model's working memory across depth.",
+            "One practical thing it explains: <strong>why interventions work</strong> — steering vectors (adding a direction to the stream changes behavior semantically), activation patching for causal attribution, and why probing at intermediate layers finds increasingly abstract features (early = syntax-ish, late = task/semantic).",
+            "It also grounds intuitions about depth: circuits are distributed across read-write patterns between heads, which is why single-layer explanations of behavior are usually wrong.",
+            "Keep the claim calibrated: this is the mechanistic-interpretability <em>frame</em>, productive but incomplete — superposition makes clean feature extraction genuinely hard (hence sparse autoencoder research)."
+          ],
+          "links": [
+            {
+              "label": "Residual stream",
+              "target": "05-LLM-Production/01-Foundations &amp; Architecture/06-Residual stream"
+            }
+          ],
+          "badge": "Evergreen (interpretability-literacy check at senior level)",
+          "oneLiner": "Every head and MLP reads from and additively writes to one shared residual stream — the model's working memory across depth — which is why steering vectors work, why probes find increasingly abstract features by layer, and why features are superposed rather than neatly one-per-neuron."
+        },
+        {
+          "id": "llm-foundations-q37",
+          "number": 37,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q42 · S13 Cross-Cutting & Frontier) \"Training-run engineering: you're running a multi-week training job on hundreds of GPUs. What actually goes wrong, and what does the discipline look like?",
+          "points": [
+            "<strong>Hardware attrition is routine at scale</strong>: with hundreds of GPUs over weeks, node failures are a <em>when</em>, not an <em>if</em> — so <strong>frequent checkpointing</strong> with fast distributed save/restore, automatic failure detection and job restart, and spare capacity are the baseline; time-to-recover multiplies into real money.",
+            "<strong>Loss-spike management</strong>: spikes and divergences happen (bad data batches, numeric instability at low precision, optimizer state issues) — the playbook is skip-the-batch, rewind-to-checkpoint with data-order change, gradient clipping, and careful LR/warmup schedules; bf16 exists because fp16's range made this worse.",
+            "<strong>Determinism and bookkeeping</strong>: exact data order logged (to replay around bad batches), every run's config/seed/commit recorded, and eval checkpoints on schedule — an unreproducible multi-week run is an unaccountable one.",
+            "<strong>Throughput engineering</strong>: MFU (model FLOPs utilization) as the honest efficiency metric; parallelism layout (data/tensor/pipeline) tuned to interconnect topology; stragglers and network flakes monitored — a few percent MFU is a large check at this scale.",
+            "Why it matters to an architect who'll never pretrain: the same disciplines — checkpointing, failure-resume, run bookkeeping, throughput accounting — apply to your <strong>fine-tuning and batch-inference jobs</strong>, scaled down."
+          ],
+          "links": [
+            {
+              "label": "Training run engineering",
+              "target": "05-LLM-Production/03-Pretraining/03-Training-run engineering"
+            }
+          ],
+          "badge": "Evergreen (tests whether \"pretraining\" knowledge is operational or theoretical)",
+          "oneLiner": "At multi-week multi-node scale, hardware failure and loss spikes are routine — so the discipline is fast checkpoint-resume, a spike playbook of rewind-and-skip, exact data-order bookkeeping for reproducibility, and MFU accounting, because a few lost percent is a large invoice."
+        },
+        {
+          "id": "llm-foundations-q38",
+          "number": 38,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q43 · S13 Cross-Cutting & Frontier) \"Beyond LoRA: what's in the wider PEFT toolbox, and when would you pick something other than LoRA?",
+          "points": [
+            "The map: <strong>prompt/prefix tuning</strong> (learn soft tokens prepended to input/attention — tiny footprint, zero architecture change, historically weaker on hard tasks and small models), <strong>adapter layers</strong> (small bottleneck MLPs inserted per layer — the pre-LoRA classic, adds inference latency unless merged), <strong>IA3-style scaling</strong> (learn per-activation scaling vectors — even fewer parameters), and selective-layer/bias-only tuning (BitFit-class).",
+            "Why LoRA won the default slot: no inference overhead after merge, strong quality across scales, ecosystem/tooling gravity, and multi-adapter serving — the alternatives survive in niches.",
+            "When to pick differently: <strong>soft prompts</strong> when you can't touch weights at all (serving stack forbids adapters) or need thousands of ultra-cheap task variants; <strong>adapters/IA3</strong> in research settings comparing parameter-efficiency frontiers; <strong>bias/selective tuning</strong> for tiny quick calibrations.",
+            "The decision variables are consistent: trainable-parameter budget, inference-latency tolerance, how many task variants must be served concurrently, and whether the base weights are modifiable at all.",
+            "Meta-point: PEFT choices are converging — the differentiator in practice is <strong>data quality and eval discipline</strong>, not which 0.5% of parameters you trained; say that before an interviewer says it to you."
+          ],
+          "links": [
+            {
+              "label": "Other PEFT",
+              "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/05-Other PEFT"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "The toolbox trades where trainable parameters live — soft prompts in the input, adapters in the layers, IA3 in scalings — but LoRA's merge-to-zero-overhead and multi-adapter serving won the default, and in practice the fine-tune's quality is decided by data and evals, not by which PEFT you picked."
+        },
+        {
+          "id": "llm-foundations-q39",
+          "number": 39,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q44 · S13 Cross-Cutting & Frontier) \"Calibration and uncertainty: how do you get a trustworthy 'how sure is the model' signal out of an LLM system?",
+          "points": [
+            "The baseline problem: pretrained models are decently calibrated at token level; <strong>post-training (RLHF/DPO) damages calibration</strong> — models become confident-sounding regardless of correctness, and verbalized certainty (\"I'm 90% sure\") correlates weakly with accuracy.",
+            "Signal families: <strong>logprob-based</strong> (token/sequence likelihood, entropy — cheap, available, needs recalibration per task via a small labeled set and temperature scaling / isotonic mapping); <strong>consistency-based</strong> (sample k answers, measure agreement — semantic entropy-style; expensive but the strongest practical signal for free-form answers, disagreement flags confabulation); <strong>verbalized confidence</strong> (ask the model — usable only after you've <em>measured</em> its reliability on your task, usually the weakest alone).",
+            "Combine and calibrate: whatever raw signal, map it to real probabilities against labeled outcomes (reliability curves again — same discipline as classical ML), per task, re-checked per model version.",
+            "What the number is <em>for</em> — the architecture part: <strong>selective prediction</strong> (answer / hedge / retrieve-more / escalate-to-human thresholds), routing (low confidence → bigger model or verification pass), and honest UX (show sources and hedge language below threshold).",
+            "The trap to name: don't ship raw logprobs or verbalized percentages to users or downstream logic — uncalibrated confidence is worse than none, because it transfers false trust."
+          ],
+          "links": [
+            {
+              "label": "Calibration &amp; uncertainty",
+              "target": "05-LLM-Production/10-Evaluation/08-Calibration &amp; uncertainty"
+            },
+            {
+              "label": "Logprobs",
+              "target": "05-LLM-Production/06-Inference &amp; Decoding/03-Logprobs"
+            }
+          ],
+          "badge": "Trending — uncertainty-quantification recurs in high-stakes-domain JDs (2025–26)",
+          "oneLiner": "Post-training wrecks native calibration, so build the signal — logprobs recalibrated on labeled outcomes, sampling agreement for free-form answers, verbalized confidence only after auditing it — and spend it on selective prediction: answer, verify, or escalate by threshold."
+        },
+        {
+          "id": "llm-foundations-q40",
+          "number": 40,
+          "marks": [],
+          "text": "🗣️ (jbtiq_llm Q45 · S13 Cross-Cutting & Frontier) \"Close it out: two model generations from now, which parts of your LLM architecture survive unchanged — and how does that shape what you build today?",
+          "points": [
+            "<strong>Made obsolete by better models</strong>: elaborate prompt scaffolding, multi-step orchestration that compensates for reasoning gaps, some routing complexity, patch-the-model guardrail layers — engineering that <em>substitutes</em> for capability depreciates with every release.",
+            "<strong>Made more valuable</strong>: evals and golden sets (you can now <em>measure</em> the upgrade), retrieval infrastructure and data quality (a better reasoner over better context compounds), tool/API contracts (a stronger model exploits the same tools harder), traces and feedback loops. Engineering that <em>feeds</em> capability appreciates.",
+            "<strong>Untouched</strong>: identity/permissions/audit, cost governance, data pipelines and contracts, domain knowledge encoded in schemas and workflows — the classical-software substrate.",
+            "The design heuristic that follows: before building compensating machinery, ask \"<strong>does this get deleted when the model improves?</strong>\" — if yes, keep it thin and disposable; invest the durable dollars in evals, data, tools, and governance. Architect so a model swap is a config change plus an eval run.",
+            "End on the operating cadence: model upgrades are a <em>scheduled institutional process</em> — re-run gates, re-tune routing thresholds, re-check calibration, retire scaffolding — the orgs that win treat capability arrival as an intake pipeline, not a surprise."
+          ],
+          "links": [
+            {
+              "label": "LLM application architecture",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/01-LLM application architecture"
+            },
+            {
+              "label": "Scaling laws &amp; emergence",
+              "target": "05-LLM-Production/02-Scaling-Emergence&amp; Model Families/01-Scaling laws &amp; emergence"
+            }
+          ],
+          "badge": "Trending — the strategy synthesis senior LLM loops end on (2025–26)",
+          "oneLiner": "Scaffolding that substitutes for capability depreciates; evals, retrieval, tools and governance appreciate — so I keep compensating machinery thin, make model swap a config-plus-eval-run event, and run upgrades as a scheduled process, because the fastest-improving component in the stack is the one I don't build."
+        }
+      ]
+    },
+    {
+      "id": "llm-foundations-merged-from-jbtiqdlmd-19-sep-2026",
+      "letter": null,
+      "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
+      "questions": [
+        {
+          "id": "llm-foundations-q41",
+          "number": 41,
+          "marks": [],
+          "text": "🗣️ (jbtiq_dl Q13 · S3 Transformer Architecture Core) \"Why the √d_k in scaled dot-product attention — what actually breaks without it?",
+          "points": [
+            "Dot products of d_k-dimensional vectors with unit-variance components have <strong>variance ≈ d_k</strong> — logit magnitude grows with head dimension.",
+            "Large-magnitude logits push softmax into <strong>saturation</strong>: output is nearly one-hot, and the softmax Jacobian ≈ 0 → <strong>tiny gradients</strong>, attention stops learning.",
+            "Dividing by <strong>√d_k</strong> renormalizes logit variance to ~1, keeping softmax in its sensitive, trainable regime.",
+            "Frame it as <strong>variance control</strong> — the same discipline as weight init and normalization, applied to attention logits. At long context the numerics of many/large logits resurface and kernels manage softmax stability explicitly."
+          ],
+          "links": [
+            {
+              "label": "Self Attention",
+              "target": "02-DL/03-Transformer Architecture Core/04-Self-Attention"
+            },
+            {
+              "label": "Attention Numerics at Long Context",
+              "target": "02-DL/03-Transformer Architecture Core/06-Attention Numerics at Long Context"
+            }
+          ],
+          "badge": "Trending — recurs across LLM interview banks (InterviewBit, DataInterview, AnalyticsVidhya) + AI-engineer screens (2025–26)",
+          "oneLiner": "Dot-product variance grows linearly with d_k, and a saturated softmax has near-zero gradient — √d_k rescales the logits to unit variance so attention stays trainable."
+        },
+        {
+          "id": "llm-foundations-q42",
+          "number": 42,
+          "marks": [],
+          "text": "🗣️ (jbtiq_dl Q14 · S3 Transformer Architecture Core) \"Why multiple attention heads instead of one big head with the same total dimension?",
+          "points": [
+            "One head = <strong>one softmax distribution per token</strong> — a single convex mixture; it must average all the relationships a token cares about into one set of weights.",
+            "H heads = H <strong>independent lookups in different learned subspaces</strong> — one can track syntax, another coreference, another positional patterns, simultaneously.",
+            "Each head is <strong>low-rank</strong> (d_model/H), so total compute stays roughly constant — you're spending the same budget on diversity instead of resolution.",
+            "Output = concat of heads through <strong>W_O</strong>, which learns to mix them.",
+            "Senior nuance: trained models show heavy head <strong>redundancy</strong> — many heads are prunable post-hoc — but training with multiplicity still helps optimization."
+          ],
+          "links": [
+            {
+              "label": "Self Attention",
+              "target": "02-DL/03-Transformer Architecture Core/04-Self-Attention"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "One head gives each token a single attention distribution; multiple heads give several independent low-rank lookups in different subspaces for the same compute — different relationship types in parallel."
+        },
+        {
+          "id": "llm-foundations-q43",
+          "number": 43,
+          "marks": [],
+          "text": "🗣️ (jbtiq_dl Q16 · S3 Transformer Architecture Core) \"Pre-norm vs post-norm — and why LayerNorm instead of BatchNorm in transformers in the first place?",
+          "points": [
+            "<strong>Post-norm</strong> (original 2017): normalize <em>after</em> the residual add → the residual path itself passes through norms; deep stacks become unstable and demand careful <strong>warmup</strong>.",
+            "<strong>Pre-norm</strong>: normalize <em>inside</em> the branch, residual path stays a pure <strong>identity highway</strong> → gradients reach every depth; the reason very deep LLMs train reliably. Standard today; post-norm's minor quality edge at small depth is the trade.",
+            "<strong>BatchNorm</strong> normalizes across the batch → depends on <em>other examples</em>: breaks with variable sequence lengths/padding, small microbatches, and creates train/inference statistics mismatch (running means).",
+            "<strong>LayerNorm</strong> normalizes across features <em>per token</em> — batch-independent, identical behavior train and serve. <strong>RMSNorm</strong> drops mean-centering for the same effect, cheaper — the current LLM default."
+          ],
+          "links": [
+            {
+              "label": "Normalization in Transformers",
+              "target": "02-DL/03-Transformer Architecture Core/07-Normalization in Transformers"
+            }
+          ],
+          "badge": "Trending — flagged in senior DL guides (Exponent, DataInterview) as the question that separates paper-readers from practitioners (2025–26)",
+          "oneLiner": "Pre-norm keeps the residual stream an untouched identity path, which is what makes very deep transformers trainable — and LayerNorm/RMSNorm normalize per token, so nothing depends on batch composition the way BatchNorm does."
+        },
+        {
+          "id": "llm-foundations-q44",
+          "number": 44,
+          "marks": [],
+          "text": "🗣️ (jbtiq_dl Q17 · S3 Transformer Architecture Core) \"Thought experiment: you delete every residual connection from a 24-layer transformer. What happens when you train it, and why?",
+          "points": [
+            "It effectively <strong>doesn't train</strong>: every gradient must now pass <em>through</em> 24 stacks of attention/FFN/norms — you've reinstated the vanishing-signal problem residuals were built to kill.",
+            "Residuals give an <strong>identity path</strong>: the block computes a <em>delta</em>, <code>x + f(x)</code>, so each layer refines a shared <strong>residual stream</strong> rather than wholesale re-encoding it.",
+            "Useful mental model: a residual network behaves like an <strong>ensemble of shallow paths</strong> — most gradient flows through short paths, deep paths are optional refinements.",
+            "Interplay: <strong>pre-norm</strong> keeps that path clean (Q16), and init schemes deliberately scale residual-branch outputs down so the network starts near the identity.",
+            "This \"residual stream as shared workspace\" view is also the load-bearing abstraction in interpretability work (Q45)."
+          ],
+          "links": [
+            {
+              "label": "The Transformer Block, End to End",
+              "target": "02-DL/03-Transformer Architecture Core/08-The Transformer Block, End-to-End"
+            }
+          ],
+          "badge": "Evergreen",
+          "oneLiner": "Without residuals every layer must relearn the whole representation and gradients must survive 24 nonlinear blocks — with them, each block writes a small delta onto an identity highway, which is what makes depth trainable."
+        },
+        {
+          "id": "llm-foundations-q45",
+          "number": 45,
+          "marks": [],
+          "text": "🗣️ (jbtiq_dl Q23 · S4 Modern Transformer Variants) \"Your PM wants a million-token context window. What breaks first, and what are the architectural levers?",
+          "points": [
+            "<strong>Decode memory breaks first</strong>: KV cache grows linearly with context (Q18) — at million-token scale it dwarfs the weights per request. Levers: GQA, KV quantization, paging, offload.",
+            "<strong>Prefill compute</strong> is O(n²): time-to-first-token becomes the user-facing pain; FlashAttention and chunked prefill manage it, but the quadratic is still there.",
+            "<strong>Positional generalization</strong>: RoPE beyond trained length degrades — needs scaling/extension schemes plus long-context finetuning; you can't just crank a config value.",
+            "<strong>Restricted attention patterns</strong> (sliding window locally, a few global tokens) cut cost to near-linear — trading exact global attention for reach.",
+            "The honest caveat: a window accepted ≠ a window <em>used</em> — retrieval quality across the middle of huge contexts must be evaluated, not assumed."
+          ],
+          "links": [
+            {
+              "label": "Restricted Attention Patterns",
+              "target": "02-DL/04-Modern transformer variants/01-Restricted Attention Patterns"
+            },
+            {
+              "label": "Attention Numerics at Long Context",
+              "target": "02-DL/03-Transformer Architecture Core/06-Attention Numerics at Long Context"
+            }
+          ],
+          "badge": "Evergreen — the long-context probe, phrased as a roadmap fight.",
+          "oneLiner": "KV memory breaks first, then quadratic prefill, then positional generalization — the levers are GQA-plus-paged-quantized cache, chunked prefill with FlashAttention, RoPE extension, and sparse attention patterns, plus actually evaluating whether the model uses the window."
+        }
+      ]
+    }
+  ]
+}

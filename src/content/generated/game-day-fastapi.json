@@ -1,0 +1,843 @@
+{
+  "slug": "fastapi",
+  "number": 2,
+  "title": "⚡ FASTAPI",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "Bullets are <strong>keywords and flows</strong>, not explanations. If you need the explanation, you're in the wrong file — go to the note.",
+    "⭐ = the ones that decide the round. 🔥 = trending 2026. 📍 = you were actually asked this. 📝 = no vault note exists yet.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> ⚠️ <code>14-fast-api/</code> is a stub (one unfinished index) — depth borrowed from <code>03-python/13-production-services/</code> · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]"
+  ],
+  "bands": [
+    {
+      "id": "fastapi-a",
+      "letter": "A",
+      "name": "Openers",
+      "questions": [
+        {
+          "id": "fastapi-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "What is ASGI, and why couldn't FastAPI be built on WSGI?",
+          "points": [
+            "WSGI = <strong>one synchronous callable per request</strong>, blocking by construction",
+            "ASGI = async callable + <strong>scope / receive / send</strong> — long-lived connections possible",
+            "That's what unlocks WebSockets, SSE, streaming, lifespan",
+            "FastAPI is Starlette (ASGI) + Pydantic (validation); it isn't a server",
+            "Server is uvicorn/hypercorn — the app is just the callable"
+          ],
+          "links": [
+            {
+              "label": "asgi wsgi worker model",
+              "target": "03-python/13-production-services/73-asgi-wsgi-worker-model"
+            }
+          ],
+          "flow": "WSGI one blocking call → ASGI scope/receive/send → streams and sockets become possible",
+          "trap": "conflating FastAPI the framework with uvicorn the server"
+        },
+        {
+          "id": "fastapi-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "How does FastAPI use type hints at runtime?",
+          "points": [
+            "Introspects the <strong>function signature</strong> — annotations are the source of truth",
+            "Drives three things at once: <strong>validation · OpenAPI schema · dependency resolution</strong>",
+            "<code>Annotated[T, Depends(...)]</code> is the modern form — metadata rides with the type",
+            "This is why <code>functools.wraps</code> matters on decorators (see <code>01-PYTHON</code> #11)",
+            "Same machinery emits JSON Schema → LLM tool definitions"
+          ],
+          "links": [
+            {
+              "label": "pydantic validation boundary",
+              "target": "03-python/08-typing-interfaces/50a-pydantic-validation-boundary"
+            }
+          ],
+          "flow": "signature introspected → validation + schema + DI all fall out of one declaration",
+          "trap": "treating hints as documentation — here they're executable"
+        },
+        {
+          "id": "fastapi-q3",
+          "number": 3,
+          "marks": [],
+          "text": "Where does validation actually happen?",
+          "points": [
+            "Request model parsed and coerced <strong>before your handler runs</strong> — body, query, path, headers",
+            "Failure → <strong>422</strong> with a structured error list, never reaching your code",
+            "Response model validates on the way out too (and <em>filters</em> — see #10)",
+            "Validate once at this boundary; the domain layer receives trusted objects",
+            "Custom validators / <code>field_validator</code> for cross-field invariants"
+          ],
+          "links": [
+            {
+              "label": "pydantic validation boundary",
+              "target": "03-python/08-typing-interfaces/50a-pydantic-validation-boundary"
+            }
+          ],
+          "flow": "parse → coerce → 422 on failure → typed object into handler → validated on the way out",
+          "trap": "re-validating inside the handler, paying twice"
+        },
+        {
+          "id": "fastapi-q4",
+          "number": 4,
+          "marks": [
+            "decides"
+          ],
+          "text": "def or async def for an endpoint — what changes?",
+          "points": [
+            "<code>async def</code> → runs <strong>on the event loop</strong>; you must never block it",
+            "plain <code>def</code> → FastAPI runs it in a <strong>threadpool</strong>, so blocking is safe there",
+            "The dangerous combination is <code>async def</code> + a sync library",
+            "Threadpool is finite — sync endpoints cap out at pool size under load",
+            "Mixed codebase is fine; the choice is per-endpoint, not per-app"
+          ],
+          "links": [
+            {
+              "label": "bridging sync async",
+              "target": "03-python/07-async-io/43-bridging-sync-async"
+            }
+          ],
+          "flow": "async def → loop, never block · def → threadpool, blocking OK · async + sync lib = the bug",
+          "trap": "<code>async def</code> everywhere \"because it's faster\", then calling <code>requests</code> inside"
+        },
+        {
+          "id": "fastapi-q5",
+          "number": 5,
+          "marks": [],
+          "text": "What does Depends actually do?",
+          "points": [
+            "Declares a callable whose <strong>result is injected</strong>; FastAPI resolves the graph per request",
+            "Dependencies can depend on dependencies — resolved as a DAG",
+            "Same dependency used twice in one request is <strong>cached by default</strong> (<code>use_cache</code>)",
+            "Can be sync or async; sync ones go to the threadpool like endpoints",
+            "Overridable in tests via <code>app.dependency_overrides</code> — the main testability win"
+          ],
+          "links": [],
+          "flow": "declare callable → DAG resolved per request → cached within request → overridable in tests",
+          "trap": "describing it as a decorator or a middleware"
+        },
+        {
+          "id": "fastapi-q6",
+          "number": 6,
+          "marks": [],
+          "text": "Path, query, body, header — how does FastAPI decide?",
+          "points": [
+            "Name in the <strong>path template</strong> → path param",
+            "Scalar not in path → query param (default); <code>Query(...)</code> to be explicit",
+            "Pydantic model → <strong>body</strong>; multiple models → nested keys under field names",
+            "<code>Header</code>, <code>Cookie</code>, <code>Form</code>, <code>File</code> explicit; header names auto-convert <code>_</code> → <code>-</code>",
+            "<code>Annotated</code> is the current idiom for all of these"
+          ],
+          "links": [],
+          "flow": "in path → path · scalar → query · model → body · rest declared explicitly",
+          "trap": "a bare scalar you expected in the body silently becoming a query param"
+        }
+      ]
+    },
+    {
+      "id": "fastapi-b",
+      "letter": "B",
+      "name": "Mechanism",
+      "questions": [
+        {
+          "id": "fastapi-q7",
+          "number": 7,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk the request through the stack.",
+          "points": [
+            "<strong>Middleware</strong> (outermost, sees raw request/response) → routing → <strong>dependencies</strong> → handler",
+            "Response unwinds back out through middleware in reverse",
+            "Exception handlers sit outside the handler, inside middleware",
+            "Middleware sees <em>every</em> request incl. 404; dependencies only matched routes",
+            "Ordering is registration order — auth before logging changes what gets logged"
+          ],
+          "links": [],
+          "flow": "middleware → route match → dependency DAG → handler → response unwinds outward",
+          "trap": "putting per-route concerns in middleware and paying for them on every 404"
+        },
+        {
+          "id": "fastapi-q8",
+          "number": 8,
+          "marks": [],
+          "text": "What's a yield dependency and when does teardown run?",
+          "points": [
+            "Code before <code>yield</code> = setup, after = <strong>teardown</strong> — a context manager in DI form",
+            "Teardown runs <strong>after the response is generated</strong>, not when the handler returns",
+            "Right home for DB sessions, transactions, acquired clients",
+            "With <code>StreamingResponse</code> the ordering bites — see #14/#31",
+            "Exceptions: teardown still runs; you can catch around the <code>yield</code>"
+          ],
+          "links": [
+            {
+              "label": "context managers",
+              "target": "03-python/09-idiomatic-structural/51-context-managers"
+            }
+          ],
+          "flow": "setup → yield value → handler → response → teardown",
+          "trap": "assuming teardown fires at handler return — it doesn't, and streams expose it"
+        },
+        {
+          "id": "fastapi-q9",
+          "number": 9,
+          "marks": [],
+          "text": "Middleware, dependency, or exception handler — which for what?",
+          "points": [
+            "<strong>Middleware</strong> — truly global, request/response shaped: CORS, tracing, timing, body size",
+            "<strong>Dependency</strong> — needs the DI graph or per-route config: auth, tenant resolution, DB session",
+            "<strong>Exception handler</strong> — maps a domain exception type to a response shape",
+            "Pure-ASGI middleware is cheaper than <code>BaseHTTPMiddleware</code> (which wraps in a task)",
+            "Prefer dependency when the concern varies per route"
+          ],
+          "links": [],
+          "flow": "global + protocol-shaped → middleware · route-varying → dependency · error mapping → handler",
+          "trap": "<code>BaseHTTPMiddleware</code> for everything, then wondering where latency and context went"
+        },
+        {
+          "id": "fastapi-q10",
+          "number": 10,
+          "marks": [],
+          "text": "What does response_model do beyond documentation?",
+          "points": [
+            "Validates <strong>and filters</strong> the outgoing object to declared fields",
+            "That filtering is a <strong>security control</strong> — the standard way ORM objects leak <code>password_hash</code>",
+            "Handles serialisation: datetimes, enums, <code>UUID</code>, nested models",
+            "Costs a second validation pass — measurable on hot list endpoints",
+            "<code>response_model_exclude_none</code> / <code>by_alias</code> shape the wire contract"
+          ],
+          "links": [],
+          "flow": "declare out-model → validate + filter → serialise → contract enforced in code",
+          "trap": "returning the ORM object directly and leaking columns you never listed"
+        },
+        {
+          "id": "fastapi-q11",
+          "number": 11,
+          "marks": [],
+          "text": "BackgroundTasks — where does that run?",
+          "points": [
+            "Runs <strong>after the response is sent</strong>, in the <em>same process</em>",
+            "Sync task → threadpool · async task → event loop",
+            "No durability: process dies → task is gone, no retry, no visibility",
+            "Fine for fire-and-forget side effects (audit log, cache warm, email)",
+            "Anything that must not be lost belongs on a real queue (see #18)"
+          ],
+          "links": [
+            {
+              "label": "queues background workers",
+              "target": "03-python/13-production-services/80-queues-background-workers"
+            }
+          ],
+          "flow": "response sent → task runs in-process → no persistence, no retry",
+          "trap": "using it for payment, indexing, or anything you'd have to explain losing"
+        },
+        {
+          "id": "fastapi-q12",
+          "number": 12,
+          "marks": [],
+          "text": "How do you turn a domain error into a good HTTP response?",
+          "points": [
+            "<code>HTTPException</code> for the direct case; <code>@app.exception_handler(Type)</code> for domain errors",
+            "Handler keeps HTTP concerns out of the domain layer — domain raises its own exception type",
+            "<code>RequestValidationError</code> → 422 by default; override to reshape the payload",
+            "Return a <strong>consistent error envelope</strong> (code, message, correlation ID) — clients parse it",
+            "Never leak stack traces or internal identifiers"
+          ],
+          "links": [
+            {
+              "label": "exception model",
+              "target": "03-python/09-idiomatic-structural/55-exception-model"
+            }
+          ],
+          "flow": "domain raises domain error → registered handler maps to status + envelope + correlation ID",
+          "trap": "<code>HTTPException</code> deep in the service layer, coupling domain to HTTP"
+        },
+        {
+          "id": "fastapi-q13",
+          "number": 13,
+          "marks": [
+            "decides"
+          ],
+          "text": "Where do you load the model / open the pool?",
+          "points": [
+            "<strong><code>lifespan</code></strong> async context manager — startup before serving, shutdown after draining",
+            "Load once per <strong>worker process</strong>; N workers → N copies in memory (see #16)",
+            "Hold handles in <code>app.state</code>, not module globals, so tests can swap them",
+            "Warm-up call in lifespan avoids the first request paying compile/JIT cost",
+            "Shutdown side must close pools and cancel background tasks"
+          ],
+          "links": [],
+          "flow": "lifespan startup → load + warm → serve → shutdown drains and closes",
+          "trap": "lazy-loading on first request — the cold start lands on a real user"
+        },
+        {
+          "id": "fastapi-q14",
+          "number": 14,
+          "marks": [
+            "decides"
+          ],
+          "text": "Stream LLM tokens out of FastAPI. Show me the shape.",
+          "points": [
+            "<code>StreamingResponse(gen(), media_type=\"text/event-stream\")</code>, chunks as <code>data: {...}\\n\\n</code>",
+            "Async generator pulls from the provider and yields — never buffer the whole answer",
+            "Disable proxy buffering or nothing ships until completion",
+            "Client disconnect must <strong>cancel upstream</strong> — otherwise you pay for unread tokens",
+            "Errors after headers are sent → in-band error event, not a 500"
+          ],
+          "links": [
+            {
+              "label": "streaming transport",
+              "target": "03-python/13-production-services/77-streaming-transport"
+            }
+          ],
+          "flow": "async gen → SSE frames → unbuffered proxy → cancel upstream on disconnect",
+          "trap": "<code>yield</code>-ing from inside a <code>yield</code> dependency's session and having it close mid-stream"
+        },
+        {
+          "id": "fastapi-q15",
+          "number": 15,
+          "marks": [],
+          "text": "Where does the OpenAPI schema come from?",
+          "points": [
+            "Generated from <strong>routes + type hints + Pydantic models</strong> — no separate spec file",
+            "<code>response_model</code>, status codes, tags, <code>summary</code>/<code>description</code> all feed it",
+            "Consequence: the schema is only as good as your annotations",
+            "Can be exported for client codegen and contract tests",
+            "Lock it in CI — an unnoticed schema diff is a broken client"
+          ],
+          "links": [
+            {
+              "label": "structured outputs tool schemas",
+              "target": "03-python/08-typing-interfaces/50b-structured-outputs-tool-schemas"
+            }
+          ],
+          "flow": "routes + hints + models → schema → export → codegen and contract test",
+          "trap": "hand-maintaining API docs beside a schema that already generates itself"
+        }
+      ]
+    },
+    {
+      "id": "fastapi-c",
+      "letter": "C",
+      "name": "Trade-offs",
+      "questions": [
+        {
+          "id": "fastapi-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "uvicorn or gunicorn? How many workers?",
+          "points": [
+            "<code>uvicorn</code> alone is fine in a container where the <strong>orchestrator</strong> does process supervision",
+            "<code>gunicorn -k uvicorn.workers.UvicornWorker</code> when you want a process manager in-pod",
+            "Starting point ~<code>2×CPU+1</code> for generic web — <strong>but that heuristic is wrong for AI services</strong>",
+            "Real ceiling is <strong>memory × workers</strong> when each loads a model or big cache",
+            "Async I/O-bound → fewer workers, high concurrency each; don't scale workers to fix a blocked loop"
+          ],
+          "links": [
+            {
+              "label": "asgi wsgi worker model",
+              "target": "03-python/13-production-services/73-asgi-wsgi-worker-model"
+            }
+          ],
+          "flow": "container supervises → uvicorn · need in-pod manager → gunicorn → then size by memory, not CPU",
+          "trap": "quoting <code>2×CPU+1</code> for a service holding a model per worker"
+        },
+        {
+          "id": "fastapi-q17",
+          "number": 17,
+          "marks": [],
+          "text": "When is a plain def endpoint the better choice?",
+          "points": [
+            "When the work is genuinely sync and the library has no async story (many SDKs, some drivers)",
+            "Threadpool isolates the blocking — safer than a half-async wrapper you got wrong",
+            "Also fine for short CPU work that would otherwise stall the loop",
+            "Ceiling: threadpool size (tunable) — beyond that requests queue",
+            "Don't mix: <code>async def</code> calling a sync client is worse than either pure option"
+          ],
+          "links": [
+            {
+              "label": "bridging sync async",
+              "target": "03-python/07-async-io/43-bridging-sync-async"
+            }
+          ],
+          "flow": "no async client available → sync def → threadpool absorbs it → watch pool size",
+          "trap": "wrapping sync calls in <code>async def</code> without an executor and calling it async"
+        },
+        {
+          "id": "fastapi-q18",
+          "number": 18,
+          "marks": [],
+          "text": "BackgroundTasks or a real queue?",
+          "points": [
+            "BackgroundTasks: zero infra, <strong>zero durability</strong> — dies with the process",
+            "Queue: persistence, retries, DLQ, backpressure, independent scaling, observability",
+            "Decision axis: <strong>can you explain losing this to a customer?</strong>",
+            "Also queue when the work outlives a deploy or needs its own resource profile (GPU)",
+            "Middle ground: enqueue <em>from</em> a background task if the response must not wait"
+          ],
+          "links": [
+            {
+              "label": "queues background workers",
+              "target": "03-python/13-production-services/80-queues-background-workers"
+            }
+          ],
+          "flow": "can it be lost? → yes → BackgroundTasks · no → queue with retry + DLQ",
+          "trap": "document indexing or embedding in BackgroundTasks — silently lost on redeploy"
+        },
+        {
+          "id": "fastapi-q19",
+          "number": 19,
+          "marks": [],
+          "text": "Auth as middleware or as a dependency?",
+          "points": [
+            "<strong>Dependency</strong> — per-route, composable, appears in OpenAPI, overridable in tests, returns typed principal",
+            "<strong>Middleware</strong> — blanket enforcement, catches unmatched routes, good for a hard deny-by-default",
+            "JWT verification: signature + <code>exp</code> + <code>aud</code>/<code>iss</code>; cache <strong>JWKS</strong>, don't fetch per request",
+            "Authorisation (can this tenant touch this row) belongs in the domain, not the edge",
+            "Common shape: middleware for deny-by-default, dependency for identity + scopes"
+          ],
+          "links": [],
+          "flow": "identity/scopes → dependency · blanket deny → middleware · row-level authz → domain",
+          "trap": "stopping at authentication and calling it authorisation"
+        },
+        {
+          "id": "fastapi-q20",
+          "number": 20,
+          "marks": [],
+          "text": "response_model is costing you p99. Now what?",
+          "points": [
+            "It's a <strong>second full validation pass</strong> — visible on large list responses",
+            "Options: narrower response models, pagination, <code>model_construct</code> on trusted internal paths",
+            "Or return a pre-serialised payload and document the schema manually — you're trading safety",
+            "Measure first: often the serialiser isn't the cost, the N+1 behind it is",
+            "Keep it on any endpoint returning ORM-backed objects — the leak risk outweighs the ms"
+          ],
+          "links": [],
+          "flow": "measure → narrow the model / paginate → only then consider skipping validation",
+          "trap": "removing response_model on a user-facing endpoint and reopening the field-leak hole"
+        },
+        {
+          "id": "fastapi-q21",
+          "number": 21,
+          "marks": [],
+          "text": "Sync SQLAlchemy in the threadpool, or the async engine?",
+          "points": [
+            "Async engine: true non-blocking, but <strong>lazy loading is a trap</strong> — must eager-load explicitly",
+            "Sync in threadpool: mature, simpler, all patterns work; capped by pool size",
+            "Session must be request-scoped — a <code>yield</code> dependency is the natural home",
+            "Pool sizing is per process, so real DB connections = pool × workers × replicas (<code>01-PYTHON</code> #30)",
+            "Transaction should be narrower than the request; never hold across an LLM call"
+          ],
+          "links": [
+            {
+              "label": "sqlalchemy vs raw sql",
+              "target": "03-python/14-applied-adjacent/85-sqlalchemy-vs-raw-sql"
+            }
+          ],
+          "flow": "async engine + eager loads · or sync + threadpool → request-scoped session → narrow transaction",
+          "trap": "holding a DB transaction open across a multi-second model call"
+        },
+        {
+          "id": "fastapi-q22",
+          "number": 22,
+          "marks": [],
+          "text": "Why FastAPI and not Flask / Django / Litestar?",
+          "points": [
+            "FastAPI: async-native, schema-from-types, strong ecosystem — the default for AI backends",
+            "<strong>Django</strong> wins when you want ORM + admin + auth + migrations as one opinionated whole",
+            "<strong>Flask</strong> for tiny sync services; async story is bolted on",
+            "<strong>Litestar</strong> — similar model, more batteries, smaller community",
+            "Honest framing: choose by <em>team</em> and <em>what else the service needs</em>, not benchmarks"
+          ],
+          "links": [],
+          "flow": "async + schema-driven → FastAPI · full batteries → Django · tiny sync → Flask",
+          "trap": "citing benchmark numbers as the reason"
+        },
+        {
+          "id": "fastapi-q23",
+          "number": 23,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you lay out a FastAPI service that's going to grow?",
+          "points": [
+            "Layers: <code>api/</code> (routers, schemas) · <code>domain/</code> (entities, services, ports) · <code>infrastructure/</code> (DB, clients, adapters)",
+            "<strong>Dependency direction points inward</strong> — domain imports nothing from api or infra",
+            "<code>APIRouter</code> per bounded context, mounted with prefix and tags",
+            "DI wires adapters at the edge, so swapping a provider is one binding",
+            "Rule: if it imports <code>fastapi</code>, it isn't domain code"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "api → domain ← infrastructure → dependencies point inward → routers per context",
+          "trap": "foldering by type (<code>models/</code>, <code>views/</code>) — the coupling survives the rename"
+        },
+        {
+          "id": "fastapi-q24",
+          "number": 24,
+          "marks": [],
+          "text": "Where does config live?",
+          "points": [
+            "<code>pydantic-settings</code> <code>BaseSettings</code> — env vars validated and typed at <strong>startup</strong>",
+            "Fail fast on missing/invalid config; never discover it on first request",
+            "Secrets from the platform (env, secret manager), never in the repo or image",
+            "One settings object, injected as a cached dependency — not read ad hoc",
+            "Per-environment overrides by env var, not by branching in code"
+          ],
+          "links": [],
+          "flow": "env → typed Settings → validated at startup → injected once",
+          "trap": "<code>os.getenv</code> scattered through modules with silent <code>None</code> defaults"
+        },
+        {
+          "id": "fastapi-q25",
+          "number": 25,
+          "marks": [],
+          "text": "How do you test it?",
+          "points": [
+            "<code>TestClient</code> (sync) or <strong><code>httpx.AsyncClient</code> + <code>ASGITransport</code></strong> for async — no network, no server",
+            "<code>app.dependency_overrides</code> to swap DB/LLM/auth — the main reason to use DI at all",
+            "Real DB in a container for repository tests; mocks for provider calls",
+            "Deterministic LLM tests need recorded or stubbed responses — never live calls in CI",
+            "Contract-test the OpenAPI schema so client breakage fails the build"
+          ],
+          "links": [],
+          "flow": "ASGI transport → override deps → real DB for repos, stubs for providers → schema contract test",
+          "trap": "mocking so deep the test only proves the mock works"
+        },
+        {
+          "id": "fastapi-q26",
+          "number": 26,
+          "marks": [],
+          "text": "Client asks for a breaking change. How do you version?",
+          "points": [
+            "URL path versioning (<code>/v1</code>, <code>/v2</code>) — blunt, obvious, easy to route and observe",
+            "Additive changes don't need a version; <strong>removals and semantic changes do</strong>",
+            "Run both versions off one domain layer; version the <em>schema</em>, not the logic",
+            "Deprecation needs a date, a header, and usage metrics — or nothing migrates",
+            "Generated OpenAPI diff in CI tells you when you broke it by accident"
+          ],
+          "links": [],
+          "flow": "additive → no version · breaking → /v2 on shared domain → deprecate with data and a date",
+          "trap": "versioning the whole service and forking business logic"
+        },
+        {
+          "id": "fastapi-q27",
+          "number": 27,
+          "marks": [],
+          "text": "Rate limiting and quotas — where?",
+          "points": [
+            "Edge (gateway/ingress) for crude abuse; <strong>in-app</strong> for per-tenant, per-feature, token-aware limits",
+            "LLM endpoints need <strong>token</strong> budgets, not just request counts — cost isn't per call",
+            "Shared counter (Redis, atomic) or per-process limiters multiply by worker count",
+            "Return <code>429</code> + <code>Retry-After</code>; decide fail-open vs fail-closed if Redis is down",
+            "Quota (monthly spend) is a different mechanism from rate limit (burst) — don't conflate"
+          ],
+          "links": [
+            {
+              "label": "rate limiting",
+              "target": "03-python/13-production-services/76-rate-limiting"
+            }
+          ],
+          "flow": "gateway for abuse → in-app per-tenant token budget → shared atomic counter → 429 + Retry-After",
+          "trap": "counting requests on an endpoint where one request can cost 100×another"
+        }
+      ]
+    },
+    {
+      "id": "fastapi-d",
+      "letter": "D",
+      "name": "Scaling & failure",
+      "questions": [
+        {
+          "id": "fastapi-q28",
+          "number": 28,
+          "marks": [
+            "decides"
+          ],
+          "text": "p99 tripled, CPU is flat. Go.",
+          "points": [
+            "Flat CPU + rising latency = <strong>waiting</strong>, not computing",
+            "Candidates: blocked event loop · connection-pool checkout queue · exhausted threadpool · slow upstream",
+            "<code>py-spy dump</code> on a live worker shows exactly where it's parked",
+            "Check pool wait time and threadpool saturation as first-class metrics, not just endpoint latency",
+            "Upstream provider latency needs its own timeout + breaker or it becomes your latency"
+          ],
+          "links": [
+            {
+              "label": "profiling the right way",
+              "target": "03-python/10-performance-profiling/59-profiling-the-right-way"
+            }
+          ],
+          "flow": "flat CPU → it's a wait → py-spy the worker → loop / pool / threadpool / upstream",
+          "trap": "scaling replicas, which multiplies pool pressure and makes it worse"
+        },
+        {
+          "id": "fastapi-q29",
+          "number": 29,
+          "marks": [],
+          "text": "How do you call an upstream provider properly?",
+          "points": [
+            "<strong>One shared <code>httpx.AsyncClient</code></strong> for the app lifetime — per-request clients kill connection reuse",
+            "Create in <code>lifespan</code>, close on shutdown",
+            "Explicit timeouts: connect / read / write / pool — never rely on defaults",
+            "Retry only idempotent calls, bounded, with <strong>jitter</strong>; add a circuit breaker",
+            "Streaming calls need their own longer read timeout, not the global one"
+          ],
+          "links": [
+            {
+              "label": "reliability mechanics",
+              "target": "03-python/13-production-services/74-reliability-mechanics"
+            }
+          ],
+          "flow": "shared client in lifespan → explicit timeouts → bounded jittered retry → breaker",
+          "trap": "a new AsyncClient per request — TLS handshake on every call"
+        },
+        {
+          "id": "fastapi-q30",
+          "number": 30,
+          "marks": [],
+          "text": "Pod gets SIGTERM mid-stream. What should happen?",
+          "points": [
+            "Stop accepting new connections, <strong>drain in-flight</strong>, then exit",
+            "<code>lifespan</code> shutdown must close pools and cancel background tasks",
+            "Long streams may exceed the grace period → cap stream duration deliberately",
+            "Readiness probe should fail <strong>before</strong> shutdown starts so traffic drains first",
+            "Client needs a resume story (event IDs) or the user just sees a truncated answer"
+          ],
+          "links": [],
+          "flow": "fail readiness → stop accepting → drain → close pools → exit within grace",
+          "trap": "grace period shorter than your longest stream, so every deploy cuts users off"
+        },
+        {
+          "id": "fastapi-q31",
+          "number": 31,
+          "marks": [],
+          "text": "Someone uploads a 2 GB PDF.",
+          "points": [
+            "<code>UploadFile</code> spools to disk past a threshold — but a naive <code>.read()</code> still loads it all",
+            "<strong>Stream</strong> to storage/parse in chunks; never materialise the whole body",
+            "Enforce a max size at the proxy <em>and</em> in-app — client-declared length is untrusted",
+            "Validate content type by sniffing, not the header",
+            "Heavy parsing goes to a worker; the endpoint returns a job handle (see #18)"
+          ],
+          "links": [],
+          "flow": "size cap at edge → stream chunks → sniff type → hand off to worker → return job id",
+          "trap": "<code>await file.read()</code> and an OOMKill under concurrent uploads"
+        },
+        {
+          "id": "fastapi-q32",
+          "number": 32,
+          "marks": [],
+          "text": "WebSockets across multiple workers — what breaks?",
+          "points": [
+            "Connections are <strong>pinned to one worker/pod</strong> — in-memory rooms don't span replicas",
+            "Need a shared broker (Redis pub/sub, etc.) to fan out across processes",
+            "Sticky sessions or a connection-aware LB; plain round-robin breaks reconnect",
+            "Heartbeats + explicit close codes; idle proxies kill silent connections",
+            "Backpressure per socket — a slow consumer must not grow an unbounded buffer"
+          ],
+          "links": [
+            {
+              "label": "streaming transport",
+              "target": "03-python/13-production-services/77-streaming-transport"
+            }
+          ],
+          "flow": "per-worker pinning → shared broker for fan-out → heartbeat → per-socket backpressure",
+          "trap": "an in-memory <code>connections</code> dict that works on one replica and fails on two"
+        },
+        {
+          "id": "fastapi-q33",
+          "number": 33,
+          "marks": [],
+          "text": "Liveness and readiness for a service that loads a 5 GB model.",
+          "points": [
+            "<strong>Liveness</strong> = am I wedged (restart me) · <strong>Readiness</strong> = can I serve now (route to me)",
+            "Model load can take minutes → readiness must stay false until warm, or use a startup probe",
+            "Liveness must <strong>not</strong> depend on downstream DB/provider — that turns a partial outage into a restart storm",
+            "Readiness <em>may</em> consider critical deps, deliberately",
+            "Probe timeouts under load are a classic self-inflicted restart loop"
+          ],
+          "links": [],
+          "flow": "startup probe for load → readiness gates traffic → liveness stays dependency-free",
+          "trap": "one <code>/health</code> wired to both, checking the DB — DB blip becomes a cluster-wide restart"
+        },
+        {
+          "id": "fastapi-q34",
+          "number": 34,
+          "marks": [],
+          "text": "It works locally, breaks behind the ingress.",
+          "points": [
+            "<strong>Proxy buffering</strong> — SSE/streaming arrives all at once at the end",
+            "CORS: preflight, credentials, and the fact that <code>*</code> + credentials is invalid",
+            "<code>X-Forwarded-*</code> / <code>--proxy-headers</code> or every client IP looks like the proxy",
+            "Idle and read timeouts at the LB shorter than your longest request",
+            "Request/body size limits enforced upstream, returning a shape your client can't parse"
+          ],
+          "links": [],
+          "flow": "buffering → CORS → forwarded headers → LB timeouts → size limits",
+          "trap": "debugging the app for hours on something the ingress config caused"
+        }
+      ]
+    },
+    {
+      "id": "fastapi-e",
+      "letter": "E",
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "fastapi-q35",
+          "number": 35,
+          "marks": [
+            "decides"
+          ],
+          "text": "Design the FastAPI layer of a RAG service.",
+          "points": [
+            "Edge: authn → tenant resolution → <strong>token-aware rate limit</strong> → validation → idempotency key",
+            "<code>/query</code> streams (SSE); <code>/ingest</code> returns a <strong>job handle</strong>, work goes to a queue",
+            "Lifespan loads embedding model + opens vector-store and DB pools once per worker",
+            "Retrieval and generation get separate timeouts and breakers — they fail differently",
+            "Response carries <strong>citations</strong> and a request ID; both are contract, not decoration"
+          ],
+          "links": [
+            {
+              "label": "reliability mechanics",
+              "target": "03-python/13-production-services/74-reliability-mechanics"
+            },
+            {
+              "label": "RAG",
+              "target": "05-RAG"
+            }
+          ],
+          "flow": "authn → tenant → budget → validate → stream query ‖ enqueue ingest → cite + correlate",
+          "trap": "one synchronous endpoint doing ingest and query, sharing a timeout"
+        },
+        {
+          "id": "fastapi-q36",
+          "number": 36,
+          "marks": [
+            "decides"
+          ],
+          "text": "Multi-tenant. How do you keep tenants apart?",
+          "points": [
+            "Tenant resolved <strong>once</strong> at the edge into a request-scoped context, never from a client-supplied body field",
+            "Isolation ladder: shared table + row filter → schema-per-tenant → database-per-tenant",
+            "Vector store needs the same story — namespace/filter per tenant, enforced server-side",
+            "Per-tenant <strong>quotas, budgets and metrics</strong>; noisy-neighbour is the real failure mode",
+            "Every log and span carries tenant ID — otherwise incidents aren't attributable"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "resolve tenant at edge → context → enforced filter in repo + vector store → per-tenant budget",
+          "trap": "trusting a <code>tenant_id</code> in the request body; filtering in the service layer instead of the repository"
+        },
+        {
+          "id": "fastapi-q37",
+          "number": 37,
+          "marks": [],
+          "text": "An agent run takes four minutes. Request/response doesn't fit.",
+          "points": [
+            "Switch to <strong>job semantics</strong>: <code>POST</code> → <code>202</code> + job id → poll or subscribe",
+            "Stream intermediate steps (SSE/WS) so the user sees progress, not a spinner",
+            "Persist run state so a disconnect or redeploy doesn't lose it",
+            "Cancellation must be a real endpoint that propagates to the worker",
+            "Bound it: step cap, wall-clock cap, token budget — see [[TREND-SCAN-2026-08]]"
+          ],
+          "links": [
+            {
+              "label": "queues background workers",
+              "target": "03-python/13-production-services/80-queues-background-workers"
+            }
+          ],
+          "flow": "202 + job id → worker executes → stream steps → persist state → cancellable → hard caps",
+          "trap": "a long-poll HTTP request holding a worker and dying at the LB timeout"
+        },
+        {
+          "id": "fastapi-q38",
+          "number": 38,
+          "marks": [],
+          "text": "What's the contract with the frontend for a streaming answer?",
+          "points": [
+            "Typed <strong>event kinds</strong>, not raw text: <code>token</code> · <code>tool_call</code> · <code>citation</code> · <code>done</code> · <code>error</code>",
+            "Errors after headers are in-band events — the status code is already 200",
+            "Include a request/trace ID in the first event for support and debugging",
+            "Sequence numbers or event IDs so a client can detect gaps and resume",
+            "Define what a <em>partial</em> answer means — is a truncated response billable, retryable, cacheable?"
+          ],
+          "links": [
+            {
+              "label": "streaming transport",
+              "target": "03-python/13-production-services/77-streaming-transport"
+            }
+          ],
+          "flow": "typed events → in-band errors → trace id first → sequence for resume → define partial",
+          "trap": "streaming bare text, leaving the client to regex out errors and citations"
+        },
+        {
+          "id": "fastapi-q39",
+          "number": 39,
+          "marks": [],
+          "text": "What do you put on the dashboard for an LLM endpoint?",
+          "points": [
+            "<strong>TTFT</strong> and inter-token latency — total duration hides the felt experience",
+            "Tokens in/out and <strong>cost</strong>, sliced per tenant and per feature",
+            "Upstream provider error and rate-limit counts, separated from your own 5xx",
+            "Model + prompt <strong>version</strong> on every span, or regressions can't be attributed",
+            "Saturation signals: pool wait, threadpool queue, event-loop lag"
+          ],
+          "links": [
+            {
+              "label": "observability instrumentation",
+              "target": "03-python/13-production-services/82-observability-instrumentation"
+            }
+          ],
+          "flow": "TTFT → cost per tenant → provider errors split out → version tags → saturation",
+          "trap": "a dashboard of RPS and 5xx that stays green while quality and spend degrade"
+        }
+      ]
+    },
+    {
+      "id": "fastapi-f",
+      "letter": "F",
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "fastapi-q40",
+          "number": 40,
+          "marks": [
+            "decides"
+          ],
+          "text": "Tell me about a FastAPI service you had to restructure or rescue.",
+          "points": [
+            "Open with what it <strong>cost</strong> — change risk, test time, an incident, onboarding drag",
+            "The structural diagnosis: what was importing what it shouldn't",
+            "The move: <code>api/</code> · <code>domain/</code> · <code>infrastructure/</code>, dependencies pointing inward",
+            "What you deliberately <strong>didn't</strong> do — big-bang rewrite, framework swap",
+            "Number: <code>&lt;fill&gt;</code> — see [[War-Stories]] #4, this Result is still blank"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "cost in business terms → structural diagnosis → incremental move → what you refused → number",
+          "trap": "\"it was cleaner afterwards\" with nothing measured"
+        }
+      ]
+    }
+  ]
+}

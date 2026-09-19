@@ -155,6 +155,13 @@ export type Manifest = {
   webrtc: { id: string; number: number; title: string; topic: string }[]
   aiSystems: Omit<VaultDoc, 'html'>[]
   dsaUtils: { lang: UtilsLang; id: string; name: string; section: string }[]
+  gameDay: {
+    slug: string
+    number: number
+    title: string
+    count: number
+    bands: { id: string; letter: string | null; name: string; count: number }[]
+  }[]
 }
 
 /* ---------------- DSA thinking playbook (hand-written, not from the vault) ---------------- */
@@ -189,4 +196,62 @@ export type Playbook = {
   subtitle: string
   intro: string[]
   sections: PlaybookSection[]
+}
+
+/* ---------------- Game Day recall (02-Game-Day) ---------------- */
+
+/** ⭐ decides the round · 🔥 trending · 📍 actually asked */
+export type GameDayMark = 'decides' | 'trending' | 'asked'
+
+/** A link to a vault note. `to` is set only once that note is published on the site. */
+export type GameDayLink = { label: string; target: string; to?: string }
+
+/** A phrasing drill folded in beside a recall question — the scripted version of the answer. */
+export type GameDayDrill = {
+  prompt?: string
+  badge?: string
+  hint?: string
+  points: string[]
+  oneLiner?: string
+  followUp?: string
+  links: GameDayLink[]
+}
+
+export type GameDayQuestion = {
+  id: string
+  number: number
+  text: string
+  marks: GameDayMark[]
+  badge?: string
+  /** Keyword bullets as HTML — deliberately not prose. */
+  points: string[]
+  flow?: string
+  trap?: string
+  oneLiner?: string
+  links: GameDayLink[]
+  drill?: GameDayDrill
+}
+
+/** `A`–`F` for the six standard bands; `null` for appendix sections (♻️ merged, 📝 gaps). */
+export type GameDayBand = {
+  id: string
+  letter: string | null
+  name: string
+  questions: GameDayQuestion[]
+}
+
+export type GameDayTopic = {
+  slug: string
+  number: number
+  title: string
+  meta: string[]
+  bands: GameDayBand[]
+}
+
+export type GameDaySearchEntry = {
+  id: string
+  text: string
+  topic: string
+  topicTitle: string
+  band: string
 }

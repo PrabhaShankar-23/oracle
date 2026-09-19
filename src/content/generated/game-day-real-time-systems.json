@@ -1,0 +1,623 @@
+{
+  "slug": "real-time-systems",
+  "number": 15,
+  "title": "🎙️ REAL-TIME & VOICE",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "⭐ = decides the round. 🔥 = trending 2026. 📍 = <em>you</em> were asked this. 📝 = no vault note yet.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> <code>03-Agentic-AI/12-Applied &amp; Domain Patterns/</code>, <code>11-…(architect lens)/99</code>, <code>001-System Design/03-hld/</code> · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]"
+  ],
+  "bands": [
+    {
+      "id": "real-time-systems-the-latency-budget-the-spine-of-every-answer-here",
+      "letter": null,
+      "name": "The latency budget — the spine of every answer here",
+      "questions": [
+        {
+          "id": "real-time-systems-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "What's the latency budget for a natural voice conversation?",
+          "points": [
+            "Human turn-taking gaps are <strong>~200–300 ms</strong>; past ~800 ms it reads as lag, past ~1.5 s people talk over it",
+            "Budget is a <strong>chain, not a number</strong>: capture + network + endpointing + STT final + LLM TTFT + TTS first-audio + playback",
+            "<strong>Endpointing is usually the biggest single slice</strong> — and it's a choice, not a constant",
+            "Every hop is additive, so the design question is always <em>what can overlap</em>",
+            "Quote shape, not invented figures: \"sub-second end to end, with endpointing and LLM TTFT as the two levers\""
+          ],
+          "links": [
+            {
+              "label": "latency in agentic systems",
+              "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+            }
+          ],
+          "flow": "name the chain → find the two dominant slices → overlap what can overlap → budget per stage",
+          "trap": "answering with one total number and no per-stage breakdown"
+        },
+        {
+          "id": "real-time-systems-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "Which latency does the user actually feel?",
+          "points": [
+            "<strong>Time to first audio</strong>, not time to complete response — they hear the start, not the end",
+            "So: stream everything. First TTS chunk can play while the LLM is still generating",
+            "Perceived latency is also <strong>shaped</strong>: a filler/backchannel token buys real budget",
+            "Total duration matters for cost and for barge-in, not for the felt experience",
+            "Measure <strong>p95 first-audio per turn</strong>, not average end-to-end per session"
+          ],
+          "links": [
+            {
+              "label": "Latency metrics",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/01-Latency metrics"
+            }
+          ],
+          "flow": "first-audio is the felt metric → stream at every stage → shape perception → measure p95 per turn",
+          "trap": "optimising total response time while first-audio stays slow"
+        },
+        {
+          "id": "real-time-systems-q3",
+          "number": 3,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you overlap the stages instead of chaining them?",
+          "points": [
+            "Streaming STT emits <strong>partials</strong> — start LLM prefill on a stable partial, don't wait for final",
+            "Speculative start: begin generating on the partial, discard if the final transcript diverges",
+            "Sentence/clause-boundary chunking into TTS → first audio before the LLM finishes",
+            "Prefetch and warm: TTS voice loaded, connections open, KV/prompt cache primed (<code>07</code> #20)",
+            "Each overlap trades a little wasted compute for a lot of perceived latency"
+          ],
+          "links": [
+            {
+              "label": "Token Streaming Mechanics",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/01-Token Streaming Mechanics"
+            }
+          ],
+          "flow": "partial transcript → speculative prefill → clause-chunk to TTS → first audio early → discard on divergence",
+          "trap": "a strictly sequential STT→LLM→TTS pipeline, then blaming the models for latency"
+        },
+        {
+          "id": "real-time-systems-q4",
+          "number": 4,
+          "marks": [],
+          "text": "What's the floor you can't optimise past?",
+          "points": [
+            "<strong>Speed of light + routing</strong>: intercontinental RTT is tens to ~hundreds of ms and no engineering removes it",
+            "So <strong>region placement</strong> is a latency decision — media, inference and TTS should be co-located with the user",
+            "Audio framing adds inherent buffering (frame size, jitter buffer depth)",
+            "Provider cold starts and model load are avoidable floor — warm pools, not autoscale-from-zero",
+            "Say the floor out loud, then show what you optimise above it"
+          ],
+          "links": [
+            {
+              "label": "speed of light budget",
+              "target": "001-System Design/01-Networking/01-mental-models/08-speed-of-light-budget"
+            }
+          ],
+          "flow": "RTT floor → co-locate media + inference → accept framing/jitter → keep pools warm",
+          "trap": "promising a latency target that violates the network floor for that geography"
+        }
+      ]
+    },
+    {
+      "id": "real-time-systems-pipeline-mechanics",
+      "letter": null,
+      "name": "Pipeline mechanics",
+      "questions": [
+        {
+          "id": "real-time-systems-q5",
+          "number": 5,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk me through your voice pipeline end to end.",
+          "points": [
+            "Capture → transport (WebRTC) → <strong>VAD/endpointing</strong> → streaming STT → LLM (+ tools/RAG) → TTS → playback",
+            "Two control loops running alongside: <strong>barge-in</strong> (#7) and <strong>turn state</strong> (who holds the floor)",
+            "Session state is per-call and stateful — this is not a stateless request/response service",
+            "Every stage streams; every stage needs its own timeout and fallback",
+            "Observability is per-turn: first-audio, endpoint delay, STT confidence, tokens, TTS latency"
+          ],
+          "links": [
+            {
+              "label": "voice agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/106-voice agents"
+            }
+          ],
+          "flow": "capture → transport → endpoint → STT → LLM → TTS → play, with barge-in and turn-state alongside",
+          "trap": "describing it as a request/response API — the state and the interrupt loops are the hard parts"
+        },
+        {
+          "id": "real-time-systems-q6",
+          "number": 6,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you know the user finished speaking?",
+          "points": [
+            "<strong>VAD</strong> detects speech vs silence; <strong>endpointing</strong> decides the turn ended — related but not the same",
+            "Silence threshold is a direct latency↔interruption trade: short cuts people off mid-thought, long feels sluggish",
+            "Naive fixed silence is the weak answer. Better: <strong>semantic endpointing</strong> — is the utterance syntactically/semantically complete?",
+            "Adapt to context: expect a long pause after \"my policy number is…\", short after a yes/no question",
+            "Noise and accents break naive VAD — this is where real deployments fail"
+          ],
+          "links": [
+            {
+              "label": "voice agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/106-voice agents"
+            }
+          ],
+          "flow": "VAD detects speech → endpointer decides turn end → tune threshold as latency↔cutoff → semantic + context-aware beats fixed silence",
+          "trap": "treating endpointing as a constant rather than the biggest tunable slice of the budget"
+        },
+        {
+          "id": "real-time-systems-q7",
+          "number": 7,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "The user talks while the agent is talking. What happens?",
+          "points": [
+            "<strong>Barge-in</strong>: detect user speech during playback → stop TTS <strong>immediately</strong>, cancel the in-flight LLM call",
+            "Must cancel upstream too, or you pay for tokens nobody hears (<code>01-PYTHON</code> #31)",
+            "Then reconcile state: the agent said only part of its turn — <strong>the conversation history must record what was actually heard</strong>, not what was generated",
+            "Echo cancellation first, or the agent barges in on itself",
+            "Distinguish genuine interruption from backchannel (\"mhm\", \"yeah\") — cutting off on acknowledgement feels broken"
+          ],
+          "links": [
+            {
+              "label": "streaming and real time agents",
+              "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+            }
+          ],
+          "flow": "detect speech during playback → kill TTS + cancel LLM → truncate history to what was heard → ignore backchannels",
+          "trap": "logging the full generated response into history when the user only heard four words of it"
+        },
+        {
+          "id": "real-time-systems-q8",
+          "number": 8,
+          "marks": [
+            "decides"
+          ],
+          "text": "Partial vs final transcripts — how do you use both?",
+          "points": [
+            "Streaming STT emits unstable <strong>partials</strong> that get revised, then a stable <strong>final</strong>",
+            "Partials drive responsiveness: UI feedback, speculative prefill (#3), early intent detection",
+            "Only commit side effects on <strong>final</strong> — never fire a tool call off a partial",
+            "Confidence scores gate behaviour: low confidence → confirm rather than act",
+            "Domain vocabulary matters — boost/hint lists for names, drug names, policy numbers (#22)"
+          ],
+          "links": [
+            {
+              "label": "voice agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/106-voice agents"
+            }
+          ],
+          "flow": "partials for responsiveness → finals for commitment → confidence gates action → vocabulary hints for domain terms",
+          "trap": "triggering a tool or a transfer off a partial that later gets revised"
+        },
+        {
+          "id": "real-time-systems-q9",
+          "number": 9,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you stream text into speech?",
+          "points": [
+            "Chunk on <strong>clause/sentence boundaries</strong>, not on token count — prosody needs a complete phrase",
+            "Too small → choppy, wrong intonation; too large → first-audio latency climbs",
+            "Keep an audio queue and play continuously; a gap mid-sentence is worse than a slightly later start",
+            "Numbers, dates, acronyms and units need <strong>normalisation</strong> before synthesis or they're read wrong",
+            "Cache synthesised audio for fixed phrases — greetings, disclaimers, hold messages"
+          ],
+          "links": [
+            {
+              "label": "streaming transport",
+              "target": "03-python/13-production-services/77-streaming-transport"
+            }
+          ],
+          "flow": "clause-boundary chunks → continuous playback queue → normalise text first → cache fixed phrases",
+          "trap": "chunking by fixed token count and getting flat or broken prosody"
+        },
+        {
+          "id": "real-time-systems-q10",
+          "number": 10,
+          "marks": [
+            "trending"
+          ],
+          "text": "Speech-to-speech models — do they replace your pipeline?",
+          "points": [
+            "Native S2S removes the STT→LLM→TTS hops → <strong>much lower latency</strong>, preserves prosody, tone and emotion",
+            "Losses: no transcript checkpoint to inspect, weaker tool-calling and RAG integration in some stacks, less control per stage",
+            "Cascaded keeps <strong>debuggability, swappability and per-stage guardrails</strong> — you can see exactly where a turn went wrong",
+            "Regulated domains often <em>require</em> the transcript, which forces cascaded or a hybrid",
+            "Honest 2026 answer: <strong>hybrid</strong> — S2S for the conversational path, cascaded/tools for anything that acts"
+          ],
+          "links": [
+            {
+              "label": "voice agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/106-voice agents"
+            }
+          ],
+          "flow": "S2S wins latency and prosody → cascaded wins control, transcripts and tools → hybrid by path",
+          "trap": "presenting S2S as a pure upgrade with no loss of observability or control"
+        }
+      ]
+    },
+    {
+      "id": "real-time-systems-transport",
+      "letter": null,
+      "name": "Transport",
+      "questions": [
+        {
+          "id": "real-time-systems-q11",
+          "number": 11,
+          "marks": [
+            "decides"
+          ],
+          "text": "WebRTC or WebSocket for the audio?",
+          "points": [
+            "<strong>WebRTC</strong> — UDP-based, built for media: jitter buffer, packet-loss concealment, echo cancellation, adaptive bitrate. Right for real user audio",
+            "<strong>WebSocket</strong> — TCP, simple, fine for server-to-server audio or where you control both ends and the network is good",
+            "TCP's head-of-line blocking is the killer for live audio — one lost packet stalls everything behind it",
+            "WebRTC costs complexity: signalling, ICE, STUN/TURN, more ops surface",
+            "Telephony path (SIP/PSTN) is a third option with its own codecs and constraints"
+          ],
+          "links": [
+            {
+              "label": "webRTC_flow",
+              "target": "001-System Design/03-hld/webRTC_flow"
+            }
+          ],
+          "flow": "real user audio over the internet → WebRTC · controlled server-to-server → WebSocket · TCP HOL blocking is why",
+          "trap": "WebSockets for browser mic audio, then debugging jitter you have no tools for"
+        },
+        {
+          "id": "real-time-systems-q12",
+          "number": 12,
+          "marks": [],
+          "text": "Walk me through how a WebRTC call gets established.",
+          "points": [
+            "<strong>Signalling</strong> (your channel, not WebRTC's): exchange SDP offer/answer describing media and codecs",
+            "<strong>ICE</strong> gathers candidates: host → <strong>STUN</strong> (discover public address, punch through NAT) → <strong>TURN</strong> (relay when direct fails)",
+            "Connectivity checks pick a candidate pair → DTLS handshake → <strong>SRTP</strong> media flows",
+            "TURN is the fallback that always works and always costs — it relays every byte",
+            "Renegotiation for changed tracks; ICE restart on network change (wifi → cellular)"
+          ],
+          "links": [
+            {
+              "label": "webRTC_flow",
+              "target": "001-System Design/03-hld/webRTC_flow"
+            }
+          ],
+          "flow": "signalling SDP → ICE candidates → STUN, then TURN if needed → DTLS → SRTP media",
+          "trap": "calling WebRTC peer-to-peer and forgetting that a real chunk of calls end up relayed"
+        },
+        {
+          "id": "real-time-systems-q13",
+          "number": 13,
+          "marks": [
+            "decides"
+          ],
+          "text": "TURN is expensive. What did you do about it?",
+          "points": [
+            "TURN relays <strong>all</strong> media — it's bandwidth-priced and scales with concurrent minutes, not users",
+            "Cut the relay rate first: correct STUN setup, IPv6, <code>host</code>/<code>srflx</code> candidate hygiene, permissive-enough firewall guidance",
+            "Then cut cost per relayed minute: <strong>region-local TURN</strong>, self-hosted (coturn) vs managed, egress-aware placement",
+            "Capacity plan on <strong>concurrent relayed streams and bandwidth</strong>, not on registered users",
+            "Measure the relay ratio as a first-class metric — if it climbs, cost climbs linearly"
+          ],
+          "links": [
+            {
+              "label": "webRTC_flow",
+              "target": "001-System Design/03-hld/webRTC_flow"
+            }
+          ],
+          "flow": "measure relay ratio → reduce it via STUN/candidate hygiene → then region-local/self-hosted TURN → plan on concurrent bandwidth"
+        },
+        {
+          "id": "real-time-systems-q14",
+          "number": 14,
+          "marks": [],
+          "text": "Network degrades mid-call. What does the user experience?",
+          "points": [
+            "<strong>Jitter buffer</strong> absorbs variance — deeper buffer, smoother audio, more latency; it's the same trade again",
+            "Packet loss → concealment (PLC) fills gaps; beyond a few percent it's audible",
+            "Codec adapts bitrate (Opus) — degrade gracefully rather than dropping",
+            "Your pipeline must handle a <strong>degraded transcript</strong>, not just degraded audio: ASR confidence falls, so confirm more (#8, #20)",
+            "Have an explicit fallback: offer to switch to text/DTMF, or escalate to a human"
+          ],
+          "links": [
+            {
+              "label": "latency bandwidth throughput",
+              "target": "001-System Design/01-Networking/01-mental-models/06-latency-bandwidth-throughput"
+            }
+          ],
+          "flow": "jitter buffer absorbs variance → PLC covers loss → codec adapts → ASR confidence drops → confirm or escalate",
+          "trap": "designing only for the clean-network path"
+        }
+      ]
+    },
+    {
+      "id": "real-time-systems-scale-reliability-cost",
+      "letter": null,
+      "name": "Scale, reliability, cost",
+      "questions": [
+        {
+          "id": "real-time-systems-q15",
+          "number": 15,
+          "marks": [
+            "decides"
+          ],
+          "text": "A thousand concurrent calls. What breaks first?",
+          "points": [
+            "Voice is <strong>stateful and long-lived</strong> — the whole stateless-autoscale playbook doesn't apply",
+            "Ceiling is usually <strong>concurrent sessions per instance</strong> (media + STT + TTS streams), not CPU or RPS",
+            "Scale on concurrency and <strong>drain, don't kill</strong> — a terminated pod drops live calls (<code>02-FASTAPI</code> #30)",
+            "Cold start is fatal here: keep <strong>warm pools</strong>, never scale from zero",
+            "Provider quotas — STT/TTS/LLM concurrency limits — bite before your own infra does"
+          ],
+          "links": [
+            {
+              "label": "Autoscaling LLM workloads",
+              "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/04-Autoscaling LLM workloads"
+            }
+          ],
+          "flow": "stateful sessions → scale on concurrency → warm pools, no cold start → drain on deploy → watch provider quotas",
+          "trap": "autoscaling on CPU/RPS and killing pods mid-call on every deploy"
+        },
+        {
+          "id": "real-time-systems-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "Audio arrives faster than you can process it. Then what?",
+          "points": [
+            "Audio is a <strong>real-time producer you cannot pause</strong> — the user keeps talking regardless",
+            "<strong>Bounded queue</strong> with an explicit overflow policy; unbounded means memory growth then OOM (<code>01-PYTHON</code> #31)",
+            "For live audio, <strong>dropping oldest</strong> usually beats blocking — stale audio is worthless, latency is everything",
+            "Detect the condition and degrade deliberately: smaller model, skip enrichment, shed non-critical work",
+            "Alert on queue depth — sustained backlog means you're under-provisioned, not momentarily unlucky"
+          ],
+          "links": [
+            {
+              "label": "streaming transport",
+              "target": "03-python/13-production-services/77-streaming-transport"
+            }
+          ],
+          "flow": "unpausable producer → bounded queue → drop stale over blocking → degrade deliberately → alert on depth"
+        },
+        {
+          "id": "real-time-systems-q17",
+          "number": 17,
+          "marks": [
+            "decides"
+          ],
+          "text": "Your STT provider degrades mid-call.",
+          "points": [
+            "Per-stage <strong>timeout + circuit breaker</strong>; a stalled stage must not hang the turn",
+            "Fallback tiers: secondary provider · smaller/local model · degraded mode",
+            "Failover <strong>mid-call</strong> is the hard part — session state, audio buffer and stream handle must migrate or restart cleanly",
+            "Decide the honest failure UX: hold message, offer callback, escalate to human — silence is the worst outcome",
+            "Health-check providers continuously, not per call; break before the user notices"
+          ],
+          "links": [
+            {
+              "label": "reliability engineering",
+              "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/92-reliability engineering"
+            }
+          ],
+          "flow": "per-stage timeout → breaker → secondary provider or degraded mode → explicit spoken fallback, never silence",
+          "trap": "a fallback that requires restarting the call and loses the conversation"
+        },
+        {
+          "id": "real-time-systems-q18",
+          "number": 18,
+          "marks": [
+            "decides"
+          ],
+          "text": "What does a minute of conversation cost?",
+          "points": [
+            "Stack the meters: <strong>STT per minute</strong> + LLM tokens per turn + <strong>TTS per character</strong> + TURN bandwidth + compute per session",
+            "Voice bills on <strong>time</strong>, not requests — an idle open call still costs",
+            "Token driver is history: every turn re-sends context, so cost grows within a call (<code>06-AGENTIC-AI</code> #22)",
+            "Levers: compact history (<code>07</code> #16), smaller model for simple turns, cache fixed phrases (#9), cut relay ratio (#13)",
+            "Model p50 <strong>and</strong> p99 call cost — a long rambling call is the tail that hurts"
+          ],
+          "links": [
+            {
+              "label": "cost modeling",
+              "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/94-cost modeling"
+            }
+          ],
+          "flow": "per-minute STT/TTS + per-token LLM + relay bandwidth → cost grows within the call → compact, route, cache",
+          "trap": "pricing per request when the unit is a minute of open session"
+        }
+      ]
+    },
+    {
+      "id": "real-time-systems-quality",
+      "letter": null,
+      "name": "Quality",
+      "questions": [
+        {
+          "id": "real-time-systems-q19",
+          "number": 19,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "How do you evaluate a voice agent?",
+          "points": [
+            "Three layers, evaluated separately: <strong>ASR</strong> (WER, esp. on domain terms) · <strong>dialogue</strong> (task success, turns to completion) · <strong>audio</strong> (naturalness, prosody)",
+            "Plus real-time-specific metrics no text agent has: <strong>first-audio p95, endpoint delay, barge-in rate, talk-over rate, interruption recovery</strong>",
+            "Outcome metrics are what the business reads: containment/deflection, escalation rate, task completion",
+            "<strong>Replay recorded audio</strong> through the pipeline for regression — that's your test suite (<code>06-AGENTIC-AI</code> #20)",
+            "Synthetic audio only goes so far — real accents, noise and phone codecs are where it fails"
+          ],
+          "links": [
+            {
+              "label": "tracing &amp; observability",
+              "target": "03-Agentic-AI/09-Evaluation &amp; Observability/77-tracing &amp; observability"
+            }
+          ],
+          "flow": "ASR + dialogue + audio layers → plus first-audio/barge-in/talk-over → outcome metrics → replay real audio",
+          "trap": "quoting WER and stopping — it says nothing about whether the conversation worked"
+        },
+        {
+          "id": "real-time-systems-q20",
+          "number": 20,
+          "marks": [
+            "decides"
+          ],
+          "text": "ASR mishears a policy number. How does the system not act on it?",
+          "points": [
+            "Errors <strong>propagate silently</strong> — the LLM receives a confident wrong string with no signal it's wrong",
+            "Use ASR <strong>confidence</strong> and n-best alternatives, not just the top hypothesis",
+            "<strong>Confirm high-stakes slots</strong> by reading back — IDs, amounts, names, dates. Cheap turn, huge error reduction",
+            "Constrain with domain knowledge: validate against a real format/checksum, or match against known values",
+            "Vocabulary boosting and phonetic matching for domain terms (#8) reduce the error at source"
+          ],
+          "links": [
+            {
+              "label": "conversational and interview agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/107-conversational and interview agents"
+            }
+          ],
+          "flow": "low confidence or high stakes → read back to confirm → validate against known formats → boost domain vocab",
+          "trap": "passing the top hypothesis straight into a tool call"
+        },
+        {
+          "id": "real-time-systems-q21",
+          "number": 21,
+          "marks": [
+            "trending"
+          ],
+          "text": "How does memory work when the conversation is live?",
+          "points": [
+            "Two horizons: <strong>within-call</strong> (fast, complete, latency-critical) and <strong>across-call</strong> (retrieved, summarised)",
+            "Within-call history grows every turn and drives both latency and cost — compact it live (<code>07</code> #16)",
+            "Anything retrieved mid-turn is on the <strong>critical path</strong> — pre-fetch on intent, or you blow the budget",
+            "Across-call memory must be written <strong>after</strong> the call, never on the hot path",
+            "Barge-in truncation (#7) must be reflected in memory or the agent \"remembers\" saying things nobody heard"
+          ],
+          "links": [
+            {
+              "label": "Conversation Memory",
+              "target": "03-Agentic-AI/05-Memory/03-Conversation Memory"
+            }
+          ],
+          "flow": "within-call compacted live → retrieval pre-fetched off the critical path → cross-call written post-call",
+          "trap": "a synchronous vector search mid-turn that adds hundreds of ms to first-audio"
+        }
+      ]
+    },
+    {
+      "id": "real-time-systems-architect",
+      "letter": null,
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "real-time-systems-q22",
+          "number": 22,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Design a hospital voice assistant — noise, privacy, latency, domain vocabulary.",
+          "points": [
+            "<strong>Noise:</strong> near-field mic + echo cancellation, noise-robust ASR, confidence-gated confirmation (#20), graceful \"I didn't catch that\"",
+            "<strong>Privacy:</strong> PHI is the constraint — regional/on-prem inference, encryption in transit and at rest, redaction before logging, <strong>consent and recording rules</strong>, BAA-covered providers only",
+            "<strong>Latency:</strong> co-locate media + inference (#4), warm pools, streaming everywhere, semantic endpointing",
+            "<strong>Vocabulary:</strong> drug/procedure lexicon, vocabulary boosting, phonetic confusion handling, validate against a formulary",
+            "<strong>Safety:</strong> clinical actions are <strong>HITL</strong> — the agent captures and confirms, a human commits"
+          ],
+          "links": [],
+          "flow": "noise → robust ASR + confirm · privacy → regional + redact + consent · latency → co-locate + stream · vocab → boosted lexicon · clinical → HITL",
+          "trap": "giving a generic voice-agent answer and never naming PHI, consent, or the clinical HITL boundary"
+        },
+        {
+          "id": "real-time-systems-q23",
+          "number": 23,
+          "marks": [
+            "decides"
+          ],
+          "text": "Multi-tenant real-time — what's different?",
+          "points": [
+            "Noisy-neighbour is <strong>immediate and audible</strong> here — one tenant's spike degrades another's live call",
+            "Per-tenant <strong>concurrency caps</strong>, not just rate limits; reserve capacity for premium tiers",
+            "Isolation choice: shared pool (cheap, risky) → dedicated pools per tier → dedicated infra for regulated tenants",
+            "Per-tenant config is deep: voice, prompt, vocabulary, escalation rules, data-residency region",
+            "Every metric, log and trace tenant-tagged, or you can't attribute a degradation to anyone"
+          ],
+          "links": [
+            {
+              "label": "Multi Tenant Serving",
+              "target": "02-DL/08-AI systems &amp; serving Architecture/02-Multi-Tenant Serving"
+            }
+          ],
+          "flow": "concurrency caps per tenant → pool isolation by tier → per-tenant voice/vocab/region config → tenant-tagged telemetry",
+          "trap": "applying request-rate limiting to a workload whose unit is a concurrent session"
+        },
+        {
+          "id": "real-time-systems-q24",
+          "number": 24,
+          "marks": [],
+          "text": "Do you record the call?",
+          "points": [
+            "<strong>Consent</strong> is jurisdiction-dependent — two-party consent states, GDPR, sector rules; the disclosure itself is a design element",
+            "Separate the artifacts: raw audio · transcript · derived data. Each gets its own retention and access policy",
+            "<strong>Redact before persisting</strong> — PII/PHI stripped from logs and traces, not after the fact",
+            "Check provider terms: does your audio train their models? Zero-retention endpoints often exist and often must be requested",
+            "Right to erasure has to reach <strong>every</strong> copy: audio store, transcripts, vector index, memory store, backups"
+          ],
+          "links": [
+            {
+              "label": "Privacy — memorization, PII extraction &amp; data governance",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/07-Privacy — memorization, PII extraction &amp; data governance"
+            }
+          ],
+          "flow": "consent + disclosure → separate audio/transcript/derived retention → redact before write → zero-retention provider terms → erasure reaches every store",
+          "trap": "treating the vector index and memory store as exempt from deletion requests"
+        }
+      ]
+    },
+    {
+      "id": "real-time-systems-your-story",
+      "letter": null,
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "real-time-systems-q25",
+          "number": 25,
+          "marks": [
+            "decides"
+          ],
+          "text": "Tell me about the real-time system you built.",
+          "points": [
+            "Open with the <strong>constraint</strong>, not the stack: \"sub-second turn latency over consumer networks\" beats \"we used Deepgram and WebRTC\"",
+            "The specific thing that broke — relay cost, backpressure, endpointing, barge-in state — and how you found it",
+            "The trade you made explicit: buffer depth vs latency, endpoint threshold vs cutting people off",
+            "What you rejected and why — the architect signal",
+            "Numbers: first-audio p95, relay ratio, cost per minute, dropped-frame rate. Any two, before → after"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "constraint → what broke → the trade you chose → what you rejected → two numbers"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,712 @@
+{
+  "slug": "mcp-context-engineering",
+  "number": 7,
+  "title": "🔌 MCP & CONTEXT ENGINEERING",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "⭐ = decides the round. 🔥 = trending 2026. 📍 = <em>you</em> were asked this. 📝 = no vault note yet.",
+    "<strong>Trend-scanned:</strong> Aug 2026 · <strong>Depth:</strong> <code>03-Agentic-AI/04-Protocols&amp;-Interoperability/</code> + <code>03-Agentic-AI/05-Memory/</code> + <code>06-spring/08-ai-mcp/</code> · <strong>Bank:</strong> [[POPULAR-QUESTIONS]] · <strong>Scan:</strong> [[TREND-SCAN-2026-08]]",
+    "♻️ <strong>Merged 19 Sep 2026:</strong> the MCP / A2A / context-engineering / prompt-versioning questions from <code>jbtiq_agentic.md</code> and <code>jbtiq_llm.md</code> were folded into #1, #6, #14 and #22 as <strong>🗣️ Phrasing drill</strong> blocks (those drill files are retired)."
+  ],
+  "bands": [
+    {
+      "id": "mcp-context-engineering-mcp",
+      "letter": null,
+      "name": "MCP",
+      "questions": [
+        {
+          "id": "mcp-context-engineering-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "What is MCP and what problem does it actually solve?",
+          "points": [
+            "Open protocol standardising how models reach <strong>tools, data and prompts</strong> — JSON-RPC over a defined transport",
+            "The problem was <strong>M×N</strong>: every model host × every integration, hand-wired. MCP makes it M+N",
+            "Server <em>exposes</em> capability; client (the model host) <em>consumes</em> — clean separation of who owns what",
+            "Value is ecosystem, not capability — you could always call an API; now the integration is portable",
+            "Think \"<strong>USB-C for model integrations</strong>\" — one connector, many peripherals"
+          ],
+          "links": [
+            {
+              "label": "MCP (Model Context Protocol)",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/01-MCP (Model Context Protocol)"
+            }
+          ],
+          "badge": "Trending — MCP questions now recur across agentic JDs + LeetCode Discuss (2025–26)",
+          "flow": "M×N integrations → standard protocol → servers expose, hosts consume → portability is the win",
+          "trap": "describing it as a new way to do function calling — function calling is the model feature, MCP is the plumbing standard",
+          "drill": {
+            "prompt": "from jbtiq_agentic Q12: \"What problem does MCP actually solve, and what are the moving parts — host, client, server?\"",
+            "badge": "Trending — MCP questions now recur across agentic JDs + LeetCode Discuss (2025–26)",
+            "hint": "Before MCP, connecting M apps to N tools cost how many integrations? Then name who runs where.",
+            "points": [
+              "The problem is <strong>M×N integration sprawl</strong>: every AI app hand-wiring every tool/data source. MCP standardizes the interface so a tool integration is written <strong>once as a server</strong> and any MCP-capable app consumes it — M+N instead of M×N, \"USB-C for AI context\" is the honest analogy.",
+              "Topology: the <strong>host</strong> is the AI application embedding the LLM (IDE, chat app, agent runtime); it runs an <strong>MCP client</strong> per connection; <strong>servers</strong> expose capabilities over JSON-RPC via stdio (local) or streamable HTTP (remote).",
+              "The three primitives to name: <strong>tools</strong> (model-invoked actions), <strong>resources</strong> (application-controlled context/data), <strong>prompts</strong> (user-invoked templates) — the distinction of <em>who controls invocation</em> is the design insight people miss.",
+              "Architect's reading: MCP turns integrations into a <strong>market of interchangeable capability servers</strong> — internal platform teams ship one server per system of record, every agent product in the org consumes it; governance (authn, permissions, audit) concentrates at the protocol boundary.",
+              "Balance to voice: a remote MCP server is a new <strong>trust boundary</strong> — a malicious or compromised server injects content straight into agent context, so server provenance and permissioning become supply-chain concerns."
+            ],
+            "oneLiner": "MCP collapses M×N integrations to M+N by standardizing how hosts discover and invoke external capabilities — tools, resources and prompts served over JSON-RPC — and its architectural payoff is that governance and reuse concentrate at one protocol boundary.",
+            "links": [
+              {
+                "label": "MCP (Model Context Protocol)",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/01-MCP (Model Context Protocol)"
+              },
+              {
+                "label": "MCP Primitives",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/03-MCP Primitives"
+              },
+              {
+                "label": "Why MCP Matters for Architects",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/04-Why MCP Matters for Architects"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mcp-context-engineering-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "What are the MCP primitives?",
+          "points": [
+            "<strong>Tools</strong> — model-invoked actions, side effects expected (the familiar one)",
+            "<strong>Resources</strong> — application-controlled context the host can read: files, records, docs. <em>Not</em> model-invoked",
+            "<strong>Prompts</strong> — user-invoked templates/workflows the server offers",
+            "The distinction is <strong>who initiates</strong>: model (tools) · app (resources) · user (prompts)",
+            "Sampling lets a server ask the <em>client's</em> model for a completion — inverts the usual direction"
+          ],
+          "links": [
+            {
+              "label": "MCP Primitives",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/03-MCP Primitives"
+            }
+          ],
+          "flow": "tools = model-initiated · resources = app-initiated · prompts = user-initiated · sampling inverts it",
+          "trap": "treating everything as a tool — resources exist so context doesn't have to be fetched by tool call"
+        },
+        {
+          "id": "mcp-context-engineering-q3",
+          "number": 3,
+          "marks": [],
+          "text": "How does a client actually connect?",
+          "points": [
+            "<strong>stdio</strong> — local subprocess, simplest, trust follows the process boundary",
+            "<strong>Streamable HTTP</strong> (superseded HTTP+SSE) — remote servers, sessions, resumability",
+            "Lifecycle: initialise → <strong>capability negotiation</strong> → operate → shut down",
+            "Capability negotiation is why version skew is survivable — both sides declare what they support",
+            "Remote transport is where <strong>authn/authz and network trust</strong> become your problem"
+          ],
+          "links": [
+            {
+              "label": "MCP Transports &amp; Connection Lifecycle",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/02-MCP Transports &amp; Connection Lifecycle"
+            }
+          ],
+          "flow": "stdio local · streamable HTTP remote → initialise → negotiate capabilities → operate",
+          "trap": "assuming remote MCP inherits the local trust model"
+        },
+        {
+          "id": "mcp-context-engineering-q4",
+          "number": 4,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "Why should an architect care? Isn't this just an SDK detail?",
+          "points": [
+            "<strong>Decouples capability from host</strong> — swap Claude/GPT/an internal model without rewriting integrations",
+            "Turns integrations into <strong>independently versioned, independently owned services</strong> — team boundaries, not a monolith of tools",
+            "Enables an internal capability registry: teams publish servers, agents discover them",
+            "Reduces vendor lock-in at the integration layer, which is where lock-in actually hurts",
+            "Cost: another network hop, another thing to secure, version management across servers"
+          ],
+          "links": [
+            {
+              "label": "Why MCP Matters for Architects",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/04-Why MCP Matters for Architects"
+            }
+          ],
+          "flow": "capability decoupled from host → integrations become owned services → registry + reuse → lock-in drops",
+          "trap": "pitching it as a productivity library rather than an architectural boundary"
+        },
+        {
+          "id": "mcp-context-engineering-q5",
+          "number": 5,
+          "marks": [
+            "decides"
+          ],
+          "text": "Would you build a server or consume one?",
+          "points": [
+            "<strong>Consume</strong> for commodity integrations — GitHub, Slack, Postgres; don't rebuild what exists",
+            "<strong>Build</strong> for proprietary domain capability: your data, your business actions, your compliance rules",
+            "Building means owning: auth, rate limits, versioning, audit, and the security review",
+            "Third-party servers are <strong>supply chain</strong> — a server you install can read what you connect to it (#8)",
+            "Middle path most teams land on: consume commodity, build a thin internal server over your own domain"
+          ],
+          "links": [
+            {
+              "label": "Building vs Consuming MCP Servers",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/07-Building vs Consuming MCP Servers"
+            }
+          ],
+          "flow": "commodity → consume · proprietary domain → build → but building means owning auth, versioning, audit",
+          "trap": "installing community servers into a production agent with no review"
+        },
+        {
+          "id": "mcp-context-engineering-q6",
+          "number": 6,
+          "marks": [
+            "trending"
+          ],
+          "text": "MCP and A2A — same thing?",
+          "points": [
+            "<strong>MCP</strong> = agent ↔ <strong>tools/context</strong>. Vertical: how one agent reaches capability",
+            "<strong>A2A</strong> = agent ↔ <strong>agent</strong>. Horizontal: discovery, task delegation, negotiation between peers",
+            "Complementary, not competing — an A2A-reachable agent still uses MCP internally",
+            "A2A adds: agent cards for discovery, task lifecycle, opaque agents (you don't see internals)",
+            "Both are young — say clearly which parts are stable and which are still moving"
+          ],
+          "links": [
+            {
+              "label": "A2A &amp; Agent Interoperability",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/05-A2A &amp; Agent Interoperability"
+            }
+          ],
+          "badge": "Evergreen (the comparative form is how it's asked)",
+          "flow": "MCP vertical to tools · A2A horizontal between agents → complementary layers",
+          "trap": "presenting them as alternatives to choose between",
+          "drill": {
+            "prompt": "from jbtiq_agentic Q13: \"MCP vs A2A vs plain function calling — draw the boundaries. When is each the right layer?\"",
+            "badge": "Evergreen (the comparative form is how it's asked)",
+            "hint": "One connects a model to capabilities, one connects peers to each other, one is just the model-vendor API primitive. What changes at each boundary?",
+            "points": [
+              "<strong>Function calling</strong> is the model-API primitive: schemas in, structured call out, you execute. It's <em>within</em> one application; no discovery, no transport, no interop — the atom everything else is built from.",
+              "<strong>MCP</strong> standardizes the <strong>agent↔capability</strong> boundary: how one application discovers and invokes external tools/data. The consumer is a model runtime; the relationship is client-server.",
+              "<strong>A2A-style protocols</strong> target the <strong>agent↔agent</strong> boundary: opaque peers exchanging tasks and results with capability discovery, long-running task lifecycle, and no obligation to expose internals — the relationship is peer delegation across trust domains (different teams, different vendors).",
+              "The clean mental model: MCP is how an agent <em>uses tools</em>; A2A is how an agent <em>delegates work to another autonomous system</em>. A tool is transparent and stateless-ish; a peer agent has its own policy, state, and failure modes.",
+              "Practical status check to voice: MCP has broad adoption momentum; agent-to-agent interop is younger and consolidating — commit hard to the tool boundary, keep the agent-peer boundary abstracted, and don't bet the architecture on any single interop spec yet."
+            ],
+            "oneLiner": "Function calling is the in-app primitive, MCP standardizes agent-to-capability, A2A-class protocols standardize agent-to-agent delegation across trust domains — I commit to the tool boundary and keep peer-agent interop behind an abstraction.",
+            "links": [
+              {
+                "label": "A2A &amp; Agent Interoperability",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/05-A2A &amp; Agent Interoperability"
+              },
+              {
+                "label": "OpenAPI &amp; Tool Spec Standards",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/06-OpenAPI &amp; Tool-Spec Standards"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mcp-context-engineering-q7",
+          "number": 7,
+          "marks": [],
+          "text": "You already have OpenAPI. Why add MCP?",
+          "points": [
+            "OpenAPI describes an <strong>HTTP API for developers</strong>; MCP describes <strong>capability for a model</strong>, with the host relationship built in",
+            "MCP carries what OpenAPI doesn't: resources, prompts, sampling, negotiated capabilities, a session",
+            "OpenAPI specs are usually far too granular and too numerous to hand a model directly (<code>06-AGENTIC-AI</code> #7)",
+            "Perfectly valid to <strong>wrap</strong> an OpenAPI surface in a small MCP server that exposes intention-shaped tools",
+            "Not either/or: OpenAPI stays the contract between services, MCP is the contract with the model"
+          ],
+          "links": [
+            {
+              "label": "OpenAPI &amp; Tool Spec Standards",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/06-OpenAPI &amp; Tool-Spec Standards"
+            }
+          ],
+          "flow": "OpenAPI = dev contract · MCP = model contract → wrap, don't replace → curate granularity in the wrapper",
+          "trap": "auto-generating one MCP tool per OpenAPI operation — you've moved the problem, not solved it"
+        },
+        {
+          "id": "mcp-context-engineering-q8",
+          "number": 8,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "What's the security model?",
+          "points": [
+            "MCP is a <strong>transport standard, not a security model</strong> — authn/authz is yours to impose",
+            "Threats: malicious server · <strong>tool poisoning</strong> (hostile text in a tool description) · confused deputy · token passthrough · cross-server data exfiltration",
+            "The agent's identity must not be the user's identity — scope credentials <strong>per server, per tool</strong>",
+            "Every tool call is untrusted input <em>and</em> a privileged action (<code>06-AGENTIC-AI</code> #18): approval gates on destructive ops",
+            "Audit every invocation: who, what, on whose behalf, with what result"
+          ],
+          "links": [
+            {
+              "label": "permissions and least privilege",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/85-permissions and least privilege"
+            }
+          ],
+          "flow": "protocol ≠ security → scope creds per server → treat descriptions as untrusted → gate destructive → audit all",
+          "trap": "trusting a server's tool descriptions — they enter your model's context as instructions"
+        },
+        {
+          "id": "mcp-context-engineering-q9",
+          "number": 9,
+          "marks": [
+            "decides"
+          ],
+          "text": "Design an MCP server over our internal systems.",
+          "points": [
+            "Start from <strong>user intentions</strong>, not from your service catalogue — one tool per thing someone wants done",
+            "Coarse and few beats thin and many; each description is prompt budget you pay every call",
+            "Return <strong>model-shaped output</strong>: compact, structured, self-describing; never a raw 400-field payload",
+            "Auth per call carrying the real principal; enforce authorisation server-side, never trust the caller's claim",
+            "Bake in idempotency, timeouts, pagination and clear errors — the model retries (<code>06-AGENTIC-AI</code> #8)"
+          ],
+          "links": [
+            {
+              "label": "Tool design principles",
+              "target": "03-Agentic-AI/03-Tool use-Function calling/03-Tool design principles"
+            }
+          ],
+          "flow": "intentions → few coarse tools → compact structured returns → per-call authz → idempotent + bounded",
+          "trap": "mirroring your microservice boundaries into tool boundaries"
+        },
+        {
+          "id": "mcp-context-engineering-q10",
+          "number": 10,
+          "marks": [
+            "trending"
+          ],
+          "text": "We're a Spring shop. What does this look like in Java?",
+          "points": [
+            "<strong>Spring AI MCP</strong> — server and client starters; annotate methods as tools, schema derived from types",
+            "Same discipline as <code>03-JAVA-SPRING</code> #38: intention-shaped tools, per-call authz, approval on destructive",
+            "Existing Spring assets carry over directly: Security for authn, Actuator for health, Micrometer for tracing",
+            "Deploy an MCP server like any other Boot service — same CI, same rollout, same on-call",
+            "Contract versioning is the new discipline: a tool signature change is a <strong>breaking API change</strong>"
+          ],
+          "links": [
+            {
+              "label": "mcp fundamentals",
+              "target": "06-spring/08-ai-mcp/37-mcp-fundamentals"
+            },
+            {
+              "label": "building mcp servers and clients",
+              "target": "06-spring/08-ai-mcp/38-building-mcp-servers-and-clients"
+            }
+          ],
+          "flow": "Boot starter → annotated tools → schema from types → reuse Security/Actuator/Micrometer → version the tool contract",
+          "trap": "treating an MCP server as a script rather than a production service with an API contract"
+        },
+        {
+          "id": "mcp-context-engineering-q11",
+          "number": 11,
+          "marks": [
+            "trending"
+          ],
+          "text": "Ten MCP servers, four hundred tools. What breaks?",
+          "points": [
+            "Tool descriptions are <strong>context tax paid on every call</strong> — this becomes a context problem first (#14)",
+            "Name collisions across servers; ambiguous overlapping tools; the model picks plausibly and wrongly",
+            "Fix by curation: a gateway/registry that exposes a <strong>filtered, task-relevant subset</strong> per agent",
+            "Or route: classify intent → attach only that toolkit's servers (<code>06-AGENTIC-AI</code> #7)",
+            "Operational reality: N servers = N failure domains, N version streams, N security reviews"
+          ],
+          "links": [
+            {
+              "label": "Tool selection at scale",
+              "target": "03-Agentic-AI/03-Tool use-Function calling/09-Tool selection at scale"
+            }
+          ],
+          "flow": "descriptions cost context → curate via gateway → route by intent → accept N failure domains",
+          "trap": "connecting every available server because you can"
+        },
+        {
+          "id": "mcp-context-engineering-q12",
+          "number": 12,
+          "marks": [],
+          "text": "How do you version a tool contract?",
+          "points": [
+            "A tool signature is a <strong>public API</strong> — the model's calls are the clients you can't see",
+            "Additive optional params are safe; renames, removals and semantic changes are breaking",
+            "Semantic change is the sneaky one: same signature, different behaviour → silent wrong actions",
+            "Version in the tool name or the server capability; run old and new in parallel through a deprecation window",
+            "Regression-test with <strong>recorded trajectories</strong> (<code>06-AGENTIC-AI</code> #20) — that's your contract test"
+          ],
+          "links": [
+            {
+              "label": "versioning and rollout",
+              "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/100-versioning and rollout"
+            }
+          ],
+          "flow": "tool = public API → additive safe → version breaking changes → parallel run → replay trajectories to verify",
+          "trap": "changing what a tool <em>means</em> while keeping its signature"
+        },
+        {
+          "id": "mcp-context-engineering-q13",
+          "number": 13,
+          "marks": [],
+          "text": "When would you not use MCP?",
+          "points": [
+            "Single app, few fixed tools, one model vendor → native function calling is less machinery",
+            "Ultra-low-latency paths — an extra hop and serialisation you don't need",
+            "Hard-regulated environments where a new protocol surface means a new audit you can't afford yet",
+            "Where the integration is genuinely one-off and will never be reused, portability buys nothing",
+            "Honest framing: MCP pays off at <strong>fleet scale and across teams</strong>, not in a single service"
+          ],
+          "links": [
+            {
+              "label": "Why MCP Matters for Architects",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/04-Why MCP Matters for Architects"
+            }
+          ],
+          "flow": "few fixed tools + one vendor → native calling · reuse across teams/agents → MCP",
+          "trap": "adopting it for a single service because it's the current vocabulary"
+        }
+      ]
+    },
+    {
+      "id": "mcp-context-engineering-context-engineering",
+      "letter": null,
+      "name": "Context engineering",
+      "questions": [
+        {
+          "id": "mcp-context-engineering-q14",
+          "number": 14,
+          "marks": [
+            "decides",
+            "trending"
+          ],
+          "text": "What is context engineering, and why isn't it prompt engineering?",
+          "points": [
+            "Prompt engineering = wording one instruction. <strong>Context engineering = deciding what occupies the window at every step</strong>",
+            "It became a discipline when agents got long: the prompt is now the <em>smallest</em> part of the context",
+            "Competing claims on a finite budget: system + tool descriptions + retrieved docs + history + scratchpad + output room",
+            "It's a <strong>systems</strong> problem — selection, ordering, compaction, eviction — not a writing problem",
+            "Directly determines cost, latency (prefill) and accuracy simultaneously"
+          ],
+          "links": [
+            {
+              "label": "Context engineering",
+              "target": "03-Agentic-AI/05-Memory/10-Context engineering"
+            }
+          ],
+          "badge": "Trending — the reframing recurs across engineering blogs + agentic JDs (2025–26)",
+          "flow": "finite window → many competing claims → select, order, compact, evict → per step, not once",
+          "trap": "describing it as \"writing better prompts\"",
+          "drill": {
+            "prompt": "from jbtiq_agentic Q15: \"'Context engineering' is replacing 'prompt engineering' as the term of art. What actually changed?\"",
+            "badge": "Trending — the reframing recurs across engineering blogs + agentic JDs (2025–26)",
+            "hint": "The unit of design is no longer a string. What are you actually curating per model call, and against what budget?",
+            "points": [
+              "The shift: from crafting a clever instruction to <strong>curating everything in the window per call</strong> — system prompt, tool schemas, retrieved docs, memory, message history, tool results — as a budgeted portfolio. The prompt is one line-item; the context is the system.",
+              "Because <strong>attention is a finite budget</strong>: irrelevant or stale tokens don't just cost money, they <em>degrade</em> selection and reasoning (distraction, lost-in-the-middle). Curation is subtractive as much as additive.",
+              "Concrete techniques to name: retrieval instead of stuffing, <strong>summarization/compaction</strong> of history, truncating tool outputs with \"fetch more\" affordances, scoping tools per turn, structured state outside the window with only the relevant slice loaded.",
+              "For agents specifically: context is <strong>dynamic across the loop</strong> — each iteration re-decides what the model needs now, which makes context assembly a runtime component with its own logic and tests, not a template.",
+              "The architect's takeaway: most \"model is dumb\" bugs are context bugs — audit what was actually in the window at the failing step before blaming the model."
+            ],
+            "oneLiner": "Prompt engineering wrote a good instruction; context engineering budgets the whole window — what to retrieve, compress, truncate and exclude per step — because attention is finite and most 'model failures' turn out to be context assembly failures.",
+            "links": [
+              {
+                "label": "Context engineering",
+                "target": "03-Agentic-AI/05-Memory/10-Context engineering"
+              },
+              {
+                "label": "Short term Working Memory",
+                "target": "03-Agentic-AI/05-Memory/02-Short-term Working Memory"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mcp-context-engineering-q15",
+          "number": 15,
+          "marks": [
+            "decides"
+          ],
+          "text": "Budget a 128k window for a real agent.",
+          "points": [
+            "Reserve <strong>output room first</strong> — the most common self-inflicted failure is no space to answer",
+            "Fixed floor: system prompt + tool descriptions (this is why #11 matters)",
+            "Variable: retrieved context, conversation history, scratchpad/observations — these must be <strong>capped, not hoped</strong>",
+            "Place critical material at <strong>start and end</strong> (<code>04-LLM-FOUNDATIONS</code> #22) — the middle degrades",
+            "Instrument it: token counts per section, per step. Unbudgeted context is how cost surprises happen"
+          ],
+          "links": [
+            {
+              "label": "Short term Working Memory",
+              "target": "03-Agentic-AI/05-Memory/02-Short-term Working Memory"
+            }
+          ],
+          "flow": "reserve output → fixed floor → cap each variable section → critical material at the edges → measure per step",
+          "trap": "letting history and observations grow until the model silently truncates"
+        },
+        {
+          "id": "mcp-context-engineering-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "Run's at step 40. What do you throw away?",
+          "points": [
+            "<strong>Compaction</strong>: summarise older turns into a running state object, drop the raw trace",
+            "Drop <strong>resolved</strong> sub-tasks entirely — a completed detour has no further value",
+            "Keep: the goal, key decisions, constraints discovered, unresolved threads",
+            "Re-retrieve on demand rather than retaining everything (#18)",
+            "Compaction is lossy — log what you dropped so a failure is debuggable"
+          ],
+          "links": [
+            {
+              "label": "State Management",
+              "target": "03-Agentic-AI/05-Memory/09-State Management"
+            }
+          ],
+          "flow": "summarise old turns → drop resolved work → keep goal/decisions/constraints → re-retrieve as needed",
+          "trap": "naive truncation of the oldest tokens, which silently deletes the goal"
+        },
+        {
+          "id": "mcp-context-engineering-q17",
+          "number": 17,
+          "marks": [
+            "trending"
+          ],
+          "text": "Answers get worse the longer the session runs. Diagnose it.",
+          "points": [
+            "Classic <strong>context rot</strong> — stale observations, dead ends, superseded facts accumulating",
+            "Distinguish four causes: rot · dilution (too much irrelevant) · position (lost in middle) · genuine truncation",
+            "Diagnose by replay: same query with a <strong>fresh</strong> context vs the long one — if fresh wins, it's context, not model",
+            "Instrument context length and composition against quality metrics per step; the correlation is usually visible",
+            "Fixes: compaction (#16), sub-agent isolation (#19), re-retrieval, hard turn caps"
+          ],
+          "links": [
+            {
+              "label": "Context Rot",
+              "target": "03-Agentic-AI/05-Memory/11-Context Rot"
+            }
+          ],
+          "flow": "replay fresh vs long → isolates context from model → then classify rot / dilution / position / truncation",
+          "trap": "swapping to a bigger model when a fresh-context replay would have proved it wasn't the model"
+        },
+        {
+          "id": "mcp-context-engineering-q18",
+          "number": 18,
+          "marks": [
+            "decides"
+          ],
+          "text": "What gets written to memory, and what gets read back?",
+          "points": [
+            "<strong>Write policy</strong>: after each turn, on explicit signal, or model-decided (<code>remember_this</code> tool) — each has a different failure",
+            "Write too much → retrieval noise and cost. Write too little → the agent feels amnesiac",
+            "<strong>Read policy</strong>: retrieve relevant memory per turn — never replay the whole store",
+            "Memory needs updating and <strong>contradiction handling</strong>: a changed preference must supersede, not coexist",
+            "Retention and deletion are compliance surface, not just engineering (GDPR/right to be forgotten)"
+          ],
+          "links": [
+            {
+              "label": "Memory Write",
+              "target": "03-Agentic-AI/05-Memory/06-Memory Write"
+            },
+            {
+              "label": "Memory Read",
+              "target": "03-Agentic-AI/05-Memory/07-Memory Read"
+            }
+          ],
+          "flow": "explicit write policy → selective retrieval on read → supersede on contradiction → retention rules",
+          "trap": "append-only memory that accumulates contradictions and never forgets anything"
+        },
+        {
+          "id": "mcp-context-engineering-q19",
+          "number": 19,
+          "marks": [
+            "trending"
+          ],
+          "text": "How does sub-agent isolation help context?",
+          "points": [
+            "Sub-agent gets a <strong>clean window</strong> for its subtask, returns only the result — not its trace",
+            "The parent's context stays small; the exploration cost is paid and discarded",
+            "This is a real argument for multi-agent that survives the \"when multi-agent hurts\" critique (<code>06-AGENTIC-AI</code> #14)",
+            "Cost: the handoff is lossy — what the sub-agent learned but didn't report is gone",
+            "Design the <strong>return contract</strong> explicitly: what must come back, in what shape"
+          ],
+          "links": [
+            {
+              "label": "Manager Sub agent Delegation",
+              "target": "03-Agentic-AI/06-Multi-Agent Systems/04-Manager Sub-agent Delegation"
+            }
+          ],
+          "flow": "subtask in a fresh window → return result only → parent context stays lean → design the return contract",
+          "trap": "sub-agents that return their whole transcript, defeating the purpose"
+        },
+        {
+          "id": "mcp-context-engineering-q20",
+          "number": 20,
+          "marks": [
+            "trending"
+          ],
+          "text": "How does prompt caching change how you order context?",
+          "points": [
+            "Providers cache a <strong>prefix</strong> — savings only if the front of your context is byte-identical across calls",
+            "So: <strong>stable content first</strong> (system, tool defs, few-shot), volatile content last (retrieved, history)",
+            "One changed character early invalidates the whole downstream cache",
+            "Big lever on agent loops specifically, where the same prefix re-enters every step",
+            "Interacts with #15: the \"put critical material at the end\" instinct and cache ordering must be reconciled deliberately"
+          ],
+          "links": [
+            {
+              "label": "caching in agentic systems",
+              "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/95-caching in agentic systems"
+            }
+          ],
+          "flow": "stable prefix first → volatile suffix last → never mutate the front → biggest win in loops",
+          "trap": "injecting a timestamp or request ID into the system prompt and killing every cache hit"
+        },
+        {
+          "id": "mcp-context-engineering-q21",
+          "number": 21,
+          "marks": [
+            "decides"
+          ],
+          "text": "Multi-tenant. How do you keep context from leaking?",
+          "points": [
+            "Memory and cache keys must include <strong>tenant</strong> — a shared semantic cache is a cross-customer leak waiting to happen",
+            "Retrieval filters enforced <strong>server-side</strong> at the store, never as a post-filter in application code",
+            "Tool credentials scoped to the tenant's own principal (#8), not a shared service account",
+            "Prompt-cache prefixes must not contain tenant data if the prefix is shared across tenants",
+            "Audit and traces carry tenant ID, or an incident can't be scoped or reported"
+          ],
+          "links": [
+            {
+              "label": "Access Control &amp; Security — Per Tenant Retrieval",
+              "target": "04-RAG/12-Production RAG Systems (arch lens)/08-Access Control &amp; Security — Per-Tenant Retrieval"
+            }
+          ],
+          "flow": "tenant in every key → server-side retrieval filter → per-tenant creds → tenant-free shared prefixes → tenant on every trace",
+          "trap": "a semantic answer cache keyed on query text alone"
+        },
+        {
+          "id": "mcp-context-engineering-q22",
+          "number": 22,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you version and roll out a prompt change?",
+          "points": [
+            "Prompts are <strong>deployable artifacts</strong>: versioned in git, reviewed, tagged on every trace",
+            "Never edit in a console with no history — untraceable quality regressions are the result",
+            "Roll out like code: canary/shadow, compare against a golden set, roll back on regression",
+            "Version the whole coupled unit — prompt + tool defs + model version move together, like RAG's index contract",
+            "Every response should be attributable to an exact prompt version, or eval is guesswork"
+          ],
+          "links": [
+            {
+              "label": "Prompt versioning &amp; management",
+              "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/06-Prompt versioning &amp; management"
+            }
+          ],
+          "badge": "Trending — prompt-ops questions recur across LLMOps JDs (2025–26)",
+          "flow": "prompt in git → tag version on traces → canary against golden set → roll back → version the coupled unit",
+          "trap": "treating the prompt as config rather than code, and losing attribution",
+          "drill": {
+            "prompt": "from jbtiq_llm Q21: \"Prompts in production: someone edits one string and quality drops 15% for a week before anyone notices. Fix the process.\"",
+            "badge": "Trending — prompt-ops questions recur across LLMOps JDs (2025–26)",
+            "hint": "Treat the prompt as what it actually is: deployed code with no compiler. What does code get that your prompts don't?",
+            "points": [
+              "The diagnosis: prompts are <strong>behavior-defining deployed artifacts</strong> being edited like copy text — no versioning, no tests, no review, no observability tying quality to the change.",
+              "<strong>Version control</strong>: prompts in git (or a prompt-management system) with IDs; every trace logs <em>which prompt version</em> served it — otherwise incidents are unattributable. Template/variable separation so data changes aren't logic changes.",
+              "<strong>Eval gate as CI</strong>: a golden set + LLM-judge/assertion suite runs on every prompt PR; a 15% regression fails the merge, not the users. This is the single highest-leverage fix.",
+              "<strong>Deployment discipline</strong>: prompts roll out like code — canary a slice, watch task-success/complaint metrics, roll back a version, A/B when the change is contested. Remember the <strong>coupling</strong>: prompt and model version pair; re-gate prompts when the model moves.",
+              "Cultural point worth voicing: the fix isn't gatekeeping who edits — it's making the safe path the easy path, so PMs <em>can</em> edit prompts because the eval gate catches the damage."
+            ],
+            "oneLiner": "Prompts are deployed code without a compiler — so they get versions logged in every trace, an eval gate in CI that fails regressions before merge, canaried rollouts with rollback, and re-gating whenever the underlying model changes.",
+            "links": [
+              {
+                "label": "Prompt versioning &amp; management",
+                "target": "05-LLM-Production/09-Prompting &amp; In-context Learning/06-Prompt versioning &amp; management"
+              },
+              {
+                "label": "Versioning &amp; rollout",
+                "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/07-Versioning &amp; rollout"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mcp-context-engineering-q23",
+          "number": 23,
+          "marks": [
+            "decides"
+          ],
+          "text": "Retrieve it again, or keep it in context?",
+          "points": [
+            "<strong>Retain</strong> when it's small, stable and needed every step — the goal, constraints, schema",
+            "<strong>Re-retrieve</strong> when it's large, changeable, or needed occasionally — documents, records, tool results",
+            "Retention costs tokens <strong>every step</strong> and compounds; retrieval costs latency <strong>once, when needed</strong>",
+            "In long runs retrieval almost always wins — retention is what causes rot (#17)",
+            "Middle ground: keep a compact pointer/summary in context, fetch the full body on demand"
+          ],
+          "links": [
+            {
+              "label": "Memory Read",
+              "target": "03-Agentic-AI/05-Memory/07-Memory Read"
+            }
+          ],
+          "flow": "small + always needed → retain · large or occasional → re-retrieve → keep pointers, fetch bodies",
+          "trap": "keeping every retrieved document in context \"in case it's needed again\""
+        },
+        {
+          "id": "mcp-context-engineering-q24",
+          "number": 24,
+          "marks": [
+            "decides"
+          ],
+          "text": "Design the context layer for a long-running assistant.",
+          "points": [
+            "Tiers: <strong>working</strong> (this turn) · <strong>session</strong> (compacted running state) · <strong>long-term</strong> (retrieved memory store)",
+            "Explicit budget per tier with hard caps; compaction on a threshold, not on vibes",
+            "Stable-prefix ordering for cache (#20), critical material at the edges (#15)",
+            "Tenant-scoped everywhere (#21); prompt and tool versions tagged on every trace (#22)",
+            "Observability: tokens per section per step, plus quality metrics — so rot is <strong>visible before users report it</strong>"
+          ],
+          "links": [
+            {
+              "label": "State Management",
+              "target": "03-Agentic-AI/05-Memory/09-State Management"
+            }
+          ],
+          "flow": "three tiers + hard caps → compact on threshold → cache-friendly order → tenant-scoped → measure composition vs quality",
+          "trap": "a memory design with no eviction, no budget and no measurement"
+        }
+      ]
+    },
+    {
+      "id": "mcp-context-engineering-your-story",
+      "letter": null,
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "mcp-context-engineering-q25",
+          "number": 25,
+          "marks": [
+            "decides"
+          ],
+          "text": "Where have you had to engineer context rather than just prompt?",
+          "points": [
+            "Anchor on a real constraint: cost per session, degradation over turns, or a window you kept hitting",
+            "What you measured — token composition per step is the detail that proves you did this for real",
+            "The lever: compaction, re-retrieval, sub-agent isolation, cache reordering",
+            "The trade you accepted — what you dropped and what that cost you",
+            "Number: cost per session, quality at turn N, or window-overflow rate, before → after"
+          ],
+          "links": [
+            {
+              "label": "War Stories",
+              "target": "War-Stories"
+            }
+          ],
+          "flow": "constraint → measured composition → lever chosen → what you dropped → number",
+          "trap": "a prompt-wording story dressed up as context engineering"
+        }
+      ]
+    }
+  ]
+}

@@ -2314,6 +2314,552 @@
       ]
     }
   ],
+  "gameDay": [
+    {
+      "slug": "python",
+      "number": 1,
+      "title": "🐍 PYTHON",
+      "count": 44,
+      "bands": [
+        {
+          "id": "python-a",
+          "letter": "A",
+          "name": "Openers",
+          "count": 6
+        },
+        {
+          "id": "python-b",
+          "letter": "B",
+          "name": "Mechanism",
+          "count": 9
+        },
+        {
+          "id": "python-c",
+          "letter": "C",
+          "name": "Trade-offs",
+          "count": 12
+        },
+        {
+          "id": "python-d",
+          "letter": "D",
+          "name": "Scaling & failure",
+          "count": 7
+        },
+        {
+          "id": "python-e",
+          "letter": "E",
+          "name": "Architect",
+          "count": 5
+        },
+        {
+          "id": "python-f",
+          "letter": "F",
+          "name": "Your story",
+          "count": 1
+        },
+        {
+          "id": "python-merged-from-jbtiqpymd-24-aug-2026",
+          "letter": null,
+          "name": "Merged from JBTIQ_PY.md — 24 Aug 2026",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "slug": "fastapi",
+      "number": 2,
+      "title": "⚡ FASTAPI",
+      "count": 40,
+      "bands": [
+        {
+          "id": "fastapi-a",
+          "letter": "A",
+          "name": "Openers",
+          "count": 6
+        },
+        {
+          "id": "fastapi-b",
+          "letter": "B",
+          "name": "Mechanism",
+          "count": 9
+        },
+        {
+          "id": "fastapi-c",
+          "letter": "C",
+          "name": "Trade-offs",
+          "count": 12
+        },
+        {
+          "id": "fastapi-d",
+          "letter": "D",
+          "name": "Scaling & failure",
+          "count": 7
+        },
+        {
+          "id": "fastapi-e",
+          "letter": "E",
+          "name": "Architect",
+          "count": 5
+        },
+        {
+          "id": "fastapi-f",
+          "letter": "F",
+          "name": "Your story",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "slug": "java-spring",
+      "number": 3,
+      "title": "☕ JAVA & SPRING",
+      "count": 40,
+      "bands": [
+        {
+          "id": "java-spring-a",
+          "letter": "A",
+          "name": "Openers",
+          "count": 6
+        },
+        {
+          "id": "java-spring-b",
+          "letter": "B",
+          "name": "Mechanism",
+          "count": 9
+        },
+        {
+          "id": "java-spring-c",
+          "letter": "C",
+          "name": "Trade-offs",
+          "count": 12
+        },
+        {
+          "id": "java-spring-d",
+          "letter": "D",
+          "name": "Scaling & failure",
+          "count": 7
+        },
+        {
+          "id": "java-spring-e",
+          "letter": "E",
+          "name": "Architect",
+          "count": 5
+        },
+        {
+          "id": "java-spring-f",
+          "letter": "F",
+          "name": "Your story",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "slug": "llm-foundations",
+      "number": 4,
+      "title": "🧠 LLM FOUNDATIONS",
+      "count": 45,
+      "bands": [
+        {
+          "id": "llm-foundations-mechanism-know-these-cold",
+          "letter": null,
+          "name": "Mechanism — know these cold",
+          "count": 8
+        },
+        {
+          "id": "llm-foundations-behaviour-control",
+          "letter": null,
+          "name": "Behaviour & control",
+          "count": 16
+        },
+        {
+          "id": "llm-foundations-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        },
+        {
+          "id": "llm-foundations-merged-from-jbtiqllmmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
+          "count": 15
+        },
+        {
+          "id": "llm-foundations-merged-from-jbtiqdlmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "slug": "rag",
+      "number": 5,
+      "title": "🔍 RAG",
+      "count": 62,
+      "bands": [
+        {
+          "id": "rag-a",
+          "letter": "A",
+          "name": "Openers",
+          "count": 6
+        },
+        {
+          "id": "rag-b",
+          "letter": "B",
+          "name": "Mechanism",
+          "count": 9
+        },
+        {
+          "id": "rag-c",
+          "letter": "C",
+          "name": "Trade-offs",
+          "count": 12
+        },
+        {
+          "id": "rag-d",
+          "letter": "D",
+          "name": "Scaling & failure",
+          "count": 7
+        },
+        {
+          "id": "rag-e",
+          "letter": "E",
+          "name": "Architect",
+          "count": 5
+        },
+        {
+          "id": "rag-f",
+          "letter": "F",
+          "name": "Your story",
+          "count": 1
+        },
+        {
+          "id": "rag-added-from-the-aug-2026-trend-scan-24-aug",
+          "letter": null,
+          "name": "Added from the Aug 2026 trend scan — 24 Aug",
+          "count": 7
+        },
+        {
+          "id": "rag-merged-from-jbtiqragmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_rag.md — 19 Sep 2026",
+          "count": 15
+        }
+      ]
+    },
+    {
+      "slug": "agentic-ai",
+      "number": 6,
+      "title": "🤖 AGENTIC AI",
+      "count": 46,
+      "bands": [
+        {
+          "id": "agentic-ai-framing",
+          "letter": null,
+          "name": "Framing",
+          "count": 5
+        },
+        {
+          "id": "agentic-ai-tools",
+          "letter": null,
+          "name": "Tools",
+          "count": 5
+        },
+        {
+          "id": "agentic-ai-memory-state",
+          "letter": null,
+          "name": "Memory & state",
+          "count": 3
+        },
+        {
+          "id": "agentic-ai-multi-agent",
+          "letter": null,
+          "name": "Multi-agent",
+          "count": 3
+        },
+        {
+          "id": "agentic-ai-safety-security",
+          "letter": null,
+          "name": "Safety & security",
+          "count": 3
+        },
+        {
+          "id": "agentic-ai-eval-reliability-cost",
+          "letter": null,
+          "name": "Eval, reliability & cost",
+          "count": 5
+        },
+        {
+          "id": "agentic-ai-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        },
+        {
+          "id": "agentic-ai-merged-from-jbtiqagenticmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_agentic.md — 19 Sep 2026",
+          "count": 21
+        }
+      ]
+    },
+    {
+      "slug": "mcp-context-engineering",
+      "number": 7,
+      "title": "🔌 MCP & CONTEXT ENGINEERING",
+      "count": 25,
+      "bands": [
+        {
+          "id": "mcp-context-engineering-mcp",
+          "letter": null,
+          "name": "MCP",
+          "count": 13
+        },
+        {
+          "id": "mcp-context-engineering-context-engineering",
+          "letter": null,
+          "name": "Context engineering",
+          "count": 11
+        },
+        {
+          "id": "mcp-context-engineering-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "slug": "llm-serving-inference",
+      "number": 8,
+      "title": "🚀 LLM SERVING & INFERENCE",
+      "count": 30,
+      "bands": [
+        {
+          "id": "llm-serving-inference-mechanism-know-these-cold",
+          "letter": null,
+          "name": "Mechanism — know these cold",
+          "count": 7
+        },
+        {
+          "id": "llm-serving-inference-trade-offs-the-senior-signal",
+          "letter": null,
+          "name": "Trade-offs — the senior signal",
+          "count": 9
+        },
+        {
+          "id": "llm-serving-inference-scaling-failure",
+          "letter": null,
+          "name": "Scaling & failure",
+          "count": 6
+        },
+        {
+          "id": "llm-serving-inference-architect",
+          "letter": null,
+          "name": "Architect",
+          "count": 2
+        },
+        {
+          "id": "llm-serving-inference-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        },
+        {
+          "id": "llm-serving-inference-merged-from-jbtiqllmmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_llm.md — 19 Sep 2026",
+          "count": 4
+        },
+        {
+          "id": "llm-serving-inference-merged-from-jbtiqdlmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "slug": "ml-dl",
+      "number": 11,
+      "title": "📐 CLASSICAL ML & DEEP LEARNING",
+      "count": 72,
+      "bands": [
+        {
+          "id": "ml-dl-ml-generalisation-honest-validation",
+          "letter": null,
+          "name": "ML — generalisation & honest validation",
+          "count": 6
+        },
+        {
+          "id": "ml-dl-ml-metrics-models-trade-offs",
+          "letter": null,
+          "name": "ML — metrics, models & trade-offs",
+          "count": 6
+        },
+        {
+          "id": "ml-dl-ml-in-production",
+          "letter": null,
+          "name": "ML in production",
+          "count": 4
+        },
+        {
+          "id": "ml-dl-dl-the-non-transformer-half",
+          "letter": null,
+          "name": "DL — the non-transformer half",
+          "count": 8
+        },
+        {
+          "id": "ml-dl-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        },
+        {
+          "id": "ml-dl-merged-from-jbtiqmlmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_ml.md — 19 Sep 2026",
+          "count": 29
+        },
+        {
+          "id": "ml-dl-merged-from-jbtiqdlmd-19-sep-2026",
+          "letter": null,
+          "name": "Merged from jbtiq_dl.md — 19 Sep 2026",
+          "count": 18
+        }
+      ]
+    },
+    {
+      "slug": "real-time-systems",
+      "number": 15,
+      "title": "🎙️ REAL-TIME & VOICE",
+      "count": 25,
+      "bands": [
+        {
+          "id": "real-time-systems-the-latency-budget-the-spine-of-every-answer-here",
+          "letter": null,
+          "name": "The latency budget — the spine of every answer here",
+          "count": 4
+        },
+        {
+          "id": "real-time-systems-pipeline-mechanics",
+          "letter": null,
+          "name": "Pipeline mechanics",
+          "count": 6
+        },
+        {
+          "id": "real-time-systems-transport",
+          "letter": null,
+          "name": "Transport",
+          "count": 4
+        },
+        {
+          "id": "real-time-systems-scale-reliability-cost",
+          "letter": null,
+          "name": "Scale, reliability, cost",
+          "count": 4
+        },
+        {
+          "id": "real-time-systems-quality",
+          "letter": null,
+          "name": "Quality",
+          "count": 3
+        },
+        {
+          "id": "real-time-systems-architect",
+          "letter": null,
+          "name": "Architect",
+          "count": 3
+        },
+        {
+          "id": "real-time-systems-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "slug": "nlp-classical",
+      "number": 17,
+      "title": "🔤 NLP (Classical)",
+      "count": 45,
+      "bands": [
+        {
+          "id": "nlp-classical-section-1-foundations-preprocessing-01-foundations-02-preprocessing",
+          "letter": null,
+          "name": "Section 1 — Foundations & Preprocessing (01-Foundations, 02-Preprocessing)",
+          "count": 3
+        },
+        {
+          "id": "nlp-classical-section-2-representation-similarity-03-representation",
+          "letter": null,
+          "name": "Section 2 — Representation & Similarity (03-Representation)",
+          "count": 2
+        },
+        {
+          "id": "nlp-classical-section-3-embeddings-04-embeddings",
+          "letter": null,
+          "name": "Section 3 — Embeddings (04-Embeddings)",
+          "count": 2
+        },
+        {
+          "id": "nlp-classical-section-4-language-modeling-sequence-models-05-language-modeling-06-sequence-models",
+          "letter": null,
+          "name": "Section 4 — Language Modeling & Sequence Models (05-Language-Modeling, 06-Sequence-Models)",
+          "count": 2
+        },
+        {
+          "id": "nlp-classical-section-5-sequence-labeling-07-sequence-labeling",
+          "letter": null,
+          "name": "Section 5 — Sequence Labeling (07-Sequence-Labeling)",
+          "count": 2
+        },
+        {
+          "id": "nlp-classical-section-6-syntax-semantics-applied-tasks-08-syntax-semantics-09-applied-tasks",
+          "letter": null,
+          "name": "Section 6 — Syntax, Semantics & Applied Tasks (08-Syntax-Semantics, 09-Applied-Tasks)",
+          "count": 3
+        },
+        {
+          "id": "nlp-classical-section-7-topic-modeling-10-topic-modeling",
+          "letter": null,
+          "name": "Section 7 — Topic Modeling (10-Topic-Modeling)",
+          "count": 1
+        },
+        {
+          "id": "nlp-classical-section-8-information-retrieval-search-11-information-retrieval-search-architect-core",
+          "letter": null,
+          "name": "Section 8 — Information Retrieval & Search (11-Information-Retrieval-Search) — architect core",
+          "count": 4
+        },
+        {
+          "id": "nlp-classical-section-9-evaluation-metrics-12-evaluation-metrics",
+          "letter": null,
+          "name": "Section 9 — Evaluation Metrics (12-Evaluation-Metrics)",
+          "count": 2
+        },
+        {
+          "id": "nlp-classical-section-10-production-multilingual-nlp-13-production-multilingual-nlp",
+          "letter": null,
+          "name": "Section 10 — Production & Multilingual NLP (13-Production-Multilingual-NLP)",
+          "count": 3
+        },
+        {
+          "id": "nlp-classical-section-11-system-architecture-lens-14-system-architecture-lens",
+          "letter": null,
+          "name": "Section 11 — System & Architecture Lens (14-System-Architecture-Lens)",
+          "count": 5
+        },
+        {
+          "id": "nlp-classical-section-12-cross-cutting-backfill-remaining-notes-across-folders",
+          "letter": null,
+          "name": "Section 12 — Cross-Cutting & Backfill (remaining notes across folders)",
+          "count": 16
+        }
+      ]
+    }
+  ],
   "dsaUtils": [
     {
       "lang": "python",
