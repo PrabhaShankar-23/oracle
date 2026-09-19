@@ -16,6 +16,7 @@ const CaseStudyPage = lazy(() => import('./pages/system-design/CaseStudyPage'))
 const WebRtcPage = lazy(() => import('./pages/system-design/WebRtcPage'))
 const AiSystemsPage = lazy(() => import('./pages/system-design/AiSystemsPage'))
 const GameDayRecallPage = lazy(() => import('./pages/game-day/GameDayRecallPage'))
+const GameDayDocPage = lazy(() => import('./pages/game-day/GameDayDocPage'))
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="system-design/webrtc" element={<WebRtcPage />} />
           <Route path="system-design/ai-systems/:slug" element={<AiSystemsPage />} />
           <Route path="game-day/recall/:slug" element={<GameDayRecallPage />} />
+          <Route path="game-day/:slug" element={<GameDayDocPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

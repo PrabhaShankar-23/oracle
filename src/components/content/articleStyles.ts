@@ -197,5 +197,16 @@ export const articleStyles: SxProps<Theme> = (t) => {
       border: `1px solid ${v.surface.outlineVariant}`,
     },
     '& summary': { cursor: 'pointer', fontWeight: 500, minHeight: 32, display: 'list-item' },
+
+    // A vault note that isn't published on the site yet — readable, but deliberately not a link.
+    '& .vault-ref': {
+      ...t.typography.body2,
+      px: 0.75,
+      py: '1px',
+      borderRadius: 1.5,
+      backgroundColor: v.surface.containerHigh,
+      color: v.text.secondary,
+      overflowWrap: 'anywhere',
+    },
   }
 }

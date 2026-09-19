@@ -117,12 +117,23 @@ export const sections: Section[] = [
     path: '/game-day',
     description: '474 recall questions, trend-scanned. Question visible — answer out loud, then expand.',
     icon: RecordVoiceOverOutlined,
-    pages: manifest.gameDay.map((t) => ({
-      title: t.title,
-      path: `/game-day/recall/${t.slug}`,
-      description: `${t.count} questions across ${t.bands.length} bands.`,
-      group: 'Recall',
-    })),
+    pages: [
+      ...manifest.gameDayDocs.map((d) => ({
+        title: d.title,
+        path: `/game-day/${d.slug}`,
+        description:
+          d.slug === 'runbook'
+            ? 'What to open, and when, in the hour before.'
+            : 'STAR stories, with the numbers that make them land.',
+        group: 'Before you go in',
+      })),
+      ...manifest.gameDay.map((t) => ({
+        title: t.title,
+        path: `/game-day/recall/${t.slug}`,
+        description: `${t.count} questions across ${t.bands.length} bands.`,
+        group: 'Recall',
+      })),
+    ],
   },
   { id: 'ai-ml', title: 'AI / ML', path: '/ai-ml', description: 'ML, deep learning, RAG, agents and LLM production.', icon: PsychologyOutlined, pages: [] },
   { id: 'ai-coding', title: 'AI Coding Patterns', path: '/ai-coding', description: 'Patterns for building with coding agents.', icon: AutoAwesomeOutlined, pages: [] },
@@ -209,6 +220,15 @@ export const searchIndex: SearchItem[] = [
       secondary: 'Agentic system design',
       path: `/system-design/ai-systems/${d.slug}#${h.id}`,
       group: 'AI systems',
+    })),
+  ),
+  ...manifest.gameDayDocs.flatMap((d) =>
+    d.headings.map((h) => ({
+      key: `gameday:${d.slug}:${h.id}`,
+      label: h.text.replace(/^[^\p{Letter}\p{Number}]+/u, ''),
+      secondary: `Game Day · ${d.title}`,
+      path: `/game-day/${d.slug}#${h.id}`,
+      group: 'Game Day',
     })),
   ),
   ...manifest.gameDay.map((t) => ({

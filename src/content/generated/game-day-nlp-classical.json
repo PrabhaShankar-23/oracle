@@ -1,7 +1,8 @@
 {
   "slug": "nlp-classical",
   "number": 17,
-  "title": "🔤 NLP (Classical)",
+  "icon": "🔤",
+  "title": "NLP (Classical)",
   "meta": [
     "<strong>Single home for the NLP pillar.</strong> Absorbed <code>jbtiq_nlp.md</code> on 19 Sep 2026 — that drill was the one orphan with no recall file among the 17, so rather than splitting it, the whole thing became this file. Nothing was dropped.",
     "<strong>Format kept from the drill:</strong> question visible, 💡 Hint and 🔑 Recall points hidden under <code>&lt;details&gt;</code>. <strong>One-liner:</strong> is the script you actually say.",

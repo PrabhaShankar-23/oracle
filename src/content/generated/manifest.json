@@ -2318,7 +2318,8 @@
     {
       "slug": "python",
       "number": 1,
-      "title": "🐍 PYTHON",
+      "icon": "🐍",
+      "title": "Python",
       "count": 44,
       "bands": [
         {
@@ -2368,7 +2369,8 @@
     {
       "slug": "fastapi",
       "number": 2,
-      "title": "⚡ FASTAPI",
+      "icon": "⚡",
+      "title": "FastAPI",
       "count": 40,
       "bands": [
         {
@@ -2412,7 +2414,8 @@
     {
       "slug": "java-spring",
       "number": 3,
-      "title": "☕ JAVA & SPRING",
+      "icon": "☕",
+      "title": "Java & Spring",
       "count": 40,
       "bands": [
         {
@@ -2456,7 +2459,8 @@
     {
       "slug": "llm-foundations",
       "number": 4,
-      "title": "🧠 LLM FOUNDATIONS",
+      "icon": "🧠",
+      "title": "LLM Foundations",
       "count": 45,
       "bands": [
         {
@@ -2494,7 +2498,8 @@
     {
       "slug": "rag",
       "number": 5,
-      "title": "🔍 RAG",
+      "icon": "🔍",
+      "title": "RAG",
       "count": 62,
       "bands": [
         {
@@ -2550,7 +2555,8 @@
     {
       "slug": "agentic-ai",
       "number": 6,
-      "title": "🤖 AGENTIC AI",
+      "icon": "🤖",
+      "title": "Agentic AI",
       "count": 46,
       "bands": [
         {
@@ -2606,7 +2612,8 @@
     {
       "slug": "mcp-context-engineering",
       "number": 7,
-      "title": "🔌 MCP & CONTEXT ENGINEERING",
+      "icon": "🔌",
+      "title": "MCP & Context Engineering",
       "count": 25,
       "bands": [
         {
@@ -2632,7 +2639,8 @@
     {
       "slug": "llm-serving-inference",
       "number": 8,
-      "title": "🚀 LLM SERVING & INFERENCE",
+      "icon": "🚀",
+      "title": "LLM Serving & Inference",
       "count": 30,
       "bands": [
         {
@@ -2682,7 +2690,8 @@
     {
       "slug": "ml-dl",
       "number": 11,
-      "title": "📐 CLASSICAL ML & DEEP LEARNING",
+      "icon": "📐",
+      "title": "Classical ML & Deep Learning",
       "count": 72,
       "bands": [
         {
@@ -2732,7 +2741,8 @@
     {
       "slug": "real-time-systems",
       "number": 15,
-      "title": "🎙️ REAL-TIME & VOICE",
+      "icon": "🎙️",
+      "title": "Real-Time & Voice",
       "count": 25,
       "bands": [
         {
@@ -2782,7 +2792,8 @@
     {
       "slug": "nlp-classical",
       "number": 17,
-      "title": "🔤 NLP (Classical)",
+      "icon": "🔤",
+      "title": "NLP (Classical)",
       "count": 45,
       "bands": [
         {
@@ -2856,6 +2867,141 @@
           "letter": null,
           "name": "Section 12 — Cross-Cutting & Backfill (remaining notes across folders)",
           "count": 16
+        }
+      ]
+    }
+  ],
+  "gameDayDocs": [
+    {
+      "slug": "runbook",
+      "icon": "🎯",
+      "title": "Game Day",
+      "meta": [
+        "The folder you open <strong>before</strong> an interview, not while learning. Every file here is a compression of something that already exists in the vault, written to be <strong>spoken</strong>, not read.",
+        "<strong>Bottleneck this folder targets:</strong> verbal fluency under follow-up pressure. Coverage lives elsewhere.",
+        "<strong>Generator:</strong> <span class=\"vault-ref\" title=\"meta_prompts/interview_day_prompt_v1\">interview_day_prompt_v1</span> — never hand-write a file here; generate it, then edit."
+      ],
+      "headings": [
+        {
+          "id": "the-three-formats-dont-confuse-them",
+          "text": "The three formats — don't confuse them",
+          "level": 2
+        },
+        {
+          "id": "the-18-files",
+          "text": "The 18 files",
+          "level": 2
+        },
+        {
+          "id": "trend-inputs-what-the-generator-must-pull-in",
+          "text": "📡 Trend inputs — what the generator must pull in",
+          "level": 2
+        },
+        {
+          "id": "the-daily-loop-recite-log",
+          "text": "🗣️ The daily loop — Recite-Log",
+          "level": 2
+        },
+        {
+          "id": "interview-day-runbook",
+          "text": "⏱️ Interview-day runbook",
+          "level": 2
+        },
+        {
+          "id": "jd-routing-which-files-for-which-interview",
+          "text": "🧭 JD routing — which files for which interview",
+          "level": 2
+        },
+        {
+          "id": "scoring-the-feedback-loop",
+          "text": "📊 Scoring & the feedback loop",
+          "level": 2
+        },
+        {
+          "id": "known-gaps-highest-roi-first",
+          "text": "⚠️ Known gaps (highest ROI first)",
+          "level": 2
+        },
+        {
+          "id": "source-channel-correction-aug-2026",
+          "text": "🔄 Source-channel correction (Aug 2026)",
+          "level": 2
+        },
+        {
+          "id": "change-log",
+          "text": "Change log",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "stories",
+      "icon": "🎯",
+      "title": "Project Stories",
+      "meta": [
+        "<strong>The only file that fires in every single loop.</strong> Read it at T-30m, out loud, twice.",
+        "<strong>Sources:</strong> <span class=\"vault-ref\" title=\"War-Stories\">War-Stories</span> · <span class=\"vault-ref\" title=\"00-index/01-resume/INTERVIEW_DEFENSE\">INTERVIEW_DEFENSE</span> · <span class=\"vault-ref\" title=\"Recite-Log\">Recite-Log</span> (drill these in STORY mode)"
+      ],
+      "headings": [
+        {
+          "id": "this-file-is-a-scaffold-not-a-finished-file",
+          "text": "🚨 This file is a scaffold, not a finished file",
+          "level": 2
+        },
+        {
+          "id": "s1-vhaire-the-agentic-ai-interviewer-lead-with-this-one",
+          "text": "S1 · VhAIre — the agentic AI interviewer ⭐ lead with this one",
+          "level": 2
+        },
+        {
+          "id": "s2-deepgram-ingest-backpressure-under-live-audio",
+          "text": "S2 · Deepgram ingest — backpressure under live audio ⭐",
+          "level": 2
+        },
+        {
+          "id": "s3-webrtc-turn-real-time-infrastructure",
+          "text": "S3 · WebRTC & TURN — real-time infrastructure ⭐",
+          "level": 2
+        },
+        {
+          "id": "s4-cv-parser-oomkill-the-algorithmic-one",
+          "text": "S4 · cv-parser OOMKill — the algorithmic one",
+          "level": 2
+        },
+        {
+          "id": "s5-founding-engineer-platform-0-1-the-architect-story",
+          "text": "S5 · Founding engineer — platform 0 → 1 ⭐ the architect story",
+          "level": 2
+        },
+        {
+          "id": "s6-provider-agnostic-llm-integration-layer",
+          "text": "S6 · Provider-agnostic LLM integration layer",
+          "level": 2
+        },
+        {
+          "id": "s7-aws-eks-spot-instances-vs-live-sessions",
+          "text": "S7 · AWS / EKS — spot instances vs live sessions",
+          "level": 2
+        },
+        {
+          "id": "s8-fastapi-domain-driven-refactor",
+          "text": "S8 · FastAPI domain-driven refactor",
+          "level": 2
+        },
+        {
+          "id": "s9-technical-lead-6-engineers-behavioural-every-loop-has-one",
+          "text": "S9 · Technical lead, 6 engineers (behavioural — every loop has one)",
+          "level": 2
+        },
+        {
+          "id": "which-story-for-which-prompt",
+          "text": "⏱️ Which story for which prompt",
+          "level": 2
+        },
+        {
+          "id": "completion-check",
+          "text": "✅ Completion check",
+          "level": 2
         }
       ]
     }

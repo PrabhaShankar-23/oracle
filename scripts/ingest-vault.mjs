@@ -420,6 +420,82 @@ function parseVaultLinks(line) {
   })
 }
 
+
+// Vault h1s are shouty ("🧠 LLM FOUNDATIONS"). Split the emoji off and title-case the rest,
+// preserving the acronyms, so cards and nav read as names rather than as headings.
+const GAME_DAY_ACRONYMS = new Set(['LLM', 'RAG', 'MCP', 'NLP', 'ML', 'DL', 'AI', 'API', 'GIL'])
+
+function prettifyTitle(raw) {
+  const m = /^([^\p{Letter}\p{Number}]*)(.*)$/u.exec(raw.trim())
+  const icon = (m?.[1] ?? '').trim()
+  const words = (m?.[2] ?? raw).trim()
+  const title = words
+    .split(/(\s+|[&/()-])/)
+    .map((w) => {
+      if (!/\p{Letter}/u.test(w)) return w
+      const bare = w.replace(/[^\p{Letter}]/gu, '')
+      if (GAME_DAY_ACRONYMS.has(bare.toUpperCase()) && w === w.toUpperCase()) return bare.toUpperCase()
+      if (/^FASTAPI$/i.test(bare)) return 'FastAPI'
+      return w === w.toUpperCase() ? w.charAt(0) + w.slice(1).toLowerCase() : w
+    })
+    .join('')
+  return { icon, title }
+}
+
+/**
+ * `[[04-RAG/01-foundations/02-Naive RAG pipeline]]` → "Naive RAG pipeline".
+ * Those notes aren't on the site yet, so the target becomes readable text rather than a dead link.
+ */
+function flattenVaultRefs(html) {
+  return html.replace(/\[\[([^\]]+)\]\]/g, (_, raw) => {
+    const [target, alias] = String(raw).split('|')
+    const leaf = alias ?? (target.split('/').pop() ?? target)
+    const label = leaf.replace(/^\d+[a-z]?-/, '').replace(/\.md$/, '').trim()
+    return `<span class="vault-ref" title="${target.trim()}">${label}</span>`
+  })
+}
+
+/** Prose siblings of the recall grids: the runbook and the STAR story bank. */
+const GAME_DAY_DOCS = [
+  { slug: 'runbook', file: '00-index.md' },
+  { slug: 'stories', file: '16-PROJECT-STORIES.md' },
+]
+
+async function ingestGameDayDocs() {
+  const docs = []
+  for (const { slug, file } of GAME_DAY_DOCS) {
+    const md = await readFile(path.join(VAULT, GAME_DAY_DIR, file), 'utf8')
+    const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+    const body = $('body')
+
+    const { icon, title } = prettifyTitle(
+      text(body.find('h1').first())
+        .replace(/\s*—\s*(Interview Day Recall|Index & Runbook)\s*$/i, '')
+        .trim(),
+    )
+    body.find('h1').first().remove()
+
+    const lead = body.find('blockquote').first()
+    rewriteLinks($, lead)
+    const meta = lead
+      .find('p')
+      .toArray()
+      .flatMap((p) => inner($(p)).split('\n'))
+      .map((l) => l.trim())
+      .filter(Boolean)
+    lead.remove()
+
+    rewriteLinks($, body)
+    // Flatten wiki refs in the DOM *before* collecting headings, or the TOC keeps the `[[…]]`.
+    body.html(flattenVaultRefs(inner(body)))
+    const headings = collectHeadings($, body)
+    docs.push({ slug, icon, title, meta: meta.map(flattenVaultRefs), headings, html: inner(body) })
+    console.log(`  parsed ${file} (${headings.length} headings)`)
+  }
+  await write('game-day-docs.json', { docs })
+  return docs
+}
+
 async function ingestGameDay() {
   const topics = []
 
@@ -428,7 +504,9 @@ async function ingestGameDay() {
     const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
     const body = $('body')
 
-    const title = text(body.find('h1').first()).replace(/\s*—\s*Interview Day Recall\s*$/i, '')
+    const { icon, title } = prettifyTitle(
+      text(body.find('h1').first()).replace(/\s*—\s*Interview Day Recall\s*$/i, ''),
+    )
     const lead = body.find('blockquote').first()
     const meta = lead
       .find('p')
@@ -537,7 +615,7 @@ async function ingestGameDay() {
 
     const withQuestions = bands.filter((b) => b.questions.length > 0)
     const count = withQuestions.reduce((n, b) => n + b.questions.length, 0)
-    topics.push({ slug, number, title, meta, bands: withQuestions })
+    topics.push({ slug, number, icon, title, meta, bands: withQuestions })
     console.log(`  parsed ${file} → ${count} questions in ${withQuestions.length} bands`)
   }
 
@@ -553,7 +631,8 @@ async function ingestGameDay() {
       ),
     ),
   )
-  return topics
+  const docs = await ingestGameDayDocs()
+  return { topics, docs }
 }
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
@@ -579,12 +658,17 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
       ...doc,
       headings: doc.headings.filter((h) => h.level === 2),
     })),
-    gameDay: gameDay.map((t) => ({
+    gameDay: gameDay.topics.map((t) => ({
       slug: t.slug,
       number: t.number,
+      icon: t.icon,
       title: t.title,
       count: t.bands.reduce((n, b) => n + b.questions.length, 0),
       bands: t.bands.map((b) => ({ id: b.id, letter: b.letter, name: b.name, count: b.questions.length })),
+    })),
+    gameDayDocs: gameDay.docs.map(({ html: _html, ...d }) => ({
+      ...d,
+      headings: d.headings.filter((h) => h.level === 2),
     })),
     dsaUtils: utils.flatMap((u) =>
       u.sections.flatMap((s) =>

@@ -3,7 +3,7 @@
 **Track:** L — new ingest shape, 474 questions across 11 source files, new types, new routes,
 nav + search changes, and more than one viable page design.
 
-**Status:** M1 complete (F1–F4 + nav/topic search). Remaining: F5 runbook, F6 stories, F7 per-question search, F8 polish.
+**Status:** M2 complete. All slices done except F8 polish (band filter). Section is fully navigable.
 
 **Naming.** The vault folder was renamed `02-Interview` → `02-Game-Day` on 19 Sep 2026; section title **Game Day**, route prefix `/game-day`. Section description: *"474 recall questions, trend-scanned. Question visible — answer out loud, then expand."*
 
@@ -165,16 +165,19 @@ sections (`♻️ Merged from…`) · back/forward between topics · keyboard-on
 - [x] F2 Topic page
 - [x] F3 All 11 topics
 - [x] F4 Phrasing drills
-- [ ] F5 Runbook page
-- [ ] F6 Stories page
-- [~] F7 Search — topics done; per-question index written but not wired
-- [ ] F8 Responsive & polish
+- [x] F5 Runbook page
+- [x] F6 Stories page
+- [x] F7 Search + manifest
+- [~] F8 Responsive verified; band filter still to do
 
 ## 6b. Deviations from plan
 
 - **F1 and F3 merged.** The parse was the whole risk, so it ran against all 11 files immediately rather than one — more signal for the same work.
 - **Two question shapes, not one.** The plan assumed every question was `🔑` + bullets + Flow/Trap. 153 of 474 are actually *drill-shaped* (badge → `💡 Hint` → `🔑 Recall points` → One-liner), and `17-NLP-CLASSICAL` is 100% that shape. The first JSON check caught it: those questions parsed with zero points. The parser now reads both and promotes a standalone drill to the primary answer, keeping `drill` as a separate object only where a real recall block sits beside it. **This is what F0 would have caught; the JSON diff caught it instead.**
 - **Question text moved out of `manifest.json`.** Putting all 474 in the manifest took it from 88 KB to 196 KB, and the manifest ships in the main bundle. It now carries topics + bands only (+12 KB) and question text lives in `game-day-search.json` (116 KB), to be lazy-loaded by search in F7.
+
+- **Vault titles normalised at ingest.** The h1s are shouty ("🧠 LLM FOUNDATIONS"); `prettifyTitle` splits the emoji into `icon` and title-cases the rest against an acronym set, so nav and cards read as names.
+- **Wiki refs flattened for the prose docs.** `[[04-RAG/…/Naive RAG pipeline]]` becomes a styled `.vault-ref` span, not a dead link. Flattening runs on the DOM *before* `collectHeadings`, or the TOC keeps the brackets.
 
 ## 7. Follow-ups
 

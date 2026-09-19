@@ -158,10 +158,12 @@ export type Manifest = {
   gameDay: {
     slug: string
     number: number
+    icon: string
     title: string
     count: number
     bands: { id: string; letter: string | null; name: string; count: number }[]
   }[]
+  gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
 }
 
 /* ---------------- DSA thinking playbook (hand-written, not from the vault) ---------------- */
@@ -243,10 +245,16 @@ export type GameDayBand = {
 export type GameDayTopic = {
   slug: string
   number: number
+  icon: string
   title: string
   meta: string[]
   bands: GameDayBand[]
 }
+
+/** The runbook and the story bank — prose, rendered as articles rather than Q&A. */
+export type GameDayDoc = VaultDoc & { icon: string }
+
+export type GameDayDocs = { docs: GameDayDoc[] }
 
 export type GameDaySearchEntry = {
   id: string

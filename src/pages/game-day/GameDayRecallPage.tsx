@@ -24,6 +24,9 @@ import NotFoundPage from '../NotFoundPage'
 // Vite turns this into one lazy chunk per topic, so a page loads only its own questions.
 const TOPICS = import.meta.glob<{ default: GameDayTopic }>('../../content/generated/game-day-*.json')
 
+/** Appendix bands have no letter — "♻️ Merged from JBTIQ_PY.md — 24 Aug 2026" → "Merged". */
+const shortBandName = (name: string) => name.replace(/^[^\p{Letter}]+/u, '').split(/[\s—]/)[0] || 'Extra'
+
 const MARK_LABEL: Record<GameDayMark, string> = {
   decides: '⭐ decides the round',
   trending: '🔥 trending',
@@ -80,7 +83,7 @@ export default function GameDayRecallPage() {
               key={b.id}
               size="small"
               variant="outlined"
-              label={`${b.letter ?? '•'} ${b.questions.length}`}
+              label={`${b.letter ?? shortBandName(b.name)} ${b.questions.length}`}
               onClick={() => document.getElementById(b.id)?.scrollIntoView()}
               sx={{ minHeight: 32 }}
             />
