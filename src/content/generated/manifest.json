@@ -2853,6 +2853,464 @@
       ]
     }
   ],
+  "agenticDecisions": [
+    {
+      "slug": "do-we-need-an-agent",
+      "title": "Which rung of the ladder does this task need",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "01-framing",
+      "sectionTitle": "Framing the round"
+    },
+    {
+      "slug": "clarifying-questions",
+      "title": "Which clarifying set governs the round",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "01-framing",
+      "sectionTitle": "Framing the round"
+    },
+    {
+      "slug": "autonomy-level",
+      "title": "What sets the autonomy level — and at what granularity",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "01-framing",
+      "sectionTitle": "Framing the round"
+    },
+    {
+      "slug": "metrics-before-boxes",
+      "title": "Which metrics you commit to before drawing a single box",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "01-framing",
+      "sectionTitle": "Framing the round"
+    },
+    {
+      "slug": "is-there-a-verifier",
+      "title": "Is there a verifier — and what do you build when there isn't",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "01-framing",
+      "sectionTitle": "Framing the round"
+    },
+    {
+      "slug": "round-pacing",
+      "title": "How to spend the 45 minutes of an agent prompt",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "01-framing",
+      "sectionTitle": "Framing the round"
+    },
+    {
+      "slug": "the-layers",
+      "title": "Which layers you draw, and which you name and skip",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "02-reference-architecture",
+      "sectionTitle": "Reference architecture"
+    },
+    {
+      "slug": "where-the-quality-lives",
+      "title": "Spend the next sprint on the model or on the harness",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "02-reference-architecture",
+      "sectionTitle": "Reference architecture"
+    },
+    {
+      "slug": "control-flow-vs-side-effects",
+      "title": "Where authority to act lives — in the loop or in the tool layer",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "02-reference-architecture",
+      "sectionTitle": "Reference architecture"
+    },
+    {
+      "slug": "sync-vs-async-runs",
+      "title": "Where the sync/async line falls, and what the client is promised",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "02-reference-architecture",
+      "sectionTitle": "Reference architecture"
+    },
+    {
+      "slug": "deterministic-code-wrapping",
+      "title": "Who owns the flow — your code or the model",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "02-reference-architecture",
+      "sectionTitle": "Reference architecture"
+    },
+    {
+      "slug": "managed-runtimes",
+      "title": "Managed agent runtime or your own",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "02-reference-architecture",
+      "sectionTitle": "Reference architecture"
+    },
+    {
+      "slug": "which-workflow-pattern",
+      "title": "Which of the five workflow shapes before you reach for a loop",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-control-flow",
+      "sectionTitle": "Control flow & orchestration"
+    },
+    {
+      "slug": "react-vs-plan-vs-rewoo",
+      "title": "Adaptive loop, upfront plan, or plan-then-execute-blind",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-control-flow",
+      "sectionTitle": "Control flow & orchestration"
+    },
+    {
+      "slug": "graph-or-free-loop",
+      "title": "An explicit graph, or a free loop with a step cap",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-control-flow",
+      "sectionTitle": "Control flow & orchestration"
+    },
+    {
+      "slug": "reflection-loops",
+      "title": "Whether a critic loop earns its second call",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "03-control-flow",
+      "sectionTitle": "Control flow & orchestration"
+    },
+    {
+      "slug": "framework-or-sdk",
+      "title": "Adopt an orchestration framework or stay on the plain SDK",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "03-control-flow",
+      "sectionTitle": "Control flow & orchestration"
+    },
+    {
+      "slug": "reasoning-models-as-planners",
+      "title": "A reasoning model for the planning step",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "03-control-flow",
+      "sectionTitle": "Control flow & orchestration"
+    },
+    {
+      "slug": "tool-granularity",
+      "title": "Task-level tools or a thin wrapper over your API",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "validate-at-the-boundary",
+      "title": "Constrain the output, or validate it after the fact",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "read-tools-vs-write-tools",
+      "title": "Read tools vs write tools — default-allow or default-deny",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "tool-selection-at-scale",
+      "title": "What to do when the catalogue outgrows the prompt",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "parallel-tool-calls",
+      "title": "Which tool calls are safe to run in parallel",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "mcp-adoption",
+      "title": "Adopt MCP, and build a server or consume one",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "code-execution-and-computer-use",
+      "title": "Give the agent a shell, or keep the action space typed",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "human-as-a-tool",
+      "title": "Escalation as a callable tool, or as a terminal state",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "04-tool-layer",
+      "sectionTitle": "Tool layer design"
+    },
+    {
+      "slug": "which-store-holds-this",
+      "title": "Which store holds this piece of state",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "context-budget",
+      "title": "What gets cut when the window fills — and in what order",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "context-rot",
+      "title": "Restart the context or keep compacting it",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "long-term-memory-pipeline",
+      "title": "Whether to build a long-term memory pipeline at all",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "agentic-rag-or-fixed",
+      "title": "Retrieval as a tool, or a fixed pipeline before the model",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "shared-state-across-agents",
+      "title": "Shared blackboard or message passing between agents",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "memory-backends",
+      "title": "Which memory backend, and whether to adopt a framework",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "05-memory-state",
+      "sectionTitle": "Memory, state & context"
+    },
+    {
+      "slug": "single-vs-multi-agent",
+      "title": "What justifies a second agent",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-multi-agent",
+      "sectionTitle": "Multi-agent topology"
+    },
+    {
+      "slug": "delegation-contract",
+      "title": "What goes in the delegation contract",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-multi-agent",
+      "sectionTitle": "Multi-agent topology"
+    },
+    {
+      "slug": "cost-and-error-multiplication",
+      "title": "What you tell the room multi-agent will cost",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-multi-agent",
+      "sectionTitle": "Multi-agent topology"
+    },
+    {
+      "slug": "which-topology",
+      "title": "Which topology, once you've accepted multi-agent",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-multi-agent",
+      "sectionTitle": "Multi-agent topology"
+    },
+    {
+      "slug": "coordination-failures",
+      "title": "Which coordination failure you design against first",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-multi-agent",
+      "sectionTitle": "Multi-agent topology"
+    },
+    {
+      "slug": "debate-ensembles",
+      "title": "Debate ensembles for quality",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "06-multi-agent",
+      "sectionTitle": "Multi-agent topology"
+    },
+    {
+      "slug": "checkpointing",
+      "title": "What a checkpoint contains, and how often you take one",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-durable-execution",
+      "sectionTitle": "Durable execution"
+    },
+    {
+      "slug": "partial-completion",
+      "title": "What happens to the effects a failed run already caused",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-durable-execution",
+      "sectionTitle": "Durable execution"
+    },
+    {
+      "slug": "hitl-durable-pause",
+      "title": "How a run waits for a human without holding anything",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-durable-execution",
+      "sectionTitle": "Durable execution"
+    },
+    {
+      "slug": "queues-and-backpressure",
+      "title": "What the queue does when it can't keep up",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "07-durable-execution",
+      "sectionTitle": "Durable execution"
+    },
+    {
+      "slug": "cancellation-and-timeouts",
+      "title": "What a cancel actually reaches",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "07-durable-execution",
+      "sectionTitle": "Durable execution"
+    },
+    {
+      "slug": "replay-and-time-travel",
+      "title": "Whether to support forking a run from step N",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "07-durable-execution",
+      "sectionTitle": "Durable execution"
+    },
+    {
+      "slug": "fewer-steps-or-more-gates",
+      "title": "Buy reliability with fewer steps or with verification gates",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "hard-budgets",
+      "title": "Which budgets you set, and what happens when one trips",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "retries",
+      "title": "What is safe to retry, and at which layer",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "fallback-and-circuit-breakers",
+      "title": "What you fail over to, and what trips the breaker",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "verification-gates",
+      "title": "Where the gates go, and in what order they run",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "graceful-degradation",
+      "title": "What the agent does when it can't do the whole job",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "consistency-not-peak",
+      "title": "Optimising for the best run or for every run",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "08-reliability",
+      "sectionTitle": "Reliability engineering"
+    },
+    {
+      "slug": "where-the-time-goes",
+      "title": "Which term in the latency sum you attack",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "09-latency",
+      "sectionTitle": "Latency & streaming"
+    },
+    {
+      "slug": "what-each-second-costs",
+      "title": "What you give up for each second you save",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "09-latency",
+      "sectionTitle": "Latency & streaming"
+    },
+    {
+      "slug": "stream-progress",
+      "title": "What you stream, and what it commits you to",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "09-latency",
+      "sectionTitle": "Latency & streaming"
+    },
+    {
+      "slug": "voice-turn-budget",
+      "title": "How to spend a sub-second turn budget",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "09-latency",
+      "sectionTitle": "Latency & streaming"
+    },
+    {
+      "slug": "transport",
+      "title": "Which transport carries the agent's stream",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "09-latency",
+      "sectionTitle": "Latency & streaming"
+    }
+  ],
   "gameDayDocs": [
     {
       "slug": "runbook",

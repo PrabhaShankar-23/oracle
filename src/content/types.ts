@@ -164,6 +164,14 @@ export type Manifest = {
     bands: { id: string; letter: string | null; name: string; count: number }[]
   }[]
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
+  agenticDecisions: {
+    slug: string
+    title: string
+    tier: DecisionTier
+    relevance?: string
+    section: string
+    sectionTitle: string
+  }[]
 }
 
 /* ---------------- DSA thinking playbook (hand-written, not from the vault) ---------------- */
@@ -262,4 +270,29 @@ export type GameDaySearchEntry = {
   topic: string
   topicTitle: string
   band: string
+}
+
+/* ---------------- Agentic design decisions (06-ai-systems/agentic-design) ---------------- */
+
+export type DecisionTier = 'CORE' | 'SUPPORTING' | 'BREADTH'
+
+/** One decision note: a fork an architect resolves out loud, rendered from vault Markdown. */
+export type AgenticDecision = {
+  slug: string
+  number: number
+  title: string
+  category?: string
+  relevance?: string
+  tier: DecisionTier
+  created?: string
+  section: string
+  sectionTitle: string
+  headings: Heading[]
+  html: string
+}
+
+export type AgenticSection = {
+  id: string
+  title: string
+  notes: AgenticDecision[]
 }

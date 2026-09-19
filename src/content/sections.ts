@@ -103,6 +103,12 @@ export const sections: Section[] = [
         description: 'Design-round view of agents: decisions, budgets and failure stories, 15 sections.',
         group: 'AI systems',
       })),
+      ...manifest.agenticDecisions.map((d) => ({
+        title: d.title,
+        path: `/system-design/agentic-design/${d.slug}`,
+        description: `${d.tier} · ${d.relevance ?? 'Medium'} round relevance.`,
+        group: d.sectionTitle,
+      })),
       {
         title: 'WebRTC revision cards',
         path: '/system-design/webrtc',
@@ -222,6 +228,13 @@ export const searchIndex: SearchItem[] = [
       group: 'AI systems',
     })),
   ),
+  ...manifest.agenticDecisions.map((d) => ({
+    key: `agentic:${d.slug}`,
+    label: d.title,
+    secondary: `Agentic design · ${d.sectionTitle} · ${d.tier}`,
+    path: `/system-design/agentic-design/${d.slug}`,
+    group: 'Agentic decisions',
+  })),
   ...manifest.gameDayDocs.flatMap((d) =>
     d.headings.map((h) => ({
       key: `gameday:${d.slug}:${h.id}`,

@@ -130,6 +130,8 @@ function rewriteLinks($, root) {
       a.attr('href', CASE_STUDY_ROUTE)
     } else if (/^[\w-]+\.html$/.test(href)) {
       a.attr('href', `${CASE_STUDY_ROUTE}/${href.replace('.html', '')}`)
+    } else if (href.startsWith('/')) {
+      // Already a site route — an earlier pass resolved it. Leave it alone.
     } else if (!href.startsWith('#')) {
       // Points at a vault .md file that isn't on the site yet — keep the text, drop the link.
       a.replaceWith(a.contents())
@@ -327,7 +329,8 @@ const AI_SYSTEMS_DOCS = [
 /** `[C]` / `[I]` / `[B]` tier markers become chips the page can style. */
 const TIERS = { C: 'core', I: 'important', B: 'breadth' }
 
-async function ingestAiSystems() {
+async function ingestAiSystems(agenticSections = []) {
+  const published = new Set(agenticSections.flatMap((s) => s.notes.map((n) => n.slug)))
   const docs = []
   for (const { slug, file } of AI_SYSTEMS_DOCS) {
     const md = await readFile(path.join(VAULT, AI_SYSTEMS_DIR, file), 'utf8')
@@ -352,6 +355,12 @@ async function ingestAiSystems() {
       const code = $(node)
       const tier = /^\[([CIB])\]$/.exec(text(code))
       if (tier) code.replaceWith(`<span class="tier tier-${TIERS[tier[1]]}">${tier[1]}</span>`)
+    })
+
+    body.find(`a[href*="${path.basename(AGENTIC_DIR)}/"][href$=".md"]`).each((_, node) => {
+      const a = $(node)
+      const slug = agenticSlug(path.basename(a.attr('href') ?? ''))
+      if (published.has(slug)) a.attr('href', `${AGENTIC_ROUTE}/${slug}`)
     })
 
     rewriteLinks($, body)
@@ -656,9 +665,122 @@ async function ingestGameDay() {
   return { topics, docs }
 }
 
+/* ---------------- Agentic design decisions (06-ai-systems/agentic-design) ---------------- */
+
+const AGENTIC_DIR = '01-System Design/06-ai-systems/agentic-design'
+const agenticSlug = (name) => slugify(name.replace(/\.md$/, '').replace(/^\d+[a-z]?-/, ''))
+const AGENTIC_ROUTE = '/system-design/agentic-design'
+
+const AGENTIC_SECTIONS = {
+  '01-framing': 'Framing the round',
+  '02-reference-architecture': 'Reference architecture',
+  '03-control-flow': 'Control flow & orchestration',
+  '04-tool-layer': 'Tool layer design',
+  '05-memory-state': 'Memory, state & context',
+  '06-multi-agent': 'Multi-agent topology',
+  '07-durable-execution': 'Durable execution',
+  '08-reliability': 'Reliability engineering',
+  '09-latency': 'Latency & streaming',
+}
+
+/** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */
+function parseDecisionMeta(blockquoteText) {
+  const fields = {}
+  for (const part of blockquoteText.split('·')) {
+    const m = /^\s*([^:]+):\s*(.+?)\s*$/.exec(part)
+    if (m) fields[m[1].trim().toLowerCase()] = m[2].trim()
+  }
+  return {
+    category: fields['category'],
+    relevance: fields['round relevance'],
+    tier: (fields['depth tier'] ?? '').toUpperCase(),
+    created: fields['created'],
+  }
+}
+
+async function ingestAgenticDecisions() {
+  const { readdir } = await import('node:fs/promises')
+  const parsed = []
+
+  // Pass 1 — parse every note, so pass 2 knows which slugs the series actually publishes.
+  for (const [dir, sectionTitle] of Object.entries(AGENTIC_SECTIONS)) {
+    const abs = path.join(VAULT, AGENTIC_DIR, dir)
+    let files
+    try {
+      files = (await readdir(abs)).filter((f) => f.endsWith('.md')).sort()
+    } catch {
+      console.log(`  skipped ${dir} (not present)`)
+      continue
+    }
+
+    for (const file of files) {
+      const md = await readFile(path.join(abs, file), 'utf8')
+      const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+      const body = $('body')
+
+      const rawTitle = text(body.find('h1').first())
+      body.find('h1').first().remove()
+
+      const lead = body.find('blockquote').first()
+      const meta = parseDecisionMeta(text(lead))
+      lead.remove()
+
+      parsed.push({
+        $,
+        body,
+        dir,
+        sectionTitle,
+        slug: agenticSlug(file),
+        number: Number(/^(\d+)/.exec(file)?.[1] ?? 0),
+        title: rawTitle.replace(/^Design Decision:\s*/i, ''),
+        ...meta,
+      })
+    }
+  }
+
+  const published = new Set(parsed.map((n) => n.slug))
+  const sections = []
+
+  // Pass 2 — links to other decision notes become site routes; links to anything else
+  // (prompt files, concept notes) fall through to rewriteLinks and flatten to plain text.
+  for (const note of parsed) {
+    const { $, body } = note
+    body.find('a[href$=".md"]').each((_, node) => {
+      const a = $(node)
+      const m = /(?:^|\/)([^/]+)\.md$/.exec(a.attr('href') ?? '')
+      const slug = m && agenticSlug(m[1])
+      if (slug && published.has(slug)) a.attr('href', `${AGENTIC_ROUTE}/${slug}`)
+    })
+    rewriteLinks($, body)
+    body.html(flattenVaultRefs(inner(body)))
+
+    const section = sections.find((s) => s.id === note.dir) ?? { id: note.dir, title: note.sectionTitle, notes: [] }
+    if (!sections.includes(section)) sections.push(section)
+    section.notes.push({
+      slug: note.slug,
+      number: note.number,
+      title: note.title,
+      category: note.category,
+      relevance: note.relevance,
+      tier: note.tier,
+      created: note.created,
+      section: note.dir,
+      sectionTitle: note.sectionTitle,
+      headings: collectHeadings($, body),
+      html: inner(body),
+    })
+  }
+
+  for (const section of sections) {
+    await write(`agentic-${section.id.replace(/^\d+-/, '')}.json`, section)
+    console.log(`  parsed ${section.id} → ${section.notes.length} decision notes`)
+  }
+  return sections
+}
+
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic) {
   await write('manifest.json', {
     dsa: {
       patterns: dsa.families.flatMap((f) =>
@@ -687,6 +809,16 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
       count: t.bands.reduce((n, b) => n + b.questions.length, 0),
       bands: t.bands.map((b) => ({ id: b.id, letter: b.letter, name: b.name, count: b.questions.length })),
     })),
+    agenticDecisions: agentic.flatMap((sec) =>
+      sec.notes.map((n) => ({
+        slug: n.slug,
+        title: n.title,
+        tier: n.tier,
+        relevance: n.relevance,
+        section: sec.id,
+        sectionTitle: sec.title,
+      })),
+    ),
     gameDayDocs: gameDay.docs.map(({ html: _html, ...d }) => ({
       ...d,
       headings: d.headings.filter((h) => h.level === 2),
@@ -703,11 +835,13 @@ await mkdir(OUT, { recursive: true })
 console.log(`Vault: ${VAULT}`)
 const utils = []
 for (const u of UTILS) utils.push(await ingestUtils(u))
+const agentic = await ingestAgenticDecisions()
 await writeManifest(
   await ingestColdRecall(),
   await ingestCaseStudies(),
   await ingestWebRtc(),
   utils,
-  await ingestAiSystems(),
+  await ingestAiSystems(agentic),
   await ingestGameDay(),
+  agentic,
 )
