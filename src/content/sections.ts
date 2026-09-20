@@ -33,6 +33,8 @@ export type NavPage = {
   description?: string
   /** Pages with the same group are listed together under a sub-heading. */
   group?: string
+  /** Optional second level inside a group, for groups large enough to need one. */
+  subgroup?: string
 }
 
 export type Section = {
@@ -98,16 +100,17 @@ export const sections: Section[] = [
         group: 'Case studies',
       })),
       ...manifest.aiSystems.map((d) => ({
-        title: 'Agentic system design',
+        title: 'Index — all 15 sections',
         path: `/system-design/ai-systems/${d.slug}`,
         description: 'Design-round view of agents: decisions, budgets and failure stories, 15 sections.',
-        group: 'AI systems',
+        group: 'Agentic system design',
       })),
       ...manifest.agenticDecisions.map((d) => ({
         title: d.title,
         path: `/system-design/agentic-design/${d.slug}`,
         description: `${d.tier} · ${d.relevance ?? 'Medium'} round relevance.`,
-        group: d.sectionTitle,
+        group: 'Agentic system design',
+        subgroup: d.sectionTitle,
       })),
       {
         title: 'WebRTC revision cards',
@@ -158,13 +161,26 @@ export function findSection(pathname: string) {
   return sections.find((s) => pathname === s.path || pathname.startsWith(`${s.path}/`))
 }
 
-export function groupPages(pages: NavPage[]) {
-  const groups = new Map<string, NavPage[]>()
+/**
+ * Groups pages, and splits each group into the pages that sit directly under it and the
+ * sub-groups beneath those. One group (Agentic system design) holds ~100 pages across 15
+ * sections, which needs the extra level; everything else has no sub-groups and renders flat.
+ */
+export function navTree(pages: NavPage[]) {
+  const groups = new Map<string, { direct: NavPage[]; subgroups: Map<string, NavPage[]> }>()
   for (const p of pages) {
     const key = p.group ?? ''
-    groups.set(key, [...(groups.get(key) ?? []), p])
+    const entry = groups.get(key) ?? { direct: [], subgroups: new Map<string, NavPage[]>() }
+    if (p.subgroup) entry.subgroups.set(p.subgroup, [...(entry.subgroups.get(p.subgroup) ?? []), p])
+    else entry.direct.push(p)
+    groups.set(key, entry)
   }
-  return [...groups]
+  return [...groups].map(([name, e]) => ({
+    name,
+    direct: e.direct,
+    subgroups: [...e.subgroups].map(([sub, subPages]) => ({ name: sub, pages: subPages })),
+    count: e.direct.length + [...e.subgroups.values()].reduce((n, x) => n + x.length, 0),
+  }))
 }
 
 /* ------------------------------------------------------------------ */

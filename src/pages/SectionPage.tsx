@@ -12,10 +12,11 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router'
 import PageContainer from '../components/content/PageContainer'
 import PageHeader from '../components/content/PageHeader'
-import { findSection, groupPages, type NavPage } from '../content/sections'
+import { findSection, navTree, type NavPage } from '../content/sections'
 import NotFoundPage from './NotFoundPage'
 
 /** A section small enough that collapsing its groups would only add clicks. */
@@ -49,6 +50,35 @@ function PageGrid({ pages }: { pages: NavPage[] }) {
   )
 }
 
+/** A collapsible group of pages. `level` picks the heading element and the emphasis. */
+function Panel({ label, count, level, children }: { label: string; count: number; level: 2 | 3; children: ReactNode }) {
+  return (
+    <Accordion
+      disableGutters
+      slotProps={{ transition: { unmountOnExit: true } }}
+      sx={(t) => ({
+        mt: level === 3 ? 1.5 : 0,
+        mb: 1.5,
+        borderRadius: 3,
+        border: `1px solid ${t.vars.palette.surface.outlineVariant}`,
+        backgroundColor: level === 2 ? t.vars.palette.surface.containerLowest : t.vars.palette.surface.container,
+        '&::before': { display: 'none' },
+        '&.Mui-expanded': { mt: level === 3 ? 1.5 : 0, mb: 1.5 },
+      })}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 56, px: { xs: 2, sm: 3 } }}>
+        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography variant={level === 2 ? 'h6' : 'subtitle1'} component={level === 2 ? 'h2' : 'h3'}>
+            {label}
+          </Typography>
+          <Chip label={count} size="small" />
+        </Stack>
+      </AccordionSummary>
+      <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: 3 }}>{children}</AccordionDetails>
+    </Accordion>
+  )
+}
+
 /**
  * A section's landing page: its description, then one row per group.
  *
@@ -61,7 +91,7 @@ export default function SectionPage() {
   const section = findSection(pathname)
   if (!section || section.path !== pathname) return <NotFoundPage />
 
-  const groups = groupPages(section.pages)
+  const tree = navTree(section.pages)
   const expanded = section.pages.length <= ALWAYS_OPEN
 
   return (
@@ -79,42 +109,25 @@ export default function SectionPage() {
       )}
 
       {expanded
-        ? groups.map(([group, pages]) => (
-            <Stack key={group} component="section" spacing={2} sx={{ mb: 5 }}>
-              {group && (
+        ? tree.map((group) => (
+            <Stack key={group.name} component="section" spacing={2} sx={{ mb: 5 }}>
+              {group.name && (
                 <Typography variant="h5" component="h2">
-                  {group}
+                  {group.name}
                 </Typography>
               )}
-              <PageGrid pages={pages} />
+              <PageGrid pages={group.direct} />
             </Stack>
           ))
-        : groups.map(([group, pages]) => (
-            <Accordion
-              key={group}
-              disableGutters
-              slotProps={{ transition: { unmountOnExit: true } }}
-              sx={(t) => ({
-                mb: 1.5,
-                borderRadius: 3,
-                border: `1px solid ${t.vars.palette.surface.outlineVariant}`,
-                backgroundColor: t.vars.palette.surface.containerLowest,
-                '&::before': { display: 'none' },
-                '&.Mui-expanded': { mb: 1.5 },
-              })}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ minHeight: 56, px: { xs: 2, sm: 3 } }}>
-                <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Typography variant="h6" component="h2">
-                    {group || 'Pages'}
-                  </Typography>
-                  <Chip label={pages.length} size="small" />
-                </Stack>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: { xs: 2, sm: 3 }, pb: 3 }}>
-                <PageGrid pages={pages} />
-              </AccordionDetails>
-            </Accordion>
+        : tree.map((group) => (
+            <Panel key={group.name} label={group.name || 'Pages'} count={group.count} level={2}>
+              {group.direct.length > 0 && <PageGrid pages={group.direct} />}
+              {group.subgroups.map((sub) => (
+                <Panel key={sub.name} label={sub.name} count={sub.pages.length} level={3}>
+                  <PageGrid pages={sub.pages} />
+                </Panel>
+              ))}
+            </Panel>
           ))}
     </PageContainer>
   )
