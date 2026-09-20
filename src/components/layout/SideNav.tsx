@@ -1,5 +1,6 @@
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
@@ -8,7 +9,6 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import ListSubheader from '@mui/material/ListSubheader'
 import { Fragment, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { findSection, groupPages, sections } from '../../content/sections'
@@ -18,30 +18,41 @@ type Props = {
   onNavigate?: () => void
 }
 
-/** Every vault section in vault order, with its pages nested. Used by the sidebar and the nav drawer. */
+const groupKey = (sectionId: string, group: string) => `${sectionId}::${group}`
+
+/**
+ * Every vault section in vault order, three levels deep: section → group → page.
+ *
+ * Only one section is open at a time and groups start closed, because System Design alone
+ * holds 100+ pages — expanding everything turns the sidebar into one long scroll. The section
+ * and group holding the current page open themselves so the selection is always visible.
+ */
 export default function SideNav({ onNavigate }: Props) {
   const { pathname } = useLocation()
   const current = findSection(pathname)?.id
-  // Sections with pages start open so every page is one click away.
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
+  const activeGroup = sections
+    .flatMap((s) => s.pages.map((p) => ({ s, p })))
+    .find(({ p }) => p.path === pathname)
+  const activeKey = activeGroup ? groupKey(activeGroup.s.id, activeGroup.p.group ?? '') : undefined
 
-  // Opening a page inside a collapsed section re-expands it so the selection stays visible.
+  const [openSection, setOpenSection] = useState<string | undefined>(current)
+  const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set(activeKey ? [activeKey] : []))
+
+  // Follow the route: open the section and group holding the current page, and close the rest.
   useEffect(() => {
-    if (!current) return
     // oxlint-disable-next-line react/set-state-in-effect
-    setCollapsed((c) => {
-      if (!c.has(current)) return c
-      const next = new Set(c)
-      next.delete(current)
-      return next
-    })
-  }, [current])
+    setOpenSection(current)
+    if (activeKey) {
+      // oxlint-disable-next-line react/set-state-in-effect
+      setOpenGroups((g) => (g.has(activeKey) ? g : new Set([...g, activeKey])))
+    }
+  }, [current, activeKey])
 
-  const toggle = (id: string) =>
-    setCollapsed((c) => {
-      const next = new Set(c)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
+  const toggleGroup = (key: string) =>
+    setOpenGroups((g) => {
+      const next = new Set(g)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
       return next
     })
 
@@ -49,7 +60,11 @@ export default function SideNav({ onNavigate }: Props) {
     <List component="nav" aria-label="Sections" sx={{ px: 1.5, py: 1 }}>
       {sections.map((s) => {
         const live = s.pages.length > 0
-        const open = live && !collapsed.has(s.id)
+        const open = live && openSection === s.id
+        const groups = groupPages(s.pages)
+        // One unnamed group means there is nothing to nest — list the pages directly.
+        const flat = groups.length === 1 && !groups[0][0]
+
         return (
           <Fragment key={s.id}>
             <ListItem
@@ -58,7 +73,7 @@ export default function SideNav({ onNavigate }: Props) {
                 live && (
                   <IconButton
                     edge="end"
-                    onClick={() => toggle(s.id)}
+                    onClick={() => setOpenSection((o) => (o === s.id ? undefined : s.id))}
                     aria-label={`${open ? 'Collapse' : 'Expand'} ${s.title}`}
                     aria-expanded={open}
                   >
@@ -70,7 +85,10 @@ export default function SideNav({ onNavigate }: Props) {
               <ListItemButton
                 component={Link}
                 to={s.path}
-                onClick={onNavigate}
+                onClick={() => {
+                  if (live) setOpenSection(s.id)
+                  onNavigate?.()
+                }}
                 selected={pathname === s.path}
                 sx={{ pr: live ? 6 : 2 }}
               >
@@ -90,32 +108,87 @@ export default function SideNav({ onNavigate }: Props) {
             </ListItem>
 
             {live && (
-              <Collapse in={open}>
+              <Collapse in={open} unmountOnExit>
                 <List disablePadding dense sx={{ mb: 1 }}>
-                  {groupPages(s.pages).map(([group, pages]) => (
-                    <Fragment key={group}>
-                      {group && (
-                        <ListSubheader
-                          disableSticky
-                          sx={{ bgcolor: 'transparent', pl: 7, lineHeight: '28px', typography: 'overline', color: 'primary.main' }}
-                        >
-                          {group}
-                        </ListSubheader>
-                      )}
-                      {pages.map((p) => (
-                        <ListItemButton
-                          key={p.path}
-                          component={Link}
-                          to={p.path}
-                          onClick={onNavigate}
-                          selected={pathname === p.path}
-                          sx={{ pl: 7 }}
-                        >
-                          <ListItemText primary={p.title} />
-                        </ListItemButton>
-                      ))}
-                    </Fragment>
-                  ))}
+                  {groups.map(([group, pages]) => {
+                    const key = groupKey(s.id, group)
+                    const groupOpen = flat || openGroups.has(key)
+                    const holdsCurrent = pages.some((p) => p.path === pathname)
+
+                    return (
+                      <Fragment key={key}>
+                        {!flat && (
+                          <ListItemButton
+                            onClick={() => toggleGroup(key)}
+                            aria-expanded={groupOpen}
+                            sx={{ pl: 4.5, minHeight: 44 }}
+                          >
+                            <ListItemText
+                              primary={group}
+                              slotProps={{
+                                primary: {
+                                  variant: 'body2',
+                                  sx: {
+                                    fontWeight: holdsCurrent ? 600 : 500,
+                                    color: holdsCurrent ? 'primary.main' : 'text.primary',
+                                  },
+                                },
+                              }}
+                            />
+                            <Chip
+                              label={pages.length}
+                              size="small"
+                              sx={(t) => ({
+                                mr: 0.5,
+                                height: 20,
+                                minHeight: 20,
+                                bgcolor: t.vars.palette.surface.containerHigh,
+                                color: t.vars.palette.text.secondary,
+                                '& .MuiChip-label': { px: 0.75, fontSize: '0.6875rem' },
+                              })}
+                            />
+                            <Box
+                              component={groupOpen ? ExpandLess : ExpandMore}
+                              fontSize="small"
+                              sx={{ color: 'text.secondary' }}
+                            />
+                          </ListItemButton>
+                        )}
+
+                        <Collapse in={groupOpen} unmountOnExit>
+                          <List disablePadding dense>
+                            {pages.map((p) => (
+                              <ListItemButton
+                                key={p.path}
+                                component={Link}
+                                to={p.path}
+                                onClick={onNavigate}
+                                selected={pathname === p.path}
+                                sx={{ pl: flat ? 4.5 : 6.5, minHeight: 40 }}
+                              >
+                                <ListItemText
+                                  primary={p.title}
+                                  // Decision titles are whole sentences; two lines keeps the list scannable.
+                                  slotProps={{
+                                    primary: {
+                                      variant: 'body2',
+                                      title: p.title,
+                                      sx: {
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        WebkitLineClamp: 2,
+                                        overflow: 'hidden',
+                                      },
+                                    },
+                                  }}
+                                />
+                              </ListItemButton>
+                            ))}
+                          </List>
+                        </Collapse>
+                      </Fragment>
+                    )
+                  })}
                 </List>
               </Collapse>
             )}
