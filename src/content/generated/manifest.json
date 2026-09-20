@@ -3357,6 +3357,70 @@
       "relevance": "Medium",
       "section": "10-cost",
       "sectionTitle": "Cost modelling & optimisation"
+    },
+    {
+      "slug": "break-a-leg",
+      "title": "Which leg of the trifecta you break",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "whose-authority",
+      "title": "Whose authority the tool call runs with",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "sandbox-boundary",
+      "title": "Which boundary untrusted code runs behind, and what egress it gets",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "approval-gates",
+      "title": "Where the approval gate sits, and how you prove nothing routes around it",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "guardrails",
+      "title": "Which rails you build, and whether policy runs in a model or in code",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "audit-trail",
+      "title": "Whether the audit trail is logging or a record of decision",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "tenant-isolation",
+      "title": "Isolation by filter or by construction, across all four surfaces",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "owasp-threat-modelling",
+      "title": "OWASP LLM Top 10 as a checklist you run, or a framing you cite",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "11-safety-security",
+      "sectionTitle": "Safety, security & governance"
     }
   ],
   "gameDayDocs": [

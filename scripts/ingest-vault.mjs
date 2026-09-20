@@ -682,6 +682,7 @@ const AGENTIC_SECTIONS = {
   '08-reliability': 'Reliability engineering',
   '09-latency': 'Latency & streaming',
   '10-cost': 'Cost modelling & optimisation',
+  '11-safety-security': 'Safety, security & governance',
 }
 
 /** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */
