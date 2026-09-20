@@ -3597,6 +3597,46 @@
       "relevance": "High",
       "section": "14-canonical-problems",
       "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "autonomy-is-the-dial",
+      "title": "Autonomy is the dial; reliability, cost and latency are the meters",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "15-architect-lens",
+      "sectionTitle": "Architect lens"
+    },
+    {
+      "slug": "four-buckets",
+      "title": "Which of the four buckets a failure goes in, and the evidence that puts it there",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "15-architect-lens",
+      "sectionTitle": "Architect lens"
+    },
+    {
+      "slug": "no-new-physics",
+      "title": "Lead with the backend framing, or with the agentic one",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "15-architect-lens",
+      "sectionTitle": "Architect lens"
+    },
+    {
+      "slug": "who-owns-what",
+      "title": "Who owns the tool contract, the eval set and the pager",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "15-architect-lens",
+      "sectionTitle": "Architect lens"
+    },
+    {
+      "slug": "which-axis-is-growing",
+      "title": "Which axis is growing, because 10× tools and 10× tenants break different things",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "15-architect-lens",
+      "sectionTitle": "Architect lens"
     }
   ],
   "gameDayDocs": [

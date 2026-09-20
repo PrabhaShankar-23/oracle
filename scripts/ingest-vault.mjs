@@ -686,6 +686,7 @@ const AGENTIC_SECTIONS = {
   '12-eval-observability': 'Evaluation & observability',
   '13-deployment': 'Deployment, versioning & scaling',
   '14-canonical-problems': 'Canonical design problems',
+  '15-architect-lens': 'Architect lens',
 }
 
 /** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */
