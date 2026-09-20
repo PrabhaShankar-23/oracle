@@ -685,6 +685,7 @@ const AGENTIC_SECTIONS = {
   '11-safety-security': 'Safety, security & governance',
   '12-eval-observability': 'Evaluation & observability',
   '13-deployment': 'Deployment, versioning & scaling',
+  '14-canonical-problems': 'Canonical design problems',
 }
 
 /** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */
@@ -748,7 +749,7 @@ async function ingestAgenticDecisions() {
         sectionTitle,
         slug: agenticSlug(file),
         number: Number(/^(\d+)/.exec(file)?.[1] ?? 0),
-        title: rawTitle.replace(/^Design Decision:\s*/i, ''),
+        title: rawTitle.replace(/^Design (?:Decision|Problem):\s*/i, ''),
         ...meta,
       })
     }

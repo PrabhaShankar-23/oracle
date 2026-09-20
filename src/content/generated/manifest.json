@@ -3525,6 +3525,78 @@
       "relevance": "Medium",
       "section": "13-deployment",
       "sectionTitle": "Deployment, versioning & scaling"
+    },
+    {
+      "slug": "coding-agent",
+      "title": "Coding agent",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "support-agent",
+      "title": "Support agent that takes actions",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "deep-research-agent",
+      "title": "Deep research agent",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "data-analyst-agent",
+      "title": "Data / SQL analyst agent",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "voice-agent",
+      "title": "Voice / interview agent",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "back-office-automation",
+      "title": "Back-office workflow automation",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "browser-agent",
+      "title": "Browser / computer-use agent",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "internal-agent-platform",
+      "title": "Internal agent platform for many teams",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
+    },
+    {
+      "slug": "sixty-percent-and-too-expensive",
+      "title": "\"Our agent succeeds 60% of the time and costs too much — fix it\"",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-canonical-problems",
+      "sectionTitle": "Canonical design problems"
     }
   ],
   "gameDayDocs": [
