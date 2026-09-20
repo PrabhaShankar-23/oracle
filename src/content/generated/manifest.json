@@ -5033,6 +5033,128 @@
       "sectionTitle": "Networking for AI systems"
     }
   ],
+  "python": [
+    {
+      "slug": "fundamentals-refresher",
+      "title": "The CPython Execution Model",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "names-binding-assignment",
+      "title": "Names, Binding & Assignment",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "is-vs-equals-identity-interning",
+      "title": "is vs ==, Identity & Interning",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "mutable-vs-immutable-default-trap",
+      "title": "Mutable vs Immutable & the Shared-Default Trap",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "data-model-dunder-protocols",
+      "title": "The Data Model / Dunder Protocols",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "eq-hash-contract",
+      "title": "The __eq__ / __hash__ Contract",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "slots-instance-layout",
+      "title": "__slots__ & Instance Layout",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "copy-semantics",
+      "title": "Copy Semantics (assignment vs shallow vs deep)",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "truthiness-operator-protocols",
+      "title": "Truthiness & Operator Protocols",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "equality-ordering-sorting",
+      "title": "Equality, Ordering & Sorting",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
+      "slug": "scope-legb-rule",
+      "title": "Scope & the LEGB Rule",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures"
+    },
+    {
+      "slug": "first-class-functions-closures",
+      "title": "First-Class Functions & Closures",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures"
+    },
+    {
+      "slug": "arguments-model",
+      "title": "The Arguments Model (/, *, *args, **kwargs)",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures"
+    },
+    {
+      "slug": "decorators",
+      "title": "Decorators",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures"
+    },
+    {
+      "slug": "functools-toolkit",
+      "title": "The functools Toolkit (lru_cache, partial, singledispatch, cached_property, reduce)",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures"
+    }
+  ],
   "gameDayDocs": [
     {
       "slug": "runbook",

@@ -166,6 +166,7 @@ export type Manifest = {
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
   agenticDecisions: NoteSummary[]
   networking: NoteSummary[]
+  python: NoteSummary[]
 }
 
 /** The row a note contributes to the manifest: enough for nav, search and the page header. */
@@ -310,4 +311,13 @@ export type NetworkingChapter = {
   id: string
   title: string
   notes: NetworkingNote[]
+}
+
+/** One Python concept note — same series shape, from `07-python`. */
+export type PythonNote = AgenticDecision
+
+export type PythonChapter = {
+  id: string
+  title: string
+  notes: PythonNote[]
 }

@@ -730,7 +730,8 @@ function parseDecisionMeta(blockquoteText) {
   }
   return {
     category: fields['category'],
-    relevance: fields['round relevance'] ?? fields['architect relevance'],
+    relevance:
+      fields['round relevance'] ?? fields['architect relevance'] ?? fields['seniority relevance'],
     tier: (fields['depth tier'] ?? '').toUpperCase(),
     created: fields['created'],
   }
@@ -771,92 +772,83 @@ const NETWORKING_CHAPTERS = {
   '16-ai-networking': 'Networking for AI systems',
 }
 
-/** `breadth.md` holds several notes in one file; everything else is one note per file. */
-function splitNetworkingNotes(md) {
-  const parts = md.split(/(?=^# Networking Topic: )/m).filter((x) => /^# Networking Topic: /.test(x))
-  return parts.length > 0 ? parts : []
-}
-
-async function ingestNetworking() {
+/** A vault series is one folder of chapters, each holding notes that share a header prefix. */
+async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
   const { readdir } = await import('node:fs/promises')
+  const headerRe = new RegExp(`^# ${header}: `)
+  const stripRe = new RegExp(`^${header}:\\s*`, 'i')
   const parsed = []
 
-  for (const [dir, chapterTitle] of Object.entries(NETWORKING_CHAPTERS)) {
-    const abs = path.join(VAULT, NETWORKING_DIR, dir)
+  for (const [chapterDir, chapterTitle] of Object.entries(chapters)) {
+    const abs = path.join(VAULT, dir, chapterDir)
     let files
     try {
       files = (await readdir(abs)).filter((f) => f.endsWith('.md') && f !== 'README.md').sort(numericSort)
     } catch {
-      console.log(`  skipped ${dir} (not present)`)
+      console.log(`  skipped ${chapterDir} (not present)`)
       continue
     }
 
     for (const file of files) {
       const raw = await readFile(path.join(abs, file), 'utf8')
-      const notes = splitNetworkingNotes(raw)
+      // A `breadth.md` carries several notes at once; every other file carries exactly one.
+      const split = raw.split(new RegExp(`(?=${headerRe.source})`, 'm')).filter((x) => headerRe.test(x))
+      const notes = split.length > 0 ? split : []
+
       for (const md of notes) {
         const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
         const body = $('body')
 
-        const rawTitle = text(body.find('h1').first())
-        const title = rawTitle.replace(/^Networking Topic:\s*/i, '')
+        const title = text(body.find('h1').first()).replace(stripRe, '')
         body.find('h1').first().remove()
 
         const lead = body.find('blockquote').first()
         const meta = parseDecisionMeta(text(lead))
         lead.remove()
 
-        // Item number comes from the metadata, so notes sharing breadth.md still order correctly.
+        // Order by the metadata's item number where there is one, else by the filename.
         const item = Number(/\(Item\s+(\d+)\)/.exec(meta.category ?? '')?.[1] ?? 0)
-        // A note's own file gives it a short, hand-chosen URL; breadth.md holds several
-        // notes, so those take their slug from the title instead.
-        const slug = file === 'breadth.md' ? slugify(title) : agenticSlug(file)
-        parsed.push({
-          $,
-          body,
-          dir,
-          chapterTitle,
-          slug,
-          number: item,
-          title,
-          ...meta,
-        })
+        const fileNo = Number(/^(\d+)/.exec(file)?.[1] ?? 0)
+        // A note's own file gives it a short, hand-chosen URL. A shared file (breadth.md) names
+        // no single note, so those take the title — including when it currently holds just one.
+        const shared = /^breadth\./.test(file)
+        const slug = shared ? slugify(title) : agenticSlug(file)
+        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, number: item || fileNo, title, ...meta })
       }
     }
   }
 
-  // Two chapters can hold the same filename (l4-vs-l7 appears in 01 and 11); the later one
-  // takes the chapter as a prefix so every note keeps a stable, unique URL.
+  // Two chapters can hold the same filename; the later one takes the chapter as a prefix so
+  // every note keeps a stable, unique URL.
   const seen = new Set()
   for (const n of parsed) {
     if (seen.has(n.slug)) n.slug = `${n.dir.replace(/^\d+-/, '')}-${n.slug}`
     seen.add(n.slug)
   }
   const dupes = parsed.map((n) => n.slug).filter((x, i, a) => a.indexOf(x) !== i)
-  if (dupes.length > 0) throw new Error(`Duplicate networking slugs: ${[...new Set(dupes)].join(', ')}`)
+  if (dupes.length > 0) throw new Error(`Duplicate ${prefix} slugs: ${[...new Set(dupes)].join(', ')}`)
 
   const published = new Set(parsed.map((n) => n.slug))
   const byFile = new Map(parsed.map((n) => [`${n.dir}/${n.number}`, n.slug]))
-  const chapters = []
+  const out = []
 
   for (const note of parsed) {
     const { $, body } = note
-    // Links to another networking note become site routes; anything else flattens to text.
+    // Links to another note in this series become site routes; anything else flattens to text.
     body.find('a[href$=".md"]').each((_, node) => {
       const a = $(node)
       const href = a.attr('href') ?? ''
       const n = /(?:^|\/)(\d+)[a-z]?-[^/]*\.md$/.exec(href)
-      const dir = /(?:^|\/)(\d{2}-[a-z-]+)\//.exec(href)?.[1] ?? note.dir
-      const target = n ? byFile.get(`${dir}/${Number(n[1])}`) : undefined
-      if (target && published.has(target)) a.attr('href', `${NETWORKING_ROUTE}/${target}`)
+      const chapterDir = /(?:^|\/)(\d{2}-[a-z-]+)\//.exec(href)?.[1] ?? note.dir
+      const target = n ? byFile.get(`${chapterDir}/${Number(n[1])}`) : undefined
+      if (target && published.has(target)) a.attr('href', `${route}/${target}`)
     })
     rewriteLinks($, body)
     promoteMermaidFences($, body)
     flattenVaultRefsWithin($, body)
 
-    const chapter =
-      chapters.find((c) => c.id === note.dir) ?? { id: note.dir, title: note.chapterTitle, notes: [] }
-    if (!chapters.includes(chapter)) chapters.push(chapter)
+    const chapter = out.find((c) => c.id === note.dir) ?? { id: note.dir, title: note.chapterTitle, notes: [] }
+    if (!out.includes(chapter)) out.push(chapter)
     chapter.notes.push({
       slug: note.slug,
       number: note.number,
@@ -872,13 +864,40 @@ async function ingestNetworking() {
     })
   }
 
-  for (const chapter of chapters) {
+  for (const chapter of out) {
     chapter.notes.sort((a, b) => a.number - b.number)
-    await write(`networking-${chapter.id.replace(/^\d+-/, '')}.json`, chapter)
-    console.log(`  parsed ${chapter.id} → ${chapter.notes.length} networking notes`)
+    await write(`${prefix}-${chapter.id.replace(/^\d+-/, '')}.json`, chapter)
+    console.log(`  parsed ${chapter.id} → ${chapter.notes.length} ${prefix} notes`)
   }
-  return chapters
+  return out
 }
+
+const ingestNetworking = () =>
+  ingestNoteSeries({
+    dir: NETWORKING_DIR,
+    chapters: NETWORKING_CHAPTERS,
+    route: NETWORKING_ROUTE,
+    header: 'Networking Topic',
+    prefix: 'networking',
+  })
+
+/* ---------------- Python (07-python) ---------------- */
+
+const PYTHON_DIR = '07-python'
+const PYTHON_ROUTE = '/python'
+const PYTHON_CHAPTERS = {
+  '01-data-model-object-semantics': 'Data model & object semantics',
+  '02-functions-scope-closures': 'Functions, scope & closures',
+}
+
+const ingestPython = () =>
+  ingestNoteSeries({
+    dir: PYTHON_DIR,
+    chapters: PYTHON_CHAPTERS,
+    route: PYTHON_ROUTE,
+    header: 'Python Topic',
+    prefix: 'python',
+  })
 
 async function ingestAgenticDecisions() {
   const { readdir } = await import('node:fs/promises')
@@ -963,7 +982,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, python) {
   await write('manifest.json', {
     dsa: {
       patterns: dsa.families.flatMap((f) =>
@@ -1012,6 +1031,16 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
         sectionTitle: ch.title,
       })),
     ),
+    python: python.flatMap((ch) =>
+      ch.notes.map((n) => ({
+        slug: n.slug,
+        title: n.title,
+        tier: n.tier,
+        relevance: n.relevance,
+        section: ch.id,
+        sectionTitle: ch.title,
+      })),
+    ),
     gameDayDocs: gameDay.docs.map(({ html: _html, ...d }) => ({
       ...d,
       headings: d.headings.filter((h) => h.level === 2),
@@ -1030,6 +1059,7 @@ const utils = []
 for (const u of UTILS) utils.push(await ingestUtils(u))
 const agentic = await ingestAgenticDecisions()
 const networking = await ingestNetworking()
+const python = await ingestPython()
 await writeManifest(
   await ingestColdRecall(),
   await ingestCaseStudies(),
@@ -1039,4 +1069,5 @@ await writeManifest(
   await ingestGameDay(),
   agentic,
   networking,
+  python,
 )
