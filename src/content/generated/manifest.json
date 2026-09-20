@@ -3639,6 +3639,1400 @@
       "sectionTitle": "Architect lens"
     }
   ],
+  "networking": [
+    {
+      "slug": "osi-model",
+      "title": "The OSI 7-Layer Model",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "tcp-ip-model",
+      "title": "The TCP/IP (4-Layer) Model",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "encapsulation",
+      "title": "Encapsulation",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "l4-vs-l7",
+      "title": "L4 vs L7 — What the Distinction Actually Means",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "communication-shapes",
+      "title": "The Four Communication Shapes",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "latency-bandwidth-throughput",
+      "title": "Latency vs Bandwidth vs Throughput",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "bandwidth-delay-product",
+      "title": "Bandwidth-Delay Product",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "speed-of-light-budget",
+      "title": "The Speed-of-Light Budget",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "the-number-line",
+      "title": "The Number Line That Matters (L1 → Cross-Continent)",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "ip-addressing",
+      "title": "IP Addressing — IPv4, IPv6, and Why IPv6 Keeps Appearing in Cloud Defaults",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "subnets-cidr",
+      "title": "Subnets & CIDR Notation",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "private-vs-public-ip",
+      "title": "Private vs Public IP Ranges",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "mtu-fragmentation-pmtud",
+      "title": "Packets, MTU, Fragmentation & Path MTU Discovery",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "routing-basics",
+      "title": "Routing Basics — Tables, Default Gateway, Next Hop",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "nat",
+      "title": "NAT — Source NAT, Destination NAT & Port Exhaustion",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "arp-mac-addresses",
+      "title": "ARP & MAC Addresses",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "bgp-the-internets-routing-fabric",
+      "title": "BGP & the Internet's Routing Fabric",
+      "tier": "BREADTH",
+      "relevance": "High",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "anycast",
+      "title": "Anycast",
+      "tier": "BREADTH",
+      "relevance": "High",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "tcp-vs-udp",
+      "title": "TCP vs UDP — The Decision Table",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "three-way-handshake",
+      "title": "The TCP 3-Way Handshake",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "connection-teardown",
+      "title": "Connection Teardown — FIN/ACK and TIME_WAIT",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "sequence-numbers-acks-retransmission",
+      "title": "Sequence Numbers, ACKs & Retransmission",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "flow-control",
+      "title": "Flow Control — The Receive Window & Zero-Window Stalls",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "congestion-control",
+      "title": "Congestion Control — Slow Start, CUBIC & BBR",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "tcp-head-of-line-blocking",
+      "title": "TCP Head-of-Line Blocking",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "nagles-algorithm-tcpnodelay",
+      "title": "Nagle's Algorithm & TCP_NODELAY",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "keepalives-idle-timeouts",
+      "title": "Keepalives, Idle Timeouts & Half-Open Connections",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "sockets-ports-ephemeral-range",
+      "title": "Sockets, Ports & the Ephemeral Port Range",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "when-udp-is-right",
+      "title": "When UDP Is Right",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "dns-resolution",
+      "title": "What DNS Resolution Actually Does",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
+    },
+    {
+      "slug": "record-types",
+      "title": "Record Types You'll Use",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
+    },
+    {
+      "slug": "ttl-and-caching-layers",
+      "title": "TTL & Caching Layers",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
+    },
+    {
+      "slug": "dns-load-balancing",
+      "title": "DNS-Based Load Balancing & Failover",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
+    },
+    {
+      "slug": "private-dns-service-discovery",
+      "title": "Private DNS & Service Discovery",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
+    },
+    {
+      "slug": "dns-as-an-outage-cause",
+      "title": "DNS as an Outage Cause",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
+    },
+    {
+      "slug": "what-tls-gives-you",
+      "title": "What TLS Gives You — Encryption, Integrity, Identity",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
+    },
+    {
+      "slug": "tls13-handshake",
+      "title": "The TLS 1.3 Handshake — 1-RTT, 0-RTT, and What 1.2 Cost",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
+    },
+    {
+      "slug": "certificates-chains-of-trust",
+      "title": "Certificates & Chains of Trust",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
+    },
+    {
+      "slug": "termination-passthrough-reencryption",
+      "title": "TLS Termination vs Pass-Through vs Re-encryption",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
+    },
+    {
+      "slug": "mtls",
+      "title": "mTLS — Mutual Authentication and Service-Mesh Zero Trust",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
+    },
+    {
+      "slug": "http-as-a-protocol",
+      "title": "HTTP as a Protocol — Message Anatomy & Statelessness",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http10-vs-11",
+      "title": "HTTP/1.0 vs HTTP/1.1 — Persistence, Host, and Chunked Encoding",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http11-limits",
+      "title": "HTTP/1.1's Limits — One Request in Flight, and the 6-Connection Cap",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http-pipelining",
+      "title": "HTTP Pipelining",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http2-binary-framing",
+      "title": "HTTP/2 — Binary Framing, Streams & Multiplexing",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "hpack-priorities-push",
+      "title": "HPACK, Stream Priorities & Server Push",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http2-remaining-flaw",
+      "title": "HTTP/2's Remaining Flaw — TCP Still Stalls Every Stream",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "quic",
+      "title": "QUIC — UDP Transport with Built-in TLS 1.3 and Per-Stream Recovery",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "quic-connection-migration",
+      "title": "Connection Migration in QUIC",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http3-semantics-over-quic",
+      "title": "HTTP/3 — HTTP Semantics over QUIC",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "when-each-version-matters",
+      "title": "When Each HTTP Version Actually Matters",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "grpc-on-http2",
+      "title": "gRPC's Dependence on HTTP/2 — and the Load-Balancing Problem",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "protocol-negotiation-alpn-and-alt-svc",
+      "title": "Protocol Negotiation — ALPN and Alt-Svc",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "methods",
+      "title": "HTTP Methods & Their Contracts",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "safe-idempotent-cacheable",
+      "title": "Safe vs Idempotent vs Cacheable",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "status-codes",
+      "title": "Status Codes — the practical map",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "choosing-the-right-code",
+      "title": "Choosing the Right Status Code",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "headers",
+      "title": "Headers That Matter",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "http-caching",
+      "title": "HTTP Caching",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "cookies",
+      "title": "Cookies and Cookie Attributes",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "cors",
+      "title": "CORS and Preflight Requests",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "content-negotiation-and-compression",
+      "title": "Content Negotiation and Compression",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "range-requests-and-resumable-downloads",
+      "title": "Range Requests and Resumable Downloads",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "idempotency-keys",
+      "title": "Idempotency Keys",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "timeouts-retries-backoff",
+      "title": "Timeouts, Retries & Exponential Backoff with Jitter",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "rate-limiting",
+      "title": "Rate Limiting and 429",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "four-options",
+      "title": "The Four Real-Time Options — Polling, Long Polling, SSE, WebSocket",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "server-sent-events",
+      "title": "Server-Sent Events (SSE)",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "websocket",
+      "title": "WebSocket — Handshake, Frames, Full Duplex, Subprotocols",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "websocket-operational-reality",
+      "title": "WebSocket Operational Reality — Stickiness, Timeouts, Heartbeats, Resume, Fan-out",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "choosing-realtime-transport",
+      "title": "SSE vs WebSocket vs HTTP/2 Streaming vs gRPC Streaming — The Decision Framework",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "backpressure",
+      "title": "Backpressure in Streaming Systems",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "webtransport",
+      "title": "WebTransport",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "what-webrtc-is-for",
+      "title": "What WebRTC Is For",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "the-three-apis",
+      "title": "The Three WebRTC APIs",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "signaling",
+      "title": "Signaling — The Part WebRTC Does Not Define",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "sdp-offer-answer",
+      "title": "SDP Offer/Answer",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "ice-stun-turn",
+      "title": "ICE, STUN & TURN — NAT Traversal",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "nat-types-why-p2p-fails",
+      "title": "NAT Types & Why P2P Fails",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "webrtcs-transport-stack",
+      "title": "WebRTC's Transport Stack",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "data-channels",
+      "title": "Data Channels",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "topologies-mesh-sfu-mcu",
+      "title": "Topologies — Mesh vs SFU vs MCU",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "media-pipeline-basics",
+      "title": "Media Pipeline Basics",
+      "tier": "BREADTH",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "webrtc-for-voice-ai",
+      "title": "WebRTC for Voice AI",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "webrtc-vs-websocket-for-audio",
+      "title": "WebRTC vs WebSocket for Audio",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "rest",
+      "title": "REST — Resources, Verbs, Statelessness, HATEOAS",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "rest-api-design",
+      "title": "REST API Design — Naming, Pagination, Filtering, Versioning, Error Envelopes",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "rpc-style-apis",
+      "title": "RPC-Style APIs & When They Beat REST",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "grpc",
+      "title": "gRPC — Protocol Buffers, HTTP/2 Transport, Codegen, the Four Call Types",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "grpc-in-production",
+      "title": "gRPC in Production — Deadlines, Interceptors, Load Balancing, gRPC-Web, Schema Evolution",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "graphql",
+      "title": "GraphQL — Single Endpoint, Client-Specified Queries, N+1, Persisted Queries, Caching",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "webhooks",
+      "title": "Webhooks — Signature Verification, Retries, Idempotency, Replay Protection",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "queues-and-event-streams",
+      "title": "Message Queues & Event Streams — SQS/RabbitMQ vs Kafka, Delivery Semantics, Ordering, DLQs",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "sync-vs-async",
+      "title": "Sync vs Async — Request/Response, Queue, Event-Driven",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "long-running-jobs",
+      "title": "Long-Running Jobs over HTTP — 202 + Polling vs Callback vs Streaming",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "ai-stack-protocols",
+      "title": "Server Protocols in the AI Stack — HTTP+SSE, MCP, A2A",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "api-choice-framework",
+      "title": "The API Choice Framework — REST vs gRPC vs GraphQL vs WebSocket vs SSE vs Queue",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "schema-contracts-compatibility",
+      "title": "Schema, Contracts & Compatibility — OpenAPI, Protobuf, Contract Testing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "api-authentication",
+      "title": "API Authentication — API Keys, OAuth2, JWT, mTLS, HMAC Signing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "api-versioning-deprecation",
+      "title": "API Versioning & Deprecation Strategy",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
+      "slug": "forward-vs-reverse-proxy",
+      "title": "Forward Proxy vs Reverse Proxy",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "reverse-proxy-responsibilities",
+      "title": "Reverse Proxy Responsibilities",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "l4-load-balancing",
+      "title": "L4 (TCP/UDP) Load Balancing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "l7-load-balancing",
+      "title": "L7 (HTTP) Load Balancing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "proxies-load-balancers-l4-vs-l7",
+      "title": "L4 vs L7 Load Balancing — The Tradeoff Table",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "load-balancing-algorithms",
+      "title": "Load Balancing Algorithms",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "consistent-hashing",
+      "title": "Consistent Hashing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "sticky-sessions",
+      "title": "Sticky Sessions / Session Affinity",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "health-checks",
+      "title": "Health Checks",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "outlier-detection-circuit-breaking",
+      "title": "Outlier Detection, Circuit Breaking, Draining & Graceful Shutdown",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "grpc-http2-load-balancing",
+      "title": "The gRPC / HTTP2 Load Balancing Problem",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "global-load-balancing",
+      "title": "Global Load Balancing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "api-gateway",
+      "title": "API Gateway",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "ingress-controllers",
+      "title": "Ingress Controllers & the Gateway API",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "service-mesh",
+      "title": "Service Mesh",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "cdn-and-edge",
+      "title": "CDN & Edge",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "waf-ddos-protection-bot-mitigation",
+      "title": "WAF, DDoS Protection & Bot Mitigation",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "buffering-vs-streaming-proxies",
+      "title": "Buffering vs Streaming Proxies",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "vpc-mental-model",
+      "title": "VPC — The Mental Model",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "subnets-azs-cidr-planning",
+      "title": "Subnets, AZs & CIDR Planning",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "igw-nat-egress",
+      "title": "Internet Gateway, NAT Gateway & Egress",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "route-tables",
+      "title": "Route Tables",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "security-groups-vs-nacls",
+      "title": "Security Groups vs Network ACLs",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "vpc-peering",
+      "title": "VPC Peering",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "transit-gateway",
+      "title": "Transit Gateway & Hub-and-Spoke",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "privatelink-vpc-endpoints",
+      "title": "PrivateLink & VPC Endpoints",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "site-to-site-vpn-vs-direct-connect",
+      "title": "Site-to-Site VPN vs Direct Connect",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "client-vpn-bastion-ssm-patterns-for-operator-access",
+      "title": "Client VPN, Bastion & SSM Patterns for Operator Access",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "cloud-load-balancer-types",
+      "title": "Load Balancer Types in Cloud",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "private-dns-cloud",
+      "title": "Private DNS in the Cloud",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "egress-cost-data-transfer",
+      "title": "Egress Cost & Data Transfer Pricing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "multi-region-networking",
+      "title": "Multi-Region Networking",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "network-security-posture",
+      "title": "Network Security Posture",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "k8s-networking-model",
+      "title": "The Kubernetes Networking Model",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "cni-plugins",
+      "title": "CNI Plugins",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "services-and-kube-proxy",
+      "title": "Services & kube-proxy",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "headless-services-statefulset-dns",
+      "title": "Headless Services & StatefulSet DNS",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "ingress-gateway-mesh",
+      "title": "Ingress vs Gateway API vs Service Mesh",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "coredns-service-discovery",
+      "title": "CoreDNS & In-Cluster Service Discovery",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "network-policies",
+      "title": "Network Policies",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "probes-vs-lb-health-checks",
+      "title": "Probes vs Load Balancer Health Checks",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "rollouts-connection-handling",
+      "title": "Rollouts & Connection Handling",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "gpu-inference-load-balancing",
+      "title": "Load Balancing GPU & Inference Workloads",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "13-kubernetes-networking",
+      "sectionTitle": "Kubernetes networking"
+    },
+    {
+      "slug": "where-latency-goes",
+      "title": "Where Latency Actually Goes",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "connection-pooling-keepalive",
+      "title": "Connection Pooling & Keep-Alive",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "timeout-hierarchy",
+      "title": "Timeout Hierarchy",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "retries-done-right",
+      "title": "Retries Done Right",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "circuit-breakers-bulkheads",
+      "title": "Circuit Breakers, Bulkheads & Load Shedding",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "queueing-theory",
+      "title": "Queueing Theory in One Page",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "tail-latency",
+      "title": "Tail Latency",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "head-of-line-blocking",
+      "title": "Head-of-Line Blocking — Four Places, One Idea",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "idempotency-exactly-once",
+      "title": "Idempotency & the Exactly-Once Delusion",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "graceful-degradation-backpressure",
+      "title": "Graceful Degradation & Backpressure",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "cascading-failures",
+      "title": "Cascading Failures & Thundering Herds",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "capacity-planning",
+      "title": "Capacity Planning",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "14-performance-reliability",
+      "sectionTitle": "Performance & reliability"
+    },
+    {
+      "slug": "curl-mastery",
+      "title": "curl Mastery — Splitting a Latency Number Into Five",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "dns-tools",
+      "title": "DNS Tools — dig, +trace, and Reading an Answer Honestly",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "path-reachability",
+      "title": "Path & Reachability — ping, mtr, and Proving a Port Is Open",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "socket-state",
+      "title": "Socket State — ss, and What Each State Is Accusing",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "packet-capture-tcpdump-and-when-you-actually-need-wireshark",
+      "title": "Packet Capture — tcpdump and When You Actually Need Wireshark",
+      "tier": "BREADTH",
+      "relevance": "Medium",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "browser-devtools-network",
+      "title": "The Browser Network Panel — The Client curl Cannot Imitate",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "distributed-tracing",
+      "title": "Distributed Tracing — One ID That Survives Every Hop",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "metrics-that-matter",
+      "title": "The Metrics That Matter — RED at Every Hop, Plus What Runs Out",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "triage-playbooks",
+      "title": "Triage Playbooks — Symptom → Three Checks → Owner",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "15-observability-debugging",
+      "sectionTitle": "Observability & debugging"
+    },
+    {
+      "slug": "streaming-llm-tokens",
+      "title": "Streaming LLM Tokens End-to-End — Every Hop Must Not Buffer",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "time-to-first-token",
+      "title": "Time-to-First-Token as a Network Problem",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "long-lived-connections-at-scale",
+      "title": "Long-Lived Connections at Scale — Idle Timeouts, Connection Limits, Heartbeats for Multi-Minute Generations",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "voice-agents",
+      "title": "Voice Agents — The Realtime Path and Its Latency Budget",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "inference-load-balancing",
+      "title": "Inference Load Balancing — Least-Request, Queue-Depth, and Affinity for KV-Cache Reuse",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "provider-timeouts-and-retries",
+      "title": "Timeouts & Retries Against LLM Providers",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "agent-tool-networking",
+      "title": "Agent & Tool Networking — MCP Transports, Egress, and SSRF Risk",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "egress-security-for-agents",
+      "title": "Egress Security for Agents — Allowlists, Metadata Blocking, Sandbox Isolation",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "cost-and-data-path",
+      "title": "Cost & Data-Path Design for AI Workloads",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    },
+    {
+      "slug": "multi-tenant-isolation",
+      "title": "Multi-Tenant Isolation on the Network Path",
+      "tier": "SUPPORTING",
+      "relevance": "High",
+      "section": "16-ai-networking",
+      "sectionTitle": "Networking for AI systems"
+    }
+  ],
   "gameDayDocs": [
     {
       "slug": "runbook",

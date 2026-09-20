@@ -164,14 +164,18 @@ export type Manifest = {
     bands: { id: string; letter: string | null; name: string; count: number }[]
   }[]
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
-  agenticDecisions: {
-    slug: string
-    title: string
-    tier: DecisionTier
-    relevance?: string
-    section: string
-    sectionTitle: string
-  }[]
+  agenticDecisions: NoteSummary[]
+  networking: NoteSummary[]
+}
+
+/** The row a note contributes to the manifest: enough for nav, search and the page header. */
+export type NoteSummary = {
+  slug: string
+  title: string
+  tier: DecisionTier
+  relevance?: string
+  section: string
+  sectionTitle: string
 }
 
 /* ---------------- DSA thinking playbook (hand-written, not from the vault) ---------------- */
@@ -295,4 +299,15 @@ export type AgenticSection = {
   id: string
   title: string
   notes: AgenticDecision[]
+}
+
+/* ---------------- Networking (01-Networking) ---------------- */
+
+/** One networking concept note. Same shape as an agentic decision — one series, two folders. */
+export type NetworkingNote = AgenticDecision
+
+export type NetworkingChapter = {
+  id: string
+  title: string
+  notes: NetworkingNote[]
 }

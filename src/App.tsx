@@ -16,6 +16,7 @@ const CaseStudyPage = lazy(() => import('./pages/system-design/CaseStudyPage'))
 const WebRtcPage = lazy(() => import('./pages/system-design/WebRtcPage'))
 const AiSystemsPage = lazy(() => import('./pages/system-design/AiSystemsPage'))
 const AgenticDecisionPage = lazy(() => import('./pages/system-design/AgenticDecisionPage'))
+const NetworkingNotePage = lazy(() => import('./pages/system-design/NetworkingNotePage'))
 const GameDayRecallPage = lazy(() => import('./pages/game-day/GameDayRecallPage'))
 const GameDayDocPage = lazy(() => import('./pages/game-day/GameDayDocPage'))
 
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="system-design/webrtc" element={<WebRtcPage />} />
           <Route path="system-design/ai-systems/:slug" element={<AiSystemsPage />} />
           <Route path="system-design/agentic-design/:slug" element={<AgenticDecisionPage />} />
+          <Route path="system-design/networking/:slug" element={<NetworkingNotePage />} />
           <Route path="game-day/recall/:slug" element={<GameDayRecallPage />} />
           <Route path="game-day/:slug" element={<GameDayDocPage />} />
           <Route path="*" element={<NotFoundPage />} />

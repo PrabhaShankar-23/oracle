@@ -455,13 +455,43 @@ function prettifyTitle(raw) {
  * `[[04-RAG/01-foundations/02-Naive RAG pipeline]]` → "Naive RAG pipeline".
  * Those notes aren't on the site yet, so the target becomes readable text rather than a dead link.
  */
+const escapeHtml = (t) =>
+  t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+const vaultRefSpan = (raw) => {
+  const [target, alias] = String(raw).split('|')
+  const leaf = alias ?? (target.split('/').pop() ?? target)
+  const label = leaf.replace(/^\d+[a-z]?-/, '').replace(/\.md$/, '').trim()
+  return `<span class="vault-ref" title="${escapeHtml(target.trim())}">${escapeHtml(label)}</span>`
+}
+
 function flattenVaultRefs(html) {
-  return html.replace(/\[\[([^\]]+)\]\]/g, (_, raw) => {
-    const [target, alias] = String(raw).split('|')
-    const leaf = alias ?? (target.split('/').pop() ?? target)
-    const label = leaf.replace(/^\d+[a-z]?-/, '').replace(/\.md$/, '').trim()
-    return `<span class="vault-ref" title="${target.trim()}">${label}</span>`
-  })
+  return html.replace(/\[\[([^\]]+)\]\]/g, (_, raw) => vaultRefSpan(raw))
+}
+
+/**
+ * Same rewrite, but over the DOM so it skips code and diagrams.
+ *
+ * Mermaid uses `[[label]]` for a subroutine node, so a blind string replace turns a valid
+ * diagram into a broken one. Run this after `promoteMermaidFences` and it never sees either.
+ */
+function flattenVaultRefsWithin($, body) {
+  const SKIP = new Set(['pre', 'code', 'script', 'style'])
+  const walk = (node) => {
+    for (const child of $(node).contents().toArray()) {
+      if (child.type === 'text') {
+        const t = child.data ?? ''
+        if (!t.includes('[[')) continue
+        const html = t.replace(/(\[\[[^\]]+\]\])|([^[]+|\[)/g, (m, ref, lit) =>
+          ref ? vaultRefSpan(ref.slice(2, -2)) : escapeHtml(lit),
+        )
+        if (html !== t) $(child).replaceWith(html)
+      } else if (child.type === 'tag' && !SKIP.has(child.name) && !$(child).hasClass('mermaid')) {
+        walk(child)
+      }
+    }
+  }
+  walk(body)
 }
 
 /** Prose siblings of the recall grids: the runbook and the STAR story bank. */
@@ -668,6 +698,8 @@ async function ingestGameDay() {
 /* ---------------- Agentic design decisions (06-ai-systems/agentic-design) ---------------- */
 
 const AGENTIC_DIR = '01-System Design/06-ai-systems/agentic-design'
+const numericSort = (a, b) =>
+  (Number(/^(\d+)/.exec(a)?.[1] ?? 0) - Number(/^(\d+)/.exec(b)?.[1] ?? 0)) || a.localeCompare(b)
 const agenticSlug = (name) => slugify(name.replace(/\.md$/, '').replace(/^\d+[a-z]?-/, ''))
 const AGENTIC_ROUTE = '/system-design/agentic-design'
 
@@ -698,7 +730,7 @@ function parseDecisionMeta(blockquoteText) {
   }
   return {
     category: fields['category'],
-    relevance: fields['round relevance'],
+    relevance: fields['round relevance'] ?? fields['architect relevance'],
     tier: (fields['depth tier'] ?? '').toUpperCase(),
     created: fields['created'],
   }
@@ -714,6 +746,138 @@ function promoteMermaidFences($, body) {
     const figure = $('<figure></figure>').append($('<div class="mermaid"></div>').text(code.text()))
     code.parent().replaceWith(figure)
   })
+}
+
+/* ---------------- Networking (01-System Design/01-Networking) ---------------- */
+
+const NETWORKING_DIR = '01-System Design/01-Networking'
+const NETWORKING_ROUTE = '/system-design/networking'
+const NETWORKING_CHAPTERS = {
+  '01-mental-models': 'Mental models',
+  '02-ip-packets-routing': 'IP, packets & routing',
+  '03-tcp-udp': 'TCP & UDP',
+  '04-dns': 'DNS',
+  '05-tls': 'TLS',
+  '06-http-versions': 'HTTP versions',
+  '07-http-semantics': 'HTTP semantics',
+  '08-realtime-streaming': 'Real-time & streaming',
+  '09-webrtc': 'WebRTC',
+  '10-api-protocols': 'API protocols',
+  '11-proxies-load-balancers': 'Proxies & load balancers',
+  '12-cloud-networking': 'Cloud networking',
+  '13-kubernetes-networking': 'Kubernetes networking',
+  '14-performance-reliability': 'Performance & reliability',
+  '15-observability-debugging': 'Observability & debugging',
+  '16-ai-networking': 'Networking for AI systems',
+}
+
+/** `breadth.md` holds several notes in one file; everything else is one note per file. */
+function splitNetworkingNotes(md) {
+  const parts = md.split(/(?=^# Networking Topic: )/m).filter((x) => /^# Networking Topic: /.test(x))
+  return parts.length > 0 ? parts : []
+}
+
+async function ingestNetworking() {
+  const { readdir } = await import('node:fs/promises')
+  const parsed = []
+
+  for (const [dir, chapterTitle] of Object.entries(NETWORKING_CHAPTERS)) {
+    const abs = path.join(VAULT, NETWORKING_DIR, dir)
+    let files
+    try {
+      files = (await readdir(abs)).filter((f) => f.endsWith('.md') && f !== 'README.md').sort(numericSort)
+    } catch {
+      console.log(`  skipped ${dir} (not present)`)
+      continue
+    }
+
+    for (const file of files) {
+      const raw = await readFile(path.join(abs, file), 'utf8')
+      const notes = splitNetworkingNotes(raw)
+      for (const md of notes) {
+        const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+        const body = $('body')
+
+        const rawTitle = text(body.find('h1').first())
+        const title = rawTitle.replace(/^Networking Topic:\s*/i, '')
+        body.find('h1').first().remove()
+
+        const lead = body.find('blockquote').first()
+        const meta = parseDecisionMeta(text(lead))
+        lead.remove()
+
+        // Item number comes from the metadata, so notes sharing breadth.md still order correctly.
+        const item = Number(/\(Item\s+(\d+)\)/.exec(meta.category ?? '')?.[1] ?? 0)
+        // A note's own file gives it a short, hand-chosen URL; breadth.md holds several
+        // notes, so those take their slug from the title instead.
+        const slug = file === 'breadth.md' ? slugify(title) : agenticSlug(file)
+        parsed.push({
+          $,
+          body,
+          dir,
+          chapterTitle,
+          slug,
+          number: item,
+          title,
+          ...meta,
+        })
+      }
+    }
+  }
+
+  // Two chapters can hold the same filename (l4-vs-l7 appears in 01 and 11); the later one
+  // takes the chapter as a prefix so every note keeps a stable, unique URL.
+  const seen = new Set()
+  for (const n of parsed) {
+    if (seen.has(n.slug)) n.slug = `${n.dir.replace(/^\d+-/, '')}-${n.slug}`
+    seen.add(n.slug)
+  }
+  const dupes = parsed.map((n) => n.slug).filter((x, i, a) => a.indexOf(x) !== i)
+  if (dupes.length > 0) throw new Error(`Duplicate networking slugs: ${[...new Set(dupes)].join(', ')}`)
+
+  const published = new Set(parsed.map((n) => n.slug))
+  const byFile = new Map(parsed.map((n) => [`${n.dir}/${n.number}`, n.slug]))
+  const chapters = []
+
+  for (const note of parsed) {
+    const { $, body } = note
+    // Links to another networking note become site routes; anything else flattens to text.
+    body.find('a[href$=".md"]').each((_, node) => {
+      const a = $(node)
+      const href = a.attr('href') ?? ''
+      const n = /(?:^|\/)(\d+)[a-z]?-[^/]*\.md$/.exec(href)
+      const dir = /(?:^|\/)(\d{2}-[a-z-]+)\//.exec(href)?.[1] ?? note.dir
+      const target = n ? byFile.get(`${dir}/${Number(n[1])}`) : undefined
+      if (target && published.has(target)) a.attr('href', `${NETWORKING_ROUTE}/${target}`)
+    })
+    rewriteLinks($, body)
+    promoteMermaidFences($, body)
+    flattenVaultRefsWithin($, body)
+
+    const chapter =
+      chapters.find((c) => c.id === note.dir) ?? { id: note.dir, title: note.chapterTitle, notes: [] }
+    if (!chapters.includes(chapter)) chapters.push(chapter)
+    chapter.notes.push({
+      slug: note.slug,
+      number: note.number,
+      title: note.title,
+      category: note.category,
+      relevance: note.relevance,
+      tier: note.tier,
+      created: note.created,
+      section: note.dir,
+      sectionTitle: note.chapterTitle,
+      headings: collectHeadings($, body),
+      html: inner(body),
+    })
+  }
+
+  for (const chapter of chapters) {
+    chapter.notes.sort((a, b) => a.number - b.number)
+    await write(`networking-${chapter.id.replace(/^\d+-/, '')}.json`, chapter)
+    console.log(`  parsed ${chapter.id} → ${chapter.notes.length} networking notes`)
+  }
+  return chapters
 }
 
 async function ingestAgenticDecisions() {
@@ -770,8 +934,8 @@ async function ingestAgenticDecisions() {
       if (slug && published.has(slug)) a.attr('href', `${AGENTIC_ROUTE}/${slug}`)
     })
     rewriteLinks($, body)
-    body.html(flattenVaultRefs(inner(body)))
     promoteMermaidFences($, body)
+    flattenVaultRefsWithin($, body)
 
     const section = sections.find((s) => s.id === note.dir) ?? { id: note.dir, title: note.sectionTitle, notes: [] }
     if (!sections.includes(section)) sections.push(section)
@@ -799,7 +963,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking) {
   await write('manifest.json', {
     dsa: {
       patterns: dsa.families.flatMap((f) =>
@@ -838,6 +1002,16 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
         sectionTitle: sec.title,
       })),
     ),
+    networking: networking.flatMap((ch) =>
+      ch.notes.map((n) => ({
+        slug: n.slug,
+        title: n.title,
+        tier: n.tier,
+        relevance: n.relevance,
+        section: ch.id,
+        sectionTitle: ch.title,
+      })),
+    ),
     gameDayDocs: gameDay.docs.map(({ html: _html, ...d }) => ({
       ...d,
       headings: d.headings.filter((h) => h.level === 2),
@@ -855,6 +1029,7 @@ console.log(`Vault: ${VAULT}`)
 const utils = []
 for (const u of UTILS) utils.push(await ingestUtils(u))
 const agentic = await ingestAgenticDecisions()
+const networking = await ingestNetworking()
 await writeManifest(
   await ingestColdRecall(),
   await ingestCaseStudies(),
@@ -863,4 +1038,5 @@ await writeManifest(
   await ingestAiSystems(agentic),
   await ingestGameDay(),
   agentic,
+  networking,
 )

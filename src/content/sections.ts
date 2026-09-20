@@ -112,6 +112,13 @@ export const sections: Section[] = [
         group: 'Agentic system design',
         subgroup: d.sectionTitle,
       })),
+      ...manifest.networking.map((n) => ({
+        title: n.title,
+        path: `/system-design/networking/${n.slug}`,
+        description: `${n.tier} · ${n.relevance ?? 'Medium'} architect relevance.`,
+        group: 'Networking',
+        subgroup: n.sectionTitle,
+      })),
       {
         title: 'WebRTC revision cards',
         path: '/system-design/webrtc',
@@ -250,6 +257,13 @@ export const searchIndex: SearchItem[] = [
     secondary: `Agentic design · ${d.sectionTitle} · ${d.tier}`,
     path: `/system-design/agentic-design/${d.slug}`,
     group: 'Agentic decisions',
+  })),
+  ...manifest.networking.map((n) => ({
+    key: `net:${n.slug}`,
+    label: n.title,
+    secondary: `Networking · ${n.sectionTitle} · ${n.tier}`,
+    path: `/system-design/networking/${n.slug}`,
+    group: 'Networking',
   })),
   ...manifest.gameDayDocs.flatMap((d) =>
     d.headings.map((h) => ({
