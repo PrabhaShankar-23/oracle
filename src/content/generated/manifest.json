@@ -3485,6 +3485,46 @@
       "relevance": "Low",
       "section": "12-eval-observability",
       "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "the-versioned-unit",
+      "title": "What the versioned unit is, and what breaks when it isn't pinned",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "13-deployment",
+      "sectionTitle": "Deployment, versioning & scaling"
+    },
+    {
+      "slug": "how-a-rollout-knows",
+      "title": "How a rollout knows it's working, when the failure isn't an error",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "13-deployment",
+      "sectionTitle": "Deployment, versioning & scaling"
+    },
+    {
+      "slug": "what-you-scale-on",
+      "title": "What you scale on, when the worker is idle and saturated at once",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "13-deployment",
+      "sectionTitle": "Deployment, versioning & scaling"
+    },
+    {
+      "slug": "provider-rate-limits",
+      "title": "Which traffic gets the tokens when the provider says no",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "13-deployment",
+      "sectionTitle": "Deployment, versioning & scaling"
+    },
+    {
+      "slug": "where-the-seam-goes",
+      "title": "Where the seam goes, so the buy decision stays reversible",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "13-deployment",
+      "sectionTitle": "Deployment, versioning & scaling"
     }
   ],
   "gameDayDocs": [
