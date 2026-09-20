@@ -683,6 +683,7 @@ const AGENTIC_SECTIONS = {
   '09-latency': 'Latency & streaming',
   '10-cost': 'Cost modelling & optimisation',
   '11-safety-security': 'Safety, security & governance',
+  '12-eval-observability': 'Evaluation & observability',
 }
 
 /** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */

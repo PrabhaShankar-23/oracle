@@ -3421,6 +3421,70 @@
       "relevance": "Low",
       "section": "11-safety-security",
       "sectionTitle": "Safety, security & governance"
+    },
+    {
+      "slug": "what-counts-as-the-score",
+      "title": "What counts as the score — the answer, the path, or the end state",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "which-layer-gates",
+      "title": "Which layer you gate on, and which you only diagnose with",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "what-a-span-carries",
+      "title": "What a span must carry, and whose backend holds it",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "what-blocks-the-merge",
+      "title": "What blocks the merge, and what only reports",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "llm-as-judge",
+      "title": "When a judge earns its call, and what you control for",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "simulation-and-replay",
+      "title": "Recorded tool responses, a simulated world, or a live sandbox",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "online-eval",
+      "title": "Which production signal you're willing to treat as a label",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
+    },
+    {
+      "slug": "benchmarks",
+      "title": "What a public benchmark tells you about your agent",
+      "tier": "BREADTH",
+      "relevance": "Low",
+      "section": "12-eval-observability",
+      "sectionTitle": "Evaluation & observability"
     }
   ],
   "gameDayDocs": [
