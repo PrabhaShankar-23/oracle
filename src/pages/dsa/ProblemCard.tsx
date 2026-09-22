@@ -14,18 +14,11 @@ import Typography from '@mui/material/Typography'
 import { memo, useState } from 'react'
 import HtmlContent from '../../components/content/HtmlContent'
 import { walkthroughs } from '../../content/deep'
-import type { Difficulty, Problem } from '../../content/types'
+import type { Problem } from '../../content/types'
 import { codeBlockHtml } from '../../lib/codeHtml'
 import { FONT_MONO } from '../../theme/theme'
 import ApproachTabs from './ApproachTabs'
-import { MARK_LABELS } from './marks'
-
-const DIFFICULTY_COLOR: Record<Difficulty, 'success' | 'warning' | 'error'> = {
-  Easy: 'success',
-  Medium: 'warning',
-  Hard: 'error',
-}
-
+import { DIFFICULTY_COLOR, MARK_LABELS } from './marks'
 
 const Html = ({ html }: { html: string }) => <span dangerouslySetInnerHTML={{ __html: html }} />
 

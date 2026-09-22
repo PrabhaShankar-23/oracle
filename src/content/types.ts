@@ -146,7 +146,41 @@ export type UtilsToolkit = {
   sections: UtilsSection[]
 }
 
+/** The vault's practice list (00-dsa-problem-solving-index.md): every problem in solve order. */
+export type PracticeProblem = {
+  /** Number in the note, 1…n — also the key for the solved ticks. */
+  n: number
+  title: string
+  url: string
+  difficulty: Difficulty
+  /** First-pass problem (🟢 L1). */
+  l1: boolean
+  marks: string[]
+  /** Cold recall card id, when the card exists. */
+  recallId?: string
+}
+
+export type PracticeGroup = {
+  id: string
+  /** Pattern code (P01…); absent for the extra tracks. */
+  code?: string
+  name: string
+  /** Cold recall pattern id (P01… or X1…). */
+  recallId?: string
+  problems: PracticeProblem[]
+}
+
+export type PracticeFamily = { id: string; name: string; note?: string; groups: PracticeGroup[] }
+
+export type PracticeList = {
+  title: string
+  intro: string
+  families: PracticeFamily[]
+  guide: { id: string; title: string; html: string }[]
+}
+
 export type Manifest = {
+  dsaPractice: { total: number; l1: number }
   dsa: {
     patterns: { id: string; name: string; family: string; count: number }[]
     problems: { id: string; title: string; pattern: string; difficulty: Difficulty }[]

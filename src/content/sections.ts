@@ -55,6 +55,12 @@ export const sections: Section[] = [
     icon: DataObjectOutlined,
     pages: [
       {
+        title: 'Practice list',
+        path: '/dsa/practice',
+        description: `${manifest.dsaPractice.total} problems in solve order — ${manifest.dsaPractice.l1} marked L1 to do first. Tick them off as you solve them cold.`,
+        group: 'Practice',
+      },
+      {
         title: 'Cold recall',
         path: '/dsa/cold-recall',
         description: `${manifest.dsa.problems.length} problems across ${manifest.dsa.patterns.length} patterns — state, invariant, approaches, code.`,

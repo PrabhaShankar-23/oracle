@@ -17,7 +17,7 @@ Deploy: `npm run build`, then drag the `dist/` folder onto Netlify (manual deplo
 ```bash
 npm run dev       # dev server
 npm run ingest    # re-read the vault → src/content/generated/*.json (VAULT_DIR=… to override path)
-npm run vault:walkthroughs  # write src/content/deep walkthroughs into the vault's dsa-cold-recall.html, then run ingest
+npm run vault:walkthroughs  # write src/content/deep walkthroughs into the vault's 03-dsa-cold-recall.html, then run ingest
 npm run build     # type-check + production build to dist/
 npm run preview   # serve dist/ locally
 npm run lint      # oxlint

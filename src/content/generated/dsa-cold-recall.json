@@ -1,6 +1,6 @@
 {
   "title": "DSA Cold Recall",
-  "intro": "One card per problem: the state you carry, the invariant that makes it correct, at most two approaches with complexity, one line on why the winner wins, and only the code worth holding in memory. Built from <b>practice-lap-1.md</b> — 40 patterns, 169 problems.",
+  "intro": "One card per problem: the state you carry, the invariant that makes it correct, at most two approaches with complexity, one line on why the winner wins, and only the code worth holding in memory. Built from <b>00-dsa-problem-solving-index.md</b> — 40 patterns, 169 problems.",
   "families": [
     {
       "id": "A",

@@ -48,7 +48,7 @@ const LIST_MARKS = {
 const DIFFICULTY = { E: 'Easy', M: 'Medium', H: 'Hard' }
 
 async function ingestColdRecall() {
-  const $ = await load('04-DSA-V2/00-index/dsa-cold-recall.html')
+  const $ = await load('04-DSA-V2/00-index/03-dsa-cold-recall.html')
   const families = []
 
   $('.wrap > .sec, .wrap > details').each((_, node) => {
@@ -115,6 +115,121 @@ async function ingestColdRecall() {
   const head = $('.head p').first()
   const data = { title: 'DSA Cold Recall', intro: inner(head), families }
   await write('dsa-cold-recall.json', data)
+  return data
+}
+
+/* ---------------- DSA practice list ---------------- */
+
+const PRACTICE_FILE = '04-DSA-V2/00-index/00-dsa-problem-solving-index.md'
+/** Prose sections of the note worth publishing; the rest is vault bookkeeping (night log, authoring rules). */
+const PRACTICE_GUIDE = ['How to work this list', 'AI-loop practical round']
+const stripEmoji = (s) => s.replace(/^[^\p{Letter}\p{Number}]+/u, '').trim()
+const normUrl = (u) => u.replace(/\/+$/, '')
+
+async function ingestPractice(recall) {
+  const md = await readFile(path.join(VAULT, PRACTICE_FILE), 'utf8')
+  const lines = md.split('\n')
+
+  // Same LeetCode problem → its cold recall card, preferring the card under the same pattern.
+  const cards = new Map()
+  for (const f of recall.families)
+    for (const p of f.patterns)
+      for (const q of p.problems) {
+        const key = normUrl(q.url)
+        cards.set(key, [...(cards.get(key) ?? []), { id: q.id, pattern: p.id }])
+      }
+  const cardFor = (url, pattern) => {
+    const hits = cards.get(normUrl(url)) ?? []
+    return hits.find((h) => h.pattern === pattern) ?? hits[0]
+  }
+
+  const families = []
+  const sections = new Map()
+  let current = null // prose section being collected
+  let inList = true
+  for (const line of lines) {
+    const h2 = /^## (.+)$/.exec(line)
+    if (h2) {
+      const title = stripEmoji(h2[1])
+      const family = /^([A-Z]) · (.+)$/.exec(title)
+      current = null
+      if (inList && family) {
+        families.push({ id: family[1], name: `${family[1]} — ${family[2]}`, groups: [] })
+      } else if (inList && /^Extra tracks/.test(title)) {
+        families.push({ id: 'extra', name: title.replace(/ — /, ' · '), groups: [] })
+      } else {
+        inList = false
+        const known = PRACTICE_GUIDE.find((g) => title.startsWith(g))
+        if (known) sections.set(known, (current = []))
+      }
+      continue
+    }
+    if (current) {
+      current.push(line)
+      continue
+    }
+    if (!inList) continue
+
+    const family = families.at(-1)
+    if (!family) continue
+    const h3 = /^### (.+)$/.exec(line)
+    if (h3) {
+      const pattern = /^(P\d+) — (.+?) · \[note\]/.exec(h3[1])
+      family.groups.push(
+        pattern
+          ? { id: pattern[1], code: pattern[1], name: pattern[2], recallId: pattern[1], problems: [] }
+          : { id: `x-${slugify(h3[1])}`, name: h3[1].trim(), problems: [] },
+      )
+      continue
+    }
+    const note = /^\*([^*].*)\*$/.exec(line.trim())
+    if (note && family.groups.length === 0) family.note = note[1]
+
+    const row = /^(\d+)\. \[[ x]\] (🟢 \*\*L1\*\* · )?\[([^\]]+)\]\(([^)]+)\) · (Easy|Medium|Hard)(.*)$/.exec(line)
+    if (!row) continue
+    const group = family.groups.at(-1)
+    const card = cardFor(row[4], group.code)
+    // Extra-track groups take the cold recall pattern (X1…) their problems sit under.
+    if (!group.recallId && card) group.recallId = card.pattern
+    group.problems.push({
+      n: Number(row[1]),
+      title: row[3],
+      url: row[4],
+      difficulty: row[5],
+      l1: Boolean(row[2]),
+      marks: row[6].split('·').map((m) => m.trim()).filter(Boolean),
+      recallId: card?.id,
+    })
+  }
+
+  const guide = PRACTICE_GUIDE.filter((t) => sections.has(t)).map((title) => {
+    const body = sections
+      .get(title)
+      .join('\n')
+      .replace(/^\s*---\s*$/gm, '')
+      .replace(/^(\s*)- \[[ x]\] /gm, '$1- ')
+    const $ = cheerio.load(marked.parse(body, { gfm: true, mangle: false, headerIds: false }))
+    const root = $('body')
+    // Pattern-note links point into the vault; the site's copy of each pattern is its cold recall section.
+    root.find('a[href$=".md"]').each((_, node) => {
+      const a = $(node)
+      const id = /(P\d+)-[\w-]+\.md$/.exec(a.attr('href') ?? '')?.[1]
+      if (id) a.attr('href', `/dsa/cold-recall#${id}`)
+    })
+    rewriteLinks($, root)
+    return { id: slugify(title), title, html: inner(root) }
+  })
+
+  const intro = /^> (.+)$/m.exec(md)?.[1] ?? ''
+  const data = {
+    title: 'Practice list',
+    intro: marked.parseInline(intro.replace(/ in this repo/, '')),
+    families,
+    guide,
+  }
+  const problems = families.flatMap((f) => f.groups.flatMap((g) => g.problems))
+  console.log(`  parsed practice list (${problems.length} problems, ${problems.filter((p) => p.l1).length} L1)`)
+  await write('dsa-practice.json', data)
   return data
 }
 
@@ -263,7 +378,7 @@ const UTILS = [
 ]
 
 async function ingestUtils({ lang, file }) {
-  const $ = await load(`04-DSA-V2/00-index/${file}`)
+  const $ = await load(`04-DSA-V2/00-index/04-code-helpers/${file}`)
   const main = $('main')
 
   // Twin page → its site route; the .py/.java source isn't on the site, so keep only the text.
@@ -982,8 +1097,10 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, python) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, python, practice) {
+  const practiceProblems = practice.families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   await write('manifest.json', {
+    dsaPractice: { total: practiceProblems.length, l1: practiceProblems.filter((p) => p.l1).length },
     dsa: {
       patterns: dsa.families.flatMap((f) =>
         f.patterns.map((p) => ({ id: p.id, name: p.name, family: f.name, count: p.problems.length })),
@@ -1060,8 +1177,9 @@ for (const u of UTILS) utils.push(await ingestUtils(u))
 const agentic = await ingestAgenticDecisions()
 const networking = await ingestNetworking()
 const python = await ingestPython()
+const dsa = await ingestColdRecall()
 await writeManifest(
-  await ingestColdRecall(),
+  dsa,
   await ingestCaseStudies(),
   await ingestWebRtc(),
   utils,
@@ -1070,4 +1188,5 @@ await writeManifest(
   agentic,
   networking,
   python,
+  await ingestPractice(dsa),
 )

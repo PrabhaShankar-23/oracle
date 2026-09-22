@@ -1,4 +1,4 @@
-// Writes the approach walkthroughs (src/content/deep) into the vault's dsa-cold-recall.html:
+// Writes the approach walkthroughs (src/content/deep) into the vault's 03-dsa-cold-recall.html:
 // tabs per approach with time/space, SVG diagrams, key points and code. Same data and SVG
 // renderer as the site. Re-running replaces the marked blocks, so it is safe to repeat.
 // Run: npm run vault:walkthroughs      (VAULT_DIR=… to override the vault path)
@@ -10,7 +10,7 @@ import { walkthroughs } from '../src/content/deep/index.ts'
 import { barsSvg, cellsSvg } from '../src/lib/recallDiagramSvg.ts'
 
 const VAULT = process.env.VAULT_DIR ?? path.join(homedir(), 'Desktop/java/Spring Boot/AlgoHandbook')
-const FILE = path.join(VAULT, '04-DSA-V2/00-index/dsa-cold-recall.html')
+const FILE = path.join(VAULT, '04-DSA-V2/00-index/03-dsa-cold-recall.html')
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const slugify = (s) =>

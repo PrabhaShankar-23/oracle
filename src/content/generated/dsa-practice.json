@@ -1,0 +1,2301 @@
+{
+  "title": "Practice list",
+  "intro": "The only practice list: <strong>169 problems</strong>, pattern by pattern. <strong>🟢 L1</strong> marks the <strong>69</strong> to do first (easy + medium, interview core) — then work the rest in the same order. Tick a box when solved <em>cold</em>.",
+  "families": [
+    {
+      "id": "A",
+      "name": "A — Arrays & Pointers",
+      "groups": [
+        {
+          "id": "P01",
+          "code": "P01",
+          "name": "Two Pointers — converging",
+          "recallId": "P01",
+          "problems": [
+            {
+              "n": 1,
+              "title": "Valid Palindrome",
+              "url": "https://leetcode.com/problems/valid-palindrome/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P01-valid-palindrome"
+            },
+            {
+              "n": 2,
+              "title": "Two Sum II - Input Array Is Sorted",
+              "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P01-two-sum-ii-input-array-is-sorted"
+            },
+            {
+              "n": 3,
+              "title": "3Sum",
+              "url": "https://leetcode.com/problems/3sum/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P01-3sum"
+            },
+            {
+              "n": 4,
+              "title": "Container With Most Water",
+              "url": "https://leetcode.com/problems/container-with-most-water/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P01-container-with-most-water"
+            },
+            {
+              "n": 5,
+              "title": "Trapping Rain Water",
+              "url": "https://leetcode.com/problems/trapping-rain-water/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P01-trapping-rain-water"
+            }
+          ]
+        },
+        {
+          "id": "P02",
+          "code": "P02",
+          "name": "Fast & Slow Pointers",
+          "recallId": "P02",
+          "problems": [
+            {
+              "n": 6,
+              "title": "Linked List Cycle",
+              "url": "https://leetcode.com/problems/linked-list-cycle/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P02-linked-list-cycle"
+            },
+            {
+              "n": 7,
+              "title": "Happy Number",
+              "url": "https://leetcode.com/problems/happy-number/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P02-happy-number"
+            },
+            {
+              "n": 8,
+              "title": "Find the Duplicate Number",
+              "url": "https://leetcode.com/problems/find-the-duplicate-number/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P02-find-the-duplicate-number"
+            }
+          ]
+        },
+        {
+          "id": "P03",
+          "code": "P03",
+          "name": "Sliding Window — fixed size",
+          "recallId": "P03",
+          "problems": [
+            {
+              "n": 9,
+              "title": "Permutation in String",
+              "url": "https://leetcode.com/problems/permutation-in-string/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P03-permutation-in-string"
+            },
+            {
+              "n": 10,
+              "title": "Substring with Concatenation of All Words",
+              "url": "https://leetcode.com/problems/substring-with-concatenation-of-all-words/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P03-substring-with-concatenation-of-all-words"
+            }
+          ]
+        },
+        {
+          "id": "P04",
+          "code": "P04",
+          "name": "Sliding Window — variable size",
+          "recallId": "P04",
+          "problems": [
+            {
+              "n": 11,
+              "title": "Longest Substring Without Repeating Characters",
+              "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P04-longest-substring-without-repeating-characters"
+            },
+            {
+              "n": 12,
+              "title": "Longest Repeating Character Replacement",
+              "url": "https://leetcode.com/problems/longest-repeating-character-replacement/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P04-longest-repeating-character-replacement"
+            },
+            {
+              "n": 13,
+              "title": "Minimum Size Subarray Sum",
+              "url": "https://leetcode.com/problems/minimum-size-subarray-sum/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P04-minimum-size-subarray-sum"
+            },
+            {
+              "n": 14,
+              "title": "Minimum Window Substring",
+              "url": "https://leetcode.com/problems/minimum-window-substring/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P04-minimum-window-substring"
+            }
+          ]
+        },
+        {
+          "id": "P05",
+          "code": "P05",
+          "name": "Prefix Sum + HashMap",
+          "recallId": "P05",
+          "problems": [
+            {
+              "n": 15,
+              "title": "Contains Duplicate II",
+              "url": "https://leetcode.com/problems/contains-duplicate-ii/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P05-contains-duplicate-ii"
+            },
+            {
+              "n": 16,
+              "title": "Subarray Sum Equals K",
+              "url": "https://leetcode.com/problems/subarray-sum-equals-k/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "＋"
+              ],
+              "recallId": "P05-subarray-sum-equals-k"
+            },
+            {
+              "n": 17,
+              "title": "Product of Array Except Self",
+              "url": "https://leetcode.com/problems/product-of-array-except-self/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P05-product-of-array-except-self"
+            },
+            {
+              "n": 18,
+              "title": "Longest Consecutive Sequence",
+              "url": "https://leetcode.com/problems/longest-consecutive-sequence/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P05-longest-consecutive-sequence"
+            }
+          ]
+        },
+        {
+          "id": "P06",
+          "code": "P06",
+          "name": "Kadane's / Max Subarray",
+          "recallId": "P06",
+          "problems": [
+            {
+              "n": 19,
+              "title": "Maximum Subarray",
+              "url": "https://leetcode.com/problems/maximum-subarray/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P06-maximum-subarray"
+            },
+            {
+              "n": 20,
+              "title": "Maximum Product Subarray",
+              "url": "https://leetcode.com/problems/maximum-product-subarray/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P06-maximum-product-subarray"
+            },
+            {
+              "n": 21,
+              "title": "Maximum Sum Circular Subarray",
+              "url": "https://leetcode.com/problems/maximum-sum-circular-subarray/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P06-maximum-sum-circular-subarray"
+            }
+          ]
+        },
+        {
+          "id": "P07",
+          "code": "P07",
+          "name": "Dutch National Flag / Partition",
+          "recallId": "P07",
+          "problems": [
+            {
+              "n": 22,
+              "title": "Remove Element",
+              "url": "https://leetcode.com/problems/remove-element/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P07-remove-element"
+            },
+            {
+              "n": 23,
+              "title": "Sort Colors",
+              "url": "https://leetcode.com/problems/sort-colors/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "＋"
+              ],
+              "recallId": "P07-sort-colors"
+            },
+            {
+              "n": 24,
+              "title": "Remove Duplicates from Sorted Array II",
+              "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P07-remove-duplicates-from-sorted-array-ii"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "B — Intervals, Sorting & Heaps",
+      "groups": [
+        {
+          "id": "P08",
+          "code": "P08",
+          "name": "Merge Intervals",
+          "recallId": "P08",
+          "problems": [
+            {
+              "n": 25,
+              "title": "Summary Ranges",
+              "url": "https://leetcode.com/problems/summary-ranges/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P08-summary-ranges"
+            },
+            {
+              "n": 26,
+              "title": "Merge Intervals",
+              "url": "https://leetcode.com/problems/merge-intervals/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P08-merge-intervals"
+            },
+            {
+              "n": 27,
+              "title": "Insert Interval",
+              "url": "https://leetcode.com/problems/insert-interval/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P08-insert-interval"
+            }
+          ]
+        },
+        {
+          "id": "P09",
+          "code": "P09",
+          "name": "Cyclic Sort",
+          "recallId": "P09",
+          "problems": [
+            {
+              "n": 28,
+              "title": "Missing Number",
+              "url": "https://leetcode.com/problems/missing-number/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P09-missing-number"
+            },
+            {
+              "n": 29,
+              "title": "First Missing Positive",
+              "url": "https://leetcode.com/problems/first-missing-positive/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "＋"
+              ],
+              "recallId": "P09-first-missing-positive"
+            }
+          ]
+        },
+        {
+          "id": "P10",
+          "code": "P10",
+          "name": "Greedy — Interval Scheduling",
+          "recallId": "P10",
+          "problems": [
+            {
+              "n": 30,
+              "title": "Meeting Rooms",
+              "url": "https://leetcode.com/problems/meeting-rooms/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "P10-meeting-rooms"
+            },
+            {
+              "n": 31,
+              "title": "Non-overlapping Intervals",
+              "url": "https://leetcode.com/problems/non-overlapping-intervals/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P10-non-overlapping-intervals"
+            },
+            {
+              "n": 32,
+              "title": "Minimum Number of Arrows to Burst Balloons",
+              "url": "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P10-minimum-number-of-arrows-to-burst-balloons"
+            },
+            {
+              "n": 33,
+              "title": "Meeting Rooms II",
+              "url": "https://leetcode.com/problems/meeting-rooms-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "P10-meeting-rooms-ii"
+            }
+          ]
+        },
+        {
+          "id": "P11",
+          "code": "P11",
+          "name": "Two Heaps",
+          "recallId": "P11",
+          "problems": [
+            {
+              "n": 34,
+              "title": "IPO",
+              "url": "https://leetcode.com/problems/ipo/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P11-ipo"
+            },
+            {
+              "n": 35,
+              "title": "Find Median from Data Stream",
+              "url": "https://leetcode.com/problems/find-median-from-data-stream/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P11-find-median-from-data-stream"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "C — Searching & Selection",
+      "groups": [
+        {
+          "id": "P12",
+          "code": "P12",
+          "name": "Binary Search — on index",
+          "recallId": "P12",
+          "problems": [
+            {
+              "n": 36,
+              "title": "Binary Search",
+              "url": "https://leetcode.com/problems/binary-search/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P12-binary-search"
+            },
+            {
+              "n": 37,
+              "title": "Search a 2D Matrix",
+              "url": "https://leetcode.com/problems/search-a-2d-matrix/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P12-search-a-2d-matrix"
+            },
+            {
+              "n": 38,
+              "title": "Find Peak Element",
+              "url": "https://leetcode.com/problems/find-peak-element/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P12-find-peak-element"
+            },
+            {
+              "n": 39,
+              "title": "Find First and Last Position of Element in Sorted Array",
+              "url": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P12-find-first-and-last-position-of-element-in-sorted-array"
+            },
+            {
+              "n": 40,
+              "title": "Find Minimum in Rotated Sorted Array",
+              "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P12-find-minimum-in-rotated-sorted-array"
+            },
+            {
+              "n": 41,
+              "title": "Search in Rotated Sorted Array",
+              "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P12-search-in-rotated-sorted-array"
+            },
+            {
+              "n": 42,
+              "title": "Median of Two Sorted Arrays",
+              "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P12-median-of-two-sorted-arrays"
+            }
+          ]
+        },
+        {
+          "id": "P13",
+          "code": "P13",
+          "name": "Binary Search — on answer space",
+          "recallId": "P13",
+          "problems": [
+            {
+              "n": 43,
+              "title": "Sqrt(x)",
+              "url": "https://leetcode.com/problems/sqrtx/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P13-sqrtx"
+            },
+            {
+              "n": 44,
+              "title": "Koko Eating Bananas",
+              "url": "https://leetcode.com/problems/koko-eating-bananas/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P13-koko-eating-bananas"
+            }
+          ]
+        },
+        {
+          "id": "P14",
+          "code": "P14",
+          "name": "Top-K Elements (Heap / Quickselect)",
+          "recallId": "P14",
+          "problems": [
+            {
+              "n": 45,
+              "title": "Top K Frequent Elements",
+              "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P14-top-k-frequent-elements"
+            },
+            {
+              "n": 46,
+              "title": "K Closest Points to Origin",
+              "url": "https://leetcode.com/problems/k-closest-points-to-origin/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P14-k-closest-points-to-origin"
+            },
+            {
+              "n": 47,
+              "title": "Kth Largest Element in an Array",
+              "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P14-kth-largest-element-in-an-array"
+            },
+            {
+              "n": 48,
+              "title": "Task Scheduler",
+              "url": "https://leetcode.com/problems/task-scheduler/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P14-task-scheduler"
+            }
+          ]
+        },
+        {
+          "id": "P15",
+          "code": "P15",
+          "name": "K-way Merge",
+          "recallId": "P15",
+          "problems": [
+            {
+              "n": 49,
+              "title": "Merge Two Sorted Lists",
+              "url": "https://leetcode.com/problems/merge-two-sorted-lists/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P15-merge-two-sorted-lists"
+            },
+            {
+              "n": 50,
+              "title": "Find K Pairs with Smallest Sums",
+              "url": "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P15-find-k-pairs-with-smallest-sums"
+            },
+            {
+              "n": 51,
+              "title": "Merge k Sorted Lists",
+              "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P15-merge-k-sorted-lists"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "name": "D — Stacks, Queues & Linked Lists",
+      "groups": [
+        {
+          "id": "P16",
+          "code": "P16",
+          "name": "Monotonic Stack",
+          "recallId": "P16",
+          "problems": [
+            {
+              "n": 52,
+              "title": "Daily Temperatures",
+              "url": "https://leetcode.com/problems/daily-temperatures/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P16-daily-temperatures"
+            },
+            {
+              "n": 53,
+              "title": "Car Fleet",
+              "url": "https://leetcode.com/problems/car-fleet/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P16-car-fleet"
+            },
+            {
+              "n": 54,
+              "title": "Largest Rectangle in Histogram",
+              "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P16-largest-rectangle-in-histogram"
+            }
+          ]
+        },
+        {
+          "id": "P17",
+          "code": "P17",
+          "name": "Monotonic Deque",
+          "recallId": "P17",
+          "problems": [
+            {
+              "n": 55,
+              "title": "Sliding Window Maximum",
+              "url": "https://leetcode.com/problems/sliding-window-maximum/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P17-sliding-window-maximum"
+            }
+          ]
+        },
+        {
+          "id": "P18",
+          "code": "P18",
+          "name": "Stack — Parsing & Matching",
+          "recallId": "P18",
+          "problems": [
+            {
+              "n": 56,
+              "title": "Valid Parentheses",
+              "url": "https://leetcode.com/problems/valid-parentheses/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P18-valid-parentheses"
+            },
+            {
+              "n": 57,
+              "title": "Min Stack",
+              "url": "https://leetcode.com/problems/min-stack/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★",
+                "[my note](../D-stacks-queues-and-linked-lists/min-stack-lc155.md)"
+              ],
+              "recallId": "P18-min-stack"
+            },
+            {
+              "n": 58,
+              "title": "Evaluate Reverse Polish Notation",
+              "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P18-evaluate-reverse-polish-notation"
+            },
+            {
+              "n": 59,
+              "title": "Basic Calculator",
+              "url": "https://leetcode.com/problems/basic-calculator/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P18-basic-calculator"
+            }
+          ]
+        },
+        {
+          "id": "P19",
+          "code": "P19",
+          "name": "In-place Linked List Reversal",
+          "recallId": "P19",
+          "problems": [
+            {
+              "n": 60,
+              "title": "Reverse Linked List",
+              "url": "https://leetcode.com/problems/reverse-linked-list/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P19-reverse-linked-list"
+            },
+            {
+              "n": 61,
+              "title": "Reverse Linked List II",
+              "url": "https://leetcode.com/problems/reverse-linked-list-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P19-reverse-linked-list-ii"
+            },
+            {
+              "n": 62,
+              "title": "Reorder List",
+              "url": "https://leetcode.com/problems/reorder-list/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P19-reorder-list"
+            },
+            {
+              "n": 63,
+              "title": "Remove Nth Node From End of List",
+              "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P19-remove-nth-node-from-end-of-list"
+            },
+            {
+              "n": 64,
+              "title": "Reverse Nodes in k-Group",
+              "url": "https://leetcode.com/problems/reverse-nodes-in-k-group/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P19-reverse-nodes-in-k-group"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "E — Trees & Tries",
+      "groups": [
+        {
+          "id": "P20",
+          "code": "P20",
+          "name": "Tree BFS — Level Order",
+          "recallId": "P20",
+          "problems": [
+            {
+              "n": 65,
+              "title": "Average of Levels in Binary Tree",
+              "url": "https://leetcode.com/problems/average-of-levels-in-binary-tree/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P20-average-of-levels-in-binary-tree"
+            },
+            {
+              "n": 66,
+              "title": "Binary Tree Level Order Traversal",
+              "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P20-binary-tree-level-order-traversal"
+            },
+            {
+              "n": 67,
+              "title": "Binary Tree Right Side View",
+              "url": "https://leetcode.com/problems/binary-tree-right-side-view/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P20-binary-tree-right-side-view"
+            },
+            {
+              "n": 68,
+              "title": "Binary Tree Zigzag Level Order Traversal",
+              "url": "https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P20-binary-tree-zigzag-level-order-traversal"
+            }
+          ]
+        },
+        {
+          "id": "P21",
+          "code": "P21",
+          "name": "Tree DFS — Path Problems",
+          "recallId": "P21",
+          "problems": [
+            {
+              "n": 69,
+              "title": "Maximum Depth of Binary Tree",
+              "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P21-maximum-depth-of-binary-tree"
+            },
+            {
+              "n": 70,
+              "title": "Same Tree",
+              "url": "https://leetcode.com/problems/same-tree/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P21-same-tree"
+            },
+            {
+              "n": 71,
+              "title": "Invert Binary Tree",
+              "url": "https://leetcode.com/problems/invert-binary-tree/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P21-invert-binary-tree"
+            },
+            {
+              "n": 72,
+              "title": "Diameter of Binary Tree",
+              "url": "https://leetcode.com/problems/diameter-of-binary-tree/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P21-diameter-of-binary-tree"
+            },
+            {
+              "n": 73,
+              "title": "Balanced Binary Tree",
+              "url": "https://leetcode.com/problems/balanced-binary-tree/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P21-balanced-binary-tree"
+            },
+            {
+              "n": 74,
+              "title": "Subtree of Another Tree",
+              "url": "https://leetcode.com/problems/subtree-of-another-tree/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P21-subtree-of-another-tree"
+            },
+            {
+              "n": 75,
+              "title": "Construct Binary Tree from Preorder and Inorder Traversal",
+              "url": "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P21-construct-binary-tree-from-preorder-and-inorder-traversal"
+            },
+            {
+              "n": 76,
+              "title": "Binary Tree Maximum Path Sum",
+              "url": "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P21-binary-tree-maximum-path-sum"
+            },
+            {
+              "n": 77,
+              "title": "Serialize and Deserialize Binary Tree",
+              "url": "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P21-serialize-and-deserialize-binary-tree"
+            }
+          ]
+        },
+        {
+          "id": "P22",
+          "code": "P22",
+          "name": "BST Invariants",
+          "recallId": "P22",
+          "problems": [
+            {
+              "n": 78,
+              "title": "Minimum Absolute Difference in BST",
+              "url": "https://leetcode.com/problems/minimum-absolute-difference-in-bst/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P22-minimum-absolute-difference-in-bst"
+            },
+            {
+              "n": 79,
+              "title": "Validate Binary Search Tree",
+              "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P22-validate-binary-search-tree"
+            },
+            {
+              "n": 80,
+              "title": "Kth Smallest Element in a BST",
+              "url": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P22-kth-smallest-element-in-a-bst"
+            },
+            {
+              "n": 81,
+              "title": "Binary Search Tree Iterator",
+              "url": "https://leetcode.com/problems/binary-search-tree-iterator/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P22-binary-search-tree-iterator"
+            }
+          ]
+        },
+        {
+          "id": "P23",
+          "code": "P23",
+          "name": "Lowest Common Ancestor",
+          "recallId": "P23",
+          "problems": [
+            {
+              "n": 82,
+              "title": "Lowest Common Ancestor of a Binary Search Tree",
+              "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P23-lowest-common-ancestor-of-a-binary-search-tree"
+            },
+            {
+              "n": 83,
+              "title": "Lowest Common Ancestor of a Binary Tree",
+              "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P23-lowest-common-ancestor-of-a-binary-tree"
+            }
+          ]
+        },
+        {
+          "id": "P24",
+          "code": "P24",
+          "name": "Trie",
+          "recallId": "P24",
+          "problems": [
+            {
+              "n": 84,
+              "title": "Implement Trie (Prefix Tree)",
+              "url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P24-implement-trie-prefix-tree"
+            },
+            {
+              "n": 85,
+              "title": "Design Add and Search Words Data Structure",
+              "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P24-design-add-and-search-words-data-structure"
+            },
+            {
+              "n": 86,
+              "title": "Word Search II",
+              "url": "https://leetcode.com/problems/word-search-ii/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P24-word-search-ii"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "name": "F — Graphs",
+      "groups": [
+        {
+          "id": "P25",
+          "code": "P25",
+          "name": "Graph BFS — Shortest Path / Multi-source",
+          "recallId": "P25",
+          "problems": [
+            {
+              "n": 87,
+              "title": "Rotting Oranges",
+              "url": "https://leetcode.com/problems/rotting-oranges/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P25-rotting-oranges"
+            },
+            {
+              "n": 88,
+              "title": "Walls and Gates",
+              "url": "https://leetcode.com/problems/walls-and-gates/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "P25-walls-and-gates"
+            },
+            {
+              "n": 89,
+              "title": "Snakes and Ladders",
+              "url": "https://leetcode.com/problems/snakes-and-ladders/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P25-snakes-and-ladders"
+            },
+            {
+              "n": 90,
+              "title": "Word Ladder",
+              "url": "https://leetcode.com/problems/word-ladder/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P25-word-ladder"
+            }
+          ]
+        },
+        {
+          "id": "P26",
+          "code": "P26",
+          "name": "Graph DFS / Flood Fill",
+          "recallId": "P26",
+          "problems": [
+            {
+              "n": 91,
+              "title": "Number of Islands",
+              "url": "https://leetcode.com/problems/number-of-islands/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P26-number-of-islands"
+            },
+            {
+              "n": 92,
+              "title": "Max Area of Island",
+              "url": "https://leetcode.com/problems/max-area-of-island/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P26-max-area-of-island"
+            },
+            {
+              "n": 93,
+              "title": "Clone Graph",
+              "url": "https://leetcode.com/problems/clone-graph/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P26-clone-graph"
+            },
+            {
+              "n": 94,
+              "title": "Surrounded Regions",
+              "url": "https://leetcode.com/problems/surrounded-regions/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P26-surrounded-regions"
+            },
+            {
+              "n": 95,
+              "title": "Pacific Atlantic Water Flow",
+              "url": "https://leetcode.com/problems/pacific-atlantic-water-flow/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P26-pacific-atlantic-water-flow"
+            }
+          ]
+        },
+        {
+          "id": "P27",
+          "code": "P27",
+          "name": "Topological Sort",
+          "recallId": "P27",
+          "problems": [
+            {
+              "n": 96,
+              "title": "Course Schedule",
+              "url": "https://leetcode.com/problems/course-schedule/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P27-course-schedule"
+            },
+            {
+              "n": 97,
+              "title": "Course Schedule II",
+              "url": "https://leetcode.com/problems/course-schedule-ii/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P27-course-schedule-ii"
+            },
+            {
+              "n": 98,
+              "title": "Alien Dictionary",
+              "url": "https://leetcode.com/problems/alien-dictionary/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "P27-alien-dictionary"
+            }
+          ]
+        },
+        {
+          "id": "P28",
+          "code": "P28",
+          "name": "Union-Find",
+          "recallId": "P28",
+          "problems": [
+            {
+              "n": 99,
+              "title": "Number of Connected Components in an Undirected Graph",
+              "url": "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "P28-number-of-connected-components-in-an-undirected-graph"
+            },
+            {
+              "n": 100,
+              "title": "Graph Valid Tree",
+              "url": "https://leetcode.com/problems/graph-valid-tree/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "P28-graph-valid-tree"
+            },
+            {
+              "n": 101,
+              "title": "Redundant Connection",
+              "url": "https://leetcode.com/problems/redundant-connection/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P28-redundant-connection"
+            },
+            {
+              "n": 102,
+              "title": "Evaluate Division",
+              "url": "https://leetcode.com/problems/evaluate-division/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P28-evaluate-division"
+            },
+            {
+              "n": 103,
+              "title": "Min Cost to Connect All Points",
+              "url": "https://leetcode.com/problems/min-cost-to-connect-all-points/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P28-min-cost-to-connect-all-points"
+            }
+          ]
+        },
+        {
+          "id": "P29",
+          "code": "P29",
+          "name": "Dijkstra / Weighted Shortest Path",
+          "recallId": "P29",
+          "problems": [
+            {
+              "n": 104,
+              "title": "Network Delay Time",
+              "url": "https://leetcode.com/problems/network-delay-time/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P29-network-delay-time"
+            },
+            {
+              "n": 105,
+              "title": "Cheapest Flights Within K Stops",
+              "url": "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P29-cheapest-flights-within-k-stops"
+            },
+            {
+              "n": 106,
+              "title": "Swim in Rising Water",
+              "url": "https://leetcode.com/problems/swim-in-rising-water/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P29-swim-in-rising-water"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "G — Bits & Math",
+      "groups": [
+        {
+          "id": "P30",
+          "code": "P30",
+          "name": "Bit Manipulation & XOR Tricks",
+          "recallId": "P30",
+          "problems": [
+            {
+              "n": 107,
+              "title": "Single Number",
+              "url": "https://leetcode.com/problems/single-number/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P30-single-number"
+            },
+            {
+              "n": 108,
+              "title": "Number of 1 Bits",
+              "url": "https://leetcode.com/problems/number-of-1-bits/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P30-number-of-1-bits"
+            },
+            {
+              "n": 109,
+              "title": "Counting Bits",
+              "url": "https://leetcode.com/problems/counting-bits/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P30-counting-bits"
+            },
+            {
+              "n": 110,
+              "title": "Reverse Bits",
+              "url": "https://leetcode.com/problems/reverse-bits/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P30-reverse-bits"
+            },
+            {
+              "n": 111,
+              "title": "Single Number II",
+              "url": "https://leetcode.com/problems/single-number-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P30-single-number-ii"
+            },
+            {
+              "n": 112,
+              "title": "Sum of Two Integers",
+              "url": "https://leetcode.com/problems/sum-of-two-integers/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P30-sum-of-two-integers"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "name": "H — Backtracking",
+      "groups": [
+        {
+          "id": "P31",
+          "code": "P31",
+          "name": "Backtracking — Subsets & Combinations",
+          "recallId": "P31",
+          "problems": [
+            {
+              "n": 113,
+              "title": "Subsets",
+              "url": "https://leetcode.com/problems/subsets/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P31-subsets"
+            },
+            {
+              "n": 114,
+              "title": "Subsets II",
+              "url": "https://leetcode.com/problems/subsets-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P31-subsets-ii"
+            },
+            {
+              "n": 115,
+              "title": "Combination Sum",
+              "url": "https://leetcode.com/problems/combination-sum/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P31-combination-sum"
+            },
+            {
+              "n": 116,
+              "title": "Combination Sum II",
+              "url": "https://leetcode.com/problems/combination-sum-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P31-combination-sum-ii"
+            },
+            {
+              "n": 117,
+              "title": "Letter Combinations of a Phone Number",
+              "url": "https://leetcode.com/problems/letter-combinations-of-a-phone-number/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P31-letter-combinations-of-a-phone-number"
+            },
+            {
+              "n": 118,
+              "title": "Generate Parentheses",
+              "url": "https://leetcode.com/problems/generate-parentheses/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P31-generate-parentheses"
+            },
+            {
+              "n": 119,
+              "title": "Palindrome Partitioning",
+              "url": "https://leetcode.com/problems/palindrome-partitioning/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P31-palindrome-partitioning"
+            }
+          ]
+        },
+        {
+          "id": "P32",
+          "code": "P32",
+          "name": "Backtracking — Permutations",
+          "recallId": "P32",
+          "problems": [
+            {
+              "n": 120,
+              "title": "Permutations",
+              "url": "https://leetcode.com/problems/permutations/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P32-permutations"
+            },
+            {
+              "n": 121,
+              "title": "Permutations II",
+              "url": "https://leetcode.com/problems/permutations-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "＋"
+              ],
+              "recallId": "P32-permutations-ii"
+            }
+          ]
+        },
+        {
+          "id": "P33",
+          "code": "P33",
+          "name": "Backtracking — Constraint Grids",
+          "recallId": "P33",
+          "problems": [
+            {
+              "n": 122,
+              "title": "Valid Sudoku",
+              "url": "https://leetcode.com/problems/valid-sudoku/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P33-valid-sudoku"
+            },
+            {
+              "n": 123,
+              "title": "Word Search",
+              "url": "https://leetcode.com/problems/word-search/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P33-word-search"
+            },
+            {
+              "n": 124,
+              "title": "N-Queens",
+              "url": "https://leetcode.com/problems/n-queens/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P33-n-queens"
+            },
+            {
+              "n": 125,
+              "title": "N-Queens II",
+              "url": "https://leetcode.com/problems/n-queens-ii/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P33-n-queens-ii"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "I",
+      "name": "I — Dynamic Programming",
+      "groups": [
+        {
+          "id": "P34",
+          "code": "P34",
+          "name": "DP — Linear / Fibonacci-style",
+          "recallId": "P34",
+          "problems": [
+            {
+              "n": 126,
+              "title": "Climbing Stairs",
+              "url": "https://leetcode.com/problems/climbing-stairs/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P34-climbing-stairs"
+            },
+            {
+              "n": 127,
+              "title": "Min Cost Climbing Stairs",
+              "url": "https://leetcode.com/problems/min-cost-climbing-stairs/",
+              "difficulty": "Easy",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P34-min-cost-climbing-stairs"
+            },
+            {
+              "n": 128,
+              "title": "House Robber",
+              "url": "https://leetcode.com/problems/house-robber/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P34-house-robber"
+            },
+            {
+              "n": 129,
+              "title": "House Robber II",
+              "url": "https://leetcode.com/problems/house-robber-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P34-house-robber-ii"
+            },
+            {
+              "n": 130,
+              "title": "Decode Ways",
+              "url": "https://leetcode.com/problems/decode-ways/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P34-decode-ways"
+            },
+            {
+              "n": 131,
+              "title": "Word Break",
+              "url": "https://leetcode.com/problems/word-break/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P34-word-break"
+            },
+            {
+              "n": 132,
+              "title": "Best Time to Buy and Sell Stock with Cooldown",
+              "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P34-best-time-to-buy-and-sell-stock-with-cooldown"
+            }
+          ]
+        },
+        {
+          "id": "P35",
+          "code": "P35",
+          "name": "DP — 0/1 Knapsack",
+          "recallId": "P35",
+          "problems": [
+            {
+              "n": 133,
+              "title": "Partition Equal Subset Sum",
+              "url": "https://leetcode.com/problems/partition-equal-subset-sum/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P35-partition-equal-subset-sum"
+            },
+            {
+              "n": 134,
+              "title": "Target Sum",
+              "url": "https://leetcode.com/problems/target-sum/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P35-target-sum"
+            }
+          ]
+        },
+        {
+          "id": "P36",
+          "code": "P36",
+          "name": "DP — Unbounded Knapsack",
+          "recallId": "P36",
+          "problems": [
+            {
+              "n": 135,
+              "title": "Coin Change",
+              "url": "https://leetcode.com/problems/coin-change/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P36-coin-change"
+            },
+            {
+              "n": 136,
+              "title": "Coin Change II",
+              "url": "https://leetcode.com/problems/coin-change-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P36-coin-change-ii"
+            }
+          ]
+        },
+        {
+          "id": "P37",
+          "code": "P37",
+          "name": "DP — LCS Family",
+          "recallId": "P37",
+          "problems": [
+            {
+              "n": 137,
+              "title": "Longest Common Subsequence",
+              "url": "https://leetcode.com/problems/longest-common-subsequence/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P37-longest-common-subsequence"
+            },
+            {
+              "n": 138,
+              "title": "Edit Distance",
+              "url": "https://leetcode.com/problems/edit-distance/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P37-edit-distance"
+            },
+            {
+              "n": 139,
+              "title": "Interleaving String",
+              "url": "https://leetcode.com/problems/interleaving-string/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P37-interleaving-string"
+            },
+            {
+              "n": 140,
+              "title": "Distinct Subsequences",
+              "url": "https://leetcode.com/problems/distinct-subsequences/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P37-distinct-subsequences"
+            },
+            {
+              "n": 141,
+              "title": "Regular Expression Matching",
+              "url": "https://leetcode.com/problems/regular-expression-matching/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P37-regular-expression-matching"
+            }
+          ]
+        },
+        {
+          "id": "P38",
+          "code": "P38",
+          "name": "DP — LIS Family",
+          "recallId": "P38",
+          "problems": [
+            {
+              "n": 142,
+              "title": "Longest Increasing Subsequence",
+              "url": "https://leetcode.com/problems/longest-increasing-subsequence/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P38-longest-increasing-subsequence"
+            }
+          ]
+        },
+        {
+          "id": "P39",
+          "code": "P39",
+          "name": "DP — Grid Paths",
+          "recallId": "P39",
+          "problems": [
+            {
+              "n": 143,
+              "title": "Unique Paths",
+              "url": "https://leetcode.com/problems/unique-paths/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P39-unique-paths"
+            },
+            {
+              "n": 144,
+              "title": "Unique Paths II",
+              "url": "https://leetcode.com/problems/unique-paths-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P39-unique-paths-ii"
+            },
+            {
+              "n": 145,
+              "title": "Minimum Path Sum",
+              "url": "https://leetcode.com/problems/minimum-path-sum/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P39-minimum-path-sum"
+            },
+            {
+              "n": 146,
+              "title": "Maximal Square",
+              "url": "https://leetcode.com/problems/maximal-square/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "P39-maximal-square"
+            },
+            {
+              "n": 147,
+              "title": "Longest Increasing Path in a Matrix",
+              "url": "https://leetcode.com/problems/longest-increasing-path-in-a-matrix/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P39-longest-increasing-path-in-a-matrix"
+            }
+          ]
+        },
+        {
+          "id": "P40",
+          "code": "P40",
+          "name": "DP — Interval / Palindrome",
+          "recallId": "P40",
+          "problems": [
+            {
+              "n": 148,
+              "title": "Longest Palindromic Substring",
+              "url": "https://leetcode.com/problems/longest-palindromic-substring/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "P40-longest-palindromic-substring"
+            },
+            {
+              "n": 149,
+              "title": "Palindromic Substrings",
+              "url": "https://leetcode.com/problems/palindromic-substrings/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P40-palindromic-substrings"
+            },
+            {
+              "n": 150,
+              "title": "Burst Balloons",
+              "url": "https://leetcode.com/problems/burst-balloons/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "P40-burst-balloons"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "extra",
+      "name": "Extra tracks · not in the 40-pattern taxonomy",
+      "groups": [
+        {
+          "id": "x-greedy",
+          "name": "Greedy",
+          "problems": [
+            {
+              "n": 151,
+              "title": "Jump Game",
+              "url": "https://leetcode.com/problems/jump-game/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X1-jump-game"
+            },
+            {
+              "n": 152,
+              "title": "Jump Game II",
+              "url": "https://leetcode.com/problems/jump-game-ii/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X1-jump-game-ii"
+            },
+            {
+              "n": 153,
+              "title": "Gas Station",
+              "url": "https://leetcode.com/problems/gas-station/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X1-gas-station"
+            },
+            {
+              "n": 154,
+              "title": "Partition Labels",
+              "url": "https://leetcode.com/problems/partition-labels/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "X1-partition-labels"
+            },
+            {
+              "n": 155,
+              "title": "Hand of Straights",
+              "url": "https://leetcode.com/problems/hand-of-straights/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "X1-hand-of-straights"
+            },
+            {
+              "n": 156,
+              "title": "Candy",
+              "url": "https://leetcode.com/problems/candy/",
+              "difficulty": "Hard",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "X1-candy"
+            }
+          ],
+          "recallId": "X1"
+        },
+        {
+          "id": "x-hashing-fundamentals",
+          "name": "Hashing fundamentals",
+          "problems": [
+            {
+              "n": 157,
+              "title": "Two Sum",
+              "url": "https://leetcode.com/problems/two-sum/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X2-two-sum"
+            },
+            {
+              "n": 158,
+              "title": "Valid Anagram",
+              "url": "https://leetcode.com/problems/valid-anagram/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X2-valid-anagram"
+            },
+            {
+              "n": 159,
+              "title": "Group Anagrams",
+              "url": "https://leetcode.com/problems/group-anagrams/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X2-group-anagrams"
+            },
+            {
+              "n": 160,
+              "title": "Contains Duplicate",
+              "url": "https://leetcode.com/problems/contains-duplicate/",
+              "difficulty": "Easy",
+              "l1": true,
+              "marks": [
+                "◆"
+              ],
+              "recallId": "X2-contains-duplicate"
+            }
+          ],
+          "recallId": "X2"
+        },
+        {
+          "id": "x-design",
+          "name": "Design",
+          "problems": [
+            {
+              "n": 161,
+              "title": "LRU Cache",
+              "url": "https://leetcode.com/problems/lru-cache/",
+              "difficulty": "Medium",
+              "l1": true,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X3-lru-cache"
+            },
+            {
+              "n": 162,
+              "title": "Insert Delete GetRandom O(1)",
+              "url": "https://leetcode.com/problems/insert-delete-getrandom-o1/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "▲"
+              ],
+              "recallId": "X3-insert-delete-getrandom-o1"
+            },
+            {
+              "n": 163,
+              "title": "Design Twitter",
+              "url": "https://leetcode.com/problems/design-twitter/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "◆",
+                "🔒"
+              ],
+              "recallId": "X3-design-twitter"
+            }
+          ],
+          "recallId": "X3"
+        },
+        {
+          "id": "x-matrix-math-manipulation",
+          "name": "Matrix & math manipulation",
+          "problems": [
+            {
+              "n": 164,
+              "title": "Rotate Image",
+              "url": "https://leetcode.com/problems/rotate-image/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X4-rotate-image"
+            },
+            {
+              "n": 165,
+              "title": "Spiral Matrix",
+              "url": "https://leetcode.com/problems/spiral-matrix/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X4-spiral-matrix"
+            },
+            {
+              "n": 166,
+              "title": "Set Matrix Zeroes",
+              "url": "https://leetcode.com/problems/set-matrix-zeroes/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X4-set-matrix-zeroes"
+            },
+            {
+              "n": 167,
+              "title": "Pow(x, n)",
+              "url": "https://leetcode.com/problems/powx-n/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X4-powx-n"
+            }
+          ],
+          "recallId": "X4"
+        },
+        {
+          "id": "x-linked-list-not-reversal-shaped",
+          "name": "Linked list — not reversal-shaped",
+          "problems": [
+            {
+              "n": 168,
+              "title": "Add Two Numbers",
+              "url": "https://leetcode.com/problems/add-two-numbers/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X5-add-two-numbers"
+            },
+            {
+              "n": 169,
+              "title": "Copy List with Random Pointer",
+              "url": "https://leetcode.com/problems/copy-list-with-random-pointer/",
+              "difficulty": "Medium",
+              "l1": false,
+              "marks": [
+                "★"
+              ],
+              "recallId": "X5-copy-list-with-random-pointer"
+            }
+          ],
+          "recallId": "X5"
+        }
+      ],
+      "note": "Worth solving (greedy especially), but no pattern note sits behind them."
+    }
+  ],
+  "guide": [
+    {
+      "id": "how-to-work-this-list",
+      "title": "How to work this list",
+      "html": "<ul>\n<li><p><strong>🟢 L1 problems first, top to bottom</strong> — skip the rest on the first pass. Within a pattern, easy → medium. Read the pattern note's <strong>Mental Trigger</strong> before the first problem of each pattern — the pattern is what you're drilling, not the problem.</p>\n</li>\n<li><p><strong>Say the pattern and the complexity out loud before coding.</strong> Stuck &gt; 35 minutes: re-read the note's Mental Trigger, look at the solution, log the stalled line, and re-attempt it cold at the end of the family.</p>\n</li>\n<li><p><strong>One family per sitting</strong> — don't mix Trees and DP in one session.</p>\n</li>\n<li><p><strong>Language: Python.</strong> Java only for a Java-specific loop — port 10 already-solved patterns, don't re-solve.</p>\n</li>\n<li><p><strong>Cadence: 3 sittings a week, ~100 min, 3–4 problems.</strong></p>\n</li>\n<li><p><strong>Exit criterion for the L1 pass:</strong> a random unseen medium solved cold in <strong>25 min</strong>, with optimal complexity stated <em>before</em> coding. Pass → start the second pass at 2 sittings a week. Fail → one week of cold re-solves from the night log, then retest.</p>\n</li>\n<li><p><strong>Second pass</strong> = every unticked problem, same order and rules. Re-solve any L1 problem logged <em>N</em> in the night log first.</p>\n</li>\n</ul>"
+    },
+    {
+      "id": "ai-loop-practical-round",
+      "title": "AI-loop practical round",
+      "html": "<p>Many AI/ML-engineer loops swap one DSA round for implement-from-scratch (NumPy only), data wrangling, or debugging. Same drill: recognise the shape, code it clean, state the complexity.</p>\n<ul>\n<li><strong>k-means</strong> — init, assign, update, converge; vectorised distance matrix <em>(most asked)</em></li>\n<li><strong>Logistic regression + batch gradient descent</strong> — derive the gradient, stable sigmoid</li>\n<li><strong>k-NN, fully vectorised</strong> — broadcasting; <code>argpartition</code> = quickselect (<a href=\"/dsa/cold-recall#P14\">P14</a>)</li>\n<li><strong>Softmax + cross-entropy, numerically stable</strong> — subtract the max</li>\n<li><strong>Scaled dot-product attention</strong> — single head; stretch: multi-head + causal mask</li>\n<li><strong>Top-k / top-p sampling</strong> — heap vs sort vs partition (<a href=\"/dsa/cold-recall#P14\">P14</a>)</li>\n<li><strong>BPE tokenizer merge loop</strong> on a toy corpus — counter fluency, greedy pair merging</li>\n<li><strong>2-layer MLP forward + backward</strong> — chain rule, shape discipline</li>\n<li><strong>Batched cosine similarity / embedding search</strong> — normalise, matmul, top-k: the RAG kernel</li>\n<li><strong>Data wrangling</strong> — groupby / aggregate / join on messy data; rolling-window stats (<a href=\"/dsa/cold-recall#P03\">P03</a> / <a href=\"/dsa/cold-recall#P04\">P04</a>)</li>\n<li><strong>Debug a training loop</strong> — missing <code>zero_grad()</code>, LR too high, softmax before <code>CrossEntropyLoss</code>, eval-mode leakage</li>\n<li><strong>Rate limiter</strong> (token bucket / sliding-window log) — everyone asks this one</li>\n</ul>"
+    }
+  ]
+}

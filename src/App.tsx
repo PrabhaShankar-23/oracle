@@ -7,6 +7,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import SectionPage from './pages/SectionPage'
 
 // Content pages are split out so each one downloads only when opened.
+const PracticePage = lazy(() => import('./pages/dsa/PracticePage'))
 const ColdRecallPage = lazy(() => import('./pages/dsa/ColdRecallPage'))
 const PlaybookPage = lazy(() => import('./pages/dsa/PlaybookPage'))
 const PythonUtilsPage = lazy(() => import('./pages/dsa/PythonUtilsPage'))
@@ -30,6 +31,7 @@ export default function App() {
           {sections.map((s) => (
             <Route key={s.id} path={s.path} element={<SectionPage />} />
           ))}
+          <Route path="dsa/practice" element={<PracticePage />} />
           <Route path="dsa/cold-recall" element={<ColdRecallPage />} />
           <Route path="dsa/playbook" element={<PlaybookPage />} />
           <Route path="dsa/python-utils" element={<PythonUtilsPage />} />
