@@ -7,7 +7,7 @@ import theme from './theme/theme'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider theme={theme} defaultMode="system" disableTransitionOnChange>
+    <ThemeProvider theme={theme} defaultMode="dark" disableTransitionOnChange>
       <CssBaseline enableColorScheme />
       <App />
     </ThemeProvider>

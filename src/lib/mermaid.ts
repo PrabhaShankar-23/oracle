@@ -1,3 +1,5 @@
+import { mermaidThemeVariables } from '../theme/theme'
+
 let counter = 0
 
 /**
@@ -11,7 +13,8 @@ export async function renderMermaidWithin(root: HTMLElement, mode: 'light' | 'da
   const { default: mermaid } = await import('mermaid')
   mermaid.initialize({
     startOnLoad: false,
-    theme: mode === 'dark' ? 'dark' : 'default',
+    theme: 'base',
+    themeVariables: mermaidThemeVariables(mode),
     securityLevel: 'strict',
     fontFamily: "'Roboto Flex Variable', system-ui, sans-serif",
     flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true },

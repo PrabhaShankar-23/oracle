@@ -5,13 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Interview prep notes: DSA cold recall and system design case studies." />
-    <meta name="theme-color" content="#F3EDF7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#211F26" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4F0E3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#384247" media="(prefers-color-scheme: dark)" />
     <title>AlgoHandbook</title>
     <script>
       // Apply the saved colour scheme before first paint (matches MUI's storage key and selector).
       try {
-        var m = localStorage.getItem('mui-mode') || 'system'
+        var m = localStorage.getItem('mui-mode') || 'dark'
         var dark = m === 'dark' || (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
         document.documentElement.setAttribute('data-mui-color-scheme', dark ? 'dark' : 'light')
       } catch (e) {}
