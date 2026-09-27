@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography'
 import { memo, useState } from 'react'
 import HtmlContent from '../../components/content/HtmlContent'
 import { walkthroughs } from '../../content/deep'
+import { gfgLinks } from '../../content/gfgLinks'
 import type { Problem } from '../../content/types'
 import { codeBlockHtml } from '../../lib/codeHtml'
 import { FONT_MONO } from '../../theme/theme'
@@ -33,6 +34,7 @@ function ProblemCard({ problem: p, recallMode, open, onToggle }: Props) {
   const hidden = recallMode && !revealed
   const walkthrough = walkthroughs[p.id]
   const bodyId = `${p.id}-body`
+  const gfg = gfgLinks[p.id]
 
   return (
     <Card id={p.id} component="article" sx={{ mb: 1 }}>
@@ -80,6 +82,20 @@ function ProblemCard({ problem: p, recallMode, open, onToggle }: Props) {
         >
           <OpenInNewIcon fontSize="small" />
         </IconButton>
+        {gfg && (
+          <Tooltip title={`GeeksforGeeks${gfg.related ? ' (related)' : ''}: ${gfg.title}`}>
+            <IconButton
+              component="a"
+              href={gfg.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`GeeksforGeeks${gfg.related ? ' related article' : ''}: ${gfg.title}`}
+              sx={{ color: gfg.related ? 'text.secondary' : 'success.main', fontSize: '0.75rem', fontWeight: 700, width: 44, height: 44 }}
+            >
+              GfG
+            </IconButton>
+          </Tooltip>
+        )}
       </Stack>
 
       <Collapse in={open} timeout={200} mountOnEnter unmountOnExit>
