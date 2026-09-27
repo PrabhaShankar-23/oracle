@@ -28,7 +28,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import PageContainer from '../../components/content/PageContainer'
 import PageHeader from '../../components/content/PageHeader'
@@ -68,6 +68,7 @@ export default function ColdRecallPage() {
 
   const [filters, setFilters] = useState<Filters>(EMPTY)
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
+  const [openProblems, setOpenProblems] = useState<Set<string>>(new Set())
   const [recallMode, setRecallMode] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const query = useDeferredValue(filters.query.trim().toLowerCase())
@@ -96,7 +97,7 @@ export default function ColdRecallPage() {
   const shownCount = visible.reduce((n, f) => n + f.patterns.reduce((m, p) => m + p.problems.length, 0), 0)
   const patternOptions = recall.families.filter((f) => !filters.family || f.id === filters.family)
 
-  // Deep link (#P12 or #P12-some-problem): make sure the target is visible and expanded.
+  // Deep link (#P12 or #P12-some-problem): make sure the target is visible, expanded and in view.
   useEffect(() => {
     const id = decodeURIComponent(hash.slice(1))
     const hit = allProblems.find(({ problem, pattern }) => problem.id === id || pattern.id === id)
@@ -110,7 +111,21 @@ export default function ColdRecallPage() {
       next.delete(hit.pattern.id)
       return next
     })
+    if (hit.problem.id === id) setOpenProblems((o) => (o.has(id) ? o : new Set(o).add(id)))
+    const frame = requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+    return () => cancelAnimationFrame(frame)
   }, [hash])
+
+  const toggleProblem = useCallback(
+    (id: string) =>
+      setOpenProblems((o) => {
+        const next = new Set(o)
+        if (next.has(id)) next.delete(id)
+        else next.add(id)
+        return next
+      }),
+    [],
+  )
 
   const togglePattern = (id: string) =>
     setCollapsed((c) => {
@@ -251,14 +266,17 @@ export default function ColdRecallPage() {
               Reset
             </Button>
           )}
-          <Button size="small" startIcon={<UnfoldMoreIcon />} onClick={() => setCollapsed(new Set())}>
-            Expand all
-          </Button>
           <Button
             size="small"
-            startIcon={<UnfoldLessIcon />}
-            onClick={() => setCollapsed(new Set(recall.families.flatMap((f) => f.patterns.map((p) => p.id))))}
+            startIcon={<UnfoldMoreIcon />}
+            onClick={() => {
+              setCollapsed(new Set())
+              setOpenProblems(new Set(visible.flatMap((f) => f.patterns.flatMap((p) => p.problems.map((q) => q.id)))))
+            }}
           >
+            Expand all
+          </Button>
+          <Button size="small" startIcon={<UnfoldLessIcon />} onClick={() => setOpenProblems(new Set())}>
             Collapse all
           </Button>
         </Stack>
@@ -323,7 +341,7 @@ export default function ColdRecallPage() {
                   </AccordionSummary>
                   <AccordionDetails sx={{ px: 0, pt: 0, pb: 2 }}>
                     {p.problems.map((q) => (
-                      <ProblemCard key={q.id} problem={q} recallMode={recallMode} />
+                      <ProblemCard key={q.id} problem={q} recallMode={recallMode} open={openProblems.has(q.id)} onToggle={toggleProblem} />
                     ))}
                   </AccordionDetails>
                 </Accordion>
