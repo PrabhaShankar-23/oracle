@@ -1,0 +1,7 @@
+{
+  "P09-missing-number#sort": "def missing_number(nums):\n    nums.sort()\n    for i, x in enumerate(nums):\n        if x != i:                     # first slot holding the wrong value\n            return i\n    return len(nums)",
+  "P09-missing-number#sum": "def missing_number(nums):\n    n = len(nums)\n    return n * (n + 1) // 2 - sum(nums)   # Java/C++: this sum can overflow int",
+  "P09-missing-number": "def missing_number(nums):\n    acc = len(nums)                    # the index n has no slot\n    for i, x in enumerate(nums):\n        acc ^= i ^ x                   # pairs cancel, the missing one remains\n    return acc",
+  "P09-first-missing-positive": "def first_missing_positive(nums):\n    n = len(nums)\n    for i in range(n):\n        while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:\n            j = nums[i] - 1            # value v belongs in slot v-1\n            nums[i], nums[j] = nums[j], nums[i]\n    for i in range(n):\n        if nums[i] != i + 1:\n            return i + 1\n    return n + 1",
+  "P09-first-missing-positive#sign": "def first_missing_positive(nums):\n    n = len(nums)\n    for i in range(n):\n        if not 1 <= nums[i] <= n:\n            nums[i] = n + 1                   # can never be the answer\n    for x in nums:\n        v = abs(x)\n        if v <= n:\n            nums[v - 1] = -abs(nums[v - 1])   # sign of slot v-1 says \"v is here\"\n    for i in range(n):\n        if nums[i] > 0:\n            return i + 1\n    return n + 1"
+}

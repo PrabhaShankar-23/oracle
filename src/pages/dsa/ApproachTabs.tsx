@@ -1,3 +1,4 @@
+import LightbulbOutlined from '@mui/icons-material/LightbulbOutlined'
 import StarRounded from '@mui/icons-material/StarRounded'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
@@ -35,7 +36,13 @@ export default function ApproachTabs({ approaches }: Props) {
             id={`${id}-tab-${i}`}
             aria-controls={`${id}-panel-${i}`}
             label={`${i + 1}. ${ap.name}`}
-            icon={ap.best ? <StarRounded fontSize="small" aria-label="Best approach" /> : undefined}
+            icon={
+              ap.best ? (
+                <StarRounded fontSize="small" aria-label="Best approach" />
+              ) : ap.trick ? (
+                <LightbulbOutlined fontSize="small" aria-label="Interview trick" />
+              ) : undefined
+            }
             iconPosition="end"
           />
         ))}
@@ -45,6 +52,7 @@ export default function ApproachTabs({ approaches }: Props) {
         <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', mb: 1.5 }}>
           <Chip size="small" label={`Time ${a.time}`} sx={{ fontFamily: FONT_MONO }} color={a.best ? 'primary' : 'default'} />
           <Chip size="small" label={`Space ${a.space}`} sx={{ fontFamily: FONT_MONO }} variant="outlined" />
+          {a.trick && <Chip size="small" label="Interview trick" color="tertiary" icon={<LightbulbOutlined />} />}
         </Stack>
 
         <Box

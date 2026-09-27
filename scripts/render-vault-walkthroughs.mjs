@@ -7,7 +7,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import path from 'node:path'
 import { walkthroughs } from '../src/content/deep/index.ts'
-import { barsSvg, cellsSvg } from '../src/lib/recallDiagramSvg.ts'
+import { barsSvg, cellsSvg, intervalsSvg } from '../src/lib/recallDiagramSvg.ts'
 
 const VAULT = process.env.VAULT_DIR ?? path.join(homedir(), 'Desktop/java/Spring Boot/AlgoHandbook')
 const FILE = path.join(VAULT, '04-DSA-V2/00-index/03-dsa-cold-recall.html')
@@ -26,7 +26,11 @@ function frame({ caption, highlight, note }, svg) {
 
 function diagram(d) {
   const frames = d.rows.map((row) =>
-    d.kind === 'cells' ? frame(row, cellsSvg(row)) : frame({ ...row, highlight: row.box?.label }, barsSvg(row)),
+    d.kind === 'cells'
+      ? frame(row, cellsSvg(row))
+      : d.kind === 'intervals'
+        ? frame(row, intervalsSvg(row))
+        : frame({ ...row, highlight: row.box?.label }, barsSvg(row)),
   )
   return `<figure class="walk-fig">${frames.join('')}</figure>`
 }
@@ -36,14 +40,14 @@ function block(id, approaches) {
   const tabs = approaches
     .map(
       (a, i) =>
-        `<button type="button" role="tab" data-i="${i}" aria-selected="${i === best}">${i + 1}. ${esc(a.name)}${a.best ? ' ★' : ''}</button>`,
+        `<button type="button" role="tab" data-i="${i}" aria-selected="${i === best}">${i + 1}. ${esc(a.name)}${a.best ? ' ★' : a.trick ? ' 💡' : ''}</button>`,
     )
     .join('')
   const panels = approaches
     .map(
       (a, i) =>
         `<div class="walk-panel${a.best ? ' walk-best' : ''}" role="tabpanel" data-i="${i}"${i === best ? '' : ' hidden'}>` +
-        `<div class="walk-cx"><span>Time ${esc(a.time)}</span><span>Space ${esc(a.space)}</span></div>` +
+        `<div class="walk-cx"><span>Time ${esc(a.time)}</span><span>Space ${esc(a.space)}</span>${a.trick ? '<span class="walk-trick">Interview trick</span>' : ''}</div>` +
         `<div class="walk-grid"><div class="walk-figs">${a.diagrams.map(diagram).join('')}</div>` +
         `<ul class="walk-points">${a.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul></div>` +
         `<pre>${esc(a.code)}</pre></div>`,
@@ -65,6 +69,7 @@ const CSS = `<style id="walk-css">
 .walk-cx span{font:11px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--badge);
   border:1px solid var(--line);border-radius:10px;padding:0 8px}
 .walk-best .walk-cx span:first-child{border-color:var(--accent);color:var(--accent)}
+.walk-cx .walk-trick{font-family:inherit;border-color:var(--m);color:var(--m)}
 .walk-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start}
 .walk-figs{display:grid;gap:8px;min-width:0}
 .walk-fig{margin:0;display:grid;gap:10px;padding:10px;border:1px solid var(--line);border-radius:8px;
@@ -82,6 +87,8 @@ const CSS = `<style id="walk-css">
 .walk .rd-miss rect{fill:color-mix(in srgb,var(--h) 18%,transparent);stroke:var(--h)}
 .walk .rd-active rect{fill:color-mix(in srgb,var(--accent) 24%,transparent);stroke:var(--accent);stroke-width:1.5}
 .walk .rd-active text{font-weight:700}
+.walk .rd-ival text{font-size:11px}
+.walk .rd-tick{font-size:10px}
 .walk .rd-span path{stroke:var(--dim)}
 .walk .rd-bar{fill:color-mix(in srgb,var(--dim) 40%,transparent)}
 .walk .rd-bar-value{font-size:9px}
@@ -120,6 +127,14 @@ function checkDiagrams() {
     for (const a of approaches) {
       for (const d of a.diagrams) {
         for (const row of d.rows) {
+          if (d.kind === 'intervals') {
+            if (!row.bars.length) throw new Error(`${id} · ${a.name}: intervals row without bars`)
+            for (const b of row.bars) {
+              if (b.from > b.to) throw new Error(`${id} · ${a.name}: interval ${b.from}–${b.to} runs backwards`)
+              if (b.lane !== undefined && !(Number.isInteger(b.lane) && b.lane >= 0)) throw new Error(`${id} · ${a.name}: bad lane ${b.lane}`)
+            }
+            continue
+          }
           const n = (d.kind === 'cells' ? row.cells : row.heights).length
           const at = (label, i) => {
             if (!Number.isInteger(i) || i < 0 || i >= n) throw new Error(`${id} · ${a.name}: ${label} index ${i} outside 0…${n - 1}`)

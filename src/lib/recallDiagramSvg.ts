@@ -3,7 +3,7 @@
  * (scripts/render-vault-walkthroughs.mjs). Pure string output with `rd-` classes, so each host
  * styles it with its own colours. Keep this file free of runtime imports: Node loads it directly.
  */
-import type { BarsRow, CellsRow, DiagramPointer } from '../content/types'
+import type { BarsRow, CellsRow, DiagramPointer, IntervalsRow } from '../content/types'
 
 const CELL = 34
 const GAP = 4
@@ -12,6 +12,11 @@ const SPAN_H = 26
 const BAR_W = 26
 const BARS_MAX_H = 96
 const LEVEL_GUTTER = 84
+const LANE_H = 20
+const LANE_GAP = 6
+const MARK_H = 18
+const AXIS_H = 20
+const IVAL_MAX_W = 250
 
 const esc = (s: string | number) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
@@ -105,4 +110,53 @@ export function barsSvg(row: BarsRow) {
   body += `<line class="rd-baseline" x1="0" x2="${chartWidth}" y1="${base}" y2="${base}"/>`
   body += pointers(row.pointers, (i) => x(i) + BAR_W / 2, base + 6, true)
   return svg(width, height, body)
+}
+
+export function intervalsSvg(row: IntervalsRow) {
+  const marks = row.marks ?? []
+  const points = [...row.bars.flatMap((b) => [b.from, b.to]), ...marks.map((m) => m.at)]
+  const lo = Math.min(...points)
+  const hi = Math.max(...points)
+  const unit = Math.min(24, IVAL_MAX_W / Math.max(1, hi - lo))
+  const width = (hi - lo) * unit
+  const lanes = Math.max(...row.bars.map((b, i) => b.lane ?? i)) + 1
+  const y0 = marks.length ? MARK_H : 4
+  const base = y0 + lanes * (LANE_H + LANE_GAP)
+  const height = base + AXIS_H
+  const x = (v: number) => (v - lo) * unit
+
+  let body = ''
+  row.bars.forEach((b, i) => {
+    const y = y0 + (b.lane ?? i) * (LANE_H + LANE_GAP)
+    // A point interval [v, v] still needs a visible sliver.
+    const x1 = b.from === b.to ? x(b.from) - 3 : x(b.from)
+    const w = b.from === b.to ? 6 : x(b.to) - x(b.from)
+    const label = b.label ?? `${b.from}–${b.to}`
+    const labelW = label.length * 6.6 + 6
+    const inside = w >= labelW
+    // An outside label that would run into the next bar on the same lane is dropped; the axis still shows the values.
+    const blocked =
+      !inside &&
+      row.bars.some((o, j) => j !== i && (o.lane ?? j) === (b.lane ?? i) && x(o.from) >= x1 + w && x(o.from) < x1 + w + labelW)
+    const text = blocked
+      ? ''
+      : `<text x="${inside ? x1 + w / 2 : x1 + w + 4}" y="${y + LANE_H / 2}" dominant-baseline="central" text-anchor="${inside ? 'middle' : 'start'}">${esc(label)}</text>`
+    body +=
+      `<g class="rd-cell rd-ival${b.state ? ` rd-${b.state}` : ''}">` +
+      `<rect x="${x1}" y="${y}" width="${w}" height="${LANE_H}" rx="4"/>` +
+      text +
+      `</g>`
+  })
+  for (const m of marks) {
+    body +=
+      `<g class="rd-level rd-tone-${m.tone ?? 'warning'}">` +
+      `<line x1="${x(m.at)}" x2="${x(m.at)}" y1="${y0 - 2}" y2="${base}"/>` +
+      `<text x="${x(m.at)}" y="${y0 - 6}" text-anchor="middle">${esc(m.label)}</text></g>`
+  }
+  body += `<line class="rd-baseline" x1="0" x2="${width}" y1="${base}" y2="${base}"/>`
+  for (const v of [...new Set(points)].sort((a, b) => a - b)) {
+    body += `<text class="rd-tick" x="${x(v)}" y="${base + 13}" text-anchor="middle">${v}</text>`
+  }
+  // Labels outside the last bar can run past the axis; leave room for them.
+  return svg(width + 48, height, body)
 }

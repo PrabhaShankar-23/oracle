@@ -55,13 +55,29 @@ export type BarsRow = {
   note?: string
 }
 
-export type Diagram = { kind: 'cells'; rows: CellsRow[] } | { kind: 'bars'; rows: BarsRow[] }
+/** One bar on a number line: [from, to]. Bars sharing a lane sit on one line (a room, the merged output). */
+export type IntervalBar = { from: number; to: number; label?: string; lane?: number; state?: CellState }
+
+/** Intervals on a number line, one lane each unless `lane` says otherwise; marks are vertical lines (an arrow, "now"). */
+export type IntervalsRow = {
+  caption?: string
+  bars: IntervalBar[]
+  marks?: { at: number; label: string; tone?: DiagramTone }[]
+  note?: string
+}
+
+export type Diagram =
+  | { kind: 'cells'; rows: CellsRow[] }
+  | { kind: 'bars'; rows: BarsRow[] }
+  | { kind: 'intervals'; rows: IntervalsRow[] }
 
 export type ApproachWalkthrough = {
   name: string
   time: string
   space: string
   best?: boolean
+  /** A well-known clever move worth showing in an interview (e.g. Min Stack's 2·x − min encoding). Comes after the best tab. */
+  trick?: boolean
   /** 4–6 short lines: the idea, the moves, why it is correct or where it wastes work. */
   points: string[]
   code: string

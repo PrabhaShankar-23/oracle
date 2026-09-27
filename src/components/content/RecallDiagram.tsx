@@ -2,12 +2,12 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import type { Theme } from '@mui/material/styles'
 import type { Diagram } from '../../content/types'
-import { barsSvg, cellsSvg } from '../../lib/recallDiagramSvg'
+import { barsSvg, cellsSvg, intervalsSvg } from '../../lib/recallDiagramSvg'
 import { FONT_MONO } from '../../theme/theme'
 
 type Props = { diagram: Diagram; label: string }
 
-/** Small step-by-step drawings for cold recall approaches: array walks and height charts. */
+/** Small step-by-step drawings for cold recall approaches: array walks, height charts and interval timelines. */
 export default function RecallDiagram({ diagram, label }: Props) {
   return (
     <Box
@@ -18,11 +18,14 @@ export default function RecallDiagram({ diagram, label }: Props) {
         { m: 0, display: 'grid', gap: 1.25, p: { xs: 1.5, sm: 2 }, borderRadius: 3, overflowX: 'auto' },
       ]}
     >
-      {diagram.kind === 'cells'
-        ? diagram.rows.map((row, i) => <Frame key={i} caption={row.caption} note={row.note} svg={cellsSvg(row)} />)
-        : diagram.rows.map((row, i) => (
-            <Frame key={i} caption={row.caption} highlight={row.box?.label} note={row.note} svg={barsSvg(row)} />
-          ))}
+      {diagram.kind === 'cells' &&
+        diagram.rows.map((row, i) => <Frame key={i} caption={row.caption} note={row.note} svg={cellsSvg(row)} />)}
+      {diagram.kind === 'bars' &&
+        diagram.rows.map((row, i) => (
+          <Frame key={i} caption={row.caption} highlight={row.box?.label} note={row.note} svg={barsSvg(row)} />
+        ))}
+      {diagram.kind === 'intervals' &&
+        diagram.rows.map((row, i) => <Frame key={i} caption={row.caption} note={row.note} svg={intervalsSvg(row)} />)}
     </Box>
   )
 }
@@ -76,6 +79,8 @@ const diagramStyles = (t: Theme) => {
     '& .rd-miss rect': { fill: tint(v.error.main, 18), stroke: v.error.main },
     '& .rd-active rect': { fill: v.container.primary, stroke: v.primary.main, strokeWidth: 1.5 },
     '& .rd-active text': { fill: v.container.onPrimary, fontWeight: 700 },
+    '& .rd-ival text': { fontSize: 11 },
+    '& .rd-tick': { fontSize: 10 },
 
     '& .rd-span path': { stroke: v.text.secondary, strokeWidth: 1 },
 

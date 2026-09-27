@@ -39,6 +39,7 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded) · `marked` (i
 - `src/content/deep/` — cold recall approach walkthroughs (naive → best: points, time/space, code, diagram specs),
   keyed by problem id. The site renders them with `RecallDiagram`; the vault page gets the same SVG from
   `src/lib/recallDiagramSvg.ts`. Keep that file and the data files free of runtime imports — Node loads them directly.
+  How to write them (approach ladder, interview-trick tab, diagrams, testing, progress): `claude/walkthrough-guide.md`.
 - `src/content/playbook.ts` — the DSA thinking playbook: hand-written, not from the vault, rendered by
   `PlaybookPage` from a small set of block kinds (`flow`, `checklist`, `table`, `cards`, `bullets`,
   `compare`, `code`, `callout`). Its section ids and titles live in `src/content/playbookIndex.ts` so
