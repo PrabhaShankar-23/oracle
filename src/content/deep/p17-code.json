@@ -1,0 +1,5 @@
+{
+  "P17-sliding-window-maximum": "from collections import deque\n\ndef max_sliding_window(nums, k):\n    dq, res = deque(), []              # indices, values decreasing front → back\n    for i, x in enumerate(nums):\n        while dq and nums[dq[-1]] <= x:\n            dq.pop()                   # can never be a max again\n        dq.append(i)\n        if dq[0] <= i - k:\n            dq.popleft()               # slid out of the window\n        if i >= k - 1:\n            res.append(nums[dq[0]])\n    return res",
+  "P17-sliding-window-maximum#brute": "def max_sliding_window(nums, k):\n    return [max(nums[i:i + k]) for i in range(len(nums) - k + 1)]   # O(k) per window",
+  "P17-sliding-window-maximum#heap": "import heapq\n\ndef max_sliding_window(nums, k):\n    heap, res = [], []                 # (−value, index)\n    for i, x in enumerate(nums):\n        heapq.heappush(heap, (-x, i))\n        while heap[0][1] <= i - k:\n            heapq.heappop(heap)        # lazily drop maxima that left the window\n        if i >= k - 1:\n            res.append(-heap[0][0])\n    return res"
+}

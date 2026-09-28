@@ -5,6 +5,133 @@ import code from './p18-code.json' with { type: 'json' }
 const c = code as Record<string, string>
 
 export const p18: Record<string, ApproachWalkthrough[]> = {
+  'P18-valid-parentheses': [
+    {
+      name: 'Erase "()" pairs until stuck',
+      time: 'O(n²)',
+      space: 'O(n)',
+      points: [
+        'An innermost pair like "()" can always be removed without changing validity.',
+        'Keep erasing pairs; the string is valid if it ends empty.',
+        'Easy to explain, but each pass rebuilds the string: quadratic.',
+      ],
+      code: c['P18-valid-parentheses#erase'],
+      diagrams: [
+        {
+          kind: 'cells',
+          rows: [
+            { caption: 'pass 1', cells: ['(', '[', ']', '{', '}', ')'], states: { 1: 'dim', 2: 'dim', 3: 'dim', 4: 'dim' } },
+            { caption: 'pass 2', cells: ['(', ')'], states: { 0: 'dim', 1: 'dim' }, note: 'empty ⇒ valid' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Stack of expected closers',
+      time: 'O(n)',
+      space: 'O(n)',
+      best: true,
+      points: [
+        'On an opener, push the closer you now expect.',
+        'On a closer, the stack top must be exactly it; pop.',
+        'Pushing the closer, not the opener, removes the pair lookup at pop time.',
+        'Valid only if the stack is empty at the end. Leftover openers are a failure too.',
+      ],
+      code: c['P18-valid-parentheses'],
+      diagrams: [
+        {
+          kind: 'cells',
+          rows: [
+            { caption: 's', cells: ['(', '[', ']', '{', '}', ')'], pointers: [{ at: 2, label: 'c' }], states: { 2: 'match' } },
+            { caption: 'stack before "]"', cells: [')', ']'], pointers: [{ at: 1, label: 'top' }], states: { 1: 'match' }, note: 'top is "]" ⇒ pop · … ⇒ empty ⇒ valid' },
+          ],
+        },
+      ],
+    },
+  ],
+
+  'P18-evaluate-reverse-polish-notation': [
+    {
+      name: 'Operand stack',
+      time: 'O(n)',
+      space: 'O(n)',
+      best: true,
+      points: [
+        'Numbers are pushed. An operator pops two operands and pushes the result.',
+        'The first pop is the right operand: b, a = pop(), pop(), then compute a op b.',
+        'Division truncates toward zero: int(a / b) in Python, not a // b.',
+        'The last value on the stack is the answer.',
+      ],
+      code: c['P18-evaluate-reverse-polish-notation'],
+      diagrams: [
+        {
+          kind: 'cells',
+          rows: [
+            { caption: 'tokens', cells: ['4', '13', '5', '/', '+'], pointers: [{ at: 3, label: 't' }] },
+            { caption: 'stack before "/"', cells: [4, 13, 5], states: { 1: 'active', 2: 'active' }, note: 'b = 5, a = 13 ⇒ 13 / 5 = 2' },
+            { caption: 'after "+"', cells: [6], states: { 0: 'match' }, note: '4 + 2 = 6' },
+          ],
+        },
+      ],
+    },
+  ],
+
+  'P18-basic-calculator': [
+    {
+      name: 'Recurse into each paren group',
+      time: 'O(n)',
+      space: 'O(depth)',
+      points: [
+        'Evaluate + and − left to right with a running result and a sign.',
+        'On "(", recurse; the group comes back as one number, and the outer sign applies to it.',
+        'On ")", return the group’s value and where it ended.',
+        'Clear, but it uses the call stack. Deeply nested input can hit Python’s recursion limit.',
+      ],
+      code: c['P18-basic-calculator#recursive'],
+      diagrams: [
+        {
+          kind: 'cells',
+          rows: [
+            {
+              caption: '1 − (4 + 5 − 2) + 3',
+              cells: ['1', '−', '(', '4', '+', '5', '−', '2', ')', '+', '3'],
+              states: { 3: 'active', 4: 'active', 5: 'active', 6: 'active', 7: 'active' },
+              span: { from: 2, to: 8, label: 'parse() ⇒ 7' },
+              note: '1 − 7 + 3 = −3',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'One pass with a sign stack',
+      time: 'O(n)',
+      space: 'O(n)',
+      best: true,
+      points: [
+        'Keep res, the current number and the sign in front of it.',
+        '"+" or "−": add sign × num to res, then set the new sign.',
+        '"(": push res and sign, then reset both. ")": finish the group, multiply by the saved sign, add the saved res.',
+        'With only + and −, a paren’s context is just two integers, so no postfix conversion is needed.',
+      ],
+      code: c['P18-basic-calculator'],
+      diagrams: [
+        {
+          kind: 'cells',
+          rows: [
+            { caption: 'stack after "(" in 1 − (4 + 5 − 2) + 3', cells: [1, -1], note: 'saved res = 1, sign = −1' },
+            {
+              caption: 'at ")"',
+              cells: [7],
+              states: { 0: 'match' },
+              note: 'group = 7 ⇒ 7 × (−1) + 1 = −6 ⇒ then + 3 ⇒ −3',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+
   'P18-min-stack': [
     {
       name: 'Second stack of minimums',
