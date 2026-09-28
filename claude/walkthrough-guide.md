@@ -169,4 +169,6 @@ Test every approach before it goes into `pNN-code.json`. Write a Python script i
 - [x] Trees: P20–P24 (22 problems)
 - [x] Graphs: P25–P29 (20 problems)
 - [x] Bits and backtracking: P30–P33 (19 problems)
-- [ ] X1–X5
+- [x] X1–X5 (19 problems)
+
+All 169 cold recall cards have walkthroughs. New or changed cards follow the same steps.

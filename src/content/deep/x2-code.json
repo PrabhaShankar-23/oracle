@@ -1,0 +1,10 @@
+{
+  "X2-contains-duplicate": "def contains_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False",
+  "X2-contains-duplicate#sort": "def contains_duplicate(nums):\n    nums = sorted(nums)\n    return any(a == b for a, b in zip(nums, nums[1:]))   # duplicates end up adjacent",
+  "X2-group-anagrams": "from collections import defaultdict\n\ndef group_anagrams(strs):\n    groups = defaultdict(list)\n    for s in strs:\n        count = [0] * 26\n        for ch in s:\n            count[ord(ch) - 97] += 1\n        groups[tuple(count)].append(s) # letter counts are the signature\n    return list(groups.values())",
+  "X2-group-anagrams#sorted": "from collections import defaultdict\n\ndef group_anagrams(strs):\n    groups = defaultdict(list)\n    for s in strs:\n        groups[''.join(sorted(s))].append(s)   # anagrams sort to the same key\n    return list(groups.values())",
+  "X2-two-sum": "def two_sum(nums, target):\n    seen = {}                          # value → index\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return [seen[target - x], i]\n        seen[x] = i\n    return []",
+  "X2-two-sum#pairs": "def two_sum(nums, target):\n    for i in range(len(nums)):\n        for j in range(i + 1, len(nums)):\n            if nums[i] + nums[j] == target:\n                return [i, j]\n    return []",
+  "X2-valid-anagram": "def is_anagram(s, t):\n    if len(s) != len(t):\n        return False\n    count = [0] * 26\n    for a, b in zip(s, t):\n        count[ord(a) - 97] += 1\n        count[ord(b) - 97] -= 1\n    return all(c == 0 for c in count)",
+  "X2-valid-anagram#sort": "def is_anagram(s, t):\n    return sorted(s) == sorted(t)"
+}
