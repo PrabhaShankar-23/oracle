@@ -1,0 +1,4 @@
+{
+  "P38-longest-increasing-subsequence": "from bisect import bisect_left\n\ndef length_of_lis(nums):\n    tails = []                         # tails[k]: smallest tail of a length-k+1 run\n    for x in nums:\n        i = bisect_left(tails, x)\n        if i == len(tails):\n            tails.append(x)            # extends the longest run\n        else:\n            tails[i] = x               # a smaller tail for length i+1\n    return len(tails)",
+  "P38-longest-increasing-subsequence#n2": "def length_of_lis(nums):\n    dp = [1] * len(nums)               # dp[i]: longest run ending at i\n    for i in range(len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i]:\n                dp[i] = max(dp[i], dp[j] + 1)\n    return max(dp)"
+}

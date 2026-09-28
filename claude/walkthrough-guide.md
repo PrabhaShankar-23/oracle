@@ -157,6 +157,7 @@ Test every approach before it goes into `pNN-code.json`. Write a Python script i
 
 - [x] Family A: P01–P07 (24 problems)
 - [x] Family B: P08–P11 (11 problems)
-- [ ] Family C: P12–P15
+- [x] Family C: P12–P15 (16 problems)
 - [ ] Family D: P16–P19. P18 Min Stack is done; the rest of P18 is not.
-- [ ] P20 onward and X1–X5
+- [x] Family I (DP): P34–P40 (25 problems)
+- [ ] P20–P33 and X1–X5

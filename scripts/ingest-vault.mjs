@@ -230,6 +230,13 @@ async function ingestPractice(recall) {
   const problems = families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   console.log(`  parsed practice list (${problems.length} problems, ${problems.filter((p) => p.l1).length} L1)`)
   await write('dsa-practice.json', data)
+
+  // The practice list owns the 🟢 L1 flag; copy it onto every cold recall card for the same LeetCode problem.
+  const l1Urls = new Set(problems.filter((p) => p.l1).map((p) => normUrl(p.url)))
+  for (const f of recall.families)
+    for (const p of f.patterns)
+      for (const q of p.problems) q.l1 = l1Urls.has(normUrl(q.url))
+  await write('dsa-cold-recall.json', recall)
   return data
 }
 

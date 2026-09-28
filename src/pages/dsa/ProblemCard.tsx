@@ -64,6 +64,7 @@ function ProblemCard({ problem: p, recallMode, open, onToggle }: Props) {
             <Typography variant="subtitle1" component="h3" sx={{ mr: 'auto', overflowWrap: 'anywhere' }}>
               {p.title}
             </Typography>
+            {p.l1 && <Chip label="L1" size="small" color="primary" />}
             <Chip label={p.difficulty} size="small" color={DIFFICULTY_COLOR[p.difficulty]} variant="outlined" />
             {p.marks.map((m) => (
               <Tooltip key={m} title={MARK_LABELS[m] ?? m}>

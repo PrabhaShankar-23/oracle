@@ -16,6 +16,8 @@ export type Problem = {
   difficulty: Difficulty
   marks: string[]
   lists: string[]
+  /** First-pass problem (🟢 L1 in the practice list). */
+  l1: boolean
   state: string
   invariant: string
   approaches: Approach[]

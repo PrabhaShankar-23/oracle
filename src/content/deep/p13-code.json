@@ -1,0 +1,7 @@
+{
+  "P13-sqrtx#count": "def my_sqrt(x):\n    r = 0\n    while (r + 1) * (r + 1) <= x:      # O(√x) steps\n        r += 1\n    return r",
+  "P13-sqrtx": "def my_sqrt(x):\n    lo, hi, ans = 0, x, 0\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if mid * mid <= x:\n            ans = mid                  # feasible: remember it, try larger\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return ans",
+  "P13-sqrtx#newton": "def my_sqrt(x):\n    r = x\n    while r * r > x:\n        r = (r + x // r) // 2          # Newton step on r² = x, in integers\n    return r",
+  "P13-koko-eating-bananas#scan": "def min_eating_speed(piles, h):\n    k = 1\n    while sum((p + k - 1) // k for p in piles) > h:\n        k += 1                         # up to max(piles) speeds, n piles each\n    return k",
+  "P13-koko-eating-bananas": "def min_eating_speed(piles, h):\n    lo, hi = 1, max(piles)\n    while lo < hi:\n        k = (lo + hi) // 2\n        hours = sum((p + k - 1) // k for p in piles)   # ceil(p / k)\n        if hours <= h:\n            hi = k                     # feasible: try slower\n        else:\n            lo = k + 1\n    return lo"
+}

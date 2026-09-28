@@ -25,6 +25,8 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
@@ -54,10 +56,12 @@ const searchText = new Map<string, string>(
   ]),
 )
 
+const l1Total = allProblems.filter(({ problem }) => problem.l1).length
+
 const DIFFICULTIES: Difficulty[] = ['Easy', 'Medium', 'Hard']
 
-type Filters = { query: string; family: string; pattern: string; difficulty: string; mark: string }
-const EMPTY: Filters = { query: '', family: '', pattern: '', difficulty: '', mark: '' }
+type Filters = { query: string; level: 'all' | 'l1'; family: string; pattern: string; difficulty: string; mark: string }
+const EMPTY: Filters = { query: '', level: 'all', family: '', pattern: '', difficulty: '', mark: '' }
 
 export default function ColdRecallPage() {
   const theme = useTheme()
@@ -74,10 +78,12 @@ export default function ColdRecallPage() {
   const query = useDeferredValue(filters.query.trim().toLowerCase())
 
   const set = (patch: Partial<Filters>) => setFilters((f) => ({ ...f, ...patch }))
-  const activeCount = [filters.family, filters.pattern, filters.difficulty, filters.mark].filter(Boolean).length
+  const menuCount = [filters.family, filters.pattern, filters.difficulty, filters.mark].filter(Boolean).length
+  const activeCount = menuCount + (filters.level === 'l1' ? 1 : 0)
 
   const visible = useMemo(() => {
     const match = (q: Problem, patternId: string, familyId: string) =>
+      (filters.level === 'all' || q.l1) &&
       (!filters.family || filters.family === familyId) &&
       (!filters.pattern || filters.pattern === patternId) &&
       (!filters.difficulty || filters.difficulty === q.difficulty) &&
@@ -92,7 +98,7 @@ export default function ColdRecallPage() {
           .filter((p) => p.problems.length > 0),
       }))
       .filter((f) => f.patterns.length > 0)
-  }, [filters.family, filters.pattern, filters.difficulty, filters.mark, query])
+  }, [filters.level, filters.family, filters.pattern, filters.difficulty, filters.mark, query])
 
   const shownCount = visible.reduce((n, f) => n + f.patterns.reduce((m, p) => m + p.problems.length, 0), 0)
   const patternOptions = recall.families.filter((f) => !filters.family || f.id === filters.family)
@@ -235,9 +241,24 @@ export default function ColdRecallPage() {
               <TextField {...params} label="Search problems, invariants, code…" />
             )}
           />
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexShrink: 0, justifyContent: 'space-between' }}>
+          <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            <ToggleButtonGroup
+              exclusive
+              size="small"
+              color="primary"
+              value={filters.level}
+              onChange={(_, level: Filters['level'] | null) => level && set({ level })}
+              aria-label="Which problems"
+            >
+              <ToggleButton value="all" sx={{ minHeight: 40, px: 1.5, whiteSpace: 'nowrap' }}>
+                All
+              </ToggleButton>
+              <ToggleButton value="l1" sx={{ minHeight: 40, px: 1.5, whiteSpace: 'nowrap' }}>
+                🟢 L1 {l1Total}
+              </ToggleButton>
+            </ToggleButtonGroup>
             {!wideBar && (
-              <Badge badgeContent={activeCount} color="primary">
+              <Badge badgeContent={menuCount} color="primary">
                 <Button
                   variant={filtersOpen ? 'contained' : 'outlined'}
                   startIcon={<FilterListIcon />}
