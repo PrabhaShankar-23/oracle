@@ -3,7 +3,7 @@
  * (scripts/render-vault-walkthroughs.mjs). Pure string output with `rd-` classes, so each host
  * styles it with its own colours. Keep this file free of runtime imports: Node loads it directly.
  */
-import type { BarsRow, CellsRow, DiagramPointer, IntervalsRow } from '../content/types'
+import type { BarsRow, CellsRow, DiagramPointer, GridRow, IntervalsRow, TreeRow } from '../content/types'
 
 const CELL = 34
 const GAP = 4
@@ -17,6 +17,12 @@ const LANE_GAP = 6
 const MARK_H = 18
 const AXIS_H = 20
 const IVAL_MAX_W = 250
+const NODE_R = 13
+const TREE_SLOT = 44
+const LEVEL_H = 50
+const TREE_PAD = 48
+const GRID_CELL = 28
+const GRID_GAP = 3
 
 const esc = (s: string | number) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
@@ -159,4 +165,64 @@ export function intervalsSvg(row: IntervalsRow) {
   }
   // Labels outside the last bar can run past the axis; leave room for them.
   return svg(width + 48, height, body)
+}
+
+export function treeSvg(row: TreeRow) {
+  const last = row.nodes.length - 1
+  const depthOf = (i: number) => Math.floor(Math.log2(i + 1))
+  const depth = depthOf(last)
+  const inner = 2 ** depth * TREE_SLOT
+  // Labels sit beside their node, so leave room at both sides when there are any.
+  const pad = row.pointers?.length ? TREE_PAD : 0
+  const top = row.pointers?.length ? 26 : NODE_R + 4
+  const x = (i: number) => {
+    const d = depthOf(i)
+    return pad + ((i - (2 ** d - 1) + 0.5) * inner) / 2 ** d
+  }
+  const y = (i: number) => top + depthOf(i) * LEVEL_H
+  const height = y(last) + NODE_R + 6
+
+  let body = ''
+  row.nodes.forEach((v, i) => {
+    const parent = Math.floor((i - 1) / 2)
+    if (i > 0 && v !== null && row.nodes[parent] !== null)
+      body += `<line class="rd-edge" x1="${x(parent)}" y1="${y(parent)}" x2="${x(i)}" y2="${y(i)}"/>`
+  })
+  row.nodes.forEach((v, i) => {
+    if (v === null) return
+    body +=
+      `<g class="rd-cell rd-node${row.states?.[i] ? ` rd-${row.states[i]}` : ''}">` +
+      `<circle cx="${x(i)}" cy="${y(i)}" r="${NODE_R}"/>` +
+      `<text x="${x(i)}" y="${y(i)}" dominant-baseline="central" text-anchor="middle">${esc(v)}</text></g>`
+  })
+  const byIndex = new Map<number, DiagramPointer[]>()
+  for (const p of row.pointers ?? []) byIndex.set(p.at, [...(byIndex.get(p.at) ?? []), p])
+  for (const [at, group] of byIndex) {
+    // Away from the edge to the parent: a left child's parent is up-right, a right child's is up-left.
+    const side = at === 0 ? 0 : at % 2 === 1 ? -1 : 1
+    const lx = x(at) + side * (NODE_R + 3)
+    const ly = at === 0 ? y(at) - NODE_R - 5 : y(at) - NODE_R + 2
+    const anchor = side === 0 ? 'middle' : side < 0 ? 'end' : 'start'
+    body +=
+      `<g class="rd-pointer rd-tone-${group[0].tone ?? 'primary'}">` +
+      `<text x="${lx}" y="${ly}" text-anchor="${anchor}">${esc(group.map((p) => p.label).join(','))}</text></g>`
+  }
+  return svg(inner + 2 * pad, height, body)
+}
+
+export function gridSvg(row: GridRow) {
+  const rows = row.cells.length
+  const cols = Math.max(...row.cells.map((r) => r.length))
+  const step = GRID_CELL + GRID_GAP
+  let body = ''
+  row.cells.forEach((line, r) =>
+    line.forEach((v, c) => {
+      const state = row.states?.[`${r},${c}`]
+      body +=
+        `<g class="rd-cell rd-gcell${state ? ` rd-${state}` : ''}">` +
+        `<rect x="${c * step}" y="${r * step + 2}" width="${GRID_CELL}" height="${GRID_CELL}" rx="4"/>` +
+        `<text x="${c * step + GRID_CELL / 2}" y="${r * step + 2 + GRID_CELL / 2}" dominant-baseline="central" text-anchor="middle">${esc(v)}</text></g>`
+    }),
+  )
+  return svg(cols * step - GRID_GAP, rows * step + 2, body)
 }

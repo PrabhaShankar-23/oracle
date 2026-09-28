@@ -68,10 +68,32 @@ export type IntervalsRow = {
   note?: string
 }
 
+/**
+ * A binary tree in level order (heap indexing: the children of i are 2i + 1 and 2i + 2); null marks a
+ * missing node. Up to 4 levels. States and pointers use the same indices.
+ */
+export type TreeRow = {
+  caption?: string
+  nodes: (string | number | null)[]
+  states?: Partial<Record<number, CellState>>
+  pointers?: DiagramPointer[]
+  note?: string
+}
+
+/** A small 2D board; states are keyed "r,c". */
+export type GridRow = {
+  caption?: string
+  cells: (string | number)[][]
+  states?: Partial<Record<string, CellState>>
+  note?: string
+}
+
 export type Diagram =
   | { kind: 'cells'; rows: CellsRow[] }
   | { kind: 'bars'; rows: BarsRow[] }
   | { kind: 'intervals'; rows: IntervalsRow[] }
+  | { kind: 'tree'; rows: TreeRow[] }
+  | { kind: 'grid'; rows: GridRow[] }
 
 export type ApproachWalkthrough = {
   name: string

@@ -106,9 +106,15 @@ Diagrams show the key moment of the approach on a tiny input, not a full trace.
     default to `from–to`. A label that doesn't fit inside a short bar goes to its right, or is dropped
     if a neighbour is in the way. Keep the range small (about 0–20), and don't put a mark through the
     middle of a labelled bar.
-  - Trees, graphs and grids have no dedicated kind yet. Show the array they reduce to (BFS order,
-    level list, DP row). If that genuinely can't carry the idea, say so and propose a new diagram kind
-    instead of faking one.
+  - `tree` for binary trees (and small tries): `nodes` in level order with heap indexing (the
+    children of i are 2i + 1 and 2i + 2), `null` for gaps, at most 4 levels (15 slots). Use `states`
+    for the nodes in focus and `pointers` for short labels such as a returned value or "pop 3". The
+    labels sit beside the node, away from its parent edge. Draw the real shape; it is what makes a
+    tree problem memorable.
+  - `grid` for boards and matrices (islands, BFS, word search). `cells` is a 2D array and `states`
+    are keyed "r,c". Keep it to about 6×6.
+  - Other graphs have no kind: show the arrays the algorithm keeps (in-degrees, order, parent). If
+    that can't carry the idea, propose a new kind instead of faking one.
 - **Size:** 1–3 rows per diagram, at most about 10 cells per row. Use one diagram per approach unless
   two moments really need separate frames.
 - **Same input across tabs:** use one small example for every approach of a problem, so the tabs
@@ -160,4 +166,5 @@ Test every approach before it goes into `pNN-code.json`. Write a Python script i
 - [x] Family C: P12–P15 (16 problems)
 - [x] Family D: P16–P19 (13 problems)
 - [x] Family I (DP): P34–P40 (25 problems)
-- [ ] P20–P33 (trees, graphs, bits, backtracking) and X1–X5
+- [x] Trees: P20–P24 (22 problems)
+- [ ] Graphs P25–P29, bits and backtracking P30–P33, and X1–X5

@@ -2,12 +2,12 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import type { Theme } from '@mui/material/styles'
 import type { Diagram } from '../../content/types'
-import { barsSvg, cellsSvg, intervalsSvg } from '../../lib/recallDiagramSvg'
+import { barsSvg, cellsSvg, gridSvg, intervalsSvg, treeSvg } from '../../lib/recallDiagramSvg'
 import { FONT_MONO } from '../../theme/theme'
 
 type Props = { diagram: Diagram; label: string }
 
-/** Small step-by-step drawings for cold recall approaches: array walks, height charts and interval timelines. */
+/** Small step-by-step drawings for cold recall approaches: array walks, height charts, interval timelines, trees and grids. */
 export default function RecallDiagram({ diagram, label }: Props) {
   return (
     <Box
@@ -26,6 +26,10 @@ export default function RecallDiagram({ diagram, label }: Props) {
         ))}
       {diagram.kind === 'intervals' &&
         diagram.rows.map((row, i) => <Frame key={i} caption={row.caption} note={row.note} svg={intervalsSvg(row)} />)}
+      {diagram.kind === 'tree' &&
+        diagram.rows.map((row, i) => <Frame key={i} caption={row.caption} note={row.note} svg={treeSvg(row)} />)}
+      {diagram.kind === 'grid' &&
+        diagram.rows.map((row, i) => <Frame key={i} caption={row.caption} note={row.note} svg={gridSvg(row)} />)}
     </Box>
   )
 }
@@ -72,12 +76,14 @@ const diagramStyles = (t: Theme) => {
     border: `1px solid ${v.surface.outlineVariant}`,
     '& text': { fontFamily: FONT_MONO, fontSize: 11, fill: v.text.secondary },
 
-    '& .rd-cell rect': { fill: v.surface.containerHigh, stroke: v.surface.outlineVariant, strokeWidth: 1 },
+    '& .rd-cell rect, & .rd-cell circle': { fill: v.surface.containerHigh, stroke: v.surface.outlineVariant, strokeWidth: 1 },
     '& .rd-cell text': { fontSize: 13, fill: v.text.primary },
     '& .rd-dim': { opacity: 0.35 },
-    '& .rd-match rect': { fill: tint(v.success.main, 22), stroke: v.success.main },
-    '& .rd-miss rect': { fill: tint(v.error.main, 18), stroke: v.error.main },
-    '& .rd-active rect': { fill: v.container.primary, stroke: v.primary.main, strokeWidth: 1.5 },
+    '& .rd-match rect, & .rd-match circle': { fill: tint(v.success.main, 22), stroke: v.success.main },
+    '& .rd-miss rect, & .rd-miss circle': { fill: tint(v.error.main, 18), stroke: v.error.main },
+    '& .rd-active rect, & .rd-active circle': { fill: v.container.primary, stroke: v.primary.main, strokeWidth: 1.5 },
+    '& .rd-edge': { stroke: v.text.secondary, strokeWidth: 1.25, opacity: 0.7 },
+    '& .rd-gcell text': { fontSize: 12 },
     '& .rd-active text': { fill: v.container.onPrimary, fontWeight: 700 },
     '& .rd-ival text': { fontSize: 11 },
     '& .rd-tick': { fontSize: 10 },

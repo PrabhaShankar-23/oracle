@@ -7,7 +7,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import path from 'node:path'
 import { walkthroughs } from '../src/content/deep/index.ts'
-import { barsSvg, cellsSvg, intervalsSvg } from '../src/lib/recallDiagramSvg.ts'
+import { barsSvg, cellsSvg, gridSvg, intervalsSvg, treeSvg } from '../src/lib/recallDiagramSvg.ts'
 
 const VAULT = process.env.VAULT_DIR ?? path.join(homedir(), 'Desktop/java/Spring Boot/AlgoHandbook')
 const FILE = path.join(VAULT, '04-DSA-V2/00-index/03-dsa-cold-recall.html')
@@ -30,7 +30,11 @@ function diagram(d) {
       ? frame(row, cellsSvg(row))
       : d.kind === 'intervals'
         ? frame(row, intervalsSvg(row))
-        : frame({ ...row, highlight: row.box?.label }, barsSvg(row)),
+        : d.kind === 'tree'
+          ? frame(row, treeSvg(row))
+          : d.kind === 'grid'
+            ? frame(row, gridSvg(row))
+            : frame({ ...row, highlight: row.box?.label }, barsSvg(row)),
   )
   return `<figure class="walk-fig">${frames.join('')}</figure>`
 }
@@ -80,12 +84,14 @@ const CSS = `<style id="walk-css">
 .walk-points{margin:0;padding-left:18px;font-size:12.5px}
 .walk-points li{margin:0 0 4px}
 .walk text{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:var(--dim)}
-.walk .rd-cell rect{fill:var(--card);stroke:var(--line)}
+.walk .rd-cell rect,.walk .rd-cell circle{fill:var(--card);stroke:var(--line)}
+.walk .rd-edge{stroke:var(--dim);stroke-width:1.25;opacity:.7}
+.walk .rd-gcell text{font-size:12px}
 .walk .rd-cell text{font-size:13px;fill:var(--ink)}
 .walk .rd-dim{opacity:.35}
-.walk .rd-match rect{fill:color-mix(in srgb,var(--e) 22%,transparent);stroke:var(--e)}
-.walk .rd-miss rect{fill:color-mix(in srgb,var(--h) 18%,transparent);stroke:var(--h)}
-.walk .rd-active rect{fill:color-mix(in srgb,var(--accent) 24%,transparent);stroke:var(--accent);stroke-width:1.5}
+.walk .rd-match circle,.walk .rd-match rect{fill:color-mix(in srgb,var(--e) 22%,transparent);stroke:var(--e)}
+.walk .rd-miss circle,.walk .rd-miss rect{fill:color-mix(in srgb,var(--h) 18%,transparent);stroke:var(--h)}
+.walk .rd-active circle,.walk .rd-active rect{fill:color-mix(in srgb,var(--accent) 24%,transparent);stroke:var(--accent);stroke-width:1.5}
 .walk .rd-active text{font-weight:700}
 .walk .rd-ival text{font-size:11px}
 .walk .rd-tick{font-size:10px}
@@ -127,6 +133,25 @@ function checkDiagrams() {
     for (const a of approaches) {
       for (const d of a.diagrams) {
         for (const row of d.rows) {
+          if (d.kind === 'tree') {
+            const n = row.nodes.length
+            if (n > 15) throw new Error(`${id} · ${a.name}: trees are limited to 4 levels (15 slots)`)
+            const at = (label, i) => {
+              if (!Number.isInteger(i) || i < 0 || i >= n || row.nodes[i] === null)
+                throw new Error(`${id} · ${a.name}: tree ${label} ${i} is not a node`)
+            }
+            for (const k of Object.keys(row.states ?? {})) at('state', Number(k))
+            for (const p of row.pointers ?? []) at(`pointer ${p.label}`, p.at)
+            continue
+          }
+          if (d.kind === 'grid') {
+            for (const k of Object.keys(row.states ?? {})) {
+              const [r, c] = k.split(',').map(Number)
+              if (!(r >= 0 && r < row.cells.length && c >= 0 && c < row.cells[r].length))
+                throw new Error(`${id} · ${a.name}: grid state ${k} outside the board`)
+            }
+            continue
+          }
           if (d.kind === 'intervals') {
             if (!row.bars.length) throw new Error(`${id} · ${a.name}: intervals row without bars`)
             for (const b of row.bars) {
