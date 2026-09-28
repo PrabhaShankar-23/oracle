@@ -1,0 +1,12 @@
+{
+  "P30-counting-bits": "def count_bits(n):\n    dp = [0] * (n + 1)\n    for i in range(1, n + 1):\n        dp[i] = dp[i >> 1] + (i & 1)   # i = (i // 2) with one more low bit\n    return dp",
+  "P30-counting-bits#each": "def count_bits(n):\n    def popcount(x):\n        c = 0\n        while x:\n            x &= x - 1                 # clear the lowest set bit\n            c += 1\n        return c\n\n    return [popcount(i) for i in range(n + 1)]",
+  "P30-number-of-1-bits": "def hamming_weight(n):\n    count = 0\n    while n:\n        n &= n - 1                     # clears the lowest set bit\n        count += 1\n    return count",
+  "P30-number-of-1-bits#shift": "def hamming_weight(n):\n    count = 0\n    for i in range(32):\n        count += (n >> i) & 1          # test every position\n    return count",
+  "P30-reverse-bits": "def reverse_bits(n):\n    res = 0\n    for _ in range(32):\n        res = (res << 1) | (n & 1)     # push n's lowest bit onto res\n        n >>= 1\n    return res",
+  "P30-reverse-bits#masks": "def reverse_bits(n):\n    n = ((n >> 16) | (n << 16)) & 0xFFFFFFFF                    # swap the halves\n    n = ((n & 0xFF00FF00) >> 8) | ((n & 0x00FF00FF) << 8)       # swap bytes\n    n = ((n & 0xF0F0F0F0) >> 4) | ((n & 0x0F0F0F0F) << 4)       # swap nibbles\n    n = ((n & 0xCCCCCCCC) >> 2) | ((n & 0x33333333) << 2)       # swap bit pairs\n    n = ((n & 0xAAAAAAAA) >> 1) | ((n & 0x55555555) << 1)       # swap single bits\n    return n",
+  "P30-single-number": "def single_number(nums):\n    acc = 0\n    for x in nums:\n        acc ^= x                       # pairs cancel: a ^ a = 0\n    return acc",
+  "P30-single-number-ii": "def single_number(nums):\n    ones = twos = 0                    # per-bit count mod 3\n    for x in nums:\n        ones = (ones ^ x) & ~twos\n        twos = (twos ^ x) & ~ones\n    return ones",
+  "P30-single-number-ii#bits": "def single_number(nums):\n    res = 0\n    for bit in range(32):\n        count = sum((x >> bit) & 1 for x in nums)\n        if count % 3:                  # only the loner leaves a remainder here\n            res |= 1 << bit\n    return res - (1 << 32) if res >= 1 << 31 else res   # back to a signed int",
+  "P30-sum-of-two-integers": "def get_sum(a, b):\n    MASK = 0xFFFFFFFF                  # Python ints are unbounded: emulate 32 bits\n    a, b = a & MASK, b & MASK\n    while b:\n        a, b = (a ^ b) & MASK, ((a & b) << 1) & MASK   # sum without carry, carry\n    return a if a <= 0x7FFFFFFF else ~(a ^ MASK)       # back to a signed int"
+}

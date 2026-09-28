@@ -28,6 +28,10 @@ import { p26 } from './p26.ts'
 import { p27 } from './p27.ts'
 import { p28 } from './p28.ts'
 import { p29 } from './p29.ts'
+import { p30 } from './p30.ts'
+import { p31 } from './p31.ts'
+import { p32 } from './p32.ts'
+import { p33 } from './p33.ts'
 import { p34 } from './p34.ts'
 import { p35 } from './p35.ts'
 import { p36 } from './p36.ts'
@@ -37,4 +41,4 @@ import { p39 } from './p39.ts'
 import { p40 } from './p40.ts'
 
 /** Problem id → approach walkthroughs (naive → best). Cards without an entry show the compact approach list. */
-export const walkthroughs: Record<string, ApproachWalkthrough[]> = { ...p01, ...p02, ...p03, ...p04, ...p05, ...p06, ...p07, ...p08, ...p09, ...p10, ...p11, ...p12, ...p13, ...p14, ...p15, ...p16, ...p17, ...p18, ...p19, ...p20, ...p21, ...p22, ...p23, ...p24, ...p25, ...p26, ...p27, ...p28, ...p29, ...p34, ...p35, ...p36, ...p37, ...p38, ...p39, ...p40 }
+export const walkthroughs: Record<string, ApproachWalkthrough[]> = { ...p01, ...p02, ...p03, ...p04, ...p05, ...p06, ...p07, ...p08, ...p09, ...p10, ...p11, ...p12, ...p13, ...p14, ...p15, ...p16, ...p17, ...p18, ...p19, ...p20, ...p21, ...p22, ...p23, ...p24, ...p25, ...p26, ...p27, ...p28, ...p29, ...p30, ...p31, ...p32, ...p33, ...p34, ...p35, ...p36, ...p37, ...p38, ...p39, ...p40 }

@@ -168,4 +168,5 @@ Test every approach before it goes into `pNN-code.json`. Write a Python script i
 - [x] Family I (DP): P34–P40 (25 problems)
 - [x] Trees: P20–P24 (22 problems)
 - [x] Graphs: P25–P29 (20 problems)
-- [ ] Bits and backtracking P30–P33, and X1–X5
+- [x] Bits and backtracking: P30–P33 (19 problems)
+- [ ] X1–X5
