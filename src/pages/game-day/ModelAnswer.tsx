@@ -99,11 +99,14 @@ export default function ModelAnswer({
   questionId,
   type,
   spine,
+  standalone = false,
 }: {
   topic: string
   questionId: string
   type: GameDayAnswerType
   spine: string[]
+  /** The card's only content (recall blocks retired), so no divider from the answer above. */
+  standalone?: boolean
 }) {
   const [answer, setAnswer] = useState<GameDayModelAnswer | null | undefined>(undefined)
 
@@ -113,7 +116,7 @@ export default function ModelAnswer({
   }
 
   return (
-    <Box sx={(t) => ({ mt: 2, pt: 1.5, borderTop: `1px dashed ${t.vars.palette.divider}` })}>
+    <Box sx={(t) => (standalone ? {} : { mt: 2, pt: 1.5, borderTop: `1px dashed ${t.vars.palette.divider}` })}>
       <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap', mb: 1 }}>
         <Typography variant="overline" component="p" sx={{ color: 'primary.main', lineHeight: 1.6 }}>
           🎤 Model answer

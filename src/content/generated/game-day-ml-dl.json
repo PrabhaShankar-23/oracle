@@ -21,46 +21,9 @@
             "decides"
           ],
           "text": "99% train accuracy, 72% test. Walk me through what you do.",
-          "points": [
-            "Name it as a <strong>variance</strong> problem before touching anything — then check it isn't leakage inverted",
-            "Cheapest first: more data · stronger regularisation · fewer features · simpler model",
-            "<strong>Learning curve</strong> tells you which — converging gap = more data helps, flat gap = it won't",
-            "Verify the split is honest (grouping, time order) <em>before</em> blaming the model",
-            "Cross-validate the fix; a single held-out set will happily lie to you twice"
-          ],
-          "links": [
-            {
-              "label": "Overfitting, Underfitting &amp; Generalization",
-              "target": "01-ML/01-Foundations/06-Overfitting, Underfitting &amp; Generalization"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen — the single most-asked ML interview question, in scenario form.",
-          "flow": "name variance → check the split → learning curve → regularise or add data → re-CV",
-          "trap": "jumping straight to hyperparameter tuning",
-          "drill": {
-            "prompt": "from jbtiq_ml Q1: \"Your model gets 99% train accuracy and 72% test accuracy. Walk me through what you do.\"",
-            "badge": "Evergreen — the single most-asked ML interview question, in scenario form.",
-            "hint": "Don't jump to a fix. What do you have to rule out before you accept \"overfitting\" as the diagnosis?",
-            "points": [
-              "<strong>First rule out that the gap is real</strong>: is the test set drawn from the same distribution, is it big enough for 72% to be meaningful (confidence interval), and is there <strong>leakage</strong> in train that inflates the 99%? A leaked ID or target-derived feature looks exactly like this.",
-              "If real, it's <strong>high variance</strong>: model capacity exceeds what the data supports. Confirm with a <strong>learning curve</strong> — if train and validation converge as data grows, you're data-hungry; if the gap persists flat, it's capacity/regularization.",
-              "Fix ladder, cheapest first: more/better data or augmentation → stronger <strong>regularization</strong> (L1/L2, dropout, tree depth/<code>min_samples_leaf</code>, early stopping) → simpler model or fewer features → ensembling/bagging to average variance away.",
-              "Say the diagnostic discipline: <strong>one change at a time, measured on a held-out set you don't tune on</strong>, and use CV rather than a single split so you're not chasing split noise.",
-              "Senior addition: check whether 72% is actually <em>bad</em> for the task — compare against a <strong>baseline</strong> (majority class, simple heuristic, human) before optimising anything."
-            ],
-            "oneLiner": "First I'd rule out leakage and test-set noise, then read a learning curve to tell data hunger from excess capacity — and only then pick between more data and more regularization.",
-            "followUp": "\"The learning curve is flat and you can't get more data.\" → reduce capacity, regularize harder, engineer better features, or accept and calibrate expectations.",
-            "links": [
-              {
-                "label": "Overfitting, Underfitting &amp; Generalization",
-                "target": "01-ML/01-Foundations/06-Overfitting, Underfitting &amp; Generalization"
-              },
-              {
-                "label": "Bias Variance Tradeoff",
-                "target": "01-ML/01-Foundations/05-Bias-Variance Tradeoff"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -80,46 +43,9 @@
             "decides"
           ],
           "text": "CV score 0.94, production 0.71. Nothing in the code changed. Where do you look first?",
-          "points": [
-            "<strong>Leakage</strong> is the first hypothesis, not drift — drift takes time, this gap was there on day one",
-            "Target leakage: a feature computed <em>after</em> the label event exists",
-            "Split leakage: same entity in train and test, or future rows leaking backward in time",
-            "Preprocessing leakage: scaler/encoder/imputer fit on the <strong>full</strong> dataset before splitting",
-            "Then check <strong>train–serve skew</strong> — different code paths computing \"the same\" feature"
-          ],
-          "links": [
-            {
-              "label": "Train Validation Test Splits",
-              "target": "01-ML/02-Data Handling &amp; EDA/06-Train-Validation-Test Splits"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs constantly on LeetCode Discuss ML threads + LinkedIn \"why my model failed\" posts (2025–26)",
-          "flow": "leakage first (target → split → preprocessing) → then skew → drift last",
-          "trap": "calling it drift on day one — drift doesn't arrive pre-installed",
-          "drill": {
-            "prompt": "from jbtiq_ml Q6: \"Your CV score is 0.94 and production is 0.71. Nothing about the code changed. Where do you look first?\"",
-            "badge": "Trending — recurs constantly on LeetCode Discuss ML threads + LinkedIn \"why my model failed\" posts (2025–26)",
-            "hint": "There are only a few ways an offline number can be optimistic. Name the leakage families before you name drift.",
-            "points": [
-              "<strong>Leakage first, drift second</strong> — leakage is the more common cause of a gap this large. Families: (1) <strong>target leakage</strong> (a feature computed from or after the outcome — refund flag, \"days since cancellation\"); (2) <strong>train/test contamination</strong> (fitting the scaler/imputer/encoder on the full dataset before splitting, duplicate rows, near-duplicates); (3) <strong>temporal leakage</strong> (random split on time-ordered data → training on the future); (4) <strong>group leakage</strong> (same user/device across folds).",
-              "Then <strong>train-serve skew</strong>: features computed differently in the training pipeline vs the serving path — different defaults for missing values, different time zones, different aggregation windows, a feature that's available in the warehouse but not at request time.",
-              "Then genuine <strong>distribution shift</strong>: covariate shift, label shift, or concept drift. Diagnose by scoring the <em>production</em> feature distributions against training (PSI/KS per feature) and by replaying production inputs through the offline pipeline.",
-              "Structural fixes: put every transform inside a <strong><code>Pipeline</code>/<code>ColumnTransformer</code></strong> fitted inside each CV fold, use <strong><code>GroupKFold</code></strong> or <strong>time-series CV</strong> where relevant, and share one feature-computation implementation between training and serving (a <strong>feature store</strong> exists for exactly this).",
-              "Say the audit trick: sort features by importance and ask of the top three, \"would I know this at prediction time?\" — that catches most target leakage in minutes."
-            ],
-            "oneLiner": "A gap that big is usually leakage or train-serve skew, not drift — so I audit the top features for availability at prediction time, check that every transform was fitted inside the fold, and replay production inputs through the offline pipeline.",
-            "followUp": "\"How would you have caught it before shipping?\" → time-based holdout, a leakage checklist in review, and shadow-scoring production traffic.",
-            "links": [
-              {
-                "label": "Train Validation Test Splits",
-                "target": "01-ML/02-Data Handling &amp; EDA/06-Train-Validation-Test Splits"
-              },
-              {
-                "label": "Train Serve Skew",
-                "target": "01-ML/15-System &amp; Architecture/02-Train-Serve Skew"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -139,45 +65,9 @@
             "decides"
           ],
           "text": "Decompose bias-variance — and tell me where the classical picture is misleading.",
-          "points": [
-            "Error = <strong>bias² + variance + irreducible noise</strong>; bias = wrong assumptions, variance = sensitivity to the sample",
-            "Classical U-curve says complexity past a point always hurts — <strong>modern over-parameterised models contradict it</strong>",
-            "Double descent: past the interpolation threshold, test error falls <em>again</em>",
-            "Operationally it's still the right diagnostic: gap between train and val is your variance read",
-            "Regularisation, ensembling and more data each attack a different term"
-          ],
-          "links": [
-            {
-              "label": "Bias Variance Tradeoff",
-              "target": "01-ML/01-Foundations/05-Bias-Variance Tradeoff"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — the \"where it's misleading\" half recurs on LeetCode Discuss ML threads + LinkedIn posts since deep-learning-era interviews (2025–26)",
-          "flow": "decompose → diagnose from the train/val gap → attack the dominant term",
-          "trap": "reciting the U-curve as universal law in 2026",
-          "drill": {
-            "prompt": "from jbtiq_ml Q2: \"Decompose the bias-variance tradeoff for me — and tell me where the classical picture is misleading.\"",
-            "badge": "Trending — the \"where it's misleading\" half recurs on LeetCode Discuss ML threads + LinkedIn posts since deep-learning-era interviews (2025–26)",
-            "hint": "Three terms in the decomposition, not two. Then: what does the U-shaped test-error curve look like for a hugely overparameterized model?",
-            "points": [
-              "Expected squared error = <strong>bias² + variance + irreducible noise</strong>. Bias = systematic error from wrong assumptions (underfit); variance = sensitivity to the particular training sample (overfit); noise is the floor you cannot beat.",
-              "Classical picture: capacity ↑ → bias ↓, variance ↑ → U-shaped test error, pick the minimum. That still governs most tabular/classical ML, which is why it's the right first answer.",
-              "Where it misleads: <strong>double descent</strong> — past the interpolation threshold, test error can <em>fall again</em> for heavily overparameterized models. So \"more parameters always overfits\" is false for modern nets, and the tradeoff is better framed as <strong>effective capacity</strong> (architecture + regularization + optimization + data) than parameter count.",
-              "Also: the decomposition is exact for squared loss; for 0–1 loss it's only an analogy — worth saying, it signals you've read past the tutorial.",
-              "Practical use: <strong>bias and variance have different fixes</strong>, so the value of the framework is diagnostic — learning curves tell you which one you have."
-            ],
-            "oneLiner": "Bias², variance and irreducible noise — capacity trades the first two, but with modern overparameterized models double descent breaks the simple U-curve, so I reason about effective capacity, not parameter count.",
-            "links": [
-              {
-                "label": "Bias Variance Tradeoff",
-                "target": "01-ML/01-Foundations/05-Bias-Variance Tradeoff"
-              },
-              {
-                "label": "No Free Lunch Theorem",
-                "target": "01-ML/01-Foundations/07-No Free Lunch Theorem"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "concept",
             "spine": [
@@ -196,45 +86,9 @@
             "decides"
           ],
           "text": "How do you split data when the same users appear many times and behaviour is seasonal?",
-          "points": [
-            "Two independent violations: <strong>entity overlap</strong> and <strong>temporal order</strong> — fix both or the score is fiction",
-            "Entity → <strong>GroupKFold</strong> on user id, never plain stratified",
-            "Time → <strong>walk-forward / expanding window</strong>; test is always <em>after</em> train",
-            "Combine: group-aware split within a time-ordered fold",
-            "Seasonality means the test window must cover a comparable season, or you're measuring the calendar"
-          ],
-          "links": [
-            {
-              "label": "Time Series Cross Validation — Walk Forward, Expanding, Rolling",
-              "target": "01-ML/11-Model Selection, Validation &amp; Tuning/02-Time-Series Cross-Validation — Walk-Forward, Expanding, Rolling"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + ML-Engineer JDs (2025–26)",
-          "flow": "group by entity → order by time → walk forward → check the test season is comparable",
-          "trap": "stratified K-fold because the class balance looked nicer",
-          "drill": {
-            "prompt": "from jbtiq_ml Q7: \"How do you split data for a model that predicts subscription cancellation, where users appear many times and behaviour changes seasonally?\"",
-            "badge": "Trending — recurs on LeetCode Discuss + ML-Engineer JDs (2025–26)",
-            "hint": "Two independent leakage risks are named in the question. A single splitting strategy has to defeat both.",
-            "points": [
-              "Two risks: <strong>entity leakage</strong> (the same user in train and test lets the model memorise the user, not the behaviour) and <strong>temporal leakage</strong> (seasonality means a random split trains on the future).",
-              "Correct construction: split <strong>by time first</strong> (train on ≤ T, validate on (T, T+Δ], test on the most recent window), and enforce <strong>group disjointness by user</strong> within that — i.e. a grouped, time-ordered split, validated with <strong>walk-forward CV</strong> across several time origins rather than a single cut.",
-              "Respect the <strong>prediction horizon and label delay</strong>: features may only use data up to the prediction timestamp, and the label window must be fully observed — otherwise the most recent rows are censored and look artificially clean.",
-              "Report the metric <strong>per time slice</strong>, not just pooled — a model that degrades monotonically over the test window is telling you the retraining cadence you need.",
-              "Say the final validation: the offline evaluation should mimic deployment exactly — train on the past, predict forward, no user overlap. If your CV doesn't look like production, its number is decoration."
-            ],
-            "oneLiner": "Time-ordered split with user-level group disjointness, validated walk-forward across multiple origins, with features truncated at the prediction timestamp and the label window fully observed.",
-            "links": [
-              {
-                "label": "Time Series CV — Walk Forward, Expanding Window, Rolling Window",
-                "target": "01-ML/11-Model Selection, Validation &amp; Tuning/03-Time Series CV — Walk-Forward, Expanding Window, Rolling Window"
-              },
-              {
-                "label": "Group K Fold — when you have grouped or leaky data",
-                "target": "01-ML/11-Model Selection, Validation &amp; Tuning/04-Group K-Fold — when you have grouped or leaky data"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "design",
             "spine": [
@@ -254,45 +108,9 @@
             "decides"
           ],
           "text": "You used 5-fold CV to tune hyperparameters and reported that same CV score. What's wrong?",
-          "points": [
-            "The score is <strong>optimistically biased</strong> — the folds were used to <em>select</em>, so they're no longer held out",
-            "Selecting over many candidates is fitting to fold noise; the more candidates, the worse the bias",
-            "Fix: <strong>nested CV</strong> — inner loop selects, outer loop estimates; or a untouched final hold-out",
-            "Nested costs k_outer × k_inner × candidates — pay it when the decision is expensive, not always",
-            "Cheap alternative: one clean hold-out set touched exactly once"
-          ],
-          "links": [
-            {
-              "label": "Nested Cross Validation",
-              "target": "01-ML/11-Model Selection, Validation &amp; Tuning/03-Nested Cross-Validation"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen — the nested-CV question, in the form it's actually asked.",
-          "flow": "selection ≠ estimation → inner loop selects, outer estimates → or one untouched hold-out",
-          "trap": "treating the best CV score as the expected production score",
-          "drill": {
-            "prompt": "from jbtiq_ml Q34: \"You used 5-fold CV to pick hyperparameters and reported that same CV score as the model's performance. What's wrong, and what's the fix?\"",
-            "badge": "Evergreen — the nested-CV question, in the form it's actually asked.",
-            "hint": "The score did double duty. What does selecting-on-a-number do to that number as an estimate?",
-            "points": [
-              "The CV score was used to <strong>select</strong> among many configurations, so the winner's score is optimistically biased — you picked the config that got luckiest on those folds (winner's curse / multiple comparisons). The more configs you tried, the bigger the inflation.",
-              "Fixes, by budget: hold out an untouched <strong>test set</strong> evaluated exactly once after all selection; or <strong>nested CV</strong> — inner loop tunes, outer loop estimates generalization of the whole <em>procedure</em> — when data is too scarce for a clean holdout.",
-              "Same discipline applies to everything that saw the folds: feature selection, encoder choices, threshold tuning. Anything selected on validation data contaminates it as an estimate.",
-              "Comparing two models honestly: differences within CV noise are not wins — use <strong>repeated CV with confidence intervals</strong>, or McNemar's / 5×2-CV paired tests when the decision matters.",
-              "Practical calibration to voice: the bias is small when you tried three configs and large when Optuna tried three hundred — the risk scales with search intensity."
-            ],
-            "oneLiner": "Selecting on a score biases that score upward — the winner got lucky on those folds — so I report from an untouched holdout or nested CV, and I treat within-noise differences as ties, not wins.",
-            "links": [
-              {
-                "label": "Nested Cross Validation (for unbiased hyperparameter selection)",
-                "target": "01-ML/11-Model Selection, Validation &amp; Tuning/05-Nested Cross Validation (for unbiased hyperparameter selection)"
-              },
-              {
-                "label": "Statistical significance of model comparisons — McNemar's test, paired t test, 5x2 CV",
-                "target": "01-ML/11-Model Selection, Validation &amp; Tuning/12-Statistical significance of model comparisons — McNemar's test, paired t-test, 5x2 CV"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -311,49 +129,9 @@
             "decides"
           ],
           "text": "How do you turn 'reduce churn' into an ML problem — and when do you say don't use ML?",
-          "points": [
-            "Force the <strong>decision</strong> out first: who gets what intervention, when, at what cost?",
-            "Then the label: churn <em>by when</em>, and what counts — pauses, downgrades?",
-            "Then horizon and unit of prediction — per user per month is a choice, not a given",
-            "Metric follows the decision: <strong>cost of FP vs FN</strong>, plus the capacity constraint",
-            "Don't use ML when: no label, no feedback loop, rules work, or the action is fixed anyway"
-          ],
-          "links": [
-            {
-              "label": "ML Problem Framing",
-              "target": "01-ML/01-Foundations/04-ML Problem Framing"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on ML-Engineer/Architect JDs and LinkedIn interview write-ups (2025–26)",
-          "flow": "decision → label + horizon → metric from cost of error → is there a cheaper rule?",
-          "trap": "accepting \"predict churn\" as a spec",
-          "drill": {
-            "prompt": "from jbtiq_ml Q3: \"How do you frame a vague business ask — 'reduce churn' — as an ML problem? And when do you tell them not to use ML?\"",
-            "badge": "Trending — recurs on ML-Engineer/Architect JDs and LinkedIn interview write-ups (2025–26)",
-            "hint": "Four things must be nailed down before any model exists. And the \"don't use ML\" answer needs a concrete condition, not modesty.",
-            "points": [
-              "Nail down, in order: <strong>the decision</strong> the model will change (who gets what intervention), the <strong>prediction target</strong> and its horizon (churn = no activity in 30 days? cancellation event?), the <strong>unit of prediction</strong> (user, account, session), and the <strong>cost matrix</strong> — what a false positive and a false negative each cost in currency.",
-              "Then define the <strong>label generation</strong> path: is the label available historically, is it observable at serving time without leakage, and what's the <strong>label delay</strong> (you can't know 30-day churn for last week's users).",
-              "Establish a <strong>baseline and a success threshold</strong> before modelling: majority class, a business rule, the current process. If a rule gets 90% of the value, ship the rule.",
-              "Say \"don't use ML\" when: the rule is expressible and stable, labels don't exist or are hopelessly noisy, the required accuracy is unachievable given noise, the cost of an error is unbounded (safety/legal) without a human in the loop, or the data drifts faster than you can retrain.",
-              "Architect framing: also decide <strong>online vs batch</strong>, latency budget, and how the prediction is <em>acted on</em> — an unusable prediction is a failed project regardless of AUC."
-            ],
-            "oneLiner": "Pin the decision, the target and horizon, the unit, and the cost of each error type — then compare against a rule-based baseline, and if the rule captures most of the value, ship the rule.",
-            "links": [
-              {
-                "label": "ML Problem Framing",
-                "target": "01-ML/01-Foundations/04-ML Problem Framing"
-              },
-              {
-                "label": "ML Development Lifecycle",
-                "target": "01-ML/01-Foundations/03-ML Development Lifecycle"
-              },
-              {
-                "label": "Cost of Error Analysis",
-                "target": "01-ML/15-System &amp; Architecture/05-Cost-of-Error Analysis"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "design",
             "spine": [
@@ -380,50 +158,9 @@
             "decides"
           ],
           "text": "ROC-AUC is 0.92 and the business says the model is useless. Reconcile.",
-          "points": [
-            "ROC-AUC is <strong>prevalence-insensitive</strong> — it flatters models on rare positives",
-            "At 0.5% prevalence, a great ROC still means most flagged cases are false positives",
-            "Use <strong>PR-AUC</strong> and precision@k — the business only ever sees the top of the ranked list",
-            "AUC is threshold-free; the product ships a <strong>threshold</strong>, chosen from the cost of error",
-            "Ranking quality and operating-point quality are different claims — say which one you're making"
-          ],
-          "links": [
-            {
-              "label": "Metric Selection &amp; Threshold Tuning",
-              "target": "01-ML/08-Classification Models/04-Metric Selection &amp; Threshold Tuning"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + LinkedIn ML posts (2025–26)",
-          "flow": "check prevalence → switch to PR-AUC / precision@k → pick the threshold from cost",
-          "trap": "defending the model with the metric instead of the decision",
-          "drill": {
-            "prompt": "from jbtiq_ml Q24: \"ROC-AUC says 0.92, the business says the model is useless. Reconcile.\"",
-            "badge": "Trending — recurs on LeetCode Discuss + LinkedIn ML posts (2025–26)",
-            "hint": "What population does ROC average over, and what slice of it does the business actually operate in?",
-            "points": [
-              "ROC-AUC is <strong>threshold-free and prevalence-insensitive</strong>: it averages ranking quality over <em>all</em> thresholds and both classes. Under heavy <strong>class imbalance</strong>, the FPR denominator is the huge negative class, so a model can flood the alert queue with false positives while ROC looks great.",
-              "The business lives at <strong>one operating point</strong> — \"the top 100 cases my team can review daily\". The relevant numbers are <strong>precision@k / PR-AUC</strong> and recall at the real alert budget; PR curves expose what ROC hides because precision has the <em>positives</em> in the denominator.",
-              "Also check <strong>calibration</strong>: a great ranker with miscalibrated probabilities breaks any downstream expected-value logic. Reliability curve + Brier score; fix with <strong>Platt scaling or isotonic regression</strong> on a held-out set.",
-              "Then set the <strong>threshold from the cost matrix</strong>, not at 0.5 — expected-cost minimization or the budget constraint, revisited whenever costs or prevalence drift.",
-              "Meta-answer: metric-model mismatch is a <em>framing</em> failure — agree on the operating metric with the business <strong>before</strong> training, not after."
-            ],
-            "oneLiner": "ROC-AUC averages over all thresholds and ignores prevalence — the business operates at one budgeted threshold, so I'd evaluate precision and recall at that budget, check calibration, and set the threshold from the cost matrix.",
-            "followUp": "\"When would you still prefer ROC-AUC?\" → comparing rankers across datasets with different prevalence, or when the operating point isn't fixed yet.",
-            "links": [
-              {
-                "label": "Classification Metrics — ROC AUC",
-                "target": "01-ML/08-Classification Models/05-Classification Metrics — ROC-AUC"
-              },
-              {
-                "label": "metric_selection",
-                "target": "01-ML/08-Classification Models/06-metric_selection"
-              },
-              {
-                "label": "Threshold Tuning",
-                "target": "01-ML/08-Classification Models/08-Threshold Tuning"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -443,45 +180,9 @@
             "decides"
           ],
           "text": "Your XGBoost probabilities feed an expected-value calculation. What's wrong with using them raw?",
-          "points": [
-            "Boosted trees are <strong>not calibrated</strong> — outputs are pushed toward 0 and 1, they rank well but misprice",
-            "Expected value multiplies probability by money, so <strong>miscalibration becomes a wrong bid</strong>",
-            "Fix: <strong>Platt scaling</strong> (sigmoid) or <strong>isotonic</strong> on a held-out calibration set — never on training folds",
-            "Isotonic needs more data and can overfit small sets; Platt is the safer default",
-            "Diagnose with a <strong>reliability curve</strong> plus Brier score, not accuracy"
-          ],
-          "links": [
-            {
-              "label": "Probability Calibration",
-              "target": "01-ML/08-Classification Models/05-Probability Calibration"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — calibration questions recur on LeetCode Discuss + quant/risk JDs (2025–26)",
-          "flow": "reliability curve → calibrate on held-out data → re-check Brier → then compute EV",
-          "trap": "assuming a good AUC implies usable probabilities",
-          "drill": {
-            "prompt": "from jbtiq_ml Q25: \"Your XGBoost model's probabilities feed an expected-value bid calculation. What's wrong with using them raw, and what do you do?\"",
-            "badge": "Trending — calibration questions recur on LeetCode Discuss + quant/risk JDs (2025–26)",
-            "hint": "A model can rank perfectly and still lie about the probability. Which training objectives cause that, and what's the repair?",
-            "points": [
-              "<strong>Ranking ≠ calibration</strong>: boosted trees (and anything trained with early stopping on AUC, class weights, or resampling) systematically output <strong>distorted probabilities</strong> — resampling shifts the base rate, boosting tends to push scores toward the extremes. Expected-value math multiplies by these numbers, so distortion becomes money lost.",
-              "Diagnose with a <strong>reliability diagram</strong> (predicted probability vs observed frequency, binned) and <strong>Brier score</strong> — AUC can't see the problem at all.",
-              "Repair: fit a <strong>post-hoc calibrator on a held-out set</strong> (never the training data): <strong>Platt scaling</strong> (sigmoid — low data, monotone distortion) or <strong>isotonic regression</strong> (more flexible, needs more data, can overfit small sets). If you resampled, also correct for the shifted prior.",
-              "Operational detail: calibration <strong>drifts</strong> with the population — recalibrate on recent data as part of retraining cadence, and monitor observed-vs-predicted rates in production as the canary.",
-              "Say the general rule: any time the probability itself (not the rank) enters a decision — pricing, EV, risk thresholds — calibration is a <strong>requirement</strong>, not a nicety."
-            ],
-            "oneLiner": "Boosted trees rank well but lie about probabilities, and EV math consumes the lie — so I check a reliability diagram, fit Platt or isotonic on held-out data, and monitor observed-versus-predicted rates for drift.",
-            "links": [
-              {
-                "label": "Probability Calibration",
-                "target": "01-ML/08-Classification Models/05-Probability Calibration"
-              },
-              {
-                "label": "Classification Metrics",
-                "target": "01-ML/08-Classification Models/03-Classification Metrics"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -501,45 +202,9 @@
             "decides"
           ],
           "text": "The positive class is 0.3%. How do you sample, split and measure?",
-          "points": [
-            "<strong>Stratify every split</strong>; at that rate a random fold can hold almost no positives",
-            "Prefer <strong>class weights / cost-sensitive learning</strong> over resampling — no synthetic data, no distribution lie",
-            "Resample <strong>inside the CV fold only</strong>; SMOTE before splitting is leakage with extra steps",
-            "SMOTE interpolates — meaningless for categoricals and often for high-dimensional data",
-            "Report PR-AUC, precision@k, recall at a fixed alert budget — never accuracy"
-          ],
-          "links": [
-            {
-              "label": "Imbalanced Data — Class Weights, SMOTE ADASYN, Undersampling, Cost Sensitive Learning",
-              "target": "01-ML/11-Model Selection, Validation &amp; Tuning/07-Imbalanced Data — Class Weights, SMOTE-ADASYN, Undersampling, Cost-Sensitive Learning"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on LeetCode Discuss (fraud/anomaly framing) + JDs (2025–26)",
-          "flow": "stratify → weight before resampling → resample inside the fold → PR-based metrics",
-          "trap": "SMOTE applied to the whole dataset before the split",
-          "drill": {
-            "prompt": "from jbtiq_ml Q9: \"Your positive class is 0.3% of the data. How do you sample and split so that your metrics mean anything?\"",
-            "badge": "Trending — recurs on LeetCode Discuss (fraud/anomaly framing) + JDs (2025–26)",
-            "hint": "Two different mistakes: resampling in the wrong place, and evaluating on a resampled set. Which one silently invalidates the number?",
-            "points": [
-              "<strong>Stratify every split</strong> on the target so each fold has enough positives; with 0.3% and small folds, positives-per-fold becomes the binding constraint — use <strong>repeated stratified K-fold</strong> to reduce variance in the estimate.",
-              "<strong>Never resample the validation or test set.</strong> Resampling (SMOTE/undersampling) belongs <em>inside</em> the training fold only, applied after the split. Evaluating on a balanced set gives a number that doesn't exist in production. This is the single most common error here.",
-              "Metric choice: accuracy is meaningless (99.7% by predicting negative). Use <strong>PR-AUC / average precision</strong> rather than ROC-AUC — with extreme imbalance ROC-AUC is dominated by the huge negative class and looks flattering. Report <strong>precision@k</strong> or recall at a fixed alert budget, because that's how the system is actually used.",
-              "Prefer <strong>class weights / <code>scale_pos_weight</code></strong> and threshold tuning over synthetic oversampling as the first move — cheaper, no synthetic-neighbour artifacts, and preserves calibration better. SMOTE on high-dimensional or categorical data interpolates nonsense.",
-              "Report <strong>confidence intervals</strong> — with ~300 positives per 100k rows, differences of a point or two are noise. And say it: with imbalance, the real deliverable is a <strong>ranked list under a review-capacity budget</strong>, not a classifier."
-            ],
-            "oneLiner": "Stratify the splits, resample only inside the training fold, evaluate with PR-AUC and precision at the real alert budget — and reach for class weights and threshold tuning before SMOTE.",
-            "links": [
-              {
-                "label": "Imbalanced Data — class weights, SMOTE, ADASYN, undersampling",
-                "target": "01-ML/11-Model Selection, Validation &amp; Tuning/10-Imbalanced Data — class weights, SMOTE, ADASYN, undersampling"
-              },
-              {
-                "label": "Classification Metrics",
-                "target": "01-ML/08-Classification Models/03-Classification Metrics"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "design",
             "spine": [
@@ -559,49 +224,9 @@
             "decides"
           ],
           "text": "Random Forest or XGBoost for a new tabular problem — how do you actually choose?",
-          "points": [
-            "RF: <strong>parallel, low-variance, forgiving</strong> — near-zero tuning, a strong honest baseline in an hour",
-            "XGBoost/LightGBM: <strong>sequential, bias-reducing</strong> — higher ceiling, more tuning, more overfit risk",
-            "Boosting is the more sensitive to noisy labels and to leakage — it will happily exploit both",
-            "LightGBM for wide/large data (leaf-wise, histogram), CatBoost for heavy categoricals",
-            "Real answer: RF as the baseline you must beat, boosting as the model you ship"
-          ],
-          "links": [
-            {
-              "label": "XGBoost",
-              "target": "01-ML/09-Ensemble Methods/05-XGBoost"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + virtually every tabular-ML JD (2025–26)",
-          "flow": "RF baseline first → boost for the ceiling → tune only if the gap justifies it",
-          "trap": "starting with XGBoost tuning before you have a baseline to beat",
-          "drill": {
-            "prompt": "from jbtiq_ml Q28: \"Random Forest or XGBoost for a new tabular problem — how do you actually choose?\"",
-            "badge": "Trending — recurs on LeetCode Discuss + virtually every tabular-ML JD (2025–26)",
-            "hint": "Don't answer with \"XGBoost is better\". Answer with the conditions under which each one earns its keep.",
-            "points": [
-              "<strong>RF when</strong>: you want strong results with almost no tuning, robustness to noisy labels and outliers, easy parallel training, honest internal validation via <strong>OOB score</strong>, and you value stability over the last few points of accuracy. RF rarely embarrasses you.",
-              "<strong>GBM (XGBoost/LightGBM/CatBoost) when</strong>: you can pay the tuning cost (learning rate, depth, subsampling, <strong>early stopping on a validation set</strong>) for typically better accuracy, you need native <strong>missing-value handling</strong>, custom objectives (quantile, ranking), or built-in regularization. LightGBM for scale/speed (leaf-wise growth), CatBoost when categorical features dominate (ordered boosting fights target leakage).",
-              "Failure asymmetry: RF's danger is mediocrity; GBM's danger is <strong>overfitting noisy labels and drifting data</strong> — boosting chases residuals, and residuals of noise are noise.",
-              "Modern caveat worth saying: on tabular data these still routinely beat deep learning; the deep-tabular literature keeps re-finding that. Don't reach for a neural net to signal sophistication.",
-              "Practical answer: train <strong>both with defaults + logistic regression</strong> as the floor; the gaps tell you where the signal is and whether tuning is worth it."
-            ],
-            "oneLiner": "RF is the robust low-tuning default with OOB validation; boosting buys more accuracy, custom objectives and missing-value handling at the price of a tuning and overfitting budget — I train both against a logistic floor and let the gaps decide.",
-            "links": [
-              {
-                "label": "Random Forest — OOB score, feature importance, tuning",
-                "target": "01-ML/09-Ensemble Methods/04-Random Forest — OOB score, feature importance, tuning"
-              },
-              {
-                "label": "XGBoost — system level optimizations, regularization, early stopping, missing value handling",
-                "target": "01-ML/09-Ensemble Methods/08-XGBoost — system-level optimizations, regularization, early stopping, missing value handling"
-              },
-              {
-                "label": "LightGBM — leaf wise growth, GOSS, EFB",
-                "target": "01-ML/09-Ensemble Methods/09-LightGBM — leaf-wise growth, GOSS, EFB"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "trade-off",
             "spine": [
@@ -621,45 +246,9 @@
             "decides"
           ],
           "text": "Why does bagging reduce variance while boosting reduces bias? Mechanism, not slogans.",
-          "points": [
-            "<strong>Bagging</strong>: independent-ish models on bootstrap samples → averaging cancels uncorrelated error",
-            "Decorrelation is the point — RF adds feature subsampling because bootstrap alone leaves trees too alike",
-            "<strong>Boosting</strong>: each learner fits the <strong>residual/gradient</strong> of the ensemble so far → systematically reduces bias",
-            "Which is why bagging wants deep (low-bias, high-variance) trees and boosting wants shallow stumps",
-            "Boosting has no variance-cancelling mechanism — hence learning rate, early stopping, subsampling"
-          ],
-          "links": [
-            {
-              "label": "Boosting — AdaBoost &amp; Gradient Boosting",
-              "target": "01-ML/09-Ensemble Methods/04-Boosting — AdaBoost &amp; Gradient Boosting"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "bagging averages independent errors → boosting fits what's left over → depth follows from that",
-          "trap": "\"bagging is parallel, boosting is sequential\" — that's the implementation, not the mechanism",
-          "drill": {
-            "prompt": "from jbtiq_ml Q27: \"Why does bagging reduce variance while boosting reduces bias? Mechanism, not slogans.\"",
-            "badge": "Evergreen",
-            "hint": "What does averaging do to independent errors? And what does each boosting round fit on?",
-            "points": [
-              "<strong>Bagging</strong>: train high-variance learners (deep trees) on bootstrap samples and <strong>average</strong> — averaging n imperfectly-correlated estimators shrinks variance roughly with n, discounted by their correlation. Bias is untouched: the average of biased models is still biased.",
-              "<strong>Random Forest's</strong> extra trick is <em>decorrelation</em>: random feature subsets per split make trees disagree more, and the variance reduction depends on that decorrelation — that's why <code>max_features</code> matters more than <code>n_estimators</code>.",
-              "<strong>Boosting</strong>: sequential — each learner fits the <strong>residuals/gradients of the current ensemble</strong>, so the ensemble incrementally corrects systematic error → bias falls. Weak learners (shallow trees) keep per-round variance low; overfitting arrives through <em>too many rounds</em>, hence early stopping and the learning rate.",
-              "Formal frame: gradient boosting is <strong>gradient descent in function space</strong> — each tree is a step along the negative gradient of the loss. Saying that sentence is the senior tell.",
-              "Consequences: bagging parallelizes trivially and is robust to tuning; boosting is sequential, more tunable, usually more accurate, and more able to overfit noisy labels."
-            ],
-            "oneLiner": "Bagging averages decorrelated high-variance learners so variance falls; boosting fits each new learner to the ensemble's residuals — gradient descent in function space — so bias falls.",
-            "links": [
-              {
-                "label": "Ensemble Learning overview — Bagging vs Boosting vs Stacking vs Voting",
-                "target": "01-ML/09-Ensemble Methods/01-Ensemble Learning overview — Bagging vs Boosting vs Stacking vs Voting"
-              },
-              {
-                "label": "Gradient Boosting — Regression",
-                "target": "01-ML/09-Ensemble Methods/06-Gradient Boosting — Regression"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "concept",
             "spine": [
@@ -678,45 +267,9 @@
             "decides"
           ],
           "text": "SHAP vs LIME in one minute — and what neither of them can tell you.",
-          "points": [
-            "<strong>SHAP</strong>: Shapley values from game theory — additive, consistent, also gives a global view",
-            "<strong>LIME</strong>: local surrogate on perturbed samples — cheap, model-agnostic, <strong>unstable</strong> run to run",
-            "SHAP costs compute; TreeSHAP makes it tractable, which is why it dominates tabular",
-            "Neither gives <strong>causality</strong> — they explain the model's function, not the world",
-            "Both mislead under correlated features — perturbation samples go off-manifold"
-          ],
-          "links": [
-            {
-              "label": "SHAP — Values, Math Intuition &amp; Plots",
-              "target": "01-ML/12-Interpretability &amp; Responsible ML/04-SHAP — Values, Math Intuition &amp; Plots"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "SHAP for consistency and global view → LIME for a cheap local check → neither is causal",
-          "trap": "presenting a SHAP plot as a causal driver to a stakeholder",
-          "drill": {
-            "prompt": "from jbtiq_ml Q37: \"SHAP vs LIME in one minute — and what neither of them can tell you.\"",
-            "badge": "Evergreen",
-            "hint": "One has axiomatic guarantees, one fits a local surrogate. The trap in the question is the last clause.",
-            "points": [
-              "<strong>SHAP</strong>: allocates a prediction's deviation from the baseline across features using <strong>Shapley values</strong> — consistency and local-accuracy guarantees (attributions sum to the prediction), exact + fast for trees via TreeSHAP, expensive for arbitrary models. Global views come from aggregating local values.",
-              "<strong>LIME</strong>: fits an interpretable <strong>local surrogate</strong> (sparse linear model) around one prediction by perturbing inputs — model-agnostic and intuitive, but unstable (perturbation kernel and sampling change the story) with no consistency guarantees. Two runs can disagree; that alone makes SHAP the default where it's tractable.",
-              "Both inherit the <strong>correlation problem</strong>: perturbing features independently creates unrealistic data points, and credit spreads across correlated features arbitrarily.",
-              "What neither tells you: <strong>causality or fairness</strong>. They explain <em>the model's function</em>, so a leaky or proxy-discriminatory feature shows up as \"important\" without any flag that it's wrong to use. Explanation ≠ justification — that's the clause the interviewer wants.",
-              "Production use: SHAP for reason codes and debugging (leakage hunting via absurdly-important features), with humans reviewing whether the model's reasons are <em>acceptable</em> reasons."
-            ],
-            "oneLiner": "SHAP gives axiomatically consistent attributions and LIME gives an unstable local surrogate — but both explain the model, not reality, so neither can tell you whether an important feature is leakage or a discriminatory proxy.",
-            "links": [
-              {
-                "label": "SHAP — Values, Plots, Math Intuition",
-                "target": "01-ML/12-Interpretability &amp; Responsible ML/04-SHAP — Values, Plots, Math Intuition"
-              },
-              {
-                "label": "LIME — Local Surrogate Models",
-                "target": "01-ML/12-Interpretability &amp; Responsible ML/05-LIME — Local Surrogate Models"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "trade-off",
             "spine": [
@@ -743,54 +296,9 @@
             "decides"
           ],
           "text": "How do you guarantee training and serving compute a feature identically?",
-          "points": [
-            "<strong>One definition, one code path</strong> — two implementations always diverge, usually silently",
-            "<strong>Feature store</strong> with the same transformation used offline and online is the structural answer",
-            "<strong>Point-in-time correctness</strong>: join features as they were <em>at the event</em>, not as they are now",
-            "Ship the preprocessing <em>inside</em> the model artefact (pipeline object), not in the calling service",
-            "Detect it anyway: log serving features, replay them offline, compare distributions"
-          ],
-          "links": [
-            {
-              "label": "Train Serve Skew",
-              "target": "01-ML/15-System &amp; Architecture/02-Train-Serve Skew"
-            },
-            {
-              "label": "Feature Stores — Feast, Tecton",
-              "target": "01-ML/15-System &amp; Architecture/03-Feature Stores — Feast, Tecton"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on ML system design loops + feature-store JDs (2025–26)",
-          "flow": "one definition → point-in-time joins → preprocessing inside the artefact → log and replay",
-          "trap": "a \"small\" reimplementation of the feature in the serving service",
-          "drill": {
-            "prompt": "from jbtiq_ml Q43: \"Design the serving architecture for a churn model: where do features come from, and how do you guarantee training and serving compute them identically?\"",
-            "badge": "Trending — recurs on ML system design loops + feature-store JDs (2025–26)",
-            "hint": "The failure you're designing against has a name. What are the two \"as-of\" guarantees a feature platform gives you?",
-            "points": [
-              "The enemy is <strong>train-serve skew</strong>: training features computed in SQL over the warehouse, serving features computed in application code — two implementations drift, and the model quietly degrades. The design goal is <strong>one feature definition, two materializations</strong>.",
-              "A <strong>feature store</strong> (Feast/Tecton pattern) provides exactly that: an <strong>offline store</strong> for training with <strong>point-in-time-correct joins</strong> (features as-of each historical label's timestamp — no future leakage), and an <strong>online store</strong> (low-latency KV) serving the <em>same</em> definitions at request time, with a materialization pipeline keeping them in sync.",
-              "Serving shape by latency need: batch-score nightly into a table if decisions are daily (churn usually is — say this; it removes most of the infra); online endpoint + online store only if the decision is truly per-request; streaming aggregations only for features that must be fresh in seconds.",
-              "Wrap the model behind a <strong>prediction service contract</strong> (schema-validated inputs, versioned model + features together) so feature and model versions roll forward and back <strong>atomically</strong>.",
-              "Monitoring is part of the architecture, not an afterthought: feature null-rates and distributions vs training profile, prediction distribution drift, and <strong>delayed-label metrics</strong> joining outcomes back for true performance."
-            ],
-            "oneLiner": "One feature definition materialized twice — an offline store with point-in-time joins for training and an online store serving the identical values — versioned atomically with the model; and for churn I'd argue for nightly batch scoring before building any of the online path.",
-            "followUp": "\"You don't have a feature store and can't buy one.\" → share one computation library/dbt layer between paths, log served features and reuse them as training data (log-and-wait).",
-            "links": [
-              {
-                "label": "Feature Stores — Feast, Tecton",
-                "target": "01-ML/15-System &amp; Architecture/03-Feature Stores — Feast, Tecton"
-              },
-              {
-                "label": "Train Serve Skew",
-                "target": "01-ML/15-System &amp; Architecture/02-Train-Serve Skew"
-              },
-              {
-                "label": "Online vs Batch vs Streaming Inference",
-                "target": "01-ML/15-System &amp; Architecture/04-Online vs Batch vs Streaming Inference"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "design",
             "spine": [
@@ -810,40 +318,9 @@
             "decides"
           ],
           "text": "📝 \"Live metrics degraded 6 points over two months. Build me the decision framework.",
-          "points": [
-            "Separate three: <strong>data drift</strong> (inputs move) · <strong>concept drift</strong> (X→y moves) · <strong>label delay</strong>",
-            "Data drift is detectable <strong>without labels</strong> — PSI, KS, per-feature stability",
-            "Concept drift needs labels — a degraded metric may just be labels arriving",
-            "Rule out non-drift causes: upstream schema change, broken join, new client version",
-            "Retrain trigger = <strong>threshold on the business metric</strong>, not a calendar; compare against incumbent"
-          ],
+          "points": [],
           "links": [],
           "badge": "Trending — drift + retraining cadence recurs across MLOps JDs + LeetCode Discuss (2025–26)",
-          "flow": "is it drift or a pipeline bug? → data vs concept → label lag → threshold-triggered retrain",
-          "trap": "a nightly retrain cron as the answer to drift",
-          "drill": {
-            "prompt": "from jbtiq_ml Q44: \"The model's live metrics degraded 6 points over two months. Build me the decision framework: drift types, how you detect each, and when you retrain.\"",
-            "badge": "Trending — drift + retraining cadence recurs across MLOps JDs + LeetCode Discuss (2025–26)",
-            "hint": "Three different things can drift, and only one of them is visible without labels. Retraining fixes some of them and not others.",
-            "points": [
-              "Taxonomy: <strong>covariate shift</strong> (P(X) moved — new user mix), <strong>label shift</strong> (P(y) moved — churn rate changed), <strong>concept drift</strong> (P(y|X) moved — the <em>relationship</em> changed, e.g. post-pricing-change behaviour). Retraining on recent data fixes the first two; concept drift may also need new features or a rethink.",
-              "Detection layers: without labels — per-feature distribution monitors (<strong>PSI/KS</strong>) and prediction-distribution drift; with (delayed) labels — rolling live metrics joined against outcomes, sliced <strong>per segment</strong> because aggregate metrics hide localized rot.",
-              "Diagnose before retraining: rule out the impostors — <strong>data pipeline breakage</strong> (nulls, unit changes, schema drift) and upstream product changes produce identical symptoms and retraining just bakes them in.",
-              "Retraining policy options: scheduled (simple, predictable), <strong>trigger-based</strong> on drift/metric thresholds (responsive, needs good monitors), or continual (rarely worth the validation risk). Every retrain goes through the same <strong>offline gate + shadow/canary</strong> as a new model — automation without evaluation is how you ship a regression at 3am.",
-              "Architect the meta-question: measure <strong>time-to-detect and time-to-recover</strong> as SLOs for the ML system; the drift response is an operational loop, not an event."
-            ],
-            "oneLiner": "Split it into covariate, label and concept drift — monitor feature and prediction distributions labels-free plus delayed-label metrics per segment, rule out pipeline breakage first, and retrain through the same canary gate on either a schedule or a drift trigger.",
-            "links": [
-              {
-                "label": "ML System Design Framework",
-                "target": "01-ML/15-System &amp; Architecture/01-ML System Design Framework"
-              },
-              {
-                "label": "Data Quality &amp; Validation",
-                "target": "01-ML/02-Data Handling &amp; EDA/07-Data Quality &amp; Validation"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -864,45 +341,9 @@
             "decides"
           ],
           "text": "You target-encoded a 5,000-level categorical and validation AUC jumped. Why be suspicious?",
-          "points": [
-            "Target encoding puts <strong>the label into a feature</strong> — the jump is usually leakage, not signal",
-            "Worst on high-cardinality: rare levels encode to essentially their own target value",
-            "Safe version: <strong>out-of-fold</strong> encoding, smoothing toward the global mean, noise injection",
-            "Fit the encoder <strong>inside</strong> the CV fold, never on the full training set",
-            "Alternatives that don't leak: frequency encoding, hashing, or let CatBoost do ordered target statistics"
-          ],
-          "links": [
-            {
-              "label": "Categorical Encoding — Ordinal, Label, One Hot, Target, Frequency, Hashing",
-              "target": "01-ML/03-Feature-engineering/02-Categorical Encoding — Ordinal, Label, One-Hot, Target, Frequency, Hashing"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + Kaggle-adjacent interview posts (2025–26)",
-          "flow": "suspect leakage → out-of-fold encoding + smoothing → refit inside the fold → re-measure",
-          "trap": "celebrating the AUC jump and shipping it",
-          "drill": {
-            "prompt": "from jbtiq_ml Q11: \"You target-encoded a 5,000-level categorical and validation AUC jumped. Why should you be suspicious, and how do you do it safely?\"",
-            "badge": "Trending — recurs on LeetCode Discuss + Kaggle-adjacent interview posts (2025–26)",
-            "hint": "The encoding contains the target. What has to be true about which rows contributed to each row's encoding?",
-            "points": [
-              "Target encoding replaces a level with a statistic of the <strong>target itself</strong>, so any row whose own label leaks into its encoding gets a feature that partially <em>is</em> the answer — the AUC jump is often <strong>self-leakage</strong>, not signal.",
-              "Safe construction: <strong>out-of-fold encoding</strong> (each row encoded using folds it isn't in) or <strong>leave-one-out</strong>, computed strictly inside the training data of each CV fold — never on the full dataset.",
-              "Rare levels need <strong>smoothing</strong> (shrink toward the global mean weighted by level count) or they memorise individual rows; unseen levels at serving time need an explicit fallback to the prior.",
-              "Compare against the honest alternatives for high cardinality: <strong>frequency/count encoding</strong> (no target, no leakage), <strong>feature hashing</strong> (bounded width, collisions as a controlled cost), or entity <strong>embeddings</strong> if you're already in a neural setting.",
-              "Verify with a time-split holdout, not random CV — target encoding failures are exactly the kind random CV hides."
-            ],
-            "oneLiner": "A jump after target encoding is guilty until proven innocent — encode out-of-fold with smoothing inside each training fold, define the unseen-level fallback, and confirm on a time-split.",
-            "links": [
-              {
-                "label": "Target &amp; Mean Encoding (Leave One Out, Smoothing)",
-                "target": "01-ML/03-Feature-engineering/07-Target &amp; Mean Encoding (Leave-One-Out, Smoothing)"
-              },
-              {
-                "label": "Feature Hashing for High Cardinality Categoricals",
-                "target": "01-ML/03-Feature-engineering/09-Feature Hashing for High-Cardinality Categoricals"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -922,45 +363,9 @@
             "decides"
           ],
           "text": "Offline NDCG improved but online CTR dropped after deploy. Give me three mechanisms.",
-          "points": [
-            "<strong>Presentation bias</strong>: offline data only contains what the <em>old</em> model showed",
-            "<strong>Position bias</strong>: offline relevance ignores that rank 1 wins clicks regardless",
-            "<strong>Shift at serve time</strong>: cold users, new items, candidates the offline set never held",
-            "Plus the boring one: a <strong>skew bug</strong> — different features online than in replay",
-            "Interleaving or A/B settles it; offline metrics are a filter, never a verdict"
-          ],
-          "links": [
-            {
-              "label": "Metrics — Precision@K, Recall@K, NDCG, MAP, hit rate",
-              "target": "01-ML/14-Recommender Systems (Classical)/05-Metrics — Precision@K, Recall@K, NDCG, MAP, hit rate"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Trending — offline-online divergence recurs on LeetCode Discuss + rec-sys JDs (2025–26)",
-          "flow": "name the bias (presentation → position → shift) → check for skew → settle with A/B",
-          "trap": "trusting an offline ranking metric as a launch decision",
-          "drill": {
-            "prompt": "from jbtiq_ml Q42: \"Your recommender's offline NDCG improved but online CTR dropped after deploy. Give me three mechanisms that produce exactly this.\"",
-            "badge": "Trending — offline-online divergence recurs on LeetCode Discuss + rec-sys JDs (2025–26)",
-            "hint": "Think about what the offline dataset can't contain: what generated it, what's missing from it, and what the metric ignores.",
-            "points": [
-              "<strong>Feedback-loop bias</strong>: your offline data was logged under the <em>old</em> policy — items the old model never showed have no labels, so offline eval rewards <strong>agreeing with the old model</strong> more than being right (off-policy evaluation problem). A genuinely different-and-better ranker can score worse offline.",
-              "<strong>Position/presentation bias</strong>: NDCG on logged clicks inherits position bias — users click what was ranked high; the new model reshuffles positions and inherits none of that logged advantage.",
-              "<strong>Diversity/novelty collapse</strong>: NDCG is per-list relevance — a model that maximizes it can converge on near-duplicate popular items, and users respond to staleness by clicking less; the aggregate experience degrades in a way per-query metrics can't see.",
-              "Also check the boring ones: <strong>train-serve skew</strong> in features, latency regression suppressing impressions, and the metric population (NDCG on all users vs CTR concentrated in heavy users).",
-              "The architectural lesson: offline metrics <strong>gate</strong> deployment, online <strong>A/B decides</strong> it; and log <strong>propensities</strong> (exposure probabilities) so future offline eval can be counterfactually corrected (IPS-style)."
-            ],
-            "oneLiner": "Logged data was generated by the old policy, so offline NDCG rewards imitating it — add position bias and diversity collapse, and offline-up-online-down is expected; the fix is propensity logging, counterfactual eval, and letting the A/B decide.",
-            "links": [
-              {
-                "label": "Evaluation — Precision@K, Recall@K, NDCG, MAP",
-                "target": "01-ML/14-Recommender Systems (Classical)/06-Evaluation — Precision@K, Recall@K, NDCG, MAP"
-              },
-              {
-                "label": "Implicit vs Explicit Feedback",
-                "target": "01-ML/14-Recommender Systems (Classical)/04-Implicit vs Explicit Feedback"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -987,45 +392,9 @@
             "decides"
           ],
           "text": "What is backpropagation, really — 60 seconds, no buzzwords.",
-          "points": [
-            "<strong>Chain rule applied in reverse over the computation graph</strong> — that's the whole idea",
-            "Forward pass caches activations; backward pass reuses them (<strong>memoisation</strong>, not re-derivation)",
-            "Each node receives an upstream gradient, multiplies by its local Jacobian, passes it down",
-            "Cost is roughly one forward pass — that's why it scales; the memory is the activations",
-            "Gradient checkpointing trades that memory back for recompute"
-          ],
-          "links": [
-            {
-              "label": "Backpropagation",
-              "target": "02-DL/01-Foundations/07-Backpropagation"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen — the opener; the filter is whether you say \"chain rule\" and \"reuse\" in the same breath.",
-          "flow": "forward caches → reverse chain rule → local Jacobian × upstream gradient → parameter grads",
-          "trap": "describing it as \"the error propagates back\" without naming the chain rule",
-          "drill": {
-            "prompt": "from jbtiq_dl Q1: \"You have 60 seconds: what is backpropagation, really — no buzzwords.\"",
-            "badge": "Evergreen — the opener; the filter is whether you say \"chain rule\" and \"reuse\" in the same breath.",
-            "hint": "It's two ideas glued together — one from calculus, one from algorithm design. Name both.",
-            "points": [
-              "The <strong>chain rule</strong> applied over a <strong>computational graph</strong>: every op knows its local derivative; compose them backwards from the loss.",
-              "It's <strong>reverse-mode autodiff</strong>: one backward sweep yields ∂L/∂θ for <em>every</em> parameter, at a cost of roughly two forward passes — regardless of parameter count. Forward-mode would cost one pass <em>per parameter</em>.",
-              "The efficiency is <strong>memoization</strong>: cache forward activations, reuse each upstream gradient once. That cache is why <em>activations</em>, not weights, dominate training memory.",
-              "Backprop is <strong>not a learning rule</strong> — it only computes gradients. The optimizer (SGD/Adam) is a separate, swappable component."
-            ],
-            "oneLiner": "Backprop is the chain rule organized as dynamic programming over the computation graph — one backward sweep gives every parameter's gradient for about the price of two forward passes.",
-            "followUp": "\"Why do activations dominate training memory?\" → they're cached for the backward pass; recomputing them is exactly what activation checkpointing trades.",
-            "links": [
-              {
-                "label": "Backpropagation",
-                "target": "02-DL/01-Foundations/09-Backpropagation"
-              },
-              {
-                "label": "12.1 Memoization in backpropagation",
-                "target": "02-DL/01-Foundations/12.1-Memoization in backpropagation"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "concept",
             "spine": [
@@ -1045,41 +414,9 @@
             "decides"
           ],
           "text": "A 12-layer sigmoid MLP trains at the top but the first layers barely move. Mechanism and three fixes.",
-          "points": [
-            "<strong>Vanishing gradients</strong>: sigmoid derivative peaks at 0.25 — multiply twelve of those and it's ~10⁻⁷",
-            "Early layers therefore get a gradient orders of magnitude smaller than the last ones",
-            "Fix 1: <strong>ReLU-family activations</strong> — derivative 1 in the positive region, no shrink",
-            "Fix 2: <strong>residual connections</strong> — a gradient highway that skips the multiplicative chain",
-            "Fix 3: <strong>normalisation</strong> (BatchNorm/LayerNorm) + <strong>He initialisation</strong> to hold variance across depth"
-          ],
-          "links": [
-            {
-              "label": "vanishing gradient",
-              "target": "02-DL/01-Foundations/08-vanishing-gradient"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "saturating derivative → product shrinks with depth → ReLU + residuals + norm/init",
-          "trap": "blaming the learning rate",
-          "drill": {
-            "prompt": "from jbtiq_dl Q4: \"A 12-layer sigmoid MLP trains fine at the top, but the first layers' weights barely move. Explain the mechanism and give me three fixes.\"",
-            "badge": "Evergreen",
-            "hint": "The gradient at layer 1 is a product of how many terms? What is the maximum value of a sigmoid's derivative?",
-            "points": [
-              "<strong>Vanishing gradient</strong>: backprop multiplies one Jacobian per layer; sigmoid's derivative is at most <strong>0.25</strong>, so twelve of them shrink the signal roughly exponentially with depth.",
-              "The same multiplication can <strong>explode</strong> if weight scales sit above 1 — vanish/explode are two ends of one mechanism (spectral radius of the layer Jacobians).",
-              "Fixes, in the order you'd try them: <strong>ReLU-family activations</strong>, <strong>variance-preserving init</strong> (He/Xavier), <strong>normalization layers</strong>, <strong>residual connections</strong> for real depth.",
-              "Diagnosis you'd actually run: log <strong>per-layer gradient norms</strong> — a clean exponential decay across layers is the signature."
-            ],
-            "oneLiner": "Gradients at the bottom are a product of a dozen Jacobians, each shrunk by sigmoid's ≤0.25 derivative — so I swap activations, fix init, add normalization, and use residuals if depth is non-negotiable.",
-            "followUp": "\"Which of those fixes made truly deep networks possible?\" → residual connections — they give gradients an identity path around every layer.",
-            "links": [
-              {
-                "label": "vanishing gradient",
-                "target": "02-DL/01-Foundations/08-vanishing-gradient"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -1098,40 +435,9 @@
             "decides"
           ],
           "text": "Why cross-entropy and not MSE for classification?",
-          "points": [
-            "With sigmoid/softmax, MSE's gradient carries the <strong>activation derivative</strong> — it vanishes exactly when the model is confidently wrong",
-            "Cross-entropy's gradient through softmax is simply <strong>(prediction − target)</strong> — large error, large step",
-            "CE is the <strong>negative log-likelihood</strong> of the model's distribution; it's the principled loss, not a trick",
-            "MSE also treats class probabilities as distances, which they aren't",
-            "Corollary worth saying: CE punishes confident wrongness harshly — that's the feature"
-          ],
-          "links": [
-            {
-              "label": "Cross Entropy Loss",
-              "target": "02-DL/01-Foundations/10-Cross-Entropy Loss"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "MSE + sigmoid → vanishing gradient when wrong → CE gives (pred − target) → NLL is the reason",
-          "trap": "\"cross-entropy just works better\" with no mechanism",
-          "drill": {
-            "prompt": "from jbtiq_dl Q5: \"Why cross-entropy and not MSE for classification? Most candidates say 'it just works better' — you have to do better than that.\"",
-            "badge": "Evergreen",
-            "hint": "Differentiate the loss through the sigmoid in both cases. What term is present in the MSE gradient that cross-entropy cancels?",
-            "points": [
-              "Cross-entropy is <strong>maximum likelihood</strong> under a categorical/Bernoulli model — it's the principled loss for probability outputs, equivalent to minimizing KL to the label distribution.",
-              "The mechanism: through sigmoid/softmax, the MSE gradient carries a <strong>σ′ factor</strong> — near-zero exactly when the model is <em>confidently wrong</em>, so learning stalls. Cross-entropy <strong>cancels σ′</strong>, leaving a clean <code>(p − y)</code> gradient.",
-              "MSE on probabilities also makes the optimization landscape non-convex in the logits with flat plateaus; CE stays well-behaved.",
-              "Practical corollary: pair softmax with CE via the fused, numerically stable op — never hand-compose <code>log(softmax)</code> (ties back to Q2)."
-            ],
-            "oneLiner": "Cross-entropy is MLE for classification and its gradient is just (p − y) — MSE keeps a σ′ factor that goes to zero precisely when the model is confidently wrong.",
-            "links": [
-              {
-                "label": "Cross Entropy Loss",
-                "target": "02-DL/01-Foundations/10-Cross-Entropy Loss"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "concept",
             "spine": [
@@ -1150,45 +456,9 @@
             "decides"
           ],
           "text": "A teammate initialises all weights to zero 'for reproducibility'. What happens?",
-          "points": [
-            "<strong>Symmetry never breaks</strong> — every unit in a layer gets identical gradients and stays identical forever",
-            "The layer collapses to the capacity of one neuron, whatever its width",
-            "Init's real job: keep <strong>activation and gradient variance stable across depth</strong>",
-            "<strong>Xavier/Glorot</strong> for symmetric activations (tanh, sigmoid), <strong>He</strong> for ReLU — the factor-of-2 is the dead half",
-            "Reproducibility comes from <strong>seeding</strong>, not from a constant"
-          ],
-          "links": [
-            {
-              "label": "He vs Xavier Initialization",
-              "target": "02-DL/05-Training Mechanics that make transformers work/04-He vs Xavier Initialization"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "identical gradients → symmetry holds → layer = one neuron; init for variance, seed for repro",
-          "trap": "confusing determinism with initialisation",
-          "drill": {
-            "prompt": "from jbtiq_dl Q24: \"A teammate initializes all weights to zero 'for reproducibility'. What happens, and what should initialization actually be doing?\"",
-            "badge": "Evergreen",
-            "hint": "If two neurons in a layer start identical, what keeps them identical? Then: what statistical property should a good init preserve layer to layer?",
-            "points": [
-              "Zero (or any constant) init → <strong>symmetry</strong>: every neuron in a layer computes the same output and receives the same gradient, forever — the layer collapses to one effective neuron. With ReLU, zero init is also simply dead.",
-              "Init's real job: <strong>preserve activation and gradient variance across layers</strong>, so signals neither vanish nor explode before training starts.",
-              "<strong>Xavier/Glorot</strong> (scales by fan-in/fan-out) suits tanh/sigmoid; <strong>He</strong> (2/fan_in) corrects for ReLU zeroing half its inputs.",
-              "Transformer practice: additionally <strong>down-scale residual-branch output projections</strong> (by depth) so the network starts close to the identity — init and the residual stream cooperate.",
-              "Random init breaks symmetry; the <em>scale</em> is what the named schemes are actually about."
-            ],
-            "oneLiner": "Constant init makes every neuron in a layer the same neuron forever — real init breaks symmetry and sets scales (Xavier for saturating activations, He for ReLU) so variance survives the depth.",
-            "links": [
-              {
-                "label": "Weight Initialization Techniques",
-                "target": "02-DL/05-Training Mechanics that make transformers work/00-Weight Initialization Techniques"
-              },
-              {
-                "label": "He vs Xavier Initialization",
-                "target": "02-DL/05-Training Mechanics that make transformers work/04-He vs Xavier Initialization"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -1207,40 +477,9 @@
             "decides"
           ],
           "text": "Dropout was left in train mode during evaluation. Explain exactly what that does.",
-          "points": [
-            "<strong>Train mode</strong>: randomly zeroes units each forward pass, scaling the survivors (inverted dropout)",
-            "<strong>Eval mode</strong>: no zeroing, full network, deterministic",
-            "Left on at eval → predictions differ run to run on the <em>same</em> input, and average quality drops",
-            "The signature symptom: non-reproducible eval numbers with no data or seed change",
-            "Same class of bug as BatchNorm using batch statistics at inference instead of running estimates"
-          ],
-          "links": [
-            {
-              "label": "Dropout",
-              "target": "02-DL/05-Training Mechanics that make transformers work/14-Dropout"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "train zeroes + rescales → eval must be deterministic → symptom is a shifting eval number",
-          "trap": "chasing a data bug when the symptom is run-to-run variance",
-          "drill": {
-            "prompt": "from jbtiq_dl Q27: \"A junior reports the model gives noticeably different predictions between two 'identical' evaluation runs. You find dropout was left in train mode. Explain exactly what it does in each mode and why this bug looks like that.\"",
-            "badge": "Evergreen",
-            "hint": "What does inverted dropout do to the surviving activations at train time — and what should eval mode be instead?",
-            "points": [
-              "Train mode: each unit is zeroed with probability p → prevents <strong>co-adaptation</strong>; the net effect is training a shifting ensemble of subnetworks.",
-              "<strong>Inverted dropout</strong> scales survivors by 1/(1−p) <em>at train time</em>, so expected activations match — which is what allows eval mode to be a clean <strong>identity</strong> (no scaling, no randomness).",
-              "Left in train mode at eval: predictions become <strong>stochastic run-to-run</strong> — exactly the reported symptom. Same bug class: BatchNorm using batch statistics instead of running stats. <code>model.eval()</code> flips both.",
-              "Transformer placement: attention weights, residual outputs, embeddings. Modern nuance worth saying: <strong>large single-epoch LLM pretraining typically sets dropout to zero</strong> — in the underfitting regime, data scale is the regularizer."
-            ],
-            "oneLiner": "Train-mode dropout randomly zeroes units and rescales survivors so eval can be the identity — leave it on at eval and you're sampling a different subnetwork per run, which is exactly the nondeterminism reported.",
-            "links": [
-              {
-                "label": "Dropout",
-                "target": "02-DL/05-Training Mechanics that make transformers work/14-Dropout"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -1259,45 +498,9 @@
             "decides"
           ],
           "text": "Two sick models: one has train 0.1 / val 2.3, the other is stuck at 2.3 on both. Triage each.",
-          "points": [
-            "Gap = <strong>variance</strong> → regularise, augment, more data, early stopping, smaller model",
-            "No gap, both high = <strong>underfit or broken pipeline</strong> — capacity, LR, or the data is wrong",
-            "Underfit triage: can it <strong>overfit a single batch</strong>? If not, the bug is in the code",
-            "Then LR (too low = stuck, too high = noisy plateau), labels, normalisation, loss wiring",
-            "Never tune hyperparameters before the overfit-one-batch test passes"
-          ],
-          "links": [
-            {
-              "label": "Diagnosing a Non Converging Model",
-              "target": "02-DL/09-diagnostics &amp; engineering Judgement/00-Diagnosing a Non-Converging Model"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "gap? → variance path; no gap? → overfit one batch first → then LR, labels, wiring",
-          "trap": "treating \"loss is high\" as one diagnosis",
-          "drill": {
-            "prompt": "from jbtiq_dl Q43: \"Two sick models: one has train loss 0.1 with val loss 2.3; the other is stuck at 2.3 on both. Give me the triage for each.\"",
-            "badge": "Evergreen",
-            "hint": "Gap versus no-gap are different diseases. And there's one five-minute experiment that should open any DL debugging session.",
-            "points": [
-              "<strong>Gap (0.1 vs 2.3) = overfitting/memorization</strong>: more or better data and augmentation first, then regularization (weight decay, dropout, <strong>early stopping</strong> on val), smaller model last. Also <em>rule out val-set problems</em>: leakage, distribution mismatch, mislabeled val.",
-              "<strong>No gap (2.3 / 2.3) = underfitting or a broken pipeline</strong>: sweep <strong>LR first</strong> (the most common cause in both directions), check the data/labels are actually learnable, add capacity or training time only after.",
-              "The universal opener: <strong>overfit a single tiny batch to ~zero loss</strong>. Fails → bug in loss/labels/architecture, not a tuning issue. Passes → it's data or optimization scale.",
-              "Know the numbers: for a vocab of ~50k, uniform-random cross-entropy is ~ln(50k)≈10.8 — where the loss <em>plateaus</em> relative to trivial baselines tells you if it learned anything at all.",
-              "LLM-era nuance: single-epoch pretraining rarely overfits classically — the gap disease there is <strong>data contamination/duplication</strong>, and the cure is data quality, not dropout."
-            ],
-            "oneLiner": "A train–val gap is a data-and-regularization problem, a joint plateau is an optimization-or-bug problem — and the first move in both is the tiny-batch overfit test, because it splits 'broken' from 'undertuned' in five minutes.",
-            "links": [
-              {
-                "label": "Diagnosing a Non Converging Model",
-                "target": "02-DL/09-diagnostics &amp; engineering Judgement/00-Diagnosing a Non-Converging Model"
-              },
-              {
-                "label": "Early Stopping",
-                "target": "02-DL/01-Foundations/14-Early Stopping"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "diagnose",
             "spine": [
@@ -1317,44 +520,9 @@
             "decides"
           ],
           "text": "Why does an RNN forget the start of a long document? Training-time mechanics, not the slogan.",
-          "points": [
-            "<strong>BPTT</strong> unrolls the sequence — gradients multiply the same recurrent Jacobian per step",
-            "Spectral radius &lt; 1 → <strong>vanishing</strong>; &gt; 1 → <strong>exploding</strong>. Same multiplicative cause",
-            "Exploding is easy (clip); vanishing is the hard one — signal gone, not noisy",
-            "<strong>LSTM/GRU</strong> add an additive gated cell path — gradient flows without repeated multiplication",
-            "Still a longer leash, not unlimited — and <strong>inherently sequential</strong>, which transformers killed"
-          ],
-          "links": [
-            {
-              "label": "RNN_failure_modes",
-              "target": "02-DL/02-why transformers won/03-RNN_failure_modes"
-            }
-          ],
+          "points": [],
+          "links": [],
           "badge": "Evergreen",
-          "flow": "BPTT multiplies Jacobians → vanish or explode → gates give an additive path → still sequential",
-          "trap": "saying \"it has a short memory\" without the multiplicative argument",
-          "drill": {
-            "prompt": "from jbtiq_dl Q8: \"Why does an RNN forget the beginning of a long document? Walk me through the training-time mechanics, not just the slogan.\"",
-            "badge": "Evergreen",
-            "hint": "Unroll the network in time. What gets multiplied T times, and why is it worse than the deep-MLP case?",
-            "points": [
-              "<strong>BPTT</strong> unrolls the recurrence into a T-layer graph; the gradient from step T to step 1 is a product of T Jacobians of the <strong>same recurrent weight matrix</strong> — repeated multiplication by one matrix vanishes or explodes even faster than depth with varied weights.",
-              "Vanish → early tokens contribute ~zero gradient → the model <em>cannot learn</em> long-range dependencies, regardless of capacity.",
-              "Explode → loss spikes; the standard patch is <strong>gradient clipping</strong>. <strong>Truncated BPTT</strong> caps the horizon, which is an admission of the problem, not a fix.",
-              "Second, independent failure: the recurrence is <strong>inherently sequential</strong> — step t needs step t−1, so training can't parallelize across the sequence. That's the throughput half of why RNNs lost."
-            ],
-            "oneLiner": "BPTT multiplies the same recurrent Jacobian T times, so gradients vanish or explode with sequence length — and even when it works, the serial dependency means you can't parallelize training.",
-            "links": [
-              {
-                "label": "BPTT (Backpropagation Through Time)",
-                "target": "02-DL/02-why transformers won/02-BPTT (Backpropagation Through Time)"
-              },
-              {
-                "label": "RNN, BPTT &amp; Failure Modes",
-                "target": "02-DL/02-why transformers won/01-RNN, BPTT &amp; Failure Modes"
-              }
-            ]
-          },
           "modelAnswer": {
             "type": "concept",
             "spine": [
@@ -1374,21 +542,8 @@
             "decides"
           ],
           "text": "When is deep learning the wrong choice?",
-          "points": [
-            "<strong>Tabular data with a few hundred thousand rows</strong> — gradient boosting still wins, cheaper and faster",
-            "Small data with strong structure: the inductive bias you'd hand-code beats what DL must learn",
-            "When you need <strong>interpretability you can defend</strong> to a regulator",
-            "When latency, cost or an edge device makes the inference bill the constraint",
-            "Strongest version of the answer: name the DL project you <strong>argued against</strong> and what you shipped instead"
-          ],
-          "links": [
-            {
-              "label": "When DL is the Wrong Choice",
-              "target": "02-DL/09-diagnostics &amp; engineering Judgement/04-When DL is the Wrong Choice"
-            }
-          ],
-          "flow": "tabular + modest rows → boosting · regulated → interpretable · edge/cost → smaller model",
-          "trap": "hedging — this question is testing whether you have judgement, not knowledge",
+          "points": [],
+          "links": [],
           "modelAnswer": {
             "type": "trade-off",
             "spine": [
@@ -1415,21 +570,8 @@
             "decides"
           ],
           "text": "Tell me about a model you built where the modelling was the easy part.",
-          "points": [
-            "The point of the question is <strong>everything around the model</strong>: label definition, split, drift, handoff",
-            "Name the decision the model served and who acted on its output",
-            "The measurement you built <em>before</em> the model, so improvement was provable",
-            "One thing you got wrong — a leaked feature, a wrong metric, a threshold nobody owned",
-            "Number: business metric moved, not just AUC"
-          ],
-          "links": [
-            {
-              "label": "War Stories",
-              "target": "War-Stories"
-            }
-          ],
-          "flow": "decision → label + split choices → what broke → what you measured → number",
-          "trap": "telling it as a modelling story — the interviewer is asking about the system",
+          "points": [],
+          "links": [],
           "modelAnswer": {
             "type": "story",
             "spine": [

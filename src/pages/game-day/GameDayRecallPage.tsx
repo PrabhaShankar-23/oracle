@@ -237,19 +237,27 @@ function QuestionCard({ topic, question: q }: { topic: string; question: GameDay
         </Box>
 
         <Box sx={{ px: { xs: 1.75, sm: 2 }, py: 1.5 }}>
-          <HtmlContent
-            html={answer}
-            sx={{
-              typography: 'body2',
-              '& ul': { m: 0, pl: 2.5 },
-              '& li': { mb: 0.5 },
-              '& .gd-line': { mt: 1.5, mb: 0 },
-              '& .gd-trap': { color: 'warning.main' },
-            }}
-          />
+          {answer && (
+            <HtmlContent
+              html={answer}
+              sx={{
+                typography: 'body2',
+                '& ul': { m: 0, pl: 2.5 },
+                '& li': { mb: 0.5 },
+                '& .gd-line': { mt: 1.5, mb: 0 },
+                '& .gd-trap': { color: 'warning.main' },
+              }}
+            />
+          )}
           {q.drill && <Drill drill={q.drill} />}
           {q.modelAnswer && (
-            <ModelAnswer topic={topic} questionId={q.id} type={q.modelAnswer.type} spine={q.modelAnswer.spine} />
+            <ModelAnswer
+              topic={topic}
+              questionId={q.id}
+              type={q.modelAnswer.type}
+              spine={q.modelAnswer.spine}
+              standalone={!answer && !q.drill}
+            />
           )}
           {q.links.length > 0 && (
             <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap', mt: 1.5 }}>

@@ -783,6 +783,9 @@ async function ingestGameDay() {
         question.badge = text(el).replace(/^[^\p{Letter}\p{Number}]+/u, '').trim() || undefined
       } else if (tag === 'p' && /Phrasing drill/i.test(text(el))) {
         question.drillPrompt = text(el).replace(/^.*?Phrasing drill\s*—?\s*/i, '').trim()
+      } else if (tag === 'p' && /Model answer:/.test(text(el))) {
+        // A question whose recall blocks were retired for a model answer carries just this link.
+        question.modelAnswerTarget = parseVaultLinks(text(el))[0]?.target
       } else if (tag === 'details') {
         question.blocks.push(el)
       }
