@@ -15,7 +15,7 @@ export default function HomePage() {
           mt: { xs: 2, md: 4 },
           mb: 5,
           p: { xs: 3, sm: 5, md: 7 },
-          borderRadius: { xs: 4, md: 7 },
+          borderRadius: 1,
           backgroundColor: t.vars.palette.container.primary,
           color: t.vars.palette.container.onPrimary,
         })}

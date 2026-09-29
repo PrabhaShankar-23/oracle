@@ -243,7 +243,7 @@ const theme = createTheme({
     dark: { palette: palette(dark, 'dark') },
   },
 
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 6 },
 
   breakpoints: {
     // Aligned with M3 window size classes: compact < 600, medium < 840, expanded < 1200, large ≥ 1200
@@ -302,20 +302,20 @@ const theme = createTheme({
     MuiButton: {
       defaultProps: { disableElevation: true },
       styleOverrides: {
-        root: { borderRadius: 20, paddingInline: 16, minHeight: 40 },
+        root: { borderRadius: 6, paddingInline: 16, minHeight: 40 },
         sizeSmall: { minHeight: 32, paddingInline: 12 },
       },
     },
 
     MuiIconButton: {
-      styleOverrides: { root: { borderRadius: 20 } },
+      styleOverrides: { root: { borderRadius: 6 } },
     },
 
     MuiCard: {
       defaultProps: { variant: 'outlined' },
       styleOverrides: {
         root: ({ theme: t }) => ({
-          borderRadius: 12,
+          borderRadius: 6,
           backgroundColor: t.vars.palette.surface.containerLowest,
           borderColor: t.vars.palette.surface.outlineVariant,
         }),
@@ -323,12 +323,12 @@ const theme = createTheme({
     },
 
     MuiPaper: {
-      styleOverrides: { rounded: { borderRadius: 12 } },
+      styleOverrides: { rounded: { borderRadius: 6 } },
     },
 
     MuiChip: {
       styleOverrides: {
-        root: { borderRadius: 8, fontWeight: 500 },
+        root: { borderRadius: 4, fontWeight: 500 },
         sizeSmall: { height: 24 },
       },
     },
@@ -336,7 +336,7 @@ const theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme: t }) => ({
-          borderRadius: 12,
+          borderRadius: 6,
           '& .MuiOutlinedInput-notchedOutline': { borderColor: t.vars.palette.surface.outlineVariant },
         }),
       },
@@ -362,13 +362,13 @@ const theme = createTheme({
     },
 
     MuiMenuItem: {
-      styleOverrides: { root: { minHeight: 44, borderRadius: 8, marginInline: 6 } },
+      styleOverrides: { root: { minHeight: 44, borderRadius: 4, marginInline: 6 } },
     },
 
     MuiListItemButton: {
       styleOverrides: {
         root: ({ theme: t }) => ({
-          borderRadius: 28,
+          borderRadius: 6,
           minHeight: 48,
           '&.Mui-selected': {
             backgroundColor: t.vars.palette.container.secondary,

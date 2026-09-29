@@ -314,7 +314,7 @@ export default function ColdRecallPage() {
                     <ListItemButton
                       key={p.id}
                       onClick={() => navigate({ hash: p.id }, { replace: true })}
-                      sx={{ minHeight: 34, py: 0, borderRadius: 5 }}
+                      sx={{ minHeight: 34, py: 0, borderRadius: 1 }}
                     >
                       <ListItemText primary={`${p.id} · ${p.name}`} slotProps={{ primary: { variant: 'body2', noWrap: true } }} />
                       <Typography variant="caption" color="text.secondary" sx={{ pl: 1 }}>

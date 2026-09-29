@@ -15,7 +15,7 @@ export default function RecallDiagram({ diagram, label }: Props) {
       aria-label={label}
       sx={[
         diagramStyles,
-        { m: 0, display: 'grid', gap: 1.25, p: { xs: 1.5, sm: 2 }, borderRadius: 3, overflowX: 'auto' },
+        { m: 0, display: 'grid', gap: 1.25, p: { xs: 1.5, sm: 2 }, borderRadius: 1, overflowX: 'auto' },
       ]}
     >
       {diagram.kind === 'cells' &&

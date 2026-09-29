@@ -94,7 +94,7 @@ export default function GlobalSearch({ autoFocus, onNavigate }: Props) {
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
               ),
-              sx: (t) => ({ borderRadius: 7, backgroundColor: t.vars.palette.surface.containerHigh, pr: '12px !important' }),
+              sx: (t) => ({ borderRadius: 1, backgroundColor: t.vars.palette.surface.containerHigh, pr: '12px !important' }),
             },
           }}
         />

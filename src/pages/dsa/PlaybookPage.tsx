@@ -174,7 +174,7 @@ export default function PlaybookPage() {
           anchor="right"
           open={tocOpen}
           onClose={() => setTocOpen(false)}
-          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '16px 0 0 16px', py: 2, px: 1 } } }}
+          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '6px 0 0 6px', py: 2, px: 1 } } }}
         >
           <TableOfContents headings={headings} onNavigate={() => setTocOpen(false)} />
         </Drawer>
@@ -227,7 +227,7 @@ function FlowBlock({ block: b }: { block: Of<'flow'> }) {
                   minHeight: 44,
                   display: 'flex',
                   alignItems: 'center',
-                  borderRadius: 5,
+                  borderRadius: 1,
                   backgroundColor: last ? t.vars.palette.container.primary : t.vars.palette.surface.containerHigh,
                   color: last ? t.vars.palette.container.onPrimary : undefined,
                   typography: 'body2',

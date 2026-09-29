@@ -33,7 +33,7 @@ export default function TableOfContents({ headings, onNavigate }: Props) {
               navigate({ hash: h.id }, { replace: true })
               onNavigate?.()
             }}
-            sx={{ minHeight: 36, py: 0.25, pl: h.level === 3 ? 4 : 2, borderRadius: 5 }}
+            sx={{ minHeight: 36, py: 0.25, pl: h.level === 3 ? 4 : 2, borderRadius: 1 }}
           >
             <ListItemText
               primary={clean(h.text)}

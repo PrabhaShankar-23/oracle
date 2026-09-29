@@ -71,7 +71,7 @@ export default function GameDayDocPage() {
               sx={(t) => ({
                 mb: 3,
                 p: 2,
-                borderRadius: 2,
+                borderRadius: 1,
                 borderLeft: `4px solid ${t.vars.palette.primary.main}`,
                 backgroundColor: t.vars.palette.surface.containerLow,
                 typography: 'body2',
@@ -108,7 +108,7 @@ export default function GameDayDocPage() {
           anchor="right"
           open={tocOpen}
           onClose={() => setTocOpen(false)}
-          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '16px 0 0 16px', py: 2, px: 1 } } }}
+          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '6px 0 0 6px', py: 2, px: 1 } } }}
         >
           <TableOfContents headings={summary.headings} onNavigate={() => setTocOpen(false)} />
         </Drawer>

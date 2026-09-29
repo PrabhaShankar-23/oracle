@@ -59,7 +59,7 @@ function Panel({ label, count, level, children }: { label: string; count: number
       sx={(t) => ({
         mt: level === 3 ? 1.5 : 0,
         mb: 1.5,
-        borderRadius: 3,
+        borderRadius: 1,
         border: `1px solid ${t.vars.palette.surface.outlineVariant}`,
         backgroundColor: level === 2 ? t.vars.palette.surface.containerLowest : t.vars.palette.surface.container,
         '&::before': { display: 'none' },

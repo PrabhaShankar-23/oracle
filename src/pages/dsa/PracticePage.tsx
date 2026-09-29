@@ -124,7 +124,7 @@ export default function PracticePage() {
         <li key={f.id}>
           <ListSubheader sx={{ bgcolor: 'background.default', lineHeight: '32px' }}>{f.name}</ListSubheader>
           {f.groups.map((g) => (
-            <ListItemButton key={g.id} onClick={() => go(g.id)} sx={{ minHeight: { xs: 44, lg: 36 }, py: 0, borderRadius: 5 }}>
+            <ListItemButton key={g.id} onClick={() => go(g.id)} sx={{ minHeight: { xs: 44, lg: 36 }, py: 0, borderRadius: 1 }}>
               <ListItemText
                 primary={g.code ? `${g.code} · ${g.name}` : g.name}
                 slotProps={{ primary: { variant: 'body2', noWrap: true } }}
@@ -139,7 +139,7 @@ export default function PracticePage() {
       <li>
         <ListSubheader sx={{ bgcolor: 'background.default', lineHeight: '32px' }}>Guide</ListSubheader>
         {practice.guide.map((s) => (
-          <ListItemButton key={s.id} onClick={() => go(s.id)} sx={{ minHeight: { xs: 44, lg: 36 }, py: 0, borderRadius: 5 }}>
+          <ListItemButton key={s.id} onClick={() => go(s.id)} sx={{ minHeight: { xs: 44, lg: 36 }, py: 0, borderRadius: 1 }}>
             <ListItemText primary={s.title} slotProps={{ primary: { variant: 'body2', noWrap: true } }} />
           </ListItemButton>
         ))}
@@ -276,7 +276,7 @@ export default function PracticePage() {
           anchor="right"
           open={railOpen}
           onClose={() => setRailOpen(false)}
-          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '16px 0 0 16px', py: 2, px: 1 } } }}
+          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '6px 0 0 6px', py: 2, px: 1 } } }}
         >
           {rail}
         </Drawer>
@@ -300,7 +300,7 @@ function Progress({ label, done, total }: { label: string; done: number; total: 
         variant="determinate"
         value={total ? (done / total) * 100 : 0}
         aria-label={`${label}: ${done} of ${total}`}
-        sx={{ height: 8, borderRadius: 4 }}
+        sx={{ height: 8, borderRadius: '4px' }}
       />
     </Box>
   )

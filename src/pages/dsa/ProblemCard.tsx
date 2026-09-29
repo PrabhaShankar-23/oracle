@@ -157,7 +157,7 @@ function ProblemCard({ problem: p, recallMode, open, onToggle }: Props) {
                         py: 0.5,
                         px: 1,
                         mx: -1,
-                        borderRadius: 2,
+                        borderRadius: 1,
                         typography: 'body2',
                         ...(a.winner && { backgroundColor: t.vars.palette.container.primary, color: t.vars.palette.container.onPrimary }),
                       })}
@@ -224,7 +224,7 @@ const inlineCode = {
   fontFamily: FONT_MONO,
   fontSize: '0.85em',
   px: 0.5,
-  borderRadius: 0.5,
+  borderRadius: '4px',
   bgcolor: 'action.hover',
 }
 

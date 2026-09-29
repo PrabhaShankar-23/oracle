@@ -128,7 +128,7 @@ export default function ModelAnswer({
             fontWeight: 500,
             px: 1,
             py: 0.25,
-            borderRadius: 1,
+            borderRadius: '4px',
             backgroundColor: t.vars.palette.container.primary,
             color: t.vars.palette.container.onPrimary,
             overflowWrap: 'anywhere',
@@ -167,7 +167,7 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
             typography: 'body2',
             mt: 2,
             p: 1.25,
-            borderRadius: 1.5,
+            borderRadius: 1,
             backgroundColor: t.vars.palette.container.error,
             color: t.vars.palette.container.onError,
             overflowWrap: 'anywhere',
@@ -188,7 +188,7 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
         sx={(t) => ({
           px: 1.75,
           py: 1.25,
-          borderRadius: 2,
+          borderRadius: 1,
           borderLeft: `3px solid ${t.vars.palette.primary.main}`,
           backgroundColor: t.vars.palette.surface.container,
         })}

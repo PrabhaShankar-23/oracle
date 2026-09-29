@@ -134,7 +134,7 @@ export default function CaseStudyPage() {
           anchor="right"
           open={tocOpen}
           onClose={() => setTocOpen(false)}
-          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '16px 0 0 16px', py: 2, px: 1 } } }}
+          slotProps={{ paper: { sx: { width: 'min(340px, 88vw)', borderRadius: '6px 0 0 6px', py: 2, px: 1 } } }}
         >
           <TableOfContents headings={study.headings} onNavigate={() => setTocOpen(false)} />
         </Drawer>
