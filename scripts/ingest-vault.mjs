@@ -536,10 +536,13 @@ function parseQuestionHeading(raw) {
       rest = rest.split(glyph).join('')
     }
   }
+  // Merged questions carry a band tag before the quote: `*(D)* "Why …?"`. Keep the tag, drop the quotes.
+  const tag = /^\*?(\([A-Z]\))\*?\s*/.exec(rest.trim())
+  const body = (tag ? rest.trim().slice(tag[0].length) : rest).trim().replace(/^["“”]+|["“”]+$/g, '').trim()
   return {
     number: Number(numbered[1]),
     marks,
-    text: rest.trim().replace(/^["“”]+|["“”]+$/g, '').trim(),
+    text: tag ? `${tag[1]} ${body}` : body,
   }
 }
 
@@ -730,7 +733,8 @@ const mdInline = (md) => flattenVaultRefs(marked.parseInline(md.trim()))
 
 function parseModelAnswer(md) {
   const line = (re) => re.exec(md)?.[1]?.trim()
-  const meta = line(/^>\s*(⭐.*)$/m) ?? ''
+  // The header line is the blockquote right under the title; only ⭐ questions start with ⭐.
+  const meta = line(/^# 🎤[^\n]*\n>\s*([^\n]*)$/m) ?? ''
   const type = Object.entries(MODEL_ANSWER_TYPES).find(([glyph]) => meta.includes(glyph))?.[1] ?? 'diagnose'
 
   const at = (marker) => {

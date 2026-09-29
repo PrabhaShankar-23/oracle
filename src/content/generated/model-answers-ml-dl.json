@@ -2712,7 +2712,7 @@
     "warning": "This answer is built on <strong>S1 · VhAIre</strong> from <span class=\"vault-ref\" title=\"16-PROJECT-STORIES\">PROJECT-STORIES</span>. Situation, constraint and options come from the vault; every <code>&lt;fill&gt;</code> is a fact only you have. Don&#39;t invent a latency number or an outcome in the room. If you have a classical ML project that fits better, keep this spine and swap the content."
   },
   "ml-dl-q26": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Define by what grows",
       "Instance-based vs model-based",
@@ -2805,7 +2805,7 @@
     ]
   },
   "ml-dl-q27": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Separate size from recency",
       "Size: out-of-core",
@@ -2902,7 +2902,7 @@
     ]
   },
   "ml-dl-q28": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Frame EDA as decisions",
       "Sample and audit the schema",
@@ -3010,7 +3010,7 @@
     ]
   },
   "ml-dl-q29": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "The rule: what the model computes with values",
       "Where it matters",
@@ -3113,7 +3113,7 @@
     ]
   },
   "ml-dl-q30": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Guarantee 1: leakage-free CV",
       "Guarantee 2: one artifact for serving",
@@ -3206,7 +3206,7 @@
     ]
   },
   "ml-dl-q31": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Ask what missingness depends on",
       "MCAR: deletion is safe",
@@ -3414,7 +3414,7 @@
     ]
   },
   "ml-dl-q33": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Classify by origin first",
       "Errors: correct or remove",
@@ -3518,7 +3518,7 @@
     ]
   },
   "ml-dl-q34": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Distances concentrate",
       "Data becomes sparse",
@@ -3615,7 +3615,7 @@
     ]
   },
   "ml-dl-q35": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "The objective",
       "The linear algebra",
@@ -3819,7 +3819,7 @@
     ]
   },
   "ml-dl-q37": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Ask what the model is for",
       "Linearity breaks predictions",
@@ -3919,7 +3919,7 @@
     ]
   },
   "ml-dl-q38": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Both trade bias for variance",
       "Ridge: smooth shrinkage",
@@ -4019,7 +4019,7 @@
     ]
   },
   "ml-dl-q39": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Three ways to estimate the gradient",
       "Problem 1: noisy direction",
@@ -4116,7 +4116,7 @@
     ]
   },
   "ml-dl-q40": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Two requirements in one sentence",
       "Why MSE and MAE fail",
@@ -4220,7 +4220,7 @@
     ]
   },
   "ml-dl-q41": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "What it models: linear log-odds",
       "How it's trained: maximum likelihood",
@@ -4317,7 +4317,7 @@
     ]
   },
   "ml-dl-q42": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Decision tree",
       "kNN",
@@ -4414,7 +4414,7 @@
     ]
   },
   "ml-dl-q43": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "First, is the gain real?",
       "The case for shipping",
@@ -4611,7 +4611,7 @@
     ]
   },
   "ml-dl-q45": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "The objective",
       "The assumptions it hides",
@@ -4819,7 +4819,7 @@
     ]
   },
   "ml-dl-q47": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Internal metrics: consistency, not truth",
       "Stability under resampling",
@@ -4916,7 +4916,7 @@
     ]
   },
   "ml-dl-q48": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Two axes: trial cost and important dimensions",
       "Grid",
@@ -5117,7 +5117,7 @@
     ]
   },
   "ml-dl-q50": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "It's a theorem, not a bug",
       "Choose the definition that matches the harm",
@@ -5307,7 +5307,7 @@
     ]
   },
   "ml-dl-q52": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Sort by what each is structurally good at",
       "ARIMA",
@@ -5415,7 +5415,7 @@
     ]
   },
   "ml-dl-q53": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Content-based",
       "Collaborative filtering",
@@ -5516,7 +5516,7 @@
     ]
   },
   "ml-dl-q54": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Price the two errors first",
       "When to buy",
@@ -5706,7 +5706,7 @@
     ]
   },
   "ml-dl-q56": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "Linear layers collapse",
       "Saturating activations",
@@ -5803,7 +5803,7 @@
     ]
   },
   "ml-dl-q57": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "A learned lookup table",
       "Why the geometry means something",
@@ -5896,7 +5896,7 @@
     ]
   },
   "ml-dl-q58": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "What UAT actually says",
       "What it doesn't: size",
@@ -5989,7 +5989,7 @@
     ]
   },
   "ml-dl-q59": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "The cell state is an additive highway",
       "Forget gate",
@@ -6086,7 +6086,7 @@
     ]
   },
   "ml-dl-q60": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "The fixed-vector bottleneck",
       "Bahdanau: soft lookup per step",
@@ -6172,7 +6172,7 @@
     ]
   },
   "ml-dl-q61": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Reason 1: parallel training",
       "Reason 2: constant path length",
@@ -6262,7 +6262,7 @@
     ]
   },
   "ml-dl-q62": {
-    "type": "diagnose",
+    "type": "concept",
     "spine": [
       "First moment steers",
       "Second moment scales",
@@ -6463,7 +6463,7 @@
     ]
   },
   "ml-dl-q64": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "ReLU's hard zero",
       "GELU: smooth gating",
@@ -6560,7 +6560,7 @@
     ]
   },
   "ml-dl-q65": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Count bytes per parameter",
       "Multiply",
@@ -6840,7 +6840,7 @@
     ]
   },
   "ml-dl-q68": {
-    "type": "diagnose",
+    "type": "design",
     "spine": [
       "Ask what stopped fitting",
       "Data parallel",
@@ -7130,7 +7130,7 @@
     ]
   },
   "ml-dl-q71": {
-    "type": "diagnose",
+    "type": "trade-off",
     "spine": [
       "Convolution's two built-in assumptions",
       "What a ViT must learn",

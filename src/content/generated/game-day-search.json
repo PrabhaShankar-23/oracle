@@ -281,28 +281,28 @@
   },
   {
     "id": "python-q41",
-    "text": "(D) \"Your multiprocessing code works on Linux, breaks on Mac. Why?",
+    "text": "(D) Your multiprocessing code works on Linux, breaks on Mac. Why?",
     "topic": "python",
     "topicTitle": "Python",
     "band": "More questions"
   },
   {
     "id": "python-q42",
-    "text": "(C) \"Why is pickle dangerous, and what do you use instead?",
+    "text": "(C) Why is pickle dangerous, and what do you use instead?",
     "topic": "python",
     "topicTitle": "Python",
     "band": "More questions"
   },
   {
     "id": "python-q43",
-    "text": "(C) \"@cached_property, @lru_cache, functools.cache — which and when?",
+    "text": "(C) @cached_property, @lru_cache, functools.cache — which and when?",
     "topic": "python",
     "topicTitle": "Python",
     "band": "More questions"
   },
   {
     "id": "python-q44",
-    "text": "(C) \"CPython, PyPy, or compiled Python?",
+    "text": "(C) CPython, PyPy, or compiled Python?",
     "topic": "python",
     "topicTitle": "Python",
     "band": "More questions"

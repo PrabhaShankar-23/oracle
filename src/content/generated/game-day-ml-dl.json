@@ -600,7 +600,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Define by what grows",
               "Instance-based vs model-based",
@@ -619,7 +619,7 @@
           "links": [],
           "badge": "Trending — recurs on ML-Engineer JDs mentioning streaming/continual training (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Separate size from recency",
               "Size: out-of-core",
@@ -638,7 +638,7 @@
           "links": [],
           "badge": "Evergreen (asked in almost every ML loop as a \"how do you work\" probe)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Frame EDA as decisions",
               "Sample and audit the schema",
@@ -658,7 +658,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "The rule: what the model computes with values",
               "Where it matters",
@@ -677,7 +677,7 @@
           "links": [],
           "badge": "Trending — recurs on ML-Engineer JDs (\"productionize sklearn pipelines\") + LinkedIn (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Guarantee 1: leakage-free CV",
               "Guarantee 2: one artifact for serving",
@@ -696,7 +696,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Ask what missingness depends on",
               "MCAR: deletion is safe",
@@ -736,7 +736,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Classify by origin first",
               "Errors: correct or remove",
@@ -756,7 +756,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Distances concentrate",
               "Data becomes sparse",
@@ -775,7 +775,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "The objective",
               "The linear algebra",
@@ -815,7 +815,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Ask what the model is for",
               "Linearity breaks predictions",
@@ -835,7 +835,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Both trade bias for variance",
               "Ridge: smooth shrinkage",
@@ -855,7 +855,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Three ways to estimate the gradient",
               "Problem 1: noisy direction",
@@ -874,7 +874,7 @@
           "links": [],
           "badge": "Trending — loss-selection scenarios recur on LeetCode Discuss + ML-Engineer JDs (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Two requirements in one sentence",
               "Why MSE and MAE fail",
@@ -894,7 +894,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "What it models: linear log-odds",
               "How it's trained: maximum likelihood",
@@ -913,7 +913,7 @@
           "links": [],
           "badge": "Evergreen — the comparative sweep interviewers use to test breadth quickly.",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Decision tree",
               "kNN",
@@ -932,7 +932,7 @@
           "links": [],
           "badge": "Evergreen — the \"engineering judgment\" ensemble question.",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "First, is the gain real?",
               "The case for shipping",
@@ -971,7 +971,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "The objective",
               "The assumptions it hides",
@@ -1011,7 +1011,7 @@
           "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + DS/ML JDs (customer segmentation) (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Internal metrics: consistency, not truth",
               "Stability under resampling",
@@ -1030,7 +1030,7 @@
           "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + MLE JDs (Optuna is a named skill now) (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Two axes: trial cost and important dimensions",
               "Grid",
@@ -1069,7 +1069,7 @@
           "links": [],
           "badge": "Trending — recurs in responsible-AI JDs + regulated-industry loops (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "It's a theorem, not a bug",
               "Choose the definition that matches the harm",
@@ -1107,7 +1107,7 @@
           "links": [],
           "badge": "Trending — recurs on LeetCode Discuss + forecasting JDs (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Sort by what each is structurally good at",
               "ARIMA",
@@ -1127,7 +1127,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Content-based",
               "Collaborative filtering",
@@ -1146,7 +1146,7 @@
           "links": [],
           "badge": "Trending — build-vs-buy framing recurs in AI-Architect JDs (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Price the two errors first",
               "When to buy",
@@ -1184,7 +1184,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "Linear layers collapse",
               "Saturating activations",
@@ -1203,7 +1203,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "A learned lookup table",
               "Why the geometry means something",
@@ -1222,7 +1222,7 @@
           "links": [],
           "badge": "Evergreen — the classic theory-vs-practice probe.",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "What UAT actually says",
               "What it doesn't: size",
@@ -1241,7 +1241,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "The cell state is an additive highway",
               "Forget gate",
@@ -1260,7 +1260,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "The fixed-vector bottleneck",
               "Bahdanau: soft lookup per step",
@@ -1278,7 +1278,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Reason 1: parallel training",
               "Reason 2: constant path length",
@@ -1296,7 +1296,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "concept",
             "spine": [
               "First moment steers",
               "Second moment scales",
@@ -1335,7 +1335,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "ReLU's hard zero",
               "GELU: smooth gating",
@@ -1354,7 +1354,7 @@
           "links": [],
           "badge": "Trending — the GPU-memory arithmetic probe recurs in senior DL guides + LLM-infra JDs (\"debug training runs\", \"billion-parameter models\") (2025–26)",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Count bytes per parameter",
               "Multiply",
@@ -1410,7 +1410,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "design",
             "spine": [
               "Ask what stopped fitting",
               "Data parallel",
@@ -1468,7 +1468,7 @@
           "links": [],
           "badge": "Evergreen",
           "modelAnswer": {
-            "type": "diagnose",
+            "type": "trade-off",
             "spine": [
               "Convolution's two built-in assumptions",
               "What a ViT must learn",
