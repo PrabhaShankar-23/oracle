@@ -1,13 +1,16 @@
 /**
  * Material Design 3 theme for MUI.
  *
- * Every colour, radius, type style and component default lives in this file.
+ * Every radius, type style and component default lives in this file; colour values live in
+ * ./schemes (one file per scheme) and the light/dark pair is chosen below.
  * Components read colours through `theme.vars.palette.*` so light/dark switch
  * with CSS variables instead of a React re-render.
  *
- * Colour roles follow M3 (https://m3.material.io/styles/color/roles), filled with the
- * Everforest palette. To re-brand, replace the `light` and `dark` objects below.
+ * Colour roles follow M3 (https://m3.material.io/styles/color/roles).
  */
+import { chatgptDark } from './schemes/chatgptDark'
+import { everforestLight } from './schemes/everforestLight'
+import type { Scheme } from './schemes/types'
 import '@fontsource-variable/roboto-flex'
 import '@fontsource-variable/roboto-mono'
 import type {} from '@mui/material/themeCssVarsAugmentation'
@@ -74,71 +77,10 @@ declare module '@mui/material/Chip' {
 /* Colour schemes                                                      */
 /* ------------------------------------------------------------------ */
 
-// Everforest (https://github.com/sainnhe/everforest), medium contrast. Dark is the default scheme.
-// Light keeps Everforest's hues on a near-white surface with near-black text, for contrast.
-const light = {
-  primary: '#566B00',
-  onPrimary: '#FFFFFF',
-  primaryContainer: '#E4EBC4',
-  onPrimaryContainer: '#2C3A08',
-  secondary: '#1A6E51',
-  onSecondary: '#FFFFFF',
-  secondaryContainer: '#D7EADF',
-  onSecondaryContainer: '#123B2C',
-  tertiary: '#A13F88',
-  onTertiary: '#FFFFFF',
-  tertiaryContainer: '#F5DCEA',
-  onTertiaryContainer: '#561C47',
-  error: '#C0302E',
-  errorContainer: '#FBE0D8',
-  onErrorContainer: '#761B19',
-  success: '#1A6E51',
-  warning: '#835A00',
-  surface: '#FFFDF7',
-  surfaceDim: '#ECE8DA',
-  surfaceBright: '#FFFDF7',
-  surfaceContainerLowest: '#FFFFFF',
-  surfaceContainerLow: '#FAF7EE',
-  surfaceContainer: '#F4F0E3',
-  surfaceContainerHigh: '#EDE9DB',
-  surfaceContainerHighest: '#E6E2D2',
-  onSurface: '#1F2A2F',
-  onSurfaceVariant: '#4A5650',
-  outline: '#7B887E',
-  outlineVariant: '#D8D3C2',
-}
-
-const dark: typeof light = {
-  primary: '#A7C080',
-  onPrimary: '#232A2E',
-  primaryContainer: '#425047',
-  onPrimaryContainer: '#D3C6AA',
-  secondary: '#83C092',
-  onSecondary: '#232A2E',
-  secondaryContainer: '#3A515D',
-  onSecondaryContainer: '#D3C6AA',
-  tertiary: '#D699B6',
-  onTertiary: '#232A2E',
-  tertiaryContainer: '#543A48',
-  onTertiaryContainer: '#E8C9D8',
-  error: '#E67E80',
-  errorContainer: '#514045',
-  onErrorContainer: '#F2C5C6',
-  success: '#83C092',
-  warning: '#DBBC7F',
-  surface: '#2D353B',
-  surfaceDim: '#232A2E',
-  surfaceBright: '#4F585E',
-  surfaceContainerLowest: '#232A2E',
-  surfaceContainerLow: '#343F44',
-  surfaceContainer: '#384247',
-  surfaceContainerHigh: '#3D484D',
-  surfaceContainerHighest: '#475258',
-  onSurface: '#D3C6AA',
-  onSurfaceVariant: '#9DA9A0',
-  outline: '#859289',
-  outlineVariant: '#4F585E',
-}
+// Colour schemes live in ./schemes, one file each. Pick the dark one here; everything else
+// (MUI palette, Mermaid, charts, code highlighting) follows from it.
+const light: Scheme = everforestLight
+const dark: Scheme = chatgptDark // alternatives: everforestDark, deepforestDark
 
 /** Hex values for vault charts (src/lib/chart.ts): Plot writes colours as SVG attributes, which can't read CSS variables. */
 export const chartColors = (mode: 'light' | 'dark') => {
@@ -188,7 +130,7 @@ export const mermaidThemeVariables = (mode: 'light' | 'dark') => {
   }
 }
 
-function palette(s: typeof light, mode: 'light' | 'dark') {
+function palette(s: Scheme, mode: 'light' | 'dark') {
   return {
     mode,
     primary: { main: s.primary, contrastText: s.onPrimary },
