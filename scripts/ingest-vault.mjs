@@ -3,6 +3,7 @@
 //      VAULT_DIR=/path npm run ingest
 import * as cheerio from 'cheerio'
 import { marked } from 'marked'
+import { parse as parseYaml } from 'yaml'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import path from 'node:path'
@@ -670,6 +671,7 @@ const MODEL_ANSWER_TYPES = { '🩺': 'diagnose', '🏗️': 'design', '⚖️': 
 function mdToHtml(md) {
   const $ = cheerio.load(marked.parse(md.trim(), { gfm: true, mangle: false, headerIds: false }))
   const body = $('body')
+  promoteMermaidFences($, body)
   flattenVaultRefsWithin($, body)
   return inner(body)
 }
@@ -878,6 +880,7 @@ async function ingestGameDay() {
       delete q.modelAnswerTarget
       if (!target) continue
       try {
+        chartSource = `${target}.md`
         const answer = parseModelAnswer(await readFile(path.join(VAULT, GAME_DAY_DIR, `${target}.md`), 'utf8'))
         answers[q.id] = answer
         q.modelAnswer = { type: answer.type, spine: answer.spine }
@@ -974,6 +977,86 @@ function promoteMermaidFences($, body) {
     const figure = $('<figure></figure>').append($('<div class="mermaid"></div>').text(code.text()))
     code.parent().replaceWith(figure)
   })
+  promoteChartFences($, body)
+}
+
+/*
+ * ```chart fences: a small, library-neutral chart spec written in the vault as YAML (see
+ * `ChartSpec` in src/content/types.ts). Validated here so a typo fails the ingest instead of
+ * rendering a broken chart; the site draws it with Observable Plot (src/lib/chart.ts).
+ */
+const CHART_TONES = new Set(['primary', 'warn', 'bad', 'ok', 'muted', 'accent'])
+const CHART_ANNOTATIONS = new Set(['band', 'vline', 'hline', 'gap', 'point', 'region'])
+
+function validateChart(spec, where) {
+  const fail = (msg) => {
+    throw new Error(`chart in ${where}: ${msg}`)
+  }
+  const isNum = (n) => typeof n === 'number' && Number.isFinite(n)
+  const isPair = (p) => Array.isArray(p) && p.length === 2 && isNum(p[0]) && isNum(p[1])
+  if (!spec || typeof spec !== 'object') fail('not a mapping')
+  if (!['line', 'bar'].includes(spec.type)) fail(`type must be line or bar, got ${spec.type}`)
+  for (const axis of ['x', 'y']) {
+    const a = spec[axis] ?? {}
+    if (a.domain && !isPair(a.domain)) fail(`${axis}.domain must be [min, max]`)
+    if (a.scale && !['linear', 'log'].includes(a.scale)) fail(`${axis}.scale must be linear or log`)
+    if (a.scale === 'log' && a.domain && a.domain[0] <= 0) fail(`${axis}.domain must be > 0 on a log scale`)
+  }
+  const tone = (t, at) => {
+    if (t !== undefined && !CHART_TONES.has(t)) fail(`${at}: unknown tone "${t}" (use ${[...CHART_TONES].join(', ')})`)
+  }
+
+  if (spec.type === 'bar') {
+    if (!Array.isArray(spec.bars) || spec.bars.length === 0) fail('bar chart needs bars: [{ label, value }]')
+    spec.bars.forEach((b, i) => {
+      if (typeof b.label !== 'string' || !isNum(b.value)) fail(`bars[${i}] needs a string label and a number value`)
+      tone(b.tone, `bars[${i}]`)
+    })
+  } else {
+    if (!Array.isArray(spec.series) || spec.series.length === 0) fail('line chart needs series')
+    spec.series.forEach((s, i) => {
+      if (typeof s.name !== 'string') fail(`series[${i}] needs a name`)
+      if (!Array.isArray(s.points) || s.points.length < 2 || !s.points.every(isPair)) fail(`series "${s.name}" needs ≥2 [x, y] points`)
+      tone(s.tone, `series "${s.name}"`)
+    })
+  }
+  if (spec.type === 'bar' && (spec.annotations ?? []).some((a) => a.kind !== 'hline'))
+    fail('bar charts only take hline annotations')
+  const names = new Set((spec.series ?? []).map((s) => s.name))
+  for (const [i, a] of (spec.annotations ?? []).entries()) {
+    if (!CHART_ANNOTATIONS.has(a.kind)) fail(`annotations[${i}]: unknown kind "${a.kind}"`)
+    tone(a.tone, `annotations[${i}]`)
+    if (a.between) {
+      if (!Array.isArray(a.between) || a.between.length !== 2 || !a.between.every((n) => names.has(n)))
+        fail(`annotations[${i}].between must name two series (${[...names].join(', ')})`)
+    }
+    if ((a.kind === 'band' || a.kind === 'gap') && !a.between) fail(`annotations[${i}] (${a.kind}) needs between`)
+    if ((a.kind === 'vline' || a.kind === 'gap') && !isNum(a.x)) fail(`annotations[${i}] (${a.kind}) needs x`)
+    if (a.kind === 'hline' && !isNum(a.y)) fail(`annotations[${i}] (hline) needs y`)
+    if (a.kind === 'point' && !(isNum(a.x) && isNum(a.y))) fail(`annotations[${i}] (point) needs x and y`)
+    if (a.kind === 'region' && !(isNum(a.from) && isNum(a.to))) fail(`annotations[${i}] (region) needs from and to`)
+  }
+  return spec
+}
+
+/** Where the chart came from, for error messages; set by callers that know the file. */
+let chartSource = 'vault'
+
+function promoteChartFences($, body) {
+  body.find('pre > code.language-chart').each((_, node) => {
+    const code = $(node)
+    let spec
+    try {
+      spec = parseYaml(code.text())
+    } catch (err) {
+      throw new Error(`chart in ${chartSource}: invalid YAML — ${err.message}`)
+    }
+    validateChart(spec, chartSource)
+    const figure = $('<figure class="chart-fig"></figure>')
+    figure.append($('<div class="vault-chart"></div>').attr('data-spec', JSON.stringify(spec)))
+    if (spec.caption) figure.append($('<figcaption></figcaption>').text(spec.caption))
+    code.parent().replaceWith(figure)
+  })
 }
 
 /* ---------------- Networking (01-System Design/01-Networking) ---------------- */
@@ -1023,6 +1106,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
       const notes = split.length > 0 ? split : []
 
       for (const md of notes) {
+        chartSource = `${chapterDir}/${file}`
         const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
         const body = $('body')
 

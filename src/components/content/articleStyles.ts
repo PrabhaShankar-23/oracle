@@ -177,6 +177,20 @@ export const articleStyles: SxProps<Theme> = (t) => {
       backgroundColor: v.surface.containerLowest,
       overflowX: 'auto',
     },
+    // Vault charts (```chart → src/lib/chart.ts). Laid out at 560px and scaled; below ~480px the
+    // figure scrolls rather than shrinking the labels past legibility.
+    '& .vault-chart': { minHeight: 120 },
+    '& svg.chart': { display: 'block', width: '100%', minWidth: 480, maxWidth: 720, height: 'auto', mx: 'auto' },
+    // Hand-drawn vault SVG (`<svg class="dgm">`, model answers). The file carries neutral fallback
+    // colours for Obsidian; here the semantic classes take the theme's. Below ~480px it scrolls
+    // inside its figure rather than shrinking the labels past legibility.
+    '& svg.dgm': { display: 'block', width: '100%', minWidth: 480, maxWidth: 720, height: 'auto', mx: 'auto', color: v.text.primary },
+    '& .dgm-a': { stroke: v.primary.main },
+    '& .dgm-a-label, & .dgm-a-dot': { fill: v.primary.main },
+    '& .dgm-b': { stroke: v.warning.main },
+    '& .dgm-b-label, & .dgm-b-dot': { fill: v.warning.main },
+    '& .dgm-bad': { fill: v.error.main, fillOpacity: 0.12 },
+    '& .dgm-ok': { fill: v.success.main, fillOpacity: 0.12 },
     '& .mermaid': { display: 'flex', justifyContent: 'center', minHeight: 60, color: 'transparent' },
     '& .mermaid svg': { maxWidth: '100%', height: 'auto' },
     '& .mermaid:has(svg)': { color: 'inherit' },

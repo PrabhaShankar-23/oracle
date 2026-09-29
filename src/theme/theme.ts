@@ -140,6 +140,25 @@ const dark: typeof light = {
   outlineVariant: '#4F585E',
 }
 
+/** Hex values for vault charts (src/lib/chart.ts): Plot writes colours as SVG attributes, which can't read CSS variables. */
+export const chartColors = (mode: 'light' | 'dark') => {
+  const s = mode === 'dark' ? dark : light
+  return {
+    text: s.onSurface,
+    muted: s.onSurfaceVariant,
+    grid: s.outlineVariant,
+    axis: s.outline,
+    tones: {
+      primary: s.primary,
+      warn: s.warning,
+      bad: s.error,
+      ok: s.success,
+      accent: s.tertiary,
+      muted: s.onSurfaceVariant,
+    },
+  }
+}
+
 /** Hex values for Mermaid, which draws SVG and can't read the CSS variables. */
 export const mermaidThemeVariables = (mode: 'light' | 'dark') => {
   const s = mode === 'dark' ? dark : light

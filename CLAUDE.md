@@ -26,7 +26,7 @@ npm run lint      # oxlint
 ## Stack
 
 React 19 · Vite 8 · TypeScript · React Router 8 (declarative `BrowserRouter`) · MUI 9 with a
-Material Design 3 theme · Mermaid and highlight.js (lazy-loaded) · `marked` (ingest only, Markdown → HTML).
+Material Design 3 theme · Mermaid, Observable Plot and highlight.js (lazy-loaded) · `marked` and `yaml` (ingest only).
 
 ## Layout
 
@@ -44,6 +44,9 @@ Material Design 3 theme · Mermaid and highlight.js (lazy-loaded) · `marked` (i
   `PlaybookPage` from a small set of block kinds (`flow`, `checklist`, `table`, `cards`, `bullets`,
   `compare`, `code`, `callout`). Its section ids and titles live in `src/content/playbookIndex.ts` so
   `sections.ts` can index them for nav and search without pulling the prose into the main bundle.
+- Vault charts: a ```` ```chart ```` YAML fence in a note is validated by the ingest (`validateChart`, `ChartSpec` in
+  `types.ts`) and drawn by `src/lib/chart.ts` with Observable Plot; colours come from `chartColors()` in `theme.ts`.
+  The spec format is documented in the vault's `02-Game-Day/meta_prompts/model_answer_prompt_v1.md` §5a.
 - `src/components/layout/` — app bar, `SideNav` section sidebar (permanent at `lg`+, inside `NavDrawer` below), global search.
 - `src/components/content/` — `PageContainer`, `PageHeader`, `HtmlContent` (renders vault HTML with
   diagrams, highlighting, copy buttons), `TableOfContents`, `articleStyles`.

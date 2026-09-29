@@ -347,6 +347,45 @@ export type GameDayModelAnswer = {
 /** `model-answers-<topic>.json`: keyed by question id. */
 export type GameDayModelAnswers = Record<string, GameDayModelAnswer>
 
+/* ---------------- Vault charts (```chart fences, validated in the ingest) ---------------- */
+
+/** Semantic colour roles; the theme maps them to palette colours per mode. */
+export type ChartTone = 'primary' | 'warn' | 'bad' | 'ok' | 'muted' | 'accent'
+
+export type ChartAxis = { label?: string; domain?: [number, number]; unit?: string; scale?: 'linear' | 'log' }
+
+export type ChartSeries = {
+  name: string
+  points: [number, number][]
+  tone?: ChartTone
+  dashed?: boolean
+  /** Where the direct label sits: an x value on the line (default: the last point). */
+  labelAt?: number
+}
+
+export type ChartAnnotation =
+  /** Shade between two series, optionally only over [from, to]. */
+  | { kind: 'band'; between: [string, string]; from?: number; to?: number; label?: string; tone?: ChartTone }
+  | { kind: 'vline'; x: number; label?: string; tone?: ChartTone }
+  | { kind: 'hline'; y: number; label?: string; tone?: ChartTone }
+  /** A bracket measuring the vertical distance between two series at x. */
+  | { kind: 'gap'; x: number; between: [string, string]; label?: string; tone?: ChartTone }
+  | { kind: 'point'; x: number; y: number; label?: string; tone?: ChartTone }
+  /** Shade a vertical strip [from, to] across the whole plot. */
+  | { kind: 'region'; from: number; to: number; label?: string; tone?: ChartTone }
+
+export type ChartSpec = {
+  type: 'line' | 'bar'
+  title?: string
+  caption?: string
+  x?: ChartAxis
+  y?: ChartAxis
+  series?: ChartSeries[]
+  bars?: { label: string; value: number; tone?: ChartTone }[]
+  annotations?: ChartAnnotation[]
+  height?: number
+}
+
 /** `A`–`F` for the six standard bands; `null` for appendix sections (♻️ merged, 📝 gaps). */
 export type GameDayBand = {
   id: string

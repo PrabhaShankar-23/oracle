@@ -3,6 +3,7 @@ import type { SxProps, Theme } from '@mui/material/styles'
 import { memo, useEffect, useRef, type MouseEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { highlightWithin } from '../../lib/highlight'
+import { renderChartsWithin } from '../../lib/chart'
 import { renderMermaidWithin } from '../../lib/mermaid'
 import { useResolvedMode } from '../../hooks/useResolvedMode'
 import { articleStyles } from './articleStyles'
@@ -54,9 +55,11 @@ function HtmlContent({ html, hideRecallAnswers = false, sx }: Props) {
     highlightWithin(root)
   }, [html])
 
-  // Diagrams re-render when the colour scheme changes.
+  // Diagrams and charts re-render when the colour scheme changes.
   useEffect(() => {
-    if (ref.current) void renderMermaidWithin(ref.current, mode)
+    if (!ref.current) return
+    void renderMermaidWithin(ref.current, mode)
+    void renderChartsWithin(ref.current, mode)
   }, [html, mode])
 
   const onClick = (e: MouseEvent<HTMLDivElement>) => {
