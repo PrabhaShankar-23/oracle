@@ -20,6 +20,7 @@ import { manifest } from '../../content/sections'
 import type { GameDayMark, GameDayQuestion, GameDayTopic } from '../../content/types'
 import { HEADER_HEIGHT, READING_MAX_WIDTH } from '../../theme/theme'
 import NotFoundPage from '../NotFoundPage'
+import ModelAnswer from './ModelAnswer'
 
 // Vite turns this into one lazy chunk per topic, so a page loads only its own questions.
 const TOPICS = import.meta.glob<{ default: GameDayTopic }>('../../content/generated/game-day-*.json')
@@ -55,9 +56,10 @@ export default function GameDayRecallPage() {
   }, [slug, known])
 
   // "Expand all" drives the native <details> elements directly — they stay uncontrolled otherwise.
+  // Question-level only: each model answer nests a dozen more, and opening those is a deliberate act.
   useEffect(() => {
     if (allOpen === null) return
-    bodyRef.current?.querySelectorAll('details').forEach((d) => (d.open = allOpen))
+    bodyRef.current?.querySelectorAll<HTMLDetailsElement>('details[data-gd-question]').forEach((d) => (d.open = allOpen))
   }, [allOpen, topic])
 
   const headings = useMemo(
@@ -129,7 +131,7 @@ export default function GameDayRecallPage() {
               </Typography>
               <Stack spacing={1.5}>
                 {band.questions.map((q) => (
-                  <QuestionCard key={q.id} question={q} />
+                  <QuestionCard key={q.id} topic={slug} question={q} />
                 ))}
               </Stack>
             </Box>
@@ -167,7 +169,7 @@ export default function GameDayRecallPage() {
 }
 
 /** Question visible, answer behind a native <details> — disclosure is exactly this interaction. */
-function QuestionCard({ question: q }: { question: GameDayQuestion }) {
+function QuestionCard({ topic, question: q }: { topic: string; question: GameDayQuestion }) {
   const answer = [
     q.points.length ? `<ul>${q.points.map((p) => `<li>${p}</li>`).join('')}</ul>` : '',
     q.flow ? `<p class="gd-line"><b>Flow:</b> ${q.flow}</p>` : '',
@@ -188,6 +190,7 @@ function QuestionCard({ question: q }: { question: GameDayQuestion }) {
     >
       <Box
         component="details"
+        data-gd-question=""
         sx={(t) => ({
           '& > summary': {
             listStyle: 'none',
@@ -245,6 +248,9 @@ function QuestionCard({ question: q }: { question: GameDayQuestion }) {
             }}
           />
           {q.drill && <Drill drill={q.drill} />}
+          {q.modelAnswer && (
+            <ModelAnswer topic={topic} questionId={q.id} type={q.modelAnswer.type} spine={q.modelAnswer.spine} />
+          )}
           {q.links.length > 0 && (
             <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap', mt: 1.5 }}>
               {q.links.map((l) => (

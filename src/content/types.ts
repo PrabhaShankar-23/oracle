@@ -319,7 +319,33 @@ export type GameDayQuestion = {
   oneLiner?: string
   links: GameDayLink[]
   drill?: GameDayDrill
+  /** Set when the vault has a model answer for this question; the full text is in `model-answers-<slug>.json`. */
+  modelAnswer?: { type: GameDayAnswerType; spine: string[] }
 }
+
+export type GameDayAnswerType = 'diagnose' | 'design' | 'trade-off' | 'concept' | 'story'
+
+/** What a follow-up is for: drill deeper, tempt a shortcut, break an assumption, or go senior. */
+export type GameDayFollowUpTag = 'probe' | 'trap' | 'edge' | 'senior'
+
+/** A full model answer (vault `02-Game-Day/model-answers/`). All `html` fields are trusted vault HTML. */
+export type GameDayModelAnswer = {
+  type: GameDayAnswerType
+  spine: string[]
+  testing: string
+  trap: string
+  speakTime?: string
+  /** Present when the answer has `<fill>` slots the reader must complete. */
+  warning?: string
+  spoken: string
+  stages: { number: number; name: string; claim: string; html: string }[]
+  followUps: { number: number; question: string; tag: GameDayFollowUpTag; html: string }[]
+  dontSay: string[]
+  links: GameDayLink[]
+}
+
+/** `model-answers-<topic>.json`: keyed by question id. */
+export type GameDayModelAnswers = Record<string, GameDayModelAnswer>
 
 /** `A`–`F` for the six standard bands; `null` for appendix sections (♻️ merged, 📝 gaps). */
 export type GameDayBand = {

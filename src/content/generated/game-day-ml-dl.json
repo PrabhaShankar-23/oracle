@@ -60,6 +60,17 @@
                 "target": "01-ML/01-Foundations/05-Bias-Variance Tradeoff"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Experiment, one change at a time",
+              "Interpret the result",
+              "Validate once, then monitor"
+            ]
           }
         },
         {
@@ -108,6 +119,17 @@
                 "target": "01-ML/15-System &amp; Architecture/02-Train-Serve Skew"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Frame the gap",
+              "Leakage first",
+              "Then train–serve skew",
+              "Drift last",
+              "Prove it by replay",
+              "Make it structural"
+            ]
           }
         },
         {
@@ -154,6 +176,16 @@
                 "label": "No Free Lunch Theorem",
                 "target": "01-ML/01-Foundations/07-No Free Lunch Theorem"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Decompose into three terms",
+              "The classical U-curve",
+              "Where it misleads",
+              "What survives",
+              "Fix the dominant term"
             ]
           }
         },
@@ -202,6 +234,17 @@
                 "target": "01-ML/11-Model Selection, Validation &amp; Tuning/04-Group K-Fold — when you have grouped or leaky data"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Name the two leaks",
+              "Split by time first",
+              "Keep users disjoint",
+              "Respect horizon and label delay",
+              "Walk forward and slice",
+              "Mirror production"
+            ]
           }
         },
         {
@@ -248,6 +291,16 @@
                 "label": "Statistical significance of model comparisons — McNemar's test, paired t test, 5x2 CV",
                 "target": "01-ML/11-Model Selection, Validation &amp; Tuning/12-Statistical significance of model comparisons — McNemar's test, paired t-test, 5x2 CV"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name the bias",
+              "Why selection inflates",
+              "How big it gets",
+              "Fix: nested CV or an untouched holdout",
+              "Compare models honestly"
             ]
           }
         },
@@ -299,6 +352,17 @@
                 "label": "Cost of Error Analysis",
                 "target": "01-ML/15-System &amp; Architecture/05-Cost-of-Error Analysis"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Pin the decision",
+              "Define the label and horizon",
+              "Choose the unit",
+              "Price the errors",
+              "Beat a baseline",
+              "Decide: ML or not"
             ]
           }
         }
@@ -359,6 +423,17 @@
                 "target": "01-ML/08-Classification Models/08-Threshold Tuning"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Both are right",
+              "Check prevalence",
+              "Look where the business operates",
+              "Check calibration",
+              "Set the threshold from cost",
+              "Agree the metric up front"
+            ]
           }
         },
         {
@@ -406,6 +481,17 @@
                 "target": "01-ML/08-Classification Models/03-Classification Metrics"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Ranking ≠ calibration",
+              "Why boosted scores lie",
+              "Diagnose with a reliability curve",
+              "Calibrate on held-out data",
+              "Correct for resampling",
+              "Monitor calibration drift"
+            ]
           }
         },
         {
@@ -452,6 +538,17 @@
                 "label": "Classification Metrics",
                 "target": "01-ML/08-Classification Models/03-Classification Metrics"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Stratify every split",
+              "Weight before you resample",
+              "Resample inside the training fold only",
+              "Measure with PR metrics at the budget",
+              "Report the noise",
+              "Deliver a ranked list"
             ]
           }
         },
@@ -504,6 +601,17 @@
                 "target": "01-ML/09-Ensemble Methods/09-LightGBM — leaf-wise growth, GOSS, EFB"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where Random Forest wins",
+              "Where boosting wins",
+              "The failure asymmetry",
+              "How I actually decide",
+              "What I'd pick here"
+            ]
           }
         },
         {
@@ -551,6 +659,16 @@
                 "target": "01-ML/09-Ensemble Methods/06-Gradient Boosting — Regression"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Bagging averages errors",
+              "Decorrelation is the real lever",
+              "Boosting fits what's left",
+              "Gradient descent in function space",
+              "Consequences for tree depth and tuning"
+            ]
           }
         },
         {
@@ -597,6 +715,17 @@
                 "label": "LIME — Local Surrogate Models",
                 "target": "01-ML/12-Interpretability &amp; Responsible ML/05-LIME — Local Surrogate Models"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "SHAP: fair credit with guarantees",
+              "LIME: a local surrogate",
+              "Where each wins",
+              "The shared weakness: correlated features",
+              "What neither can tell you",
+              "How I use them in production"
             ]
           }
         }
@@ -661,6 +790,17 @@
                 "target": "01-ML/15-System &amp; Architecture/04-Online vs Batch vs Streaming Inference"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Name the enemy: skew",
+              "One definition, two materialisations",
+              "Point-in-time correctness",
+              "Ship preprocessing with the model",
+              "Version together, roll back together",
+              "Detect it anyway"
+            ]
           }
         },
         {
@@ -702,6 +842,18 @@
                 "label": "Data Quality &amp; Validation",
                 "target": "01-ML/02-Data Handling &amp; EDA/07-Data Quality &amp; Validation"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Is it real?",
+              "Rule out the impostors",
+              "Classify the drift",
+              "Localise it",
+              "Decide the response",
+              "Retrain through a gate",
+              "Run it as a loop"
             ]
           }
         },
@@ -750,6 +902,17 @@
                 "target": "01-ML/03-Feature-engineering/09-Feature Hashing for High-Cardinality Categoricals"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Suspect the label in the feature",
+              "Why high cardinality makes it worse",
+              "Test it honestly",
+              "Encode safely",
+              "Handle rare and unseen levels",
+              "Compare the leak-free alternatives"
+            ]
           }
         },
         {
@@ -796,6 +959,17 @@
                 "label": "Implicit vs Explicit Feedback",
                 "target": "01-ML/14-Recommender Systems (Classical)/04-Implicit vs Explicit Feedback"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Offline data is biased by the old policy",
+              "Position bias",
+              "Diversity collapse",
+              "Rule out the boring causes",
+              "Let the A/B decide",
+              "Fix the evaluation loop"
             ]
           }
         }
@@ -851,6 +1025,17 @@
                 "target": "02-DL/01-Foundations/12.1-Memoization in backpropagation"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Chain rule over a graph",
+              "Forward pass caches",
+              "Backward pass reuses",
+              "Why it's cheap",
+              "What it isn't",
+              "The memory consequence"
+            ]
           }
         },
         {
@@ -894,6 +1079,16 @@
                 "target": "02-DL/01-Foundations/08-vanishing-gradient"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it: vanishing gradients",
+              "The multiplicative mechanism",
+              "Confirm with per-layer gradient norms",
+              "Fix: activations, init, normalisation, residuals",
+              "Verify"
+            ]
           }
         },
         {
@@ -935,6 +1130,16 @@
                 "label": "Cross Entropy Loss",
                 "target": "02-DL/01-Foundations/10-Cross-Entropy Loss"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "The principled reason: maximum likelihood",
+              "The gradient mechanism",
+              "Where MSE stalls",
+              "Landscape and penalties",
+              "The practical corollary"
             ]
           }
         },
@@ -983,6 +1188,16 @@
                 "target": "02-DL/05-Training Mechanics that make transformers work/04-He vs Xavier Initialization"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Symmetry never breaks",
+              "The layer collapses to one neuron",
+              "What init is really for",
+              "Pick the scheme by activation",
+              "Get reproducibility the right way"
+            ]
           }
         },
         {
@@ -1024,6 +1239,16 @@
                 "label": "Dropout",
                 "target": "02-DL/05-Training Mechanics that make transformers work/14-Dropout"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "What train mode does",
+              "What eval mode must be",
+              "What leaving it on does",
+              "The symptom and its twin",
+              "Fix and guard"
             ]
           }
         },
@@ -1072,6 +1297,17 @@
                 "target": "02-DL/01-Foundations/14-Early Stopping"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Gap vs no gap: two diseases",
+              "Open with the one-batch overfit test",
+              "Model A: variance path",
+              "Model B: optimisation or bug path",
+              "Read the loss against baselines",
+              "Verify each fix"
+            ]
           }
         },
         {
@@ -1118,6 +1354,17 @@
                 "target": "02-DL/02-why transformers won/01-RNN, BPTT &amp; Failure Modes"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Unroll in time: BPTT",
+              "One matrix, multiplied T times",
+              "Vanish vs explode",
+              "The patches: clipping, truncation",
+              "Gated cells: an additive path",
+              "The second failure: sequential compute"
+            ]
           }
         },
         {
@@ -1141,7 +1388,18 @@
             }
           ],
           "flow": "tabular + modest rows → boosting · regulated → interpretable · edge/cost → smaller model",
-          "trap": "hedging — this question is testing whether you have judgement, not knowledge"
+          "trap": "hedging — this question is testing whether you have judgement, not knowledge",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame it as a judgement call",
+              "Tabular data",
+              "Small data with strong structure",
+              "Interpretability you must defend",
+              "Cost, latency and the edge",
+              "Say what you'd ship instead"
+            ]
+          }
         }
       ]
     },
@@ -1171,7 +1429,18 @@
             }
           ],
           "flow": "decision → label + split choices → what broke → what you measured → number",
-          "trap": "telling it as a modelling story — the interviewer is asking about the system"
+          "trap": "telling it as a modelling story — the interviewer is asking about the system",
+          "modelAnswer": {
+            "type": "story",
+            "spine": [
+              "The decision it served",
+              "The constraint that made it hard",
+              "Options I weighed",
+              "What I built around the model",
+              "What broke",
+              "The number"
+            ]
+          }
         }
       ]
     },

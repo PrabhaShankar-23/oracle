@@ -657,6 +657,76 @@ async function ingestGameDayDocs() {
   return docs
 }
 
+/*
+ * Model answers: `02-Game-Day/model-answers/<recall-stem>/NN-slug.md`, one per question, linked from the
+ * recall entry by `**🎤 Model answer:** [[…]]`. The format comes from the vault's
+ * `meta_prompts/model_answer_prompt_v1.md`, so it's regular enough to read from the Markdown source:
+ * a Spine line, 🎯/🪤 lead lines, and `<details><summary><b>…</b></summary> … </details>` blocks under
+ * `## 🪜` (stages) and `## 🔁` (follow-ups). marked doesn't nest a details body reliably, so each body is
+ * cut out here and rendered on its own.
+ */
+const MODEL_ANSWER_TYPES = { '🩺': 'diagnose', '🏗️': 'design', '⚖️': 'trade-off', '📖': 'concept', '📣': 'story' }
+
+function mdToHtml(md) {
+  const $ = cheerio.load(marked.parse(md.trim(), { gfm: true, mangle: false, headerIds: false }))
+  const body = $('body')
+  flattenVaultRefsWithin($, body)
+  return inner(body)
+}
+
+const mdInline = (md) => flattenVaultRefs(marked.parseInline(md.trim()))
+
+function parseModelAnswer(md) {
+  const line = (re) => re.exec(md)?.[1]?.trim()
+  const meta = line(/^>\s*(⭐.*)$/m) ?? ''
+  const type = Object.entries(MODEL_ANSWER_TYPES).find(([glyph]) => meta.includes(glyph))?.[1] ?? 'diagnose'
+
+  const at = (marker) => {
+    const i = md.indexOf(marker)
+    return i === -1 ? md.length : i
+  }
+  const walkStart = at('## 🪜')
+  const followStart = at('## 🔁')
+  const dontStart = at("## 🚫 Don't say")
+
+  const answer = {
+    type,
+    spine: (line(/^\*\*🧭 Spine:\*\*\s*(.*)$/m) ?? '').split(/\s+→\s+/).filter(Boolean),
+    testing: mdInline(line(/^>\s*🎯\s*\*\*What they're testing:\*\*\s*(.*)$/m) ?? ''),
+    trap: mdInline(line(/^>\s*🪤\s*\*\*The trap:\*\*\s*(.*)$/m) ?? ''),
+    speakTime: line(/Time to speak:\s*([^·\n]+)/),
+    spoken: '',
+    stages: [],
+    followUps: [],
+    dontSay: [],
+    links: parseVaultLinks(line(/^\*\*🔗 Depth:\*\*\s*(.*)$/m) ?? '').filter((l) => !/^\d+-[A-Z-]+$/.test(l.target)),
+  }
+  const warning = line(/^>\s*⚠️\s*\*\*Fill before use\.\*\*\s*(.*)$/m)
+  if (warning) answer.warning = mdInline(warning)
+
+  for (const m of md.matchAll(/<details><summary>(.*?)<\/summary>\n([\s\S]*?)\n<\/details>/g)) {
+    const summary = m[1]
+    const title = summary.replace(/<code>.*?<\/code>/g, '').replace(/<\/?b>/g, '').trim()
+    const html = mdToHtml(m[2])
+    const pos = m.index ?? 0
+
+    if (/🎤 The spoken answer/.test(title)) {
+      answer.spoken = html
+    } else if (pos > walkStart && pos < followStart) {
+      const s = /^(\d+)\s*·\s*(.*?)\s*—\s*(.*)$/.exec(title)
+      if (s) answer.stages.push({ number: Number(s[1]), name: s[2], claim: mdInline(s[3]), html })
+    } else if (pos > followStart && pos < dontStart) {
+      const f = /^F(\d+)\s*·\s*(.*)$/.exec(title)
+      const tag = /<code>(\w+)<\/code>/.exec(summary)?.[1]
+      if (f) answer.followUps.push({ number: Number(f[1]), question: mdInline(f[2]), tag: tag ?? 'probe', html })
+    }
+  }
+
+  const dont = md.slice(dontStart, at('**🔗 Depth:**'))
+  answer.dontSay = [...dont.matchAll(/^-\s+(.*)$/gm)].map((d) => mdInline(d[1]))
+  return answer
+}
+
 async function ingestGameDay() {
   const topics = []
 
@@ -741,6 +811,7 @@ async function ingestGameDay() {
               else if (/^Trap/i.test(key)) out.trap = value.trim()
               else if (/^One-liner/i.test(key)) out.oneLiner = value.trim().replace(/^["“”]+|["“”]+$/g, '')
               else if (/^Follow-up/i.test(key)) out.followUp = value.trim()
+              else if (/Model answer/i.test(key)) out.modelAnswer = parseVaultLinks(value)[0]?.target
               else if (key.includes('→') || /^Note/i.test(key)) out.links.push(...parseVaultLinks(value))
             }
           }
@@ -755,6 +826,7 @@ async function ingestGameDay() {
           if (primary.flow) q.flow = primary.flow
           if (primary.trap) q.trap = primary.trap
           if (primary.oneLiner) q.oneLiner = primary.oneLiner
+          if (primary.modelAnswer) q.modelAnswerTarget = primary.modelAnswer
         }
 
         // A drill only survives separately when it sits alongside a real recall block.
@@ -797,6 +869,27 @@ async function ingestGameDay() {
 
     const withQuestions = bands.filter((b) => b.questions.length > 0)
     const count = withQuestions.reduce((n, b) => n + b.questions.length, 0)
+
+    // Full model answers go in their own lazily-loaded file; the topic keeps only what the card
+    // shows before one is opened.
+    const answers = {}
+    for (const q of withQuestions.flatMap((b) => b.questions)) {
+      const target = q.modelAnswerTarget
+      delete q.modelAnswerTarget
+      if (!target) continue
+      try {
+        const answer = parseModelAnswer(await readFile(path.join(VAULT, GAME_DAY_DIR, `${target}.md`), 'utf8'))
+        answers[q.id] = answer
+        q.modelAnswer = { type: answer.type, spine: answer.spine }
+      } catch (err) {
+        console.warn(`  ⚠ ${file} Q${q.number}: model answer ${target} not readable (${err.code ?? err.message})`)
+      }
+    }
+    const answerCount = Object.keys(answers).length
+    if (answerCount > 0) {
+      await write(`model-answers-${slug}.json`, answers)
+      console.log(`  parsed ${answerCount} model answers for ${file}`)
+    }
     topics.push({ slug, number, icon, title, meta, bands: withQuestions })
     console.log(`  parsed ${file} → ${count} questions in ${withQuestions.length} bands`)
   }
