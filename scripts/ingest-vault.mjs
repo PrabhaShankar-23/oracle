@@ -843,12 +843,24 @@ const AGENTIC_SECTIONS = {
   '15-architect-lens': 'Architect lens',
 }
 
-/** The metadata blockquote, read as text: `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …` */
+/**
+ * The metadata blockquote, read as text. Two shapes:
+ * labelled — `Category: … · Round Relevance: High · Depth Tier: CORE · Created: …`
+ * positional (Python v5 notes) — `CORE · Senior · Language Fundamentals … · Created 20 Sep 2026 · Revised …`
+ */
 function parseDecisionMeta(blockquoteText) {
   const fields = {}
   for (const part of blockquoteText.split('·')) {
     const m = /^\s*([^:]+):\s*(.+?)\s*$/.exec(part)
-    if (m) fields[m[1].trim().toLowerCase()] = m[2].trim()
+    if (m) {
+      fields[m[1].trim().toLowerCase()] = m[2].trim()
+      continue
+    }
+    const p = part.trim()
+    if (/^(CORE|SUPPORTING|BREADTH)$/i.test(p)) fields['depth tier'] = p
+    else if (/^(Senior|Architect|Staff)$/i.test(p)) fields['seniority relevance'] = p
+    else if (/^Created\s+/i.test(p)) fields['created'] = p.replace(/^Created\s+/i, '')
+    else if (p && !/^Revised\s+/i.test(p) && !fields['category']) fields['category'] = p
   }
   return {
     category: fields['category'],

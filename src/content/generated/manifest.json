@@ -5089,7 +5089,7 @@
     {
       "slug": "slots-instance-layout",
       "title": "__slots__ & Instance Layout",
-      "tier": "CORE",
+      "tier": "SUPPORTING",
       "relevance": "Senior",
       "section": "01-data-model-object-semantics",
       "sectionTitle": "Data model & object semantics"
