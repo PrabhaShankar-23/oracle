@@ -74,8 +74,8 @@ declare module '@mui/material/Chip' {
 /* Colour schemes                                                      */
 /* ------------------------------------------------------------------ */
 
-// Everforest (https://github.com/sainnhe/everforest), medium contrast. Dark is the default scheme.
-// Light keeps Everforest's hues on a near-white surface with near-black text, for contrast.
+// Light: Everforest (https://github.com/sainnhe/everforest) hues on a near-white surface with
+// near-black text, for contrast. Dark (the default scheme) is below.
 const light = {
   primary: '#566B00',
   onPrimary: '#FFFFFF',
@@ -108,38 +108,39 @@ const light = {
   outlineVariant: '#D8D3C2',
 }
 
-// Dark "deep forest": Everforest's accents on green-tinted surfaces instead of its blue-grey ones,
-// with slightly brighter text and accents so the page reads crisp rather than muted.
+// Dark matches the convo_client app (~/Projects/convo_client/src/theme/tokens.ts): near-black,
+// slightly blue surfaces, crisp off-white text and a lime accent. Status colours come from the same
+// file; secondary and tertiary are its info blue and "thinking" violet.
 const dark: typeof light = {
-  primary: '#B2CC87',
-  onPrimary: '#16201B',
-  primaryContainer: '#34472F',
-  onPrimaryContainer: '#DDE8C4',
-  secondary: '#86C99A',
-  onSecondary: '#16201B',
-  secondaryContainer: '#244A3A',
-  onSecondaryContainer: '#CFE9D8',
-  tertiary: '#DB9FBC',
-  onTertiary: '#16201B',
-  tertiaryContainer: '#4E3444',
-  onTertiaryContainer: '#F0D0DF',
-  error: '#EC8587',
-  errorContainer: '#4E3434',
-  onErrorContainer: '#F6CACB',
-  success: '#86C99A',
-  warning: '#E3C282',
-  surface: '#18221D',
-  surfaceDim: '#121A16',
-  surfaceBright: '#34443B',
-  surfaceContainerLowest: '#111814',
-  surfaceContainerLow: '#1D2822',
-  surfaceContainer: '#212D27',
-  surfaceContainerHigh: '#27342D',
-  surfaceContainerHighest: '#2E3C34',
-  onSurface: '#E0D6BC',
-  onSurfaceVariant: '#A8B6A6',
-  outline: '#7F9185',
-  outlineVariant: '#34443B',
+  primary: '#D3FB52',
+  onPrimary: '#0B0D12',
+  primaryContainer: '#1C2210',
+  onPrimaryContainer: '#E4FD8F',
+  secondary: '#60A5FA',
+  onSecondary: '#0B0D12',
+  secondaryContainer: '#16263D',
+  onSecondaryContainer: '#BFDBFE',
+  tertiary: '#A78BFA',
+  onTertiary: '#0B0D12',
+  tertiaryContainer: '#2A2145',
+  onTertiaryContainer: '#DDD6FE',
+  error: '#F87171',
+  errorContainer: '#3B1A1D',
+  onErrorContainer: '#FECACA',
+  success: '#34D399',
+  warning: '#FBBF24',
+  surface: '#0B0D12',
+  surfaceDim: '#08090D',
+  surfaceBright: '#262C3B',
+  surfaceContainerLowest: '#08090D',
+  surfaceContainerLow: '#11141C',
+  surfaceContainer: '#151923',
+  surfaceContainerHigh: '#1C2130',
+  surfaceContainerHighest: '#232939',
+  onSurface: '#E8EAF0',
+  onSurfaceVariant: '#8B92A5',
+  outline: '#5B6377',
+  outlineVariant: '#262C3B',
 }
 
 /** Hex values for vault charts (src/lib/chart.ts): Plot writes colours as SVG attributes, which can't read CSS variables. */
