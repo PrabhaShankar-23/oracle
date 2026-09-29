@@ -666,7 +666,11 @@ async function ingestGameDayDocs() {
  * `## 🪜` (stages) and `## 🔁` (follow-ups). marked doesn't nest a details body reliably, so each body is
  * cut out here and rendered on its own.
  */
-const MODEL_ANSWER_TYPES = { '🩺': 'diagnose', '🏗️': 'design', '⚖️': 'trade-off', '📖': 'concept', '📣': 'story' }
+const MODEL_ANSWER_TYPES = {
+  '🩺': 'diagnose', '🏗️': 'design', '⚖️': 'trade-off', '📖': 'concept', '📣': 'story',
+  // Python edition (meta_prompts/python_model_answer_prompt_v1.md)
+  '🔬': 'mechanism', '🐛': 'debug', '🧪': 'predict',
+}
 
 function mdToHtml(md) {
   const $ = cheerio.load(marked.parse(md.trim(), { gfm: true, mangle: false, headerIds: false }))

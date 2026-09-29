@@ -27,6 +27,9 @@ const TYPE_LABEL: Record<GameDayAnswerType, string> = {
   'trade-off': 'Trade-off',
   concept: 'Concept',
   story: 'Story',
+  mechanism: 'Mechanism',
+  debug: 'Debug',
+  predict: 'Predict the output',
 }
 
 const TAG_COLOR: Record<GameDayFollowUpTag, 'primary' | 'warning' | 'secondary' | 'success'> = {

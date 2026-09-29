@@ -323,7 +323,9 @@ export type GameDayQuestion = {
   modelAnswer?: { type: GameDayAnswerType; spine: string[] }
 }
 
-export type GameDayAnswerType = 'diagnose' | 'design' | 'trade-off' | 'concept' | 'story'
+export type GameDayAnswerType =
+  | 'diagnose' | 'design' | 'trade-off' | 'concept' | 'story'
+  | 'mechanism' | 'debug' | 'predict' // Python edition
 
 /** What a follow-up is for: drill deeper, tempt a shortcut, break an assumption, or go senior. */
 export type GameDayFollowUpTag = 'probe' | 'trap' | 'edge' | 'senior'

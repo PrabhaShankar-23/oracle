@@ -1,0 +1,118 @@
+{
+  "python-q1": {
+    "type": "mechanism",
+    "spine": [
+      "The one-line claim",
+      "What CPython does",
+      "Prove it",
+      "Where it bites in production",
+      "What changes by version"
+    ],
+    "testing": "whether you know the GIL protects the interpreter, not your code, and can predict when threads help.",
+    "trap": "&quot;the GIL makes Python single-threaded,&quot; or its opposite, &quot;the GIL makes my code thread-safe.&quot;",
+    "speakTime": "~90 s",
+    "spoken": "<p>\"The GIL protects the interpreter's own state, not my data. In CPython every object carries a reference count that changes on almost every operation, plus shared structures like the allocator. The GIL is one lock per interpreter that makes those updates safe by letting only one thread execute Python bytecode at a time.</p>\n<p>It stops mattering in two big cases. First, I/O: a thread releases the GIL while it waits on a socket or disk, so I/O-bound threads overlap fine. Twenty threads each sleeping 0.2 seconds finish in about 0.2 seconds. Second, C extensions: NumPy, PyTorch, tokenizers and most database drivers release the GIL while they do heavy work, so threads calling them can run in parallel. The real victim is CPU-bound pure-Python code: four threads doing Python arithmetic take about as long as one.</p>\n<p>Two production consequences. The GIL doesn't make my code thread-safe: <code>counter += 1</code> is several bytecodes, and a switch can land between them, so I still need locks. And one CPU-heavy thread in a web worker adds latency to every other request, because threads hand the GIL over only every 5 milliseconds by default.</p>\n<p>Version note: Python 3.13 ships an optional free-threaded build without the GIL, and 3.12 allows one GIL per sub-interpreter.\"</p>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The one-line claim",
+        "claim": "it guards the interpreter, not your data",
+        "html": "<p><strong>\"The GIL makes CPython's internals safe to use from several threads. It says nothing about the safety of my own data structures.\"</strong></p>\n<ul>\n<li><strong>CPython detail</strong>, not a language guarantee: PyPy has one too; Jython and IronPython never did; 3.13t can run without it.</li>\n<li>One GIL per interpreter; a thread must hold it to execute Python bytecode.</li>\n</ul>"
+      },
+      {
+        "number": 2,
+        "name": "What CPython does",
+        "claim": "refcounts, a token, and a 5 ms hand-off",
+        "html": "<ul>\n<li><strong>Why it exists:</strong> every object has a reference count updated on nearly every operation; the allocator, dict resizes and list growth are shared too. One big lock made all of that safe without per-object locking, and kept single-threaded code fast.</li>\n<li><strong>When it changes hands:</strong><ul>\n<li>a thread <strong>blocks on I/O</strong> (socket, file, <code>time.sleep</code>) → it releases the GIL;</li>\n<li>a <strong>C extension</strong> releases it around heavy work (<code>Py_BEGIN_ALLOW_THREADS</code>);</li>\n<li>otherwise the running thread is asked to drop it when another thread has waited for the <strong>switch interval</strong> (<code>sys.getswitchinterval()</code> → 0.005 s by default).</li>\n</ul>\n</li>\n</ul>\n<table>\n<thead>\n<tr>\n<th>Work type</th>\n<th>Do threads run in parallel?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Waiting on network / disk</td>\n<td>✅ waits overlap</td>\n</tr>\n<tr>\n<td>NumPy / torch / hashlib on large buffers</td>\n<td>✅ mostly, GIL released in C</td>\n</tr>\n<tr>\n<td>Pure-Python loops, parsing, JSON in Python</td>\n<td>❌ one thread at a time</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Prove it",
+        "claim": "scaling, and a race the GIL doesn&#39;t stop",
+        "html": "<p><strong>\"Run it and look at the shape: CPU-bound threads don't speed up, sleeping ones do.\"</strong></p>\n<pre><code class=\"language-python\">import threading, time\ndef cpu():  sum(i * i for i in range(3_000_000))    # pure Python bytecode\ndef io():   time.sleep(0.5)                          # releases the GIL while waiting\ndef run(fn, k):\n    ts = [threading.Thread(target=fn) for _ in range(k)]\n    t = time.perf_counter(); [x.start() for x in ts]; [x.join() for x in ts]\n    return time.perf_counter() - t\nfor fn in (cpu, io):\n    print(fn.__name__, f\"{run(fn, 1):.2f}s vs 4 threads {run(fn, 4):.2f}s\")\n# → expect: cpu ≈ 4× the single-thread time (no speedup); io ≈ the same 0.5 s (4× throughput)\n</code></pre>\n<p>And why the GIL isn't thread safety: <code>+=</code> on a shared value is several bytecodes.</p>\n<pre><code class=\"language-python\">import dis\nx = 0\ndef bump():\n    global x\n    x += 1\ndis.dis(bump)\n# → LOAD_GLOBAL x · LOAD_CONST 1 · BINARY_OP (+=) · STORE_GLOBAL x   (3.12; names vary by version)\n</code></pre>\n<p>A thread switch can land between the load and the store, losing an update. Use a <code>threading.Lock</code>, <code>queue.Queue</code>, or avoid shared mutable state.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where it bites in production",
+        "claim": "AI-backend patterns",
+        "html": "<p><strong>\"The GIL rarely limits throughput of an I/O service. It hurts latency when CPU work sneaks into it.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Situation</th>\n<th>What happens</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>FastAPI endpoint runs tokenisation / JSON-heavy parsing in a thread pool</td>\n<td>other requests wait on the GIL; p99 rises</td>\n<td>move CPU work to a <code>ProcessPoolExecutor</code> or a separate worker service</td>\n</tr>\n<tr>\n<td>Background thread doing Python computation in a web worker</td>\n<td>convoy effect: I/O threads wake up and wait for the GIL</td>\n<td>offload to processes; keep web workers I/O-only</td>\n</tr>\n<tr>\n<td>Embedding pipeline calling a model via torch</td>\n<td>fine with threads; the heavy work is in C/GPU</td>\n<td>threads or async are OK; watch data loading in Python</td>\n</tr>\n<tr>\n<td>CPU-bound batch job</td>\n<td>threads give no speedup</td>\n<td><code>multiprocessing</code> / process pool, or vectorise with NumPy</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>See it:</strong> <code>py-spy dump --pid &lt;pid&gt;</code> shows which thread holds the GIL and where; <code>py-spy top</code> for hot Python frames; asyncio debug mode for slow callbacks.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "free-threading arrives",
+        "html": "<ul>\n<li><strong>3.12:</strong> per-interpreter GIL (PEP 684): sub-interpreters can run Python in parallel in one process (limited API).</li>\n<li><strong>3.13:</strong> optional <strong>free-threaded build</strong> (PEP 703, <code>python3.13t</code>): no GIL, per-object locking and biased refcounting; single-threaded code runs somewhat slower, and C extensions must declare support.</li>\n<li><strong>Senior stance:</strong> not a default for production yet; adopt when your dependencies ship free-threaded wheels and you've measured a real gain for CPU-bound Python threads.</li>\n</ul>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "🧪 Four threads each run <code>for _ in range(1_000_000): x += 1</code> on a global. What does <code>print(x)</code> show?",
+        "tag": "edge",
+        "html": "<p>Something <strong>up to</strong> 4,000,000, and you must not rely on it being exact. <code>+=</code> is a read-modify-write across several bytecodes, so a switch between the load and the store loses an update. Recent CPython versions make lost updates rarer for this exact loop because of when switches are checked, but that's an implementation detail, not a guarantee. Protect it with a <code>Lock</code>.</p>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;So Python can&#39;t do multithreading?&quot;",
+        "tag": "trap",
+        "html": "<p>It can, and does. Threads run concurrently and overlap all I/O; C extensions run in parallel with the GIL released. What threads can't do in standard CPython is execute Python bytecode on several cores at once. For that you use processes, or the 3.13 free-threaded build.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Why does one CPU-heavy thread slow down the I/O threads?",
+        "tag": "probe",
+        "html": "<p>When an I/O thread's data arrives, it needs the GIL to run its Python code, but the CPU thread holds it. The waiting thread only gets it after the switch interval (default 5 ms) forces a hand-off, so every I/O wake-up can pay a few milliseconds. Many such waits show up as tail latency, the convoy effect.</p>"
+      },
+      {
+        "number": 4,
+        "question": "Your FastAPI service&#39;s p99 doubled after adding a PDF-parsing step in a sync endpoint. What do you do?",
+        "tag": "senior",
+        "html": "<p>Confirm with <code>py-spy</code> that parsing holds the GIL on the hot path. Then move it out of the web worker: a <code>ProcessPoolExecutor</code> via <code>run_in_executor</code>, or a separate worker service fed by a queue, so web workers stay I/O-only. Watch p99 and event-loop lag after the change, and size the process pool to cores.</p>"
+      },
+      {
+        "number": 5,
+        "question": "Would you switch production to the free-threaded 3.13t build?",
+        "tag": "senior",
+        "html": "<p>Not yet as a default. Check that every C extension you rely on ships free-threaded wheels, that your code doesn't rely on the GIL for implicit safety, and measure: single-threaded speed is lower, and gains only appear for CPU-bound Python threads. For most I/O-bound services the win is small today; I'd pilot it on a CPU-heavy batch job first.</p>"
+      },
+      {
+        "number": 6,
+        "question": "Why do threads calling NumPy scale when pure-Python threads don&#39;t?",
+        "tag": "probe",
+        "html": "<p>NumPy releases the GIL inside its C loops for large arrays, so several threads can compute at once on different cores. The Python lines between those calls still take the GIL, so small arrays with lots of Python overhead scale poorly.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The GIL makes Python single-threaded.&quot; — threads run and overlap I/O.",
+      "&quot;The GIL makes my code thread-safe.&quot; — compound operations still race.",
+      "&quot;Python is slow because of the GIL.&quot; — most slowness is interpretation overhead, not the lock.",
+      "&quot;The GIL is part of the Python language.&quot; — it&#39;s a CPython implementation detail."
+    ],
+    "links": [
+      {
+        "label": "the gil",
+        "target": "06-concurrency-gil/33-the-gil"
+      },
+      {
+        "label": "concurrency vs parallelism",
+        "target": "06-concurrency-gil/33a-concurrency-vs-parallelism"
+      },
+      {
+        "label": "synchronization hazards",
+        "target": "06-concurrency-gil/37-synchronization-hazards"
+      },
+      {
+        "label": "no gil free threaded cpython",
+        "target": "06-concurrency-gil/38-no-gil-free-threaded-cpython"
+      },
+      {
+        "label": "sub interpreters",
+        "target": "06-concurrency-gil/39-sub-interpreters"
+      },
+      {
+        "label": "reference counting",
+        "target": "05-memory-management-gc/28-reference-counting"
+      }
+    ]
+  }
+}

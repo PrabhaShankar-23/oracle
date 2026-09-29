@@ -22,21 +22,18 @@
             "decides"
           ],
           "text": "What does the GIL actually protect, and when does it stop mattering?",
-          "points": [
-            "Protects <strong>interpreter state</strong> — refcounts, object headers — not <em>your</em> data",
-            "One thread executes <strong>bytecode</strong> at a time; released around I/O and in C extensions",
-            "So: I/O-bound threads scale fine · <strong>CPU-bound Python threads don't</strong>",
-            "NumPy / tokenizers / DB drivers drop it → \"Python is slow\" often isn't the GIL",
-            "Your locks are still needed — GIL ≠ thread safety for compound ops"
-          ],
-          "links": [
-            {
-              "label": "the gil",
-              "target": "03-python/06-concurrency-gil/33-the-gil"
-            }
-          ],
-          "flow": "protects interpreter internals → released on I/O and in C → CPU-bound is the only real victim",
-          "trap": "\"the GIL makes Python single-threaded\""
+          "points": [],
+          "links": [],
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What CPython does",
+              "Prove it",
+              "Where it bites in production",
+              "What changes by version"
+            ]
+          }
         },
         {
           "id": "python-q2",
