@@ -56,7 +56,7 @@ export default function GameDayRecallPage() {
   }, [slug, known])
 
   // "Expand all" drives the native <details> elements directly — they stay uncontrolled otherwise.
-  // Question-level only: each model answer nests a dozen more, and opening those is a deliberate act.
+  // Question-level cards only; any <details> inside vault HTML stays as the author left it.
   useEffect(() => {
     if (allOpen === null) return
     bodyRef.current?.querySelectorAll<HTMLDetailsElement>('details[data-gd-question]').forEach((d) => (d.open = allOpen))
