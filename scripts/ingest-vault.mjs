@@ -672,8 +672,54 @@ function mdToHtml(md) {
   const $ = cheerio.load(marked.parse(md.trim(), { gfm: true, mangle: false, headerIds: false }))
   const body = $('body')
   promoteMermaidFences($, body)
+  promoteExperimentBlocks($, body)
   flattenVaultRefsWithin($, body)
   return inner(body)
+}
+
+/*
+ * Experiment blocks (template §5, "one sub-block per experiment"): a paragraph that is only
+ * `**Experiment N — Name.**`, then its what / **Why?** / *Best suited…* paragraphs and any lists.
+ * Consecutive blocks become one `.exp-list` card with a tagged, titled section per experiment.
+ * A block ends at the next experiment, a table, a heading, a rule, or a `**Why this matters:**` line.
+ */
+function promoteExperimentBlocks($, body) {
+  const marker = (el) => {
+    if (el.tagName !== 'p') return null
+    const p = $(el)
+    const only = p.children().length === 1 && p.children().first().is('strong') && text(p) === text(p.children().first())
+    return only ? /^Experiment\s+(\d+)\s*[—–-]\s*(.+?)\.?$/.exec(text(p)) : null
+  }
+  const stops = (el) =>
+    ['table', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'figure'].includes(el.tagName) ||
+    (el.tagName === 'p' && /^Why this matters:/i.test(text($(el))))
+
+  const nodes = body.children().toArray()
+  let list = null
+  for (let i = 0; i < nodes.length; i++) {
+    const m = marker(nodes[i])
+    if (!m) {
+      if (stops(nodes[i])) list = null
+      continue
+    }
+    if (!list) {
+      list = $('<div class="exp-list"></div>')
+      $(nodes[i]).before(list)
+    }
+    const section = $('<section class="exp"></section>')
+    section.append($('<span class="exp-tag"></span>').text(`Experiment ${m[1]}`))
+    section.append($('<h4 class="exp-title"></h4>').text(m[2]))
+    $(nodes[i]).remove()
+    while (i + 1 < nodes.length && !marker(nodes[i + 1]) && !stops(nodes[i + 1])) {
+      const el = $(nodes[++i])
+      // A paragraph that is only italics is the "best suited when" line: muted, not emphasised.
+      if (el.is('p') && el.children().length === 1 && el.children().first().is('em') && text(el) === text(el.children().first())) {
+        el.addClass('exp-best').html(el.children().first().html())
+      }
+      section.append(el)
+    }
+    list.append(section)
+  }
 }
 
 const mdInline = (md) => flattenVaultRefs(marked.parseInline(md.trim()))

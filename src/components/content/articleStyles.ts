@@ -181,6 +181,30 @@ export const articleStyles: SxProps<Theme> = (t) => {
     // figure scrolls rather than shrinking the labels past legibility.
     '& .vault-chart': { minHeight: 120 },
     '& svg.chart': { display: 'block', width: '100%', minWidth: 480, maxWidth: 720, height: 'auto', mx: 'auto' },
+    // Experiment cards (ingest: promoteExperimentBlocks): one bordered card, a tagged, titled
+    // section per experiment, divided by hairlines.
+    '& .exp-list': {
+      my: 2.5,
+      px: { xs: 2, sm: 3 },
+      borderRadius: 1,
+      border: `1px solid ${v.surface.outlineVariant}`,
+      backgroundColor: v.surface.containerLowest,
+    },
+    '& .exp': { py: 2.5 },
+    '& .exp + .exp': { borderTop: `1px solid ${v.divider}` },
+    '& .exp > :last-child': { mb: 0 },
+    '& .exp-tag': {
+      display: 'inline-block',
+      px: 1.25,
+      py: 0.25,
+      borderRadius: '999px',
+      fontSize: '0.8125rem',
+      fontWeight: 500,
+      color: v.success.main,
+      backgroundColor: `color-mix(in srgb, ${v.success.main} 14%, transparent)`,
+    },
+    '& .exp-title': { ...t.typography.h6, fontWeight: 700, mt: 1.25, mb: 1 },
+    '& .exp-best': { ...t.typography.body2, color: v.text.secondary, mt: 1.5 },
     // Hand-drawn vault SVG (`<svg class="dgm">`, model answers). The file carries neutral fallback
     // colours for Obsidian; here the semantic classes take the theme's. Below ~480px it scrolls
     // inside its figure rather than shrinking the labels past legibility.
