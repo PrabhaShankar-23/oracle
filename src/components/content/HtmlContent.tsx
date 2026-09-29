@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import { highlightWithin } from '../../lib/highlight'
 import { renderChartsWithin } from '../../lib/chart'
 import { renderMermaidWithin } from '../../lib/mermaid'
-import { useResolvedMode } from '../../hooks/useResolvedMode'
+import { useActiveScheme } from '../../hooks/useResolvedMode'
 import { articleStyles } from './articleStyles'
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 function HtmlContent({ html, hideRecallAnswers = false, sx }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
-  const mode = useResolvedMode()
+  const scheme = useActiveScheme()
 
   // One-time DOM enhancements for this HTML.
   useEffect(() => {
@@ -58,9 +58,9 @@ function HtmlContent({ html, hideRecallAnswers = false, sx }: Props) {
   // Diagrams and charts re-render when the colour scheme changes.
   useEffect(() => {
     if (!ref.current) return
-    void renderMermaidWithin(ref.current, mode)
-    void renderChartsWithin(ref.current, mode)
-  }, [html, mode])
+    void renderMermaidWithin(ref.current, scheme)
+    void renderChartsWithin(ref.current, scheme)
+  }, [html, scheme])
 
   const onClick = (e: MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement

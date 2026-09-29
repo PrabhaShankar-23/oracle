@@ -16,6 +16,7 @@ import { useHashScroll } from '../../hooks/useHashScroll'
 import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../../theme/theme'
 import PageLoader from '../content/PageLoader'
 import ColorModeToggle from './ColorModeToggle'
+import ForestToggle from './ForestToggle'
 import GlobalSearch from './GlobalSearch'
 import NavDrawer from './NavDrawer'
 import SideNav from './SideNav'
@@ -67,6 +68,7 @@ export default function AppShell() {
               <SearchIcon />
             </IconButton>
           )}
+          <ForestToggle />
           <ColorModeToggle />
         </Toolbar>
       </AppBar>

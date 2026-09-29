@@ -1,4 +1,4 @@
-import { mermaidThemeVariables } from '../theme/theme'
+import { mermaidThemeVariables, type SchemeName } from '../theme/theme'
 
 let counter = 0
 
@@ -6,7 +6,7 @@ let counter = 0
  * Renders every `.mermaid` block inside `root`. Mermaid is ~1 MB, so it is only
  * downloaded the first time a page with a diagram is opened.
  */
-export async function renderMermaidWithin(root: HTMLElement, mode: 'light' | 'dark') {
+export async function renderMermaidWithin(root: HTMLElement, scheme: SchemeName) {
   const blocks = [...root.querySelectorAll<HTMLElement>('.mermaid')]
   if (blocks.length === 0) return
 
@@ -14,7 +14,7 @@ export async function renderMermaidWithin(root: HTMLElement, mode: 'light' | 'da
   mermaid.initialize({
     startOnLoad: false,
     theme: 'base',
-    themeVariables: mermaidThemeVariables(mode),
+    themeVariables: mermaidThemeVariables(scheme),
     securityLevel: 'strict',
     fontFamily: "'Roboto Flex Variable', system-ui, sans-serif",
     flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true },

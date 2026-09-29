@@ -9,6 +9,7 @@
  * Colour roles follow M3 (https://m3.material.io/styles/color/roles).
  */
 import { chatgptDark } from './schemes/chatgptDark'
+import { deepforestDark } from './schemes/deepforestDark'
 import { everforestLight } from './schemes/everforestLight'
 import type { Scheme } from './schemes/types'
 import '@fontsource-variable/roboto-flex'
@@ -82,9 +83,22 @@ declare module '@mui/material/Chip' {
 const light: Scheme = everforestLight
 const dark: Scheme = chatgptDark // alternatives: everforestDark, deepforestDark
 
+/**
+ * Every scheme the app can show. `forest` is a second dark scheme, offered by the forest button in
+ * the app bar (ForestToggle); MUI swaps it in as the dark scheme via `setColorScheme({ dark: 'forest' })`.
+ */
+const SCHEMES = { light, dark, forest: deepforestDark } as const
+export type SchemeName = keyof typeof SCHEMES
+
+declare module '@mui/material/styles' {
+  interface ColorSchemeOverrides {
+    forest: true
+  }
+}
+
 /** Hex values for vault charts (src/lib/chart.ts): Plot writes colours as SVG attributes, which can't read CSS variables. */
-export const chartColors = (mode: 'light' | 'dark') => {
-  const s = mode === 'dark' ? dark : light
+export const chartColors = (scheme: SchemeName) => {
+  const s = SCHEMES[scheme]
   return {
     text: s.onSurface,
     muted: s.onSurfaceVariant,
@@ -102,10 +116,10 @@ export const chartColors = (mode: 'light' | 'dark') => {
 }
 
 /** Hex values for Mermaid, which draws SVG and can't read the CSS variables. */
-export const mermaidThemeVariables = (mode: 'light' | 'dark') => {
-  const s = mode === 'dark' ? dark : light
+export const mermaidThemeVariables = (scheme: SchemeName) => {
+  const s = SCHEMES[scheme]
   return {
-    darkMode: mode === 'dark',
+    darkMode: scheme !== 'light',
     background: s.surface,
     primaryColor: s.surfaceContainerHigh,
     primaryTextColor: s.onSurface,
@@ -171,6 +185,17 @@ function palette(s: Scheme, mode: 'light' | 'dark') {
   }
 }
 
+/**
+ * MUI v9 only fills in palette defaults (common, grey, overlays…) for the built-in `light` and
+ * `dark` schemes; a custom one such as `forest` is copied as-is and would crash theme creation.
+ * So resolve the scheme as `dark` in a throwaway theme and register the finished result.
+ * (The cast: the ColorSchemeOverrides augmentation makes every theme's options require `forest`.)
+ */
+function resolvedDarkScheme(s: Scheme) {
+  const options = { cssVariables: true, defaultColorScheme: 'dark', colorSchemes: { dark: { palette: palette(s, 'dark') } } }
+  return createTheme(options as unknown as Parameters<typeof createTheme>[0]).colorSchemes.dark!
+}
+
 /* ------------------------------------------------------------------ */
 /* Theme                                                               */
 /* ------------------------------------------------------------------ */
@@ -180,6 +205,7 @@ const theme = createTheme({
   colorSchemes: {
     light: { palette: palette(light, 'light') },
     dark: { palette: palette(dark, 'dark') },
+    forest: resolvedDarkScheme(deepforestDark),
   },
 
   shape: { borderRadius: 6 },

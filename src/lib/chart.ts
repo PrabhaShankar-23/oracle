@@ -1,5 +1,5 @@
 import type { ChartAnnotation, ChartSeries, ChartSpec, ChartTone } from '../content/types'
-import { chartColors } from '../theme/theme'
+import { chartColors, type SchemeName } from '../theme/theme'
 
 type PlotModule = typeof import('@observablehq/plot')
 type Colors = ReturnType<typeof chartColors>
@@ -15,12 +15,12 @@ const DEFAULT_TONES: ChartTone[] = ['primary', 'warn', 'accent', 'ok', 'muted']
  * Renders every `.vault-chart` inside `root` from its `data-spec` (a `ChartSpec` validated by the
  * ingest). Observable Plot is only downloaded the first time a page with a chart is opened.
  */
-export async function renderChartsWithin(root: HTMLElement, mode: 'light' | 'dark') {
+export async function renderChartsWithin(root: HTMLElement, scheme: SchemeName) {
   const blocks = [...root.querySelectorAll<HTMLElement>('.vault-chart')]
   if (blocks.length === 0) return
 
   const Plot = await import('@observablehq/plot')
-  const colors = chartColors(mode)
+  const colors = chartColors(scheme)
   for (const el of blocks) {
     try {
       const spec = JSON.parse(el.dataset.spec ?? '') as ChartSpec
