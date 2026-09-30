@@ -177,10 +177,22 @@ export const articleStyles: SxProps<Theme> = (t) => {
       backgroundColor: v.surface.containerLowest,
       overflowX: 'auto',
     },
-    // Vault charts (```chart → src/lib/chart.ts). Laid out at 560px and scaled; below ~480px the
-    // figure scrolls rather than shrinking the labels past legibility.
+    // Vault charts (```chart → src/lib/chart.ts). Laid out at 720px (1:1 at full width) and only
+    // scaled down; below ~480px the figure scrolls rather than shrinking the labels past legibility.
     '& .vault-chart': { minHeight: 120 },
     '& svg.chart': { display: 'block', width: '100%', minWidth: 480, maxWidth: 720, height: 'auto', mx: 'auto' },
+    '& .chart-legend': {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      gap: '6px 20px',
+      mt: 1,
+      fontSize: '0.8125rem',
+      color: v.text.secondary,
+      '& span': { display: 'inline-flex', alignItems: 'center', gap: '8px' },
+      '& i': { width: 10, height: 10, borderRadius: '50%', display: 'inline-block' },
+      '& i[data-dashed]': { width: 16, height: 3, borderRadius: 2 },
+    },
     // Experiment cards (ingest: promoteExperimentBlocks): one bordered card, a tagged, titled
     // section per experiment, divided by hairlines.
     '& .exp-list': {

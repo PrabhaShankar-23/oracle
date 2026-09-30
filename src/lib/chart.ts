@@ -7,8 +7,10 @@ type Colors = ReturnType<typeof chartColors>
 /**
  * Charts are laid out at this logical width and scaled by CSS (`svg.chart` in articleStyles).
  * A fixed size means a chart inside a closed <details> renders correctly before anyone opens it.
+ * It matches the CSS max width, so a chart is drawn at 1:1 and only ever scales down — scaling
+ * up is what made strokes and text look thick and hand-drawn.
  */
-const WIDTH = 560
+const WIDTH = 720
 const DEFAULT_TONES: ChartTone[] = ['primary', 'warn', 'accent', 'ok', 'muted']
 
 /**
@@ -26,7 +28,7 @@ export async function renderChartsWithin(root: HTMLElement, scheme: SchemeName) 
       const spec = JSON.parse(el.dataset.spec ?? '') as ChartSpec
       const svg = buildChart(Plot, spec, colors)
       svg.classList.add('chart')
-      if (el.isConnected) el.replaceChildren(svg)
+      if (el.isConnected) el.replaceChildren(svg, ...legendFor(spec, colors))
     } catch (err) {
       console.warn('Chart render failed', err)
       el.textContent = 'Chart failed to render.'
@@ -70,7 +72,7 @@ function buildChart(Plot: PlotModule, spec: ChartSpec, c: Colors): SVGSVGElement
     marginTop: 28,
     marginLeft: 56,
     marginBottom: 46,
-    style: { fontSize: '13px', fontFamily: 'inherit', color: c.text, background: 'transparent', overflow: 'visible' },
+    style: { fontSize: '12.5px', fontFamily: 'inherit', color: c.muted, background: 'transparent', overflow: 'visible' },
     ariaLabel: spec.title,
     ariaDescription: spec.caption,
   }
@@ -82,9 +84,10 @@ function buildChart(Plot: PlotModule, spec: ChartSpec, c: Colors): SVGSVGElement
       ...common,
       marginRight: hasHline ? 120 : 16,
       // Keep the author's bar order (a pipeline, a ranking); Plot sorts band domains otherwise.
-      x: { type: 'band', label: spec.x?.label ?? null, padding: 0.35, domain: bars.map((b) => b.label) },
-      y: { label: spec.y?.label ?? null, domain: spec.y?.domain, grid: true, tickFormat: unit(spec.y?.unit), labelArrow: 'none' },
+      x: { type: 'band', label: spec.x?.label ?? null, padding: 0.35, domain: bars.map((b) => b.label), tickSize: 0, tickPadding: 8 },
+      y: { label: spec.y?.label ?? null, domain: spec.y?.domain, tickFormat: unit(spec.y?.unit), labelArrow: 'none', tickSize: 0, tickPadding: 8 },
       marks: [
+        dashedGrid(Plot, c),
         // Bars start at the domain floor, so a y domain that skips 0 can show small differences.
         Plot.barY(bars, { x: 'label', y1: base, y2: 'value', fill: (d) => tone(d.tone, 'primary'), rx: 4 }),
         Plot.text(bars, {
@@ -93,9 +96,9 @@ function buildChart(Plot: PlotModule, spec: ChartSpec, c: Colors): SVGSVGElement
           text: (d) => `${d.value}${spec.y?.unit ?? ''}`,
           dy: -10,
           fill: c.text,
-          fontWeight: 700,
+          fontWeight: 600,
         }),
-        Plot.ruleY([base], { stroke: c.axis }),
+        Plot.ruleY([base], { stroke: c.grid }),
         // Only reference lines make sense on bars; the ingest rejects series-based annotations here.
         ...(spec.annotations ?? []).flatMap((a) => annotationMarks(Plot, a, new Map(), c, tone, 'foreground')),
       ],
@@ -105,7 +108,7 @@ function buildChart(Plot: PlotModule, spec: ChartSpec, c: Colors): SVGSVGElement
   const series = (spec.series ?? []).map((s, i) => ({ ...s, color: tone(s.tone, DEFAULT_TONES[i % DEFAULT_TONES.length]) }))
   const byName = new Map(series.map((s) => [s.name, s]))
   const annotations = spec.annotations ?? []
-  const needsRightRoom = annotations.some((a) => a.kind === 'gap') || series.some((s) => s.labelAt === undefined)
+  const needsRightRoom = annotations.some((a) => a.kind === 'gap')
 
   const background = annotations.flatMap((a) => annotationMarks(Plot, a, byName, c, tone, 'background'))
   const foreground = annotations.flatMap((a) => annotationMarks(Plot, a, byName, c, tone, 'foreground'))
@@ -115,40 +118,61 @@ function buildChart(Plot: PlotModule, spec: ChartSpec, c: Colors): SVGSVGElement
       x: (d) => d[0],
       y: (d) => d[1],
       stroke: s.color,
-      strokeWidth: 2.75,
-      curve: 'monotone-x',
+      strokeWidth: 2,
+      // Straight segments between data points: the chart shows the data, not a drawn curve.
+      curve: 'linear',
       strokeDasharray: s.dashed ? '6 5' : undefined,
     }),
   )
+  // A marker on every data point, ringed in the card colour so it reads as a crisp cut-out.
+  const dots = series.map((s) =>
+    Plot.dot(s.points, { x: (d) => d[0], y: (d) => d[1], r: 3.5, fill: s.color, stroke: c.surface, strokeWidth: 1.5 }),
+  )
 
-  // Label each line directly: beside its end, or — when a gap bracket owns that spot, or the
-  // author picked a point with `labelAt` — above it (below when it's the lower line there).
-  const gapXs = new Set(annotations.flatMap((a) => (a.kind === 'gap' ? [a.x] : [])))
-  const labels = series.map((s) => {
-    const last = s.points[s.points.length - 1]
-    const x = s.labelAt ?? last[0]
-    const y = valueAt(s.points, x)
-    const lowest = series.every((o) => o === s || valueAt(o.points, x) >= y)
-    const beside = s.labelAt === undefined && !gapXs.has(x)
-    const stacked = { dx: 0, dy: lowest && series.length > 1 ? 18 : -12 }
-    return Plot.text([{ x, y }], {
+  // Hover: nearest point, with the series name and value.
+  const flat = series.flatMap((s) => s.points.map(([x, y]) => ({ x, y, name: s.name })))
+  const fmt = (v: number, axis?: ChartSpec['x']) => (axis?.scale === 'log' ? v.toExponential(1) : `${+v.toFixed(2)}${axis?.unit ?? ''}`)
+  const tip = Plot.tip(
+    flat,
+    Plot.pointer({
       x: 'x',
       y: 'y',
-      text: () => s.name,
-      fill: s.color,
-      fontWeight: 700,
-      textAnchor: beside ? 'start' : s.labelAt === undefined ? 'end' : 'middle',
-      ...(beside ? { dx: 8, dy: 0 } : stacked),
-    })
-  })
+      title: (d: { x: number; y: number; name: string }) => `${d.name}\n${spec.x?.label ?? 'x'}: ${fmt(d.x, spec.x)}\n${spec.y?.label ?? 'y'}: ${fmt(d.y, spec.y)}`,
+      fill: c.surface,
+      stroke: c.grid,
+      textPadding: 8,
+    }),
+  )
 
   return Plot.plot({
     ...common,
-    marginRight: hasHline ? 120 : needsRightRoom ? 96 : 20,
-    x: { type: spec.x?.scale ?? 'linear', label: spec.x?.label ?? null, domain: spec.x?.domain, tickFormat: ticks(spec.x), labelAnchor: 'center', labelArrow: 'none' },
-    y: { type: spec.y?.scale ?? 'linear', label: spec.y?.label ?? null, domain: spec.y?.domain, tickFormat: ticks(spec.y), grid: true, labelArrow: 'none' },
-    marks: [...background, ...lines, ...foreground, ...labels],
+    marginRight: hasHline ? 120 : needsRightRoom ? 96 : 24,
+    x: { type: spec.x?.scale ?? 'linear', label: spec.x?.label ?? null, domain: spec.x?.domain, tickFormat: ticks(spec.x), labelAnchor: 'center', labelArrow: 'none', tickSize: 0, tickPadding: 8 },
+    y: { type: spec.y?.scale ?? 'linear', label: spec.y?.label ?? null, domain: spec.y?.domain, tickFormat: ticks(spec.y), labelArrow: 'none', tickSize: 0, tickPadding: 8 },
+    marks: [dashedGrid(Plot, c), ...background, ...lines, ...dots, ...foreground, tip],
   })
+}
+
+/** Faint dashed horizontal gridlines — the only frame the chart needs. */
+function dashedGrid(Plot: PlotModule, c: Colors) {
+  return Plot.gridY({ stroke: c.grid, strokeOpacity: 0.9, strokeDasharray: '3 5' })
+}
+
+/** A legend under the chart (swatch + name per series); a single series needs none. */
+function legendFor(spec: ChartSpec, c: Colors): HTMLElement[] {
+  const series = spec.series ?? []
+  if (spec.type === 'bar' || series.length < 2) return []
+  const legend = document.createElement('div')
+  legend.className = 'chart-legend'
+  series.forEach((s, i) => {
+    const item = document.createElement('span')
+    const dot = document.createElement('i')
+    dot.style.background = c.tones[s.tone ?? DEFAULT_TONES[i % DEFAULT_TONES.length]]
+    if (s.dashed) dot.dataset.dashed = ''
+    item.append(dot, document.createTextNode(s.name))
+    legend.append(item)
+  })
+  return [legend]
 }
 
 type SeriesWithColor = ChartSeries & { color: string }
@@ -176,7 +200,7 @@ function annotationMarks(
       const data = xs.map((x) => ({ x, y1: valueAt(top, x), y2: valueAt(bottom, x) }))
       const mid = data[Math.floor(data.length / 2)]
       return [
-        Plot.areaY(data, { x: 'x', y1: 'y1', y2: 'y2', fill: tone(a.tone, 'bad'), fillOpacity: 0.16, curve: 'monotone-x' }),
+        Plot.areaY(data, { x: 'x', y1: 'y1', y2: 'y2', fill: tone(a.tone, 'bad'), fillOpacity: 0.14, curve: 'linear' }),
         ...label([{ x: mid.x, y: (mid.y1 + mid.y2) / 2 }], { x: 'x', y: 'y' }),
       ]
     }

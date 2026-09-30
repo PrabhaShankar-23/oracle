@@ -102,6 +102,8 @@ export const chartColors = (scheme: SchemeName) => {
   return {
     text: s.onSurface,
     muted: s.onSurfaceVariant,
+    // Charts sit in figures on the lowest surface; point markers get a ring in that colour so they read as cut-outs.
+    surface: s.surfaceContainerLowest,
     grid: s.outlineVariant,
     axis: s.outline,
     tones: {
