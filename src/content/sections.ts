@@ -47,27 +47,26 @@ export type Section = {
 }
 
 /**
- * Recall files grouped into compartments, ordered by relevance to the target role (AI-backend first,
- * front-end last). Within a compartment, files follow the order listed here; unknown slugs land in
- * "Other" so a new vault file still shows up.
+ * Recall files as one flat, numbered list in priority order: AI/ML first, then backend, cloud, and
+ * front-end last. Unknown slugs go at the end so a new vault file still shows up; add its slug here.
  */
-const RECALL_COMPARTMENTS: [string, string[]][] = [
-  ['AI systems', ['rag', 'agentic-ai', 'llm-foundations', 'llm-serving-inference', 'mcp-context-engineering']],
-  ['Backend', ['python', 'fastapi', 'java-spring']],
-  ['ML & NLP', ['ml-dl', 'nlp-classical']],
-  ['Real-time & voice', ['real-time-systems']],
-  ['Frontend', ['react']],
+const RECALL_ORDER = [
+  // AI / ML
+  'llm-foundations', 'rag', 'agentic-ai', 'mcp-context-engineering', 'llm-serving-inference',
+  'ml-dl', 'nlp-classical', 'real-time-systems',
+  // Backend
+  'python', 'fastapi', 'java-spring',
+  // Cloud (none yet)
+  // Front-end
+  'react',
 ]
 
-function recallByCompartment() {
-  const place = new Map<string, [number, number, string]>()
-  RECALL_COMPARTMENTS.forEach(([name, slugs], ci) => slugs.forEach((slug, si) => place.set(slug, [ci, si, name])))
-  return manifest.gameDay
-    .map((topic) => {
-      const [ci, si, compartment] = place.get(topic.slug) ?? [RECALL_COMPARTMENTS.length, topic.number, 'Other']
-      return { topic, compartment, ci, si }
-    })
-    .sort((a, b) => a.ci - b.ci || a.si - b.si)
+function recallInOrder() {
+  const rank = (slug: string) => {
+    const i = RECALL_ORDER.indexOf(slug)
+    return i === -1 ? RECALL_ORDER.length : i
+  }
+  return [...manifest.gameDay].sort((a, b) => rank(a.slug) - rank(b.slug) || a.number - b.number)
 }
 
 export const sections: Section[] = [
@@ -173,12 +172,11 @@ export const sections: Section[] = [
             : 'STAR stories, with the numbers that make them land.',
         group: 'Before you go in',
       })),
-      ...recallByCompartment().map(({ topic: t, compartment }) => ({
-        title: t.title,
+      ...recallInOrder().map((t, i) => ({
+        title: `${i + 1}. ${t.title}`,
         path: `/game-day/recall/${t.slug}`,
         description: `${t.count} questions across ${t.bands.length} bands.`,
         group: 'Recall',
-        subgroup: compartment,
       })),
     ],
   },
