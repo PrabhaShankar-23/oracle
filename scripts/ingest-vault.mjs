@@ -513,6 +513,7 @@ const GAME_DAY_FILES = [
   '11-ML-DL.md',
   '15-REAL-TIME-SYSTEMS.md',
   '17-NLP-CLASSICAL.md',
+  '18-REACT.md',
 ]
 
 const GAME_DAY_MARKS = { '⭐': 'decides', '🔥': 'trending', '📍': 'asked' }
@@ -852,6 +853,10 @@ async function ingestGameDay() {
       } else if (tag === 'p' && /Model answer:/.test(text(el))) {
         // A question whose recall blocks were retired for a model answer carries just this link.
         question.modelAnswerTarget = parseVaultLinks(text(el))[0]?.target
+      } else if ((tag === 'pre' || tag === 'ul' || tag === 'ol') && !question.modelAnswerTarget && !question.blocks.length) {
+        // Snippet questions ("What renders after one click?") carry their code and A–D options
+        // between the heading and the answer; they're part of the question, shown before expanding.
+        question.prompt = (question.prompt ?? '') + $.html(el)
       } else if (tag === 'details') {
         question.blocks.push(el)
       }

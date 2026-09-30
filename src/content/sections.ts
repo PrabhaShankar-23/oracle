@@ -46,6 +46,30 @@ export type Section = {
   pages: NavPage[]
 }
 
+/**
+ * Recall files grouped into compartments, ordered by relevance to the target role (AI-backend first,
+ * front-end last). Within a compartment, files follow the order listed here; unknown slugs land in
+ * "Other" so a new vault file still shows up.
+ */
+const RECALL_COMPARTMENTS: [string, string[]][] = [
+  ['AI systems', ['rag', 'agentic-ai', 'llm-foundations', 'llm-serving-inference', 'mcp-context-engineering']],
+  ['Backend', ['python', 'fastapi', 'java-spring']],
+  ['ML & NLP', ['ml-dl', 'nlp-classical']],
+  ['Real-time & voice', ['real-time-systems']],
+  ['Frontend', ['react']],
+]
+
+function recallByCompartment() {
+  const place = new Map<string, [number, number, string]>()
+  RECALL_COMPARTMENTS.forEach(([name, slugs], ci) => slugs.forEach((slug, si) => place.set(slug, [ci, si, name])))
+  return manifest.gameDay
+    .map((topic) => {
+      const [ci, si, compartment] = place.get(topic.slug) ?? [RECALL_COMPARTMENTS.length, topic.number, 'Other']
+      return { topic, compartment, ci, si }
+    })
+    .sort((a, b) => a.ci - b.ci || a.si - b.si)
+}
+
 export const sections: Section[] = [
   {
     id: 'dsa',
@@ -137,7 +161,7 @@ export const sections: Section[] = [
     id: 'game-day',
     title: 'Game Day',
     path: '/game-day',
-    description: '474 recall questions, trend-scanned. Question visible — answer out loud, then expand.',
+    description: `${manifest.gameDay.reduce((n, t) => n + t.count, 0)} recall questions, trend-scanned. Question visible — answer out loud, then expand.`,
     icon: RecordVoiceOverOutlined,
     pages: [
       ...manifest.gameDayDocs.map((d) => ({
@@ -149,11 +173,12 @@ export const sections: Section[] = [
             : 'STAR stories, with the numbers that make them land.',
         group: 'Before you go in',
       })),
-      ...manifest.gameDay.map((t) => ({
+      ...recallByCompartment().map(({ topic: t, compartment }) => ({
         title: t.title,
         path: `/game-day/recall/${t.slug}`,
         description: `${t.count} questions across ${t.bands.length} bands.`,
         group: 'Recall',
+        subgroup: compartment,
       })),
     ],
   },

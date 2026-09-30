@@ -319,6 +319,8 @@ export type GameDayQuestion = {
   oneLiner?: string
   links: GameDayLink[]
   drill?: GameDayDrill
+  /** Code and options that are part of the question itself (snippet questions), as HTML. */
+  prompt?: string
   /** Set when the vault has a model answer for this question; the full text is in `model-answers-<slug>.json`. */
   modelAnswer?: { type: GameDayAnswerType; spine: string[] }
 }

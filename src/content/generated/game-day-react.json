@@ -1,0 +1,936 @@
+{
+  "slug": "react",
+  "number": 18,
+  "icon": "⚛️",
+  "title": "React",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "⭐ = the ones that decide the round. 🔥 = trending. 📍 = you were actually asked this.",
+    "<strong>Source:</strong> the 45 questions of <code>14-React/00-Index/Jbtiq_react.md</code> (trend-sourced July 2026) · <strong>Depth:</strong> <code>14-React/</code> · <strong>Template:</strong> [[meta_prompts/react_model_answer_prompt_v1]] · <strong>Bank:</strong> [[POPULAR-QUESTIONS]]"
+  ],
+  "bands": [
+    {
+      "id": "react-a",
+      "letter": "A",
+      "name": "Core model & reconciliation",
+      "questions": [
+        {
+          "id": "react-q1",
+          "number": 1,
+          "marks": [],
+          "text": "In 30 seconds — what does React actually give you that hand-written DOM code doesn't?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "What it costs",
+              "How I've used it",
+              "Adjacent concept"
+            ]
+          }
+        },
+        {
+          "id": "react-q2",
+          "number": 2,
+          "marks": [],
+          "text": "What renders after one click?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function Counter() {\n  const [count, setCount] = useState(0);\n\n  const handleClick = () =&gt; {\n    setCount(count + 1);\n    setCount(count + 1);\n    setCount(count + 1);\n  };\n\n  return &lt;button onClick={handleClick}&gt;{count}&lt;/button&gt;;\n}\n</code></pre><ul>\n<li>A: <code>3</code></li>\n<li>B: <code>1</code></li>\n<li>C: <code>0</code></li>\n<li>D: <code>2</code></li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q3",
+          "number": 3,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk me through everything that happens between calling setState and the pixel changing.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs across LeetCode Discuss frontend loops + ex-interviewer roundups (2025–26)",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What React does",
+              "Prove it",
+              "Where it bites",
+              "What changed by version"
+            ]
+          }
+        },
+        {
+          "id": "react-q4",
+          "number": 4,
+          "marks": [],
+          "text": "What is reconciliation, and what is the key prop actually doing inside it?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What React does",
+              "Prove it",
+              "Where it bites",
+              "What changed by version"
+            ]
+          }
+        },
+        {
+          "id": "react-q5",
+          "number": 5,
+          "marks": [],
+          "text": "Users delete a row from a list and the wrong form inputs now show the wrong values. The list uses key={index}. Explain what's happening.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — one of the most repeated React scenario questions across Discuss threads + LinkedIn interview posts (2025–26)",
+          "modelAnswer": {
+            "type": "debug",
+            "spine": [
+              "Read the symptom",
+              "Measure before guessing",
+              "Rank the suspects",
+              "Confirm",
+              "Fix",
+              "Guard against the next one"
+            ]
+          }
+        },
+        {
+          "id": "react-q6",
+          "number": 6,
+          "marks": [],
+          "text": "Is the virtual DOM faster than direct DOM manipulation? Answer honestly.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — a standard senior filter question; the wrong (marketing) answer is the tell",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where direct DOM wins",
+              "Where React's model wins",
+              "The deciding question",
+              "What I'd say"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "react-b",
+      "letter": "B",
+      "name": "Hooks: state, effects, closures",
+      "questions": [
+        {
+          "id": "react-q7",
+          "number": 7,
+          "marks": [],
+          "text": "Why can't you call hooks conditionally? Explain the mechanism, not the rule.",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What React does",
+              "Prove it",
+              "Where it bites",
+              "What changed by version"
+            ]
+          }
+        },
+        {
+          "id": "react-q8",
+          "number": 8,
+          "marks": [],
+          "text": "What's wrong here? The counter shows 1 and then stops forever.",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function Timer() {\n  const [count, setCount] = useState(0);\n\n  useEffect(() =&gt; {\n    const id = setInterval(() =&gt; setCount(count + 1), 1000);\n    return () =&gt; clearInterval(id);\n  }, []);\n\n  return &lt;h1&gt;{count}&lt;/h1&gt;;\n}\n</code></pre><ul>\n<li>A: <code>clearInterval</code> runs too early</li>\n<li>B: the interval closes over <code>count</code> from the first render</li>\n<li>C: <code>setCount</code> is not batched inside <code>setInterval</code></li>\n<li>D: the empty dep array is illegal here</li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q9",
+          "number": 9,
+          "marks": [],
+          "text": "Your effect has [filters] in the dep array and it's firing on every single render. Walk me through it.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on Discuss + LinkedIn \"useEffect bugs\" posts (2025–26)",
+          "modelAnswer": {
+            "type": "debug",
+            "spine": [
+              "Read the symptom",
+              "Measure before guessing",
+              "Rank the suspects",
+              "Confirm",
+              "Fix",
+              "Guard against the next one"
+            ]
+          }
+        },
+        {
+          "id": "react-q10",
+          "number": 10,
+          "marks": [],
+          "text": "How many re-renders does this cause — in React 17, and in React 18+?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function App() {\n  const [a, setA] = useState(0);\n  const [b, setB] = useState(0);\n\n  const handleClick = () =&gt; {\n    setTimeout(() =&gt; {\n      setA(x =&gt; x + 1);\n      setB(x =&gt; x + 1);\n    }, 0);\n  };\n\n  return &lt;button onClick={handleClick}&gt;{a}{b}&lt;/button&gt;;\n}\n</code></pre><ul>\n<li>A: 1 then 1</li>\n<li>B: 2 then 1</li>\n<li>C: 1 then 2</li>\n<li>D: 2 then 2</li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q11",
+          "number": 11,
+          "marks": [],
+          "text": "useEffect vs useLayoutEffect — and when have you actually needed the second one?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where useEffect wins",
+              "Where useLayoutEffect wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
+        },
+        {
+          "id": "react-q12",
+          "number": 12,
+          "marks": [],
+          "text": "What gets logged on mount, in React 18 development with <StrictMode>?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function Child() {\n  useEffect(() =&gt; {\n    console.log('effect');\n    return () =&gt; console.log('cleanup');\n  }, []);\n  return null;\n}\n</code></pre><ul>\n<li>A: <code>effect</code></li>\n<li>B: <code>effect</code>, <code>effect</code></li>\n<li>C: <code>effect</code>, <code>cleanup</code>, <code>effect</code></li>\n<li>D: <code>effect</code>, <code>cleanup</code></li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q13",
+          "number": 13,
+          "marks": [
+            "decides"
+          ],
+          "text": "Two searches fire back to back. The slower, older request resolves last and overwrites the newer results. Fix it.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on Discuss frontend threads + ex-interviewer roundups (2025–26)",
+          "modelAnswer": {
+            "type": "debug",
+            "spine": [
+              "Read the symptom",
+              "Measure before guessing",
+              "Rank the suspects",
+              "Confirm",
+              "Fix",
+              "Guard against the next one"
+            ]
+          }
+        },
+        {
+          "id": "react-q14",
+          "number": 14,
+          "marks": [],
+          "text": "buildGrid logs \"building\". After the component renders 5 times, how many times is it logged?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function App() {\n  const [grid, setGrid] = useState(buildGrid());\n  const [n, setN] = useState(0);\n  return &lt;button onClick={() =&gt; setN(n + 1)}&gt;{n}&lt;/button&gt;;\n}\n</code></pre><ul>\n<li>A: 1</li>\n<li>B: 5</li>\n<li>C: 0</li>\n<li>D: 2</li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "react-c",
+      "letter": "C",
+      "name": "Refs, memoization, custom hooks",
+      "questions": [
+        {
+          "id": "react-q15",
+          "number": 15,
+          "marks": [],
+          "text": "What's the log order?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function Parent() {\n  useEffect(() =&gt; console.log('parent effect'), []);\n  return &lt;Child /&gt;;\n}\n\nfunction Child() {\n  useEffect(() =&gt; console.log('child effect'), []);\n  return null;\n}\n</code></pre><ul>\n<li>A: <code>parent effect</code>, <code>child effect</code></li>\n<li>B: <code>child effect</code>, <code>parent effect</code></li>\n<li>C: order is not guaranteed</li>\n<li>D: only <code>parent effect</code></li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the commit",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q16",
+          "number": 16,
+          "marks": [],
+          "text": "Why doesn't mutating ref.current re-render, and when is that the feature you want?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What React does",
+              "Prove it",
+              "Where it bites",
+              "What changed by version"
+            ]
+          }
+        },
+        {
+          "id": "react-q17",
+          "number": 17,
+          "marks": [],
+          "text": "Child is memoized but still logs on every parent render. Why?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">const Child = React.memo(({ style, onSelect }) =&gt; {\n  console.log('child render');\n  return &lt;div style={style} onClick={onSelect} /&gt;;\n});\n\nfunction Parent() {\n  const [n, setN] = useState(0);\n  return (\n    &lt;&gt;\n      &lt;button onClick={() =&gt; setN(n + 1)}&gt;{n}&lt;/button&gt;\n      &lt;Child style={{ color: 'red' }} onSelect={() =&gt; console.log('pick')} /&gt;\n    &lt;/&gt;\n  );\n}\n</code></pre>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q18",
+          "number": 18,
+          "marks": [],
+          "text": "A teammate has wrapped every component in memo and every function in useCallback. What do you tell them in review?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs across ex-interviewer roundups + LinkedIn senior-React posts (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where memoization wins",
+              "Where it costs",
+              "The deciding question",
+              "What I'd say in review"
+            ]
+          }
+        },
+        {
+          "id": "react-q19",
+          "number": 19,
+          "marks": [],
+          "text": "What does useCallback do that useMemo can't?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the equivalence",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q20",
+          "number": 20,
+          "marks": [],
+          "text": "Design the API for a custom hook that keeps a piece of state in sync with a URL query param. Where's the hard part?",
+          "points": [],
+          "links": [],
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
+        },
+        {
+          "id": "react-q21",
+          "number": 21,
+          "marks": [],
+          "text": "What does useSyncExternalStore exist for? What breaks without it?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — the standard \"do you actually understand concurrent React\" probe (2025–26)",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What React does",
+              "Prove it",
+              "Where it bites",
+              "What changed by version"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "react-d",
+      "letter": "D",
+      "name": "State management & data",
+      "questions": [
+        {
+          "id": "react-q22",
+          "number": 22,
+          "marks": [],
+          "text": "Changing the theme re-renders ExpensiveTree, which only consumes AuthCtx. Why?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function App() {\n  const [user, setUser] = useState(null);\n  const [theme, setTheme] = useState('dark');\n\n  return (\n    &lt;AuthCtx.Provider value={{ user, setUser }}&gt;\n      &lt;button onClick={() =&gt; setTheme(t =&gt; (t === 'dark' ? 'light' : 'dark'))} /&gt;\n      &lt;ExpensiveTree /&gt;\n    &lt;/AuthCtx.Provider&gt;\n  );\n}\n</code></pre>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q23",
+          "number": 23,
+          "marks": [],
+          "text": "When do you reach for Context, and when is reaching for it the wrong instinct?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on Discuss + LinkedIn architecture-round posts (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where Context wins",
+              "Where it's the wrong instinct",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
+        },
+        {
+          "id": "react-q24",
+          "number": 24,
+          "marks": [
+            "decides"
+          ],
+          "text": "Redux Toolkit, Zustand, Context + useReducer, or a server-state library — how do you actually choose? Defend a real pick.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — the most common React architecture question in senior loops (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Server state",
+              "Shared client state",
+              "Local and URL state",
+              "What I'd pick for a real app"
+            ]
+          }
+        },
+        {
+          "id": "react-q25",
+          "number": 25,
+          "marks": [],
+          "text": "What is 'server state', and why did query libraries take that category from Redux?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on ex-interviewer roundups (2025–26)",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I've used it",
+              "Adjacent concept"
+            ]
+          }
+        },
+        {
+          "id": "react-q26",
+          "number": 26,
+          "marks": [],
+          "text": "Explain optimistic updates — and the two ways they bite you in production.",
+          "points": [],
+          "links": [],
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "Where it bites",
+              "What changed by version"
+            ]
+          }
+        },
+        {
+          "id": "react-q27",
+          "number": 27,
+          "marks": [],
+          "text": "What does useReducer buy you over useState?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where useState wins",
+              "Where useReducer wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
+        },
+        {
+          "id": "react-q28",
+          "number": 28,
+          "marks": [],
+          "text": "You inherit an app with 40 contributors where state is a swamp — Redux, Context, and local state all holding overlapping copies. How do you impose structure without a rewrite?",
+          "points": [],
+          "links": [],
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints",
+              "Baseline plan",
+              "Deep-dive",
+              "Failure modes",
+              "What I'd measure"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "react-e",
+      "letter": "E",
+      "name": "Performance & re-render debugging",
+      "questions": [
+        {
+          "id": "react-q29",
+          "number": 29,
+          "marks": [
+            "decides"
+          ],
+          "text": "One keystroke in a search box re-renders 60 components and the input feels laggy. Walk me through your diagnosis — in order.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — the canonical React performance scenario across Discuss + roundups (2025–26)",
+          "modelAnswer": {
+            "type": "debug",
+            "spine": [
+              "Read the symptom",
+              "Measure before guessing",
+              "Rank the suspects",
+              "Confirm",
+              "Fix",
+              "Guard against the next one"
+            ]
+          }
+        },
+        {
+          "id": "react-q30",
+          "number": 30,
+          "marks": [],
+          "text": "Switching documents keeps the previous draft in the box. What's the one-character-ish fix?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function Editor({ docId }) {\n  const [draft, setDraft] = useState('');\n  return &lt;textarea value={draft} onChange={e =&gt; setDraft(e.target.value)} /&gt;;\n}\n\n// parent\n&lt;Editor docId={selectedId} /&gt;\n</code></pre><ul>\n<li>A: add <code>useEffect(() =&gt; setDraft(''), [docId])</code></li>\n<li>B: render <code>&lt;Editor key={docId} docId={selectedId} /&gt;</code></li>\n<li>C: move <code>draft</code> to the parent</li>\n<li>D: wrap <code>Editor</code> in <code>React.memo</code></li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q31",
+          "number": 31,
+          "marks": [],
+          "text": "A table with 10,000 rows is janky on scroll. Give me your options and the trade-off of each.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on Discuss frontend threads (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Virtualisation",
+              "Server-side pagination and filtering",
+              "Cheaper rows",
+              "What I'd pick"
+            ]
+          }
+        },
+        {
+          "id": "react-q32",
+          "number": 32,
+          "marks": [],
+          "text": "Where do you put code-splitting boundaries, and how do you avoid making the app feel worse?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints",
+              "Baseline boundaries",
+              "Deep-dive",
+              "Failure modes",
+              "What I'd measure"
+            ]
+          }
+        },
+        {
+          "id": "react-q33",
+          "number": 33,
+          "marks": [],
+          "text": "What happens when userId goes from \"42\" to null?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">function Profile({ userId }) {\n  if (!userId) return &lt;Login /&gt;;\n\n  const [name, setName] = useState('');\n  return &lt;input value={name} onChange={e =&gt; setName(e.target.value)} /&gt;;\n}\n</code></pre><ul>\n<li>A: renders <code>&lt;Login /&gt;</code> fine, state is discarded</li>\n<li>B: throws — \"Rendered fewer hooks than expected\"</li>\n<li>C: <code>name</code> silently becomes <code>undefined</code></li>\n<li>D: React warns in dev, works in prod</li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q34",
+          "number": 34,
+          "marks": [],
+          "text": "How do you measure React performance in production, not on your laptop?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — the senior/architect separator on performance questions (2025–26)",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints",
+              "Baseline setup",
+              "Deep-dive",
+              "Failure modes",
+              "What I'd alert on"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "react-f",
+      "letter": "F",
+      "name": "React 18/19: concurrent, RSC, Actions, Compiler",
+      "questions": [
+        {
+          "id": "react-q35",
+          "number": 35,
+          "marks": [],
+          "text": "What does concurrent rendering actually enable? Give me the user-visible win, not the mechanism.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on ex-interviewer roundups + LinkedIn React 19 posts (2025–26)",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it doesn't help",
+              "How I've used it",
+              "Adjacent concept"
+            ]
+          }
+        },
+        {
+          "id": "react-q36",
+          "number": 36,
+          "marks": [],
+          "text": "useTransition vs useDeferredValue — when do you use each?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs across roundups + Discuss threads (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where useTransition wins",
+              "Where useDeferredValue wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
+        },
+        {
+          "id": "react-q37",
+          "number": 37,
+          "marks": [
+            "decides"
+          ],
+          "text": "React Server Components — what actually ships to the browser, and what can't you do inside one?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — the highest-frequency React 19 architecture question (2025–26)",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What ships",
+              "Prove it",
+              "What you can't do",
+              "So what for the system"
+            ]
+          }
+        },
+        {
+          "id": "react-q38",
+          "number": 38,
+          "marks": [],
+          "text": "Is this legal in React 19?",
+          "points": [],
+          "links": [],
+          "prompt": "<pre><code class=\"language-jsx\">import { use } from 'react';\n\nfunction Message({ promise }) {\n  if (!promise) return &lt;Empty /&gt;;\n\n  const text = use(promise);\n  return &lt;p&gt;{text}&lt;/p&gt;;\n}\n</code></pre><ul>\n<li>A: No — it breaks the rules of hooks</li>\n<li>B: Yes — <code>use</code> may be called conditionally and inside loops</li>\n<li>C: Only inside a Server Component</li>\n<li>D: Yes, but it throws unless wrapped in <code>useMemo</code></li>\n</ul>",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the render",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
+        },
+        {
+          "id": "react-q39",
+          "number": 39,
+          "marks": [],
+          "text": "Hydration mismatch errors in production only. Works perfectly on localhost. Debug it.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on Discuss + LinkedIn SSR/Next.js posts (2025–26)",
+          "modelAnswer": {
+            "type": "debug",
+            "spine": [
+              "Read the symptom",
+              "Measure before guessing",
+              "Rank the suspects",
+              "Confirm",
+              "Fix",
+              "Guard against the next one"
+            ]
+          }
+        },
+        {
+          "id": "react-q40",
+          "number": 40,
+          "marks": [],
+          "text": "The React Compiler auto-memoizes. Is useMemo/useCallback dead? What changes in your code review checklist?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — top React 19 architecture probe on roundups + LinkedIn (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "What the compiler takes over",
+              "Where manual memo remains",
+              "The deciding question",
+              "What changes in review"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "react-architecture-testing-scale",
+      "letter": null,
+      "name": "Architecture, testing & scale",
+      "questions": [
+        {
+          "id": "react-q41",
+          "number": 41,
+          "marks": [],
+          "text": "CSR, SSR, SSG, ISR — assign one to a logged-in dashboard, a docs site, and an e-commerce category page. Defend each.",
+          "points": [],
+          "links": [],
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "The docs site",
+              "The category page",
+              "The dashboard",
+              "What I'd pick and revisit"
+            ]
+          }
+        },
+        {
+          "id": "react-q42",
+          "number": 42,
+          "marks": [],
+          "text": "When are micro-frontends worth their runtime cost?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — recurs on senior/staff frontend architecture rounds (2025–26)",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where micro-frontends win",
+              "Where a modular monolith wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
+        },
+        {
+          "id": "react-q43",
+          "number": 43,
+          "marks": [],
+          "text": "How do you test React at scale — what goes in unit, integration, and e2e?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints",
+              "Baseline strategy",
+              "Deep-dive",
+              "Failure modes",
+              "What I'd measure"
+            ]
+          }
+        },
+        {
+          "id": "react-q44",
+          "number": 44,
+          "marks": [],
+          "text": "A team wants to introduce a fourth state library. You're the architect. What's your process?",
+          "points": [],
+          "links": [],
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify the need",
+              "Constraints",
+              "Baseline process",
+              "Deep-dive",
+              "Failure modes",
+              "What I'd measure"
+            ]
+          }
+        },
+        {
+          "id": "react-q45",
+          "number": 45,
+          "marks": [
+            "decides"
+          ],
+          "text": "You're building the frontend for an AI product — streaming tokens, long-running agent runs, tool-call traces. What breaks in a normal React app, and how do you design for it?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — increasingly common in AI-product frontend and AI-architect loops (2025–26)",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "What breaks",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "What I'd monitor"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -233,6 +233,13 @@ function QuestionCard({ topic, question: q }: { topic: string; question: GameDay
                 {q.badge && <Chip size="small" label={q.badge} color="secondary" variant="outlined" sx={{ height: 22, fontSize: '0.6875rem' }} />}
               </Stack>
             )}
+            {/* Snippet questions: the code and options are the question, so they show before expanding. */}
+            {q.prompt && (
+              <HtmlContent
+                html={q.prompt}
+                sx={{ mt: 1.25, typography: 'body2', '& pre': { my: 1, fontSize: '0.8125rem' }, '& ul': { m: 0, pl: 2.5 }, '& li': { mb: 0.25 } }}
+              />
+            )}
           </Box>
         </Box>
 

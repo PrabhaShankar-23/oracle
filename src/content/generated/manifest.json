@@ -2855,6 +2855,57 @@
           "count": 16
         }
       ]
+    },
+    {
+      "slug": "react",
+      "number": 18,
+      "icon": "⚛️",
+      "title": "React",
+      "count": 45,
+      "bands": [
+        {
+          "id": "react-a",
+          "letter": "A",
+          "name": "Core model & reconciliation",
+          "count": 6
+        },
+        {
+          "id": "react-b",
+          "letter": "B",
+          "name": "Hooks: state, effects, closures",
+          "count": 8
+        },
+        {
+          "id": "react-c",
+          "letter": "C",
+          "name": "Refs, memoization, custom hooks",
+          "count": 7
+        },
+        {
+          "id": "react-d",
+          "letter": "D",
+          "name": "State management & data",
+          "count": 7
+        },
+        {
+          "id": "react-e",
+          "letter": "E",
+          "name": "Performance & re-render debugging",
+          "count": 6
+        },
+        {
+          "id": "react-f",
+          "letter": "F",
+          "name": "React 18/19: concurrent, RSC, Actions, Compiler",
+          "count": 6
+        },
+        {
+          "id": "react-architecture-testing-scale",
+          "letter": null,
+          "name": "Architecture, testing & scale",
+          "count": 5
+        }
+      ]
     }
   ],
   "agenticDecisions": [

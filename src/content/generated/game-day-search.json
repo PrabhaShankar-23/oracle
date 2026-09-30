@@ -3316,5 +3316,320 @@
     "topic": "nlp-classical",
     "topicTitle": "NLP (Classical)",
     "band": "Section 12 — Cross-Cutting & Backfill (remaining notes across folders)"
+  },
+  {
+    "id": "react-q1",
+    "text": "In 30 seconds — what does React actually give you that hand-written DOM code doesn't?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "A"
+  },
+  {
+    "id": "react-q2",
+    "text": "What renders after one click?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "A"
+  },
+  {
+    "id": "react-q3",
+    "text": "Walk me through everything that happens between calling setState and the pixel changing.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "A"
+  },
+  {
+    "id": "react-q4",
+    "text": "What is reconciliation, and what is the key prop actually doing inside it?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "A"
+  },
+  {
+    "id": "react-q5",
+    "text": "Users delete a row from a list and the wrong form inputs now show the wrong values. The list uses key={index}. Explain what's happening.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "A"
+  },
+  {
+    "id": "react-q6",
+    "text": "Is the virtual DOM faster than direct DOM manipulation? Answer honestly.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "A"
+  },
+  {
+    "id": "react-q7",
+    "text": "Why can't you call hooks conditionally? Explain the mechanism, not the rule.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q8",
+    "text": "What's wrong here? The counter shows 1 and then stops forever.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q9",
+    "text": "Your effect has [filters] in the dep array and it's firing on every single render. Walk me through it.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q10",
+    "text": "How many re-renders does this cause — in React 17, and in React 18+?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q11",
+    "text": "useEffect vs useLayoutEffect — and when have you actually needed the second one?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q12",
+    "text": "What gets logged on mount, in React 18 development with <StrictMode>?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q13",
+    "text": "Two searches fire back to back. The slower, older request resolves last and overwrites the newer results. Fix it.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q14",
+    "text": "buildGrid logs \"building\". After the component renders 5 times, how many times is it logged?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "B"
+  },
+  {
+    "id": "react-q15",
+    "text": "What's the log order?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q16",
+    "text": "Why doesn't mutating ref.current re-render, and when is that the feature you want?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q17",
+    "text": "Child is memoized but still logs on every parent render. Why?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q18",
+    "text": "A teammate has wrapped every component in memo and every function in useCallback. What do you tell them in review?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q19",
+    "text": "What does useCallback do that useMemo can't?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q20",
+    "text": "Design the API for a custom hook that keeps a piece of state in sync with a URL query param. Where's the hard part?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q21",
+    "text": "What does useSyncExternalStore exist for? What breaks without it?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "C"
+  },
+  {
+    "id": "react-q22",
+    "text": "Changing the theme re-renders ExpensiveTree, which only consumes AuthCtx. Why?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q23",
+    "text": "When do you reach for Context, and when is reaching for it the wrong instinct?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q24",
+    "text": "Redux Toolkit, Zustand, Context + useReducer, or a server-state library — how do you actually choose? Defend a real pick.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q25",
+    "text": "What is 'server state', and why did query libraries take that category from Redux?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q26",
+    "text": "Explain optimistic updates — and the two ways they bite you in production.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q27",
+    "text": "What does useReducer buy you over useState?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q28",
+    "text": "You inherit an app with 40 contributors where state is a swamp — Redux, Context, and local state all holding overlapping copies. How do you impose structure without a rewrite?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "D"
+  },
+  {
+    "id": "react-q29",
+    "text": "One keystroke in a search box re-renders 60 components and the input feels laggy. Walk me through your diagnosis — in order.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "E"
+  },
+  {
+    "id": "react-q30",
+    "text": "Switching documents keeps the previous draft in the box. What's the one-character-ish fix?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "E"
+  },
+  {
+    "id": "react-q31",
+    "text": "A table with 10,000 rows is janky on scroll. Give me your options and the trade-off of each.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "E"
+  },
+  {
+    "id": "react-q32",
+    "text": "Where do you put code-splitting boundaries, and how do you avoid making the app feel worse?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "E"
+  },
+  {
+    "id": "react-q33",
+    "text": "What happens when userId goes from \"42\" to null?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "E"
+  },
+  {
+    "id": "react-q34",
+    "text": "How do you measure React performance in production, not on your laptop?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "E"
+  },
+  {
+    "id": "react-q35",
+    "text": "What does concurrent rendering actually enable? Give me the user-visible win, not the mechanism.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "F"
+  },
+  {
+    "id": "react-q36",
+    "text": "useTransition vs useDeferredValue — when do you use each?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "F"
+  },
+  {
+    "id": "react-q37",
+    "text": "React Server Components — what actually ships to the browser, and what can't you do inside one?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "F"
+  },
+  {
+    "id": "react-q38",
+    "text": "Is this legal in React 19?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "F"
+  },
+  {
+    "id": "react-q39",
+    "text": "Hydration mismatch errors in production only. Works perfectly on localhost. Debug it.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "F"
+  },
+  {
+    "id": "react-q40",
+    "text": "The React Compiler auto-memoizes. Is useMemo/useCallback dead? What changes in your code review checklist?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "F"
+  },
+  {
+    "id": "react-q41",
+    "text": "CSR, SSR, SSG, ISR — assign one to a logged-in dashboard, a docs site, and an e-commerce category page. Defend each.",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "Architecture, testing & scale"
+  },
+  {
+    "id": "react-q42",
+    "text": "When are micro-frontends worth their runtime cost?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "Architecture, testing & scale"
+  },
+  {
+    "id": "react-q43",
+    "text": "How do you test React at scale — what goes in unit, integration, and e2e?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "Architecture, testing & scale"
+  },
+  {
+    "id": "react-q44",
+    "text": "A team wants to introduce a fourth state library. You're the architect. What's your process?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "Architecture, testing & scale"
+  },
+  {
+    "id": "react-q45",
+    "text": "You're building the frontend for an AI product — streaming tokens, long-running agent runs, tool-call traces. What breaks in a normal React app, and how do you design for it?",
+    "topic": "react",
+    "topicTitle": "React",
+    "band": "Architecture, testing & scale"
   }
 ]
