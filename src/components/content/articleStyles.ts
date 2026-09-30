@@ -230,6 +230,8 @@ export const articleStyles: SxProps<Theme> = (t) => {
     '& .mermaid': { display: 'flex', justifyContent: 'center', minHeight: 60, color: 'transparent' },
     '& .mermaid svg': { maxWidth: '100%', height: 'auto' },
     '& .mermaid:has(svg)': { color: 'inherit' },
+    // too wide even top-to-bottom: readable size, scroll sideways (see lib/mermaid.ts)
+    '& .mermaid.mermaid-wide': { justifyContent: 'flex-start', overflowX: 'auto', pb: 1 },
     '& .mermaid-error': { color: v.text.secondary, whiteSpace: 'pre-wrap', fontFamily: FONT_MONO, fontSize: '0.75rem' },
     '& figcaption': {
       mt: 1.5,
