@@ -538,7 +538,10 @@ function parseQuestionHeading(raw) {
   }
   // Merged questions carry a tag before the quote. A band tag (`*(D)* "Why …?"`) is kept; a drill
   // provenance tag (`🗣️ *(`jbtiq_ml` Q12 · S3 …)* "Why …?"`) is dropped. The quotes go either way.
+  // Trend-scan badges (🆕 new to the vault, 🎯 a named company asked it) may sit in front and are kept.
   rest = rest.trim().replace(/^🗣️\s*/, '')
+  const badges = /^(?:(?:🆕|🎯)\s*)+/.exec(rest)?.[0] ?? ''
+  rest = rest.slice(badges.length)
   const prov = /^\*?\([^)]*\bQ\d+[^)]*\)\*?\s*/.exec(rest)
   if (prov) rest = rest.slice(prov[0].length)
   const tag = /^\*?(\([A-Z]\))\*?\s*/.exec(rest)
@@ -546,7 +549,7 @@ function parseQuestionHeading(raw) {
   return {
     number: Number(numbered[1]),
     marks,
-    text: tag ? `${tag[1]} ${body}` : body,
+    text: [badges.replace(/\s+/g, ''), tag?.[1], body].filter(Boolean).join(' '),
   }
 }
 

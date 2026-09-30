@@ -1464,49 +1464,49 @@
   },
   {
     "id": "rag-q41",
-    "text": "🆕🎯 (B) \"Similarity score vs relevance score — what's the difference?",
+    "text": "🆕🎯 (B) Similarity score vs relevance score — what's the difference?",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q42",
-    "text": "🆕🎯 (B) \"Which vector is longer — dense or sparse?",
+    "text": "🆕🎯 (B) Which vector is longer — dense or sparse?",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q43",
-    "text": "🆕 (C) \"When should the system refuse to answer, and what does it owe the user instead?",
+    "text": "🆕 (C) When should the system refuse to answer, and what does it owe the user instead?",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q44",
-    "text": "🎯 (D) \"Ten chunks are relevant. Your retriever returns two. Fix the pipeline.",
+    "text": "🎯 (D) Ten chunks are relevant. Your retriever returns two. Fix the pipeline.",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q45",
-    "text": "🎯 (C) \"How does the embedding model change your chunk size — and how do you pick the pair?",
+    "text": "🎯 (C) How does the embedding model change your chunk size — and how do you pick the pair?",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q46",
-    "text": "🎯 (C) \"You used knowledge graphs. What did construction actually cost you?",
+    "text": "🎯 (C) You used knowledge graphs. What did construction actually cost you?",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"
   },
   {
     "id": "rag-q47",
-    "text": "🎯 (E) \"Legal documents, end to end — sections, tables, clause references. Design it.",
+    "text": "🎯 (E) Legal documents, end to end — sections, tables, clause references. Design it.",
     "topic": "rag",
     "topicTitle": "RAG",
     "band": "Trend scan — Aug 2026"

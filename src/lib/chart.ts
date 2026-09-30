@@ -81,7 +81,8 @@ function buildChart(Plot: PlotModule, spec: ChartSpec, c: Colors): SVGSVGElement
     return Plot.plot({
       ...common,
       marginRight: hasHline ? 120 : 16,
-      x: { type: 'band', label: spec.x?.label ?? null, padding: 0.35 },
+      // Keep the author's bar order (a pipeline, a ranking); Plot sorts band domains otherwise.
+      x: { type: 'band', label: spec.x?.label ?? null, padding: 0.35, domain: bars.map((b) => b.label) },
       y: { label: spec.y?.label ?? null, domain: spec.y?.domain, grid: true, tickFormat: unit(spec.y?.unit), labelArrow: 'none' },
       marks: [
         // Bars start at the domain floor, so a y domain that skips 0 can show small differences.
