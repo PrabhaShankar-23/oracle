@@ -1175,7 +1175,7 @@
           "id": "agentic-ai-q26",
           "number": 26,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q8 · S3 Tool Use & Function Calling) \"What actually happens, wire-level, in a function call round trip? And who executes the function?",
+          "text": "What actually happens, wire-level, in a function call round trip? And who executes the function?",
           "points": [
             "You send: messages + <strong>tool schemas</strong> (name, description, JSON-Schema parameters). The model returns a <strong>structured tool-call message</strong> — name + arguments — not an execution. <strong>Your runtime executes</strong> the function, then sends the result back as a tool-result message, and the model continues. The model only ever emits and reads tokens.",
             "The schema quality <em>is</em> the interface quality: the model chooses tools by reading <strong>names, descriptions, and parameter docs</strong> — vague descriptions produce wrong calls; enums and required fields constrain errors structurally.",
@@ -1200,7 +1200,7 @@
           "id": "agentic-ai-q27",
           "number": 27,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q11 · S3 Tool Use & Function Calling) \"CodeAct: why do serious agent systems increasingly have the model write code instead of emitting JSON tool calls?",
+          "text": "CodeAct: why do serious agent systems increasingly have the model write code instead of emitting JSON tool calls?",
           "points": [
             "JSON tool calling buys one primitive action per round trip; <strong>CodeAct</strong> has the model emit a program — composition, loops, conditionals, intermediate variables — executing many actions in one turn. \"Filter these 500 rows and retry failures\" is one code block vs dozens of call cycles.",
             "It leverages what models are <em>strongest</em> at (code generation, massively represented in training) rather than a bespoke calling dialect, and errors surface as tracebacks the model is excellent at repairing.",
@@ -1225,7 +1225,7 @@
           "id": "agentic-ai-q28",
           "number": 28,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q18 · S7 Frameworks & Orchestration) \"LangGraph models agents as state machines. What does that representation actually buy you in production?",
+          "text": "LangGraph models agents as state machines. What does that representation actually buy you in production?",
           "points": [
             "The representation: nodes = steps (LLM calls, tools, code), edges = transitions (some conditional, decided by state or model output), plus a typed <strong>shared state schema</strong> that nodes read/update via reducers. The agent loop becomes an inspectable artifact instead of implicit control flow.",
             "Buy #1 — <strong>durable execution</strong>: state checkpointing at every step means crash recovery, resume, and long-running tasks that survive restarts; the checkpointer turns an agent from a request into a <em>process</em>.",
@@ -1250,7 +1250,7 @@
           "id": "agentic-ai-q29",
           "number": 29,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q19 · S7 Frameworks & Orchestration) \"Framework or no framework for your agent runtime — how do you make that call, and where's the lock-in actually located?",
+          "text": "Framework or no framework for your agent runtime — how do you make that call, and where's the lock-in actually located?",
           "points": [
             "What a framework really provides: <strong>checkpointing/durability, HITL interrupts, streaming plumbing, tracing integration, subgraph composition</strong> — undifferentiated heavy lifting that's genuinely tedious to build well. What it costs: an abstraction between you and the model API, upgrade churn in a fast-moving ecosystem, and debugging through framework internals.",
             "The core agent loop is genuinely small — model call, tool dispatch, context append. If your needs stop there, <strong>no framework</strong> is the defensible choice and keeps failure modes fully visible.",
@@ -1275,7 +1275,7 @@
           "id": "agentic-ai-q30",
           "number": 30,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q20 · S8 Agentic RAG & Knowledge) \"Agentic RAG vs classic RAG — what changes when retrieval becomes a tool the agent controls?",
+          "text": "Agentic RAG vs classic RAG — what changes when retrieval becomes a tool the agent controls?",
           "points": [
             "Classic RAG is a <strong>fixed pipeline</strong>: embed query → retrieve once → stuff context → generate. Agentic RAG hands the agent retrieval as a <strong>tool</strong>: it decides <em>whether</em> to retrieve, <em>what</em> to ask, evaluates results, <strong>reformulates and re-retrieves</strong>, and can do multi-hop chains (\"find X's supplier, then that supplier's filings\").",
             "The wins: <strong>query planning and decomposition</strong> (compound questions split into retrievable sub-queries), self-correction loops (grade results, retry with better terms), source selection across multiple stores/APIs, and stopping when evidence suffices rather than at a fixed k.",
@@ -1300,7 +1300,7 @@
           "id": "agentic-ai-q31",
           "number": 31,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q21 · S8 Agentic RAG & Knowledge) \"When do you put a knowledge graph behind an agent instead of (or beside) a vector store?",
+          "text": "When do you put a knowledge graph behind an agent instead of (or beside) a vector store?",
           "points": [
             "Vector search answers \"<strong>what is <em>like</em> this</strong>\"; it structurally fails at <strong>relational/multi-hop questions</strong> — \"which customers depend on the component that team X owns\" is a <em>path</em>, not a similarity neighborhood.",
             "A KG gives the agent <strong>traversal as actions</strong>: entity lookup, edge following, filtered subgraph queries — each hop exact and explainable; the trajectory doubles as the citation trail (why these facts: this path).",
@@ -1325,7 +1325,7 @@
           "id": "agentic-ai-q32",
           "number": 32,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q24 · S9 Evaluation & Observability) \"What does observability mean for an agent system — beyond logging? What do you trace and what do you alert on?",
+          "text": "What does observability mean for an agent system — beyond logging? What do you trace and what do you alert on?",
           "points": [
             "The unit is the <strong>trajectory trace</strong>: a tree of spans — each LLM call (prompt, completion, model, tokens), each tool call (args, result, latency, error), each decision point — correlated by run ID. Without the full tree, \"the agent did something weird\" is undebuggable; with it, every failure is a replayable artifact.",
             "Standardize on <strong>OTel-compatible tracing</strong> (LangSmith/Langfuse-class tools or your own spans) so agent traces join the rest of your distributed tracing instead of living in a silo.",
@@ -1350,7 +1350,7 @@
           "id": "agentic-ai-q33",
           "number": 33,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q27 · S10 Safety, Security & Guardrails) \"What's in your guardrail stack, and what can guardrails NOT do?",
+          "text": "What's in your guardrail stack, and what can guardrails NOT do?",
           "points": [
             "Four checkpoints: <strong>input</strong> (injection/jailbreak screening, topic and PII filters before the model), <strong>output</strong> (schema validation, content policy, groundedness checks before anything ships), <strong>action</strong> (tool allowlists, argument validation, approval gates before execution), and <strong>runtime</strong> (budgets: iterations, tokens, spend, wall-clock).",
             "Implementation mix: cheap deterministic rules first (regex, schemas, allowlists — fast, testable, no false authority), model-based classifiers for the fuzzy layer, structural controls (sandboxes, permissions) underneath as the real floor.",
@@ -1375,7 +1375,7 @@
           "id": "agentic-ai-q34",
           "number": 34,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q31 · S11 Production Agentic Systems) \"How do you version and roll out changes to a production agent, when a 'change' might be a prompt, a model, a tool, or the graph?",
+          "text": "How do you version and roll out changes to a production agent, when a 'change' might be a prompt, a model, a tool, or the graph?",
           "points": [
             "Version the <strong>bundle atomically</strong>: prompt + model + tool schemas + graph/policy config as one versioned artifact — components interact (a prompt tuned for model A regresses on model B), so independent component rollouts create untested combinations.",
             "Promotion gate = the <strong>eval suite</strong>: outcome + trajectory evals run against the candidate bundle; a candidate that wins on quality can still fail the gate on cost-per-task or latency SLOs — gates are multi-metric.",
@@ -1400,7 +1400,7 @@
           "id": "agentic-ai-q35",
           "number": 35,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q32 · S11 Production Agentic Systems) \"Build vs buy for the agent platform layer — where's the durable value, and what do you refuse to outsource?",
+          "text": "Build vs buy for the agent platform layer — where's the durable value, and what do you refuse to outsource?",
           "points": [
             "Commodity — <strong>rent without guilt</strong>: model APIs, tracing/observability tooling, vector stores, managed sandboxes. Differentiation here is negative (you'll build a worse one).",
             "Contested — <strong>decide by need</strong>: orchestration frameworks vs a thin in-house loop (decide on durability/HITL needs, as earlier); guardrail products vs assembled open components. Key criterion: exit cost — can you swap it without rewriting state schemas and evals?",
@@ -1425,7 +1425,7 @@
           "id": "agentic-ai-q36",
           "number": 36,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q33 · S12 Applied & Domain Patterns) \"Why did coding agents become the first agent category that really works — and what generalizes from them?",
+          "text": "Why did coding agents become the first agent category that really works — and what generalizes from them?",
           "points": [
             "Coding hands the agent a <strong>verifiable environment for free</strong>: compilers, tests, linters, type checkers — cheap, fast, objective feedback after every action. The reflexion loop has a real error signal, so iteration converges instead of confabulating.",
             "Plus: enormous training representation, text-native artifacts, <strong>reversibility</strong> (version control makes almost every action undoable — the blast-radius problem solves itself), and value-per-task economics that tolerate many model calls.",
@@ -1445,7 +1445,7 @@
           "id": "agentic-ai-q37",
           "number": 37,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q34 · S12 Applied & Domain Patterns) \"Design a customer-support agent that deflects tickets without destroying CSAT. Where do the boundaries go?",
+          "text": "Design a customer-support agent that deflects tickets without destroying CSAT. Where do the boundaries go?",
           "points": [
             "<strong>Answer boundary</strong>: grounded strictly in the knowledge base with citations; below a confidence/grounding threshold it doesn't guess — hallucinated policy answers are the reputational failure mode, worse than \"let me connect you\".",
             "<strong>Action boundary</strong>: tiered like any permission model — reads free, reversible actions validated, irreversible/financial actions (refunds, cancellations) gated or escalated; the agent acts under <em>this customer's</em> entitlements only.",
@@ -1470,7 +1470,7 @@
           "id": "agentic-ai-q38",
           "number": 38,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q35 · S12 Applied & Domain Patterns) \"A text-to-SQL analyst agent for executives: what makes this deceptively hard, and what's the safety architecture?",
+          "text": "A text-to-SQL analyst agent for executives: what makes this deceptively hard, and what's the safety architecture?",
           "points": [
             "The hard part is <strong>semantics, not syntax</strong>: which of four revenue columns is canonical, that <code>status=5</code> means churned, fiscal-vs-calendar quarters — models write fluent SQL against the wrong tables. The fix is a curated <strong>semantic layer</strong> (documented views/metrics definitions) the agent queries instead of raw tables; the agent is only as good as that layer.",
             "The failure that matters: <strong>confidently wrong numbers in an exec deck</strong> — worse than an error, because nobody checks a plausible chart. Mitigate with verification: run-and-inspect loops (does the row count make sense?), cross-checks against known aggregates, and showing the generated SQL + definitions used alongside every answer.",
@@ -1491,7 +1491,7 @@
           "id": "agentic-ai-q39",
           "number": 39,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q36 · S12 Applied & Domain Patterns) \"Voice agents: what changes architecturally when the interface is a phone call instead of a chat box?",
+          "text": "Voice agents: what changes architecturally when the interface is a phone call instead of a chat box?",
           "points": [
             "<strong>Latency becomes conversational physics</strong>: response gaps beyond roughly a second feel broken on a call — so budgets shift to time-to-first-<em>audio</em>: streaming STT, streaming LLM, streaming TTS overlapped in a full-duplex pipeline; no stage waits for a complete previous stage.",
             "<strong>Turn-taking is a real problem</strong>: endpoint detection (has the caller finished?), <strong>barge-in</strong> (caller interrupts mid-response → stop TTS, cancel in-flight generation, re-enter listening), and backchannel handling — none of which exists in chat.",
@@ -1516,7 +1516,7 @@
           "id": "agentic-ai-q40",
           "number": 40,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q37 · S12 Applied & Domain Patterns) \"Deep-research agents: what's the architecture behind 'go research X and write me a report'?",
+          "text": "Deep-research agents: what's the architecture behind 'go research X and write me a report'?",
           "points": [
             "Shape: <strong>plan → parallel gather → synthesize with citations</strong>. A lead agent decomposes the question into sub-queries, parallel workers search/read disjoint slices (web, internal docs, APIs) with bounded budgets, and a synthesis pass writes the report grounded in collected evidence.",
             "Quality mechanism 1 — <strong>source discipline</strong>: every claim traceable to a fetched source (citations enforced structurally), source-quality heuristics (primary over aggregator), and conflict handling — when sources disagree, report the disagreement instead of averaging it away.",
@@ -1541,7 +1541,7 @@
           "id": "agentic-ai-q41",
           "number": 41,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q38 · S13 Framework Fluency & Cross-Cutting) \"Where does LangChain end and LangGraph begin? What's LCEL still for?",
+          "text": "Where does LangChain end and LangGraph begin? What's LCEL still for?",
           "points": [
             "<strong>LCEL/Runnables</strong> compose <strong>acyclic pipelines</strong> — prompt | model | parser — with batteries (streaming, batching, async, retries) for free via the uniform <code>Runnable</code> interface (<code>invoke/stream/batch</code>). Right for chains: RAG pipelines, extraction, anything without cycles.",
             "<strong>LangGraph</strong> exists because <strong>agents are loops</strong>: cycles, branching on state, persistence — things a pipe syntax can't express. Graph over typed state with checkpointing is the agent runtime; LCEL components typically live <em>inside</em> graph nodes.",
@@ -1569,7 +1569,7 @@
           "id": "agentic-ai-q42",
           "number": 42,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q39 · S13 Framework Fluency & Cross-Cutting) \"Structured output: how do you actually guarantee the model returns valid JSON matching your schema — and what can still go wrong?",
+          "text": "Structured output: how do you actually guarantee the model returns valid JSON matching your schema — and what can still go wrong?",
           "points": [
             "The ladder: prompt-and-pray → <strong>function-calling/JSON mode</strong> (provider-enforced JSON) → <strong>constrained/grammar-based decoding</strong> (invalid tokens masked at generation — schema validity guaranteed by construction) → parse-validate-repair loops (Pydantic validation, feed errors back for one retry) as the pragmatic wrapper at any rung.",
             "Know the mechanism difference: JSON <em>mode</em> guarantees syntactic JSON, not <em>your schema</em>; <strong>schema-constrained decoding</strong> (structured outputs) guarantees the shape too. Say which your provider actually gives you.",
@@ -1594,7 +1594,7 @@
           "id": "agentic-ai-q43",
           "number": 43,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q41 · S13 Framework Fluency & Cross-Cutting) \"Define autonomy levels for agents the way you'd present them to a risk committee.",
+          "text": "Define autonomy levels for agents the way you'd present them to a risk committee.",
           "points": [
             "A workable ladder: <strong>L0 suggest</strong> (human executes everything — copilot), <strong>L1 act-with-approval</strong> (agent prepares, human approves each consequential action), <strong>L2 act-with-oversight</strong> (agent executes within scoped permissions, humans review samples/exceptions), <strong>L3 delegated</strong> (agent owns the task end-to-end within budgets, humans set policy and audit). Frame each rung by <em>what the human stops doing</em>.",
             "The committee's variables per rung: <strong>blast radius</strong> (what the agent can touch), <strong>reversibility</strong> of its actions, <strong>detection</strong> (how fast a bad action surfaces), and <strong>accountability</strong> (who answers for an agent action — the deploying team, with the audit trail as evidence).",
@@ -1619,7 +1619,7 @@
           "id": "agentic-ai-q44",
           "number": 44,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q43 · S13 Framework Fluency & Cross-Cutting) \"Two of your agents keep undoing each other's work on shared records. Diagnose the coordination problem class and fix it.",
+          "text": "Two of your agents keep undoing each other's work on shared records. Diagnose the coordination problem class and fix it.",
           "points": [
             "Name it: a <strong>write-write conflict from unsynchronized concurrent actors</strong> — lost updates, races, and livelock (each agent \"correcting\" the other) — the classic distributed-systems problem wearing an agent costume. LLMs add a twist: agents <em>re-derive</em> intent from stale reads, so they conflict semantically, not just at the row level.",
             "Mechanisms that transfer unchanged: <strong>ownership partitioning</strong> (one writer per record class/region — the best fix is making the conflict impossible), <strong>optimistic concurrency</strong> (version numbers on records; a stale write fails and the agent re-reads before retrying), and <strong>leases/locks</strong> for genuinely shared critical sections.",
@@ -1644,7 +1644,7 @@
           "id": "agentic-ai-q45",
           "number": 45,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q44 · S13 Framework Fluency & Cross-Cutting) \"CoT, ToT, GoT — the reasoning-structure zoo. What survives contact with production, and what did reasoning models change?",
+          "text": "CoT, ToT, GoT — the reasoning-structure zoo. What survives contact with production, and what did reasoning models change?",
           "points": [
             "The ideas: <strong>CoT</strong> — decompose before answering; <strong>ToT</strong> — explore multiple branches with lookahead and backtracking, needs an evaluator to score branches; <strong>GoT</strong> — arbitrary merge/refine topologies over thoughts. Each trades tokens for solution quality on search-shaped problems.",
             "What survived production: CoT is now table stakes (and increasingly <em>internalized</em>); branch-and-evaluate survives as <strong>best-of-N with a verifier/reranker</strong> — the pragmatic ToT — for problems with checkable answers. Full ToT/GoT scaffolds mostly stayed papers: cost explodes and the branch evaluator is the weak link.",
@@ -1673,7 +1673,7 @@
           "id": "agentic-ai-q46",
           "number": 46,
           "marks": [],
-          "text": "🗣️ (jbtiq_agentic Q45 · S13 Framework Fluency & Cross-Cutting) \"Close it out: how do you, as the architect, frame agentic AI to a skeptical CTO — what's real, what's hype, what do you commit to?",
+          "text": "Close it out: how do you, as the architect, frame agentic AI to a skeptical CTO — what's real, what's hype, what do you commit to?",
           "points": [
             "<strong>What's real today</strong>: agents work where outcomes are verifiable, actions are reversible or gated, and value-per-task funds the loop — coding, research synthesis, tiered support, data analysis with semantic layers. The wins are workflow-adjacent, not AGI-adjacent.",
             "<strong>What's structurally unsolved</strong>: compounding reliability over long trajectories, prompt injection (no in-band fix), and evaluation of open-ended work — these are managed with architecture, not eliminated; anyone selling \"fully autonomous everything\" is selling past the reliability math.",

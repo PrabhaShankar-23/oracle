@@ -361,6 +361,12 @@
         "name": "Where it bites in production",
         "claim": "legit uses and real bugs",
         "html": "<ul>\n<li><strong>Legit:</strong> <code>if x is None</code>, sentinel objects, enum members (<code>status is Status.DONE</code>), <code>type(x) is dict</code> for exact type checks.</li>\n<li><strong>Bug:</strong> <code>if response.status_code is 200</code> passes in tests with small values cached and is a <code>SyntaxWarning</code> since 3.8; compare with <code>==</code>.</li>\n<li><strong>Bug:</strong> NumPy/pandas: <code>arr == 0</code> returns an array, so <code>if arr == 0</code> raises \"truth value is ambiguous\"; <code>is</code> there is wrong too. Use <code>.all()</code>/<code>.any()</code> or <code>np.array_equal</code>.</li>\n<li><strong>Floats:</strong> <code>==</code> on floats needs tolerance: <code>math.isclose(0.1 + 0.2, 0.3)</code>.</li>\n<li><strong>NaN:</strong> <code>float(\"nan\") == float(\"nan\")</code> is False, but <code>x is x</code> is True, which is why <code>[nan] == [nan]</code> is True (containers check identity first).</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "a warning in 3.8, immortal objects in 3.12",
+        "html": "<ul>\n<li><strong>3.8:</strong> <code>is</code> with a literal (<code>x is 1</code>) emits <code>SyntaxWarning</code>.</li>\n<li><strong>3.12:</strong> immortal objects (PEP 683): <code>None</code>, small ints and some others never have their refcount changed. Identity semantics are unchanged.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -452,6 +458,12 @@
         "name": "Where it bites in production",
         "claim": "ingestion pipelines",
         "html": "<pre><code class=\"language-python\">def read(paths):\n    for p in paths:\n        with open(p) as f: yield f.read()\ndef chunk(docs, n):   yield from (d[i:i+n] for d in docs for i in range(0, len(d), n))\ndef batched(it, k):\n    batch = []\n    for x in it:\n        batch.append(x)\n        if len(batch) == k: yield batch; batch = []\n    if batch: yield batch\nfor b in batched(chunk(read(paths), 1000), 64): embed(b)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Pitfall</th>\n<th>What happens</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Iterating twice</td>\n<td>second pass is empty</td>\n<td>materialise once, or re-create the generator</td>\n</tr>\n<tr>\n<td>Failure mid-stream</td>\n<td>where did we stop?</td>\n<td>checkpoint IDs; make the sink idempotent</td>\n</tr>\n<tr>\n<td>Open files inside a generator</td>\n<td>file stays open until exhausted or GC'd</td>\n<td><code>with</code> inside the generator; close the generator</td>\n</tr>\n<tr>\n<td>Exceptions</td>\n<td>raised at the consumer's <code>next()</code>, far from the cause</td>\n<td>log with item IDs in each stage</td>\n</tr>\n<tr>\n<td><code>list(gen)</code> \"to debug\"</td>\n<td>memory spike, defeats the point</td>\n<td><code>itertools.islice(gen, 5)</code></td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>See it:</strong> <code>tracemalloc</code> peak with list vs generator versions; <code>memray</code> for the flame graph.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "<code>itertools.batched</code> and PEP 479",
+        "html": "<ul>\n<li><strong>3.12:</strong> <code>itertools.batched(it, n)</code> replaces the hand-written <code>batched</code> above.</li>\n<li><strong>3.7 (PEP 479):</strong> a <code>StopIteration</code> raised inside a generator becomes <code>RuntimeError</code>, so a stray <code>next()</code> can't silently end the stream.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -553,6 +565,12 @@
         "name": "Where it bites in production",
         "claim": "schemas and boundaries",
         "html": "<ul>\n<li><strong>FastAPI:</strong> parameter annotations decide query vs body vs path, run Pydantic validation, and produce OpenAPI docs.</li>\n<li><strong>LLM tools:</strong> <code>Model.model_json_schema()</code> or a function signature → tool definition; the model's arguments come back and are validated against the same model.</li>\n<li><strong>Decorators:</strong> a wrapper without <code>functools.wraps</code> hides the original annotations, and FastAPI sees <code>*args, **kwargs</code> (see <span class=\"vault-ref\" title=\"model-answers/01-PYTHON/11-timing-decorator\">timing-decorator</span>).</li>\n<li><strong>Hot paths:</strong> <code>get_type_hints()</code> is slow; libraries cache it. Don't call it per request.</li>\n<li><strong>CI:</strong> <code>mypy --strict</code> or <code>pyright</code> on the service; untyped boundaries are where bugs hide.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "lazy annotations arrive in 3.14",
+        "html": "<ul>\n<li><strong>3.9/3.10:</strong> <code>list[int]</code>, <code>X | None</code> syntax in annotations.</li>\n<li><strong>3.12:</strong> <code>type</code> aliases and <code>def f[T](x: T)</code> generics syntax (PEP 695).</li>\n<li><strong>3.14:</strong> deferred evaluation by default (PEP 649); <code>annotationlib.get_annotations()</code> with <code>Format.FORWARDREF</code>.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -642,6 +660,18 @@
         "name": "Prove it",
         "claim": "the order of execution",
         "html": "<pre><code class=\"language-python\">import asyncio\nasync def worker(name, delay):\n    print(name, \"start\")\n    await asyncio.sleep(delay)\n    print(name, \"end\")\nasync def main():\n    await worker(\"A\", 0.1)          # awaited inline: no overlap\n    await asyncio.gather(worker(\"B\", 0.2), worker(\"C\", 0.1))\nasyncio.run(main())\n# → A start · A end · B start · C start · C end · B end   (one per line)\n</code></pre>\n<p>A runs alone because awaiting a coroutine directly just runs it. B and C are wrapped as Tasks by <code>gather</code>, so their waits overlap and C finishes first.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where it bites in production",
+        "claim": "blocked loops, lost tasks, sequential awaits",
+        "html": "<table>\n<thead>\n<tr>\n<th>Symptom</th>\n<th>Cause</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>All requests stall, CPU idle-ish</td>\n<td>blocking call on the loop</td>\n<td>async client or <code>asyncio.to_thread</code></td>\n</tr>\n<tr>\n<td>p99 spikes during a CPU step</td>\n<td>long step between awaits</td>\n<td>process pool / worker tier</td>\n</tr>\n<tr>\n<td>\"Task was destroyed but it is pending\"</td>\n<td>fire-and-forget task garbage-collected</td>\n<td>keep a reference, or use <code>TaskGroup</code></td>\n</tr>\n<tr>\n<td>Sequential awaits in a loop</td>\n<td><code>for x: await call(x)</code></td>\n<td><code>gather</code>/<code>TaskGroup</code> with a semaphore</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>See it:</strong> <code>PYTHONASYNCIODEBUG=1</code> or <code>asyncio.run(main(), debug=True)</code> logs callbacks slower than <code>loop.slow_callback_duration</code> (100 ms default); <code>py-spy dump</code> shows the frame holding the loop.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "TaskGroup in 3.11, eager tasks in 3.12",
+        "html": "<ul>\n<li><strong>3.7:</strong> <code>asyncio.run</code>, <code>create_task</code>. <strong>3.11:</strong> <code>TaskGroup</code>, <code>asyncio.timeout</code>, faster asyncio internals. <strong>3.12:</strong> eager task factory (<code>asyncio.eager_task_factory</code>) runs a task synchronously until its first real suspension. <strong>uvloop</strong> replaces the loop with a libuv-based one for faster I/O.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -737,6 +767,18 @@
         "name": "Prove it",
         "claim": "order kept, and the hash/eq contract",
         "html": "<pre><code class=\"language-python\">d = {\"b\": 1, \"a\": 2}; d[\"c\"] = 3; del d[\"b\"]; d[\"b\"] = 4\nprint(list(d))\nclass Bad:\n    def __init__(self, v): self.v = v\n    def __eq__(self, o): return self.v == o.v\n    __hash__ = object.__hash__           # identity hash: breaks the contract\nprint({Bad(1): \"x\"}.get(Bad(1)))\n# → ['a', 'c', 'b']\n# → None\n</code></pre>\n<p>Re-inserting <code>b</code> after deletion puts it at the end. The <code>Bad</code> keys are equal but hash differently, so the lookup misses.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where it bites in production",
+        "claim": "mutable keys, memory, hash flooding",
+        "html": "<ul>\n<li><strong>Mutable keys:</strong> a key whose hash changes after insertion becomes unfindable. Use frozen dataclasses or tuples.</li>\n<li><strong>Memory:</strong> millions of small dicts (JSON records) cost ~100–200+ bytes each; use <code>__slots__</code>, tuples, or columnar storage (pandas/Arrow). See it with <code>tracemalloc</code> or <code>sys.getsizeof</code>.</li>\n<li><strong>Hash flooding:</strong> str hashes are randomised per process (<code>PYTHONHASHSEED</code>) to stop attackers crafting collisions; don't rely on <code>hash(\"x\")</code> being stable across runs, e.g. for sharding. Use <code>hashlib</code>.</li>\n<li><strong>Iteration while mutating:</strong> adding or removing keys during iteration raises <code>RuntimeError: dictionary changed size during iteration</code>.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "ordered by guarantee since 3.7",
+        "html": "<ul>\n<li><strong>3.6:</strong> compact dict (CPython detail). <strong>3.7:</strong> insertion order guaranteed by the language. <strong>3.8:</strong> <code>reversed(dict)</code>. <strong>3.9:</strong> <code>|</code> and <code>|=</code> merge operators. <strong>3.11+:</strong> instance <code>__dict__</code> materialised lazily for plain objects, cheaper attribute storage.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -822,6 +864,18 @@
         "name": "Prove it",
         "claim": "immediate free vs cycle",
         "html": "<pre><code class=\"language-python\">import gc, weakref\nclass Node: pass\na = Node(); r = weakref.ref(a)\ndel a\nprint(r() is None)                 # freed at once by refcount\ngc.disable()\nb = Node(); b.self = b; r = weakref.ref(b)\ndel b\nprint(r() is None, gc.collect() &gt; 0, r() is None)\n# → True\n# → False True True\n</code></pre>\n<p>The self-referencing node survives <code>del</code> until the cycle collector runs.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where it bites in production",
+        "claim": "RSS stays high, forks copy pages, cycles pin buffers",
+        "html": "<ul>\n<li><strong>RSS never goes down:</strong> fragmentation across arenas, not necessarily a leak. Confirm with <code>tracemalloc</code> (Python-level allocations fall while RSS stays flat).</li>\n<li><strong>Pre-fork workers (gunicorn):</strong> touching refcounts causes copy-on-write, so shared pages get copied. <code>gc.freeze()</code> after loading, before forking, moves objects to a permanent generation (Instagram's well-known trick).</li>\n<li><strong>GC pauses:</strong> a full gen-2 collection over millions of objects can add latency; tune <code>gc.set_threshold</code> or run <code>gc.collect()</code> at safe points in batch jobs.</li>\n<li><strong>Leaks via cycles holding big buffers:</strong> tracebacks keep frames alive (<code>except Exception as e</code> then storing <code>e</code>); clear references.</li>\n<li><strong>Tools:</strong> <code>tracemalloc</code>, <code>memray</code>, <code>gc.get_referrers</code>, <code>objgraph</code>.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "immortal objects, free-threaded GC, incremental GC",
+        "html": "<ul>\n<li><strong>3.12:</strong> immortal objects (PEP 683): <code>None</code>, small ints and others skip refcount changes.</li>\n<li><strong>3.13t (free-threaded):</strong> biased reference counting and deferred refcounting for some objects; the GC becomes non-generational in that build.</li>\n<li><strong>3.14:</strong> the cyclic GC is incremental (young generation plus a slice of the old one per run) for shorter pauses; <code>gc.get_threshold()</code> changes from <code>(700, 10, 10)</code> to <code>(2000, 10, 10)</code>.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -911,6 +965,18 @@
         "name": "Prove it",
         "claim": "property beats the instance dict",
         "html": "<pre><code class=\"language-python\">class A:\n    @property\n    def x(self): return \"property\"\n    def m(self): return \"method\"\na = A()\na.__dict__[\"x\"] = \"dict\"; a.__dict__[\"m\"] = \"dict\"\nprint(a.x, a.m)\nprint(A.m.__get__(a, A))\n# → property dict\n# → &lt;bound method A.m of &lt;__main__.A object at 0x…&gt;&gt;\n</code></pre>\n<p><code>property</code> is a data descriptor, so it wins over the dict. A function is non-data, so the instance dict shadows it.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where it bites in production",
+        "claim": "proxies, ORMs and cached properties all ride on it",
+        "html": "<table>\n<thead>\n<tr>\n<th>Pattern</th>\n<th>What to know</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>__getattr__</code> proxies (SDK clients, lazy config)</td>\n<td>only called on miss; cheap, but typos become silent calls if you return defaults</td>\n</tr>\n<tr>\n<td><code>__getattribute__</code> override</td>\n<td>runs on <em>every</em> access, including <code>self.__dict__</code>; easy infinite recursion; slow</td>\n</tr>\n<tr>\n<td><code>functools.cached_property</code></td>\n<td>non-data descriptor: first access stores in <code>__dict__</code>, later accesses skip the descriptor</td>\n</tr>\n<tr>\n<td>ORMs (SQLAlchemy <code>InstrumentedAttribute</code>)</td>\n<td>data descriptors tracking changes and lazy loads — the root of async lazy-load errors</td>\n</tr>\n<tr>\n<td><code>__slots__</code></td>\n<td>each slot is a data descriptor on the class; no instance dict</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What changes by version",
+        "claim": "faster lookups since 3.11, same rules",
+        "html": "<ul>\n<li><strong>3.11:</strong> specialising adaptive interpreter caches attribute lookups per call site (PEP 659), making plain attribute access much cheaper. <strong>3.12:</strong> more specialisations; semantics unchanged.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -996,6 +1062,18 @@
         "name": "The hard part",
         "claim": "metadata the framework depends on",
         "html": "<pre><code class=\"language-python\">import functools, inspect\ndef bare(fn):\n    def w(*a, **k): return fn(*a, **k)\n    return w\ndef good(fn):\n    @functools.wraps(fn)\n    def w(*a, **k): return fn(*a, **k)\n    return w\ndef f(q: str, limit: int = 10): ...\nprint(inspect.signature(bare(f)), inspect.signature(good(f)))\n# → (*a, **k) (q: str, limit: int = 10)\n</code></pre>\n<p>FastAPI uses exactly this signature to decide query parameters and validation.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "each careless shortcut breaks something specific",
+        "html": "<table>\n<thead>\n<tr>\n<th>Careless version</th>\n<th>What breaks</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>no <code>wraps</code></td>\n<td>endpoint signature lost, docs/schema wrong, logs show <code>wrapper</code></td>\n</tr>\n<tr>\n<td>sync wrapper on async fn</td>\n<td>times coroutine creation (~µs); caller must still await</td>\n</tr>\n<tr>\n<td>no <code>try/finally</code></td>\n<td>failed calls never timed, so error latency is invisible</td>\n</tr>\n<tr>\n<td><code>time.time()</code></td>\n<td>wall clock can jump (NTP); use <code>perf_counter</code></td>\n</tr>\n<tr>\n<td>wrapper swallows exceptions</td>\n<td>callers see <code>None</code></td>\n</tr>\n<tr>\n<td>generator functions</td>\n<td>times creation only; wrap the iteration if you need it</td>\n</tr>\n<tr>\n<td>decorating methods with state in the decorator</td>\n<td>shared across instances</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "a histogram or span, not a print",
+        "html": "<ul>\n<li>In production, the <code>print</code> becomes a histogram: <code>latency.observe(dt, labels={\"fn\": fn.__qualname__})</code>, or an OpenTelemetry span, which gives timing plus trace context.</li>\n<li>Keep label cardinality bounded: function name, not arguments.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1069,6 +1147,12 @@
         "name": "Frame the axis",
         "claim": "same guarantee, different owner",
         "html": "<p><strong>\"Both guarantee cleanup; a context manager moves the cleanup from every caller to the resource.\"</strong></p>\n<pre><code class=\"language-python\">mgr = open(path)            # what `with open(path) as f:` does, roughly\nf = mgr.__enter__()\ntry:\n    ...                     # body\nexcept BaseException as e:\n    if not mgr.__exit__(type(e), e, e.__traceback__): raise\nelse:\n    mgr.__exit__(None, None, None)\n</code></pre>"
+      },
+      {
+        "number": 2,
+        "name": "Where try/finally is enough",
+        "claim": "one-off, local cleanup",
+        "html": "<ul>\n<li>One-off cleanup local to a single function, with no reuse.</li>\n<li>Cleanup that isn't tied to a resource object (resetting a flag, logging).</li>\n</ul>"
       },
       {
         "number": 3,
@@ -1172,6 +1256,18 @@
         "name": "The hard part",
         "claim": "coercion, strictness and errors",
         "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-python\">from pydantic import BaseModel, ValidationError, Field\nclass ToolArgs(BaseModel):\n    query: str\n    top_k: int = Field(5, ge=1, le=50)\nprint(ToolArgs.model_validate({\"query\": \"gil\", \"top_k\": \"7\"}))\ntry:\n    ToolArgs.model_validate({\"query\": \"gil\", \"top_k\": 500})\nexcept ValidationError as e:\n    print(e.errors()[0][\"type\"], e.errors()[0][\"loc\"])\nprint(ToolArgs.model_json_schema()[\"properties\"][\"top_k\"])\n# → query='gil' top_k=7\n# → less_than_equal ('top_k',)\n# → {'default': 5, 'maximum': 50, 'minimum': 1, 'title': 'Top K', 'type': 'integer'}\n</code></pre>\n<ul>\n<li>Lax mode coerced <code>\"7\"</code> → <code>7</code>. <code>model_config = ConfigDict(strict=True)</code> rejects it, which is what you want for internal contracts.</li>\n<li><code>e.errors()</code> is structured: location, type, message. Return it as a 422 body.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "validating everywhere, or the wrong place",
+        "html": "<table>\n<thead>\n<tr>\n<th>Mistake</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Validating the same data at every layer</td>\n<td>CPU on hot paths; v2 is fast but not free</td>\n</tr>\n<tr>\n<td>Pydantic models as the domain model</td>\n<td>framework coupling; validation logic mixed with business rules</td>\n</tr>\n<tr>\n<td>Lax coercion on money or IDs</td>\n<td><code>\"1e3\"</code> accepted where you meant exact input</td>\n</tr>\n<tr>\n<td>Stringifying <code>ValidationError</code></td>\n<td>clients can't act on it; LLM repair loops lose the field path</td>\n</tr>\n<tr>\n<td><code>model_construct()</code> on untrusted data</td>\n<td>skips validation entirely</td>\n</tr>\n<tr>\n<td>v1 idioms on v2 (<code>.dict()</code>, <code>@validator</code>)</td>\n<td>deprecation warnings; removed in future</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "failure rates per field and per model version",
+        "html": "<ul>\n<li>Validation-failure rate per endpoint and per field (spikes mean a client or model changed).</li>\n<li>For LLM outputs: schema-failure rate per model and prompt version, and retries needed.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1245,6 +1341,12 @@
         "name": "Frame the axis",
         "claim": "who owns the tasks when something fails",
         "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th><code>gather</code> (default)</th>\n<th><code>gather(return_exceptions=True)</code></th>\n<th><code>TaskGroup</code> (3.11+)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>First failure</td>\n<td>raised to caller</td>\n<td>returned in the list</td>\n<td>siblings cancelled</td>\n</tr>\n<tr>\n<td>Other tasks</td>\n<td>keep running</td>\n<td>keep running</td>\n<td>cancelled and awaited</td>\n</tr>\n<tr>\n<td>Errors reported</td>\n<td>first only</td>\n<td>all, as values</td>\n<td>all, as <code>ExceptionGroup</code></td>\n</tr>\n<tr>\n<td>Orphans possible</td>\n<td>yes</td>\n<td>no (awaits all)</td>\n<td>no</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where gather still fits",
+        "claim": "independent best-effort work and older Pythons",
+        "html": "<ul>\n<li>Best-effort fan-out where each result is independent: <code>return_exceptions=True</code> then inspect each.</li>\n<li>Pre-3.11 codebases. Libraries that must support older Pythons.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -1348,6 +1450,18 @@
         "name": "The hard part",
         "claim": "semantic validation and repair",
         "html": "<p><strong>💻 Prove it — shape passes, meaning fails:</strong></p>\n<pre><code class=\"language-python\">from typing import Literal\nfrom pydantic import BaseModel, field_validator, ValidationError\nALLOWED_IDS = {\"ord_1\", \"ord_2\"}\nclass Refund(BaseModel):\n    action: Literal[\"refund\"]\n    order_id: str\n    amount: float\n    @field_validator(\"order_id\")\n    @classmethod\n    def known(cls, v):\n        if v not in ALLOWED_IDS: raise ValueError(\"unknown order\")\n        return v\ntry: Refund.model_validate_json('{\"action\":\"refund\",\"order_id\":\"ord_9\",\"amount\":20}')\nexcept ValidationError as e: print(e.errors()[0][\"loc\"], e.errors()[0][\"msg\"])\n# → ('order_id',) Value error, unknown order\n</code></pre>\n<ul>\n<li>Repair prompt carries <code>e.errors()</code> (field path + message), not the whole traceback.</li>\n<li>Cap it: <code>max_repairs = 2</code>. Then raise <code>LLMOutputError</code> with the last raw output logged for debugging.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "truncation, drift, injection, endless repair",
+        "html": "<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Truncated JSON (hit <code>max_tokens</code>)</td>\n<td>check finish reason; raise limits or shrink schema</td>\n</tr>\n<tr>\n<td>Schema too complex for constrained mode (recursion, unions)</td>\n<td>flatten; providers limit supported keywords</td>\n</tr>\n<tr>\n<td>Enum drift (model invents a value)</td>\n<td><code>Literal</code>/<code>Enum</code> in schema; constrained decoding enforces</td>\n</tr>\n<tr>\n<td>Valid shape, hallucinated IDs</td>\n<td>validator against a known set or DB lookup</td>\n</tr>\n<tr>\n<td>Prompt injection asks for a dangerous action</td>\n<td>allow-list in the executor; permission check per action</td>\n</tr>\n<tr>\n<td>Infinite repair loop</td>\n<td>hard cap + typed failure</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "validation failures per model and prompt version",
+        "html": "<ul>\n<li>Parse/validation failure rate per model and prompt version; repair rounds per request; fallback rate.</li>\n<li>Log the raw output of failures (redacted) with trace IDs, so regressions after a model upgrade are visible the same day.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1430,6 +1544,12 @@
         "html": "<p><strong>💻 Prove it — a heartbeat that should tick every 100 ms:</strong></p>\n<pre><code class=\"language-python\">import asyncio, time\nasync def heartbeat():\n    for _ in range(3):\n        t = time.perf_counter(); await asyncio.sleep(0.1)\n        print(f\"tick late by {time.perf_counter() - t - 0.1:.1f}s\")\nasync def bad_handler():\n    time.sleep(0.5)                       # blocking: holds the loop\nasync def main():\n    await asyncio.gather(heartbeat(), bad_handler())\nasyncio.run(main())\n# → tick late by 0.4s\n# → tick late by 0.0s\n# → tick late by 0.0s\n</code></pre>\n<p>One blocking call delayed an unrelated coroutine by 0.4 s. Export that lag as a metric in production.</p>"
       },
       {
+        "number": 3,
+        "name": "Rank the suspects",
+        "claim": "sync clients, sleeps, file reads, CPU loops",
+        "html": "<table>\n<thead>\n<tr>\n<th>Suspect</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>sync HTTP client</td>\n<td><code>requests</code>, <code>urllib</code>, a vendor SDK without async</td>\n</tr>\n<tr>\n<td>sync DB driver</td>\n<td><code>psycopg2</code>, sync SQLAlchemy session</td>\n</tr>\n<tr>\n<td>sleeps and waits</td>\n<td><code>time.sleep</code>, <code>future.result()</code>, <code>thread.join()</code></td>\n</tr>\n<tr>\n<td>file and disk</td>\n<td><code>open().read()</code> of a big file, <code>json.load</code> on large payloads</td>\n</tr>\n<tr>\n<td>CPU work</td>\n<td>tokenising, PDF parsing, pandas on a big frame</td>\n</tr>\n<tr>\n<td>hidden sync</td>\n<td>a logging handler writing over the network; DNS in some clients</td>\n</tr>\n</tbody></table>"
+      },
+      {
         "number": 4,
         "name": "Confirm",
         "claim": "see the frame",
@@ -1440,6 +1560,12 @@
         "name": "Fix",
         "claim": "async client, thread, or process",
         "html": "<pre><code class=\"language-python\">@app.get(\"/a\")                                   # sync lib → thread\nasync def a(): return await asyncio.to_thread(vendor_sdk.call, \"x\")\n@app.get(\"/b\")                                   # async client\nasync def b(): return (await client.get(URL)).json()\n@app.get(\"/c\")                                   # FastAPI runs plain def in its threadpool\ndef c(): return vendor_sdk.call(\"x\")\n</code></pre>\n<ul>\n<li>The FastAPI threadpool (AnyIO) defaults to 40 threads; heavy use of <code>def</code> handlers can exhaust it.</li>\n<li>CPU-bound → <code>ProcessPoolExecutor</code> or a worker tier (see <span class=\"vault-ref\" title=\"model-answers/01-PYTHON/17-cpu-preprocessing-next-to-async-api\">cpu-preprocessing-next-to-async-api</span>).</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "Guard against the next one",
+        "claim": "a lint rule and a loop-lag alert",
+        "html": "<ul>\n<li>Lint: ruff's <code>ASYNC</code> rules (from flake8-async) flag <code>time.sleep</code>, sync HTTP and <code>open()</code> inside <code>async def</code>.</li>\n<li>Alert on event-loop lag p99 &gt; 50 ms. Load-test with concurrency, not one request at a time.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1513,6 +1639,12 @@
     "spoken": "<p>\"Never inline in the handler. CPU work inside an <code>async def</code> is the blocking-call problem under a nicer name: it holds the loop and delays every other request.</p>\n<p>Where it goes depends on two things: how long it holds the CPU, and whether that time is in Python bytecode or in C.</p>\n<p>If the heavy part is C code that releases the GIL — NumPy, a Rust tokenizer, image decoding in Pillow for large images — a thread via <code>asyncio.to_thread</code> is enough. It's cheap, shares memory, and gets real parallelism.</p>\n<p>If it's pure-Python work, like parsing PDFs, walking big JSON, or custom chunking, and takes tens to hundreds of milliseconds, I use a <code>ProcessPoolExecutor</code> with <code>loop.run_in_executor</code>. Each process has its own GIL. The costs are pickling inputs and outputs, and each process holding its own copy of anything it loads.</p>\n<p>If it takes seconds, is spiky, or needs a GPU, it goes to a queue and a separate worker fleet. The API returns a job ID or streams progress, and the workers scale independently.</p>\n<p>The deciding test is: does this step hold the loop for longer than a fraction of my latency budget? I measure it with a profiler before deciding, not after.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "keep loop lag within the latency budget",
+        "html": "<ul>\n<li>The async API must keep loop lag under a few ms to hold its p99.</li>\n<li>The preprocessing step: its duration, where its CPU time goes (Python vs C), input/output size, and memory footprint.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Runtime model",
         "claim": "a ladder",
@@ -1523,6 +1655,18 @@
         "name": "The hard part",
         "claim": "the process boundary",
         "html": "<ul>\n<li><strong>Pickling:</strong> arguments and results are serialised. Passing a 50 MB document costs more than parsing it; pass a path or an object-store key.</li>\n<li><strong>Unpicklable things:</strong> lambdas, open connections, locks, models on a GPU.</li>\n<li><strong>Memory:</strong> a process that loads a 2 GB model × 8 workers = 16 GB. Load once per process with the <code>initializer=</code> argument, or move to a dedicated service.</li>\n<li><strong>Start method:</strong> <code>spawn</code> (macOS/Windows default) re-imports your module; Linux defaults to <code>forkserver</code> from 3.14; <code>fork</code> from a threaded server is unsafe.</li>\n<li><strong>A crashed child</strong> raises <code>BrokenProcessPool</code> for every pending future; recreate the pool.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "each wrong placement has a distinct symptom",
+        "html": "<table>\n<thead>\n<tr>\n<th>Mistake</th>\n<th>Symptom</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>CPU loop inside <code>async def</code></td>\n<td>p99 spike, loop lag</td>\n</tr>\n<tr>\n<td>Thread pool for pure-Python work</td>\n<td>no speedup; GIL contention adds latency</td>\n</tr>\n<tr>\n<td>Pool per request</td>\n<td>process start per request; seconds of latency</td>\n</tr>\n<tr>\n<td>Unbounded submissions</td>\n<td>memory blow-up; queue inside the executor grows</td>\n</tr>\n<tr>\n<td>Queue without backpressure</td>\n<td>work piles up; results useless by the time they're done</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "loop lag, executor queue, worker backlog",
+        "html": "<ul>\n<li>Event-loop lag; executor queue depth and task duration; worker queue depth and age of oldest job.</li>\n<li>Per-step timings as spans (<code>parse</code>, <code>chunk</code>, <code>embed</code>) so moving the step shows up as a change in loop lag and p99.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1608,10 +1752,22 @@
         "html": "<p><strong>💻 Prove it — measured with tracemalloc:</strong></p>\n<pre><code class=\"language-python\">import tracemalloc\nclass P:\n    def __init__(s, x, y): s.x, s.y = x, y\nclass S:\n    __slots__ = (\"x\", \"y\")\n    def __init__(s, x, y): s.x, s.y = x, y\nfor cls in (P, S):\n    tracemalloc.start()\n    objs = [cls(i, i) for i in range(100_000)]\n    print(cls.__name__, tracemalloc.get_traced_memory()[0] // 100_000, \"bytes/obj\")\n    tracemalloc.stop(); del objs\n# → P 119 bytes/obj\n# → S 87 bytes/obj      (CPython 3.12, M-series Mac; includes the int values and list slot)\n</code></pre>\n<ul>\n<li>The size of the gap depends on version: CPython 3.11+ already avoids materialising <code>__dict__</code> for plain objects in many cases, which narrowed it.</li>\n</ul>"
       },
       {
+        "number": 3,
+        "name": "Where it costs you",
+        "claim": "flexibility, inheritance and some tools",
+        "html": "<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>No new attributes</td>\n<td><code>AttributeError</code> on <code>obj.extra = 1</code></td>\n</tr>\n<tr>\n<td>Weak references</td>\n<td>add <code>\"__weakref__\"</code> to slots</td>\n</tr>\n<tr>\n<td>Inheritance</td>\n<td>subclass without <code>__slots__</code> regains <code>__dict__</code>; two slotted bases with layouts conflict</td>\n</tr>\n<tr>\n<td>Pickling / copy</td>\n<td>works in 3.x, but custom <code>__getstate__</code> code may assume <code>__dict__</code></td>\n</tr>\n<tr>\n<td><code>cached_property</code></td>\n<td>needs <code>__dict__</code>; fails on slotted classes</td>\n</tr>\n<tr>\n<td>Class attribute defaults</td>\n<td>can't have a class attribute with the same name as a slot</td>\n</tr>\n</tbody></table>"
+      },
+      {
         "number": 4,
         "name": "The deciding question",
         "claim": "do you have millions of instances, and did a profile say so?",
         "html": "<ul>\n<li>Measure first: <code>tracemalloc</code> or <code>memray</code> shows whether these objects dominate.</li>\n<li>Alternatives in order: don't create objects at all (arrays/columnar) → tuples / <code>NamedTuple</code> → <code>@dataclass(slots=True)</code> → hand-written <code>__slots__</code>.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "columnar first, slots for the last stretch",
+        "html": "<ul>\n<li>Request-scoped and service objects: no slots, readability wins.</li>\n<li>Chunk or token records in an ingestion job holding millions in memory: columnar (Arrow/pandas) first; <code>dataclass(slots=True, frozen=True)</code> if objects are needed.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1691,10 +1847,28 @@
         "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Validates</th>\n<th>Mutable</th>\n<th>Cost</th>\n<th>Best for</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Pydantic <code>BaseModel</code></td>\n<td>yes, with coercion</td>\n<td>yes (or <code>frozen</code>)</td>\n<td>highest</td>\n<td>untrusted boundaries, schemas</td>\n</tr>\n<tr>\n<td><code>@dataclass</code></td>\n<td>no</td>\n<td>yes (or <code>frozen</code>)</td>\n<td>low</td>\n<td>internal records</td>\n</tr>\n<tr>\n<td><code>NamedTuple</code></td>\n<td>no</td>\n<td>no</td>\n<td>lowest</td>\n<td>small immutable values, tuple compatibility</td>\n</tr>\n<tr>\n<td>plain class</td>\n<td>whatever you write</td>\n<td>your choice</td>\n<td>—</td>\n<td>behaviour and invariants</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Where each one wins",
+        "claim": "same input, three different contracts",
+        "html": "<p><strong>💻 Prove it — same input, different contracts:</strong></p>\n<pre><code class=\"language-python\">from dataclasses import dataclass\nfrom typing import NamedTuple\nfrom pydantic import BaseModel\n@dataclass(frozen=True, slots=True)\nclass DC: score: float\nclass NT(NamedTuple): score: float\nclass PM(BaseModel): score: float\nprint(DC(\"0.9\"), NT(\"0.9\"), PM(score=\"0.9\"))\nx, = NT(0.5); print(x, NT(0.5) == (0.5,))\n# → DC(score='0.9') NT(score='0.9') score=0.9\n# → 0.5 True\n</code></pre>\n<p>Only Pydantic converted the string. The NamedTuple equals a plain tuple, which is convenient and sometimes surprising.</p>"
+      },
+      {
+        "number": 3,
+        "name": "What each one costs",
+        "claim": "validation cost, no validation, or positional coupling",
+        "html": "<ul>\n<li><strong>Pydantic:</strong> validation per construction; <code>model_construct</code> skips it but only for trusted data. Framework coupling if it leaks into the domain.</li>\n<li><strong>Dataclass:</strong> no validation, so bad data travels until it breaks something. Mutable defaults need <code>field(default_factory=...)</code>.</li>\n<li><strong>NamedTuple:</strong> positional; adding a field in the middle breaks callers who unpack; equality with plain tuples.</li>\n<li><strong>Plain class:</strong> you write <code>__repr__</code>/<code>__eq__</code> yourself or live without them.</li>\n</ul>"
+      },
+      {
         "number": 4,
         "name": "The deciding question",
         "claim": "where did this data come from?",
         "html": "<ul>\n<li>From outside the process → validate (Pydantic).</li>\n<li>From your own code → trust the type checker (dataclass/NamedTuple).</li>\n<li>Has invariants that change with operations → a class with methods.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "Pydantic at the edge, dataclasses inside",
+        "html": "<table>\n<thead>\n<tr>\n<th>Object</th>\n<th>Pick</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>request/response bodies, tool arguments, structured LLM output</td>\n<td>Pydantic</td>\n</tr>\n<tr>\n<td>retrieved chunk, scored candidate, pipeline step result</td>\n<td><code>@dataclass(frozen=True, slots=True)</code></td>\n</tr>\n<tr>\n<td><code>(text, score)</code> returned from a ranking helper</td>\n<td><code>NamedTuple</code></td>\n</tr>\n<tr>\n<td>token bucket, circuit breaker, model registry</td>\n<td>plain class</td>\n</tr>\n</tbody></table>"
       }
     ],
     "followUps": [
@@ -1770,6 +1944,12 @@
         "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>ORM</th>\n<th>Core / raw SQL</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>CRUD, relationships</td>\n<td>✅ concise</td>\n<td>verbose</td>\n</tr>\n<tr>\n<td>Transactions / unit of work</td>\n<td>✅ built in</td>\n<td>manual</td>\n</tr>\n<tr>\n<td>Analytics, window functions, CTEs</td>\n<td>awkward</td>\n<td>✅</td>\n</tr>\n<tr>\n<td>Bulk inserts/upserts</td>\n<td>slower by default</td>\n<td>✅ <code>insert().values([...])</code>, <code>COPY</code></td>\n</tr>\n<tr>\n<td>Plan control</td>\n<td>indirect</td>\n<td>✅</td>\n</tr>\n<tr>\n<td>Injection safety</td>\n<td>✅ bound params</td>\n<td>✅ only with bound params</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Where the ORM wins",
+        "claim": "domain writes and migrations",
+        "html": "<ul>\n<li>Domain writes with invariants: load aggregate, change it, commit once.</li>\n<li>Migrations and schema in one place; typed models (<code>Mapped[int]</code>) in 2.0.</li>\n</ul>"
+      },
+      {
         "number": 3,
         "name": "Where SQL wins",
         "claim": "and the N+1 trap",
@@ -1780,6 +1960,12 @@
         "name": "The deciding question",
         "claim": "is this path a write with invariants, or a read shaped by the database?",
         "html": "<ul>\n<li>Write with domain rules → ORM.</li>\n<li>Read that's really a report, a search or a bulk job → Core/SQL, returning plain rows or dataclasses.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "ORM for entities, SQL for search, billing and bulk",
+        "html": "<ul>\n<li>ORM for users, tenants, conversations, jobs.</li>\n<li>SQL for vector search with pgvector (<code>ORDER BY embedding &lt;=&gt; :q LIMIT :k</code> plus metadata filters), usage aggregation for billing, and bulk chunk upserts during ingestion (<code>INSERT … ON CONFLICT</code>).</li>\n<li>Async: <code>AsyncSession</code> + <code>asyncpg</code>, <code>expire_on_commit=False</code>, eager loading always explicit.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1851,10 +2037,28 @@
         "html": "<p><strong>\"It replaces processes for Python CPU work, at the price of single-thread speed and ecosystem readiness.\"</strong></p>"
       },
       {
+        "number": 2,
+        "name": "Where free-threading wins",
+        "claim": "CPU-bound Python threads without pickling",
+        "html": "<ul>\n<li>CPU-bound pure-Python work split across threads: no pickling, one copy of loaded data.</li>\n<li>Workloads that currently use <code>multiprocessing</code> only to escape the GIL and suffer from memory duplication (e.g. a large read-only index shared by workers).</li>\n</ul>\n<p><strong>💻 Prove it — which build am I on?</strong></p>\n<pre><code class=\"language-python\">import sys, sysconfig\nprint(sysconfig.get_config_var(\"Py_GIL_DISABLED\"))   # 1 on a free-threaded build\nprint(sys._is_gil_enabled() if hasattr(sys, \"_is_gil_enabled\") else \"3.12 or older\")\n# → 0 then True on standard 3.14; 1 then False on 3.14t; None then '3.12 or older' on 3.12\n</code></pre>\n<p>Run the GIL demo from Q1 (4 threads of pure-Python arithmetic) on both builds to see the scaling difference.</p>"
+      },
+      {
+        "number": 3,
+        "name": "What it costs",
+        "claim": "single-thread speed and C-extension readiness",
+        "html": "<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Single-thread slowdown</td>\n<td>per-object locking, biased refcounting; smaller in 3.14 than 3.13</td>\n</tr>\n<tr>\n<td>C-extension ABI</td>\n<td>separate wheels (<code>cp313t</code>, <code>cp314t</code>); unsupported ones re-enable the GIL</td>\n</tr>\n<tr>\n<td>Hidden races</td>\n<td>code that assumed \"the GIL makes this safe\" (dict/list compound updates)</td>\n</tr>\n<tr>\n<td>Memory</td>\n<td>somewhat higher per object</td>\n</tr>\n<tr>\n<td>Tooling</td>\n<td>profilers and debuggers catching up</td>\n</tr>\n</tbody></table>\n<ul>\n<li><code>PYTHON_GIL=0</code> forces the GIL off even if an extension asks for it; only for testing.</li>\n</ul>"
+      },
+      {
         "number": 4,
         "name": "The deciding question",
         "claim": "is your bottleneck Python CPU, and is your dep tree green?",
         "html": "<ul>\n<li>I/O-bound: no benefit. CPU in C that already releases the GIL: little benefit.</li>\n<li>Check dependencies: NumPy, Pydantic-core, orjson and others have been shipping free-threaded wheels; many smaller extensions haven't. The community tracker (py-free-threading.github.io) lists status.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "standard build for the API, a pilot for batch work",
+        "html": "<ul>\n<li>API tier: standard build, asyncio.</li>\n<li>CPU-bound Python batch job (parsing, feature extraction): a pilot on 3.14t, compared against a process pool on throughput and memory, with a fallback to the standard build.</li>\n<li>Not for the GPU inference path: torch already runs heavy work outside the GIL.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -1930,10 +2134,28 @@
         "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>multiprocessing</th>\n<th>sub-interpreters</th>\n<th>threads (standard build)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Parallel Python bytecode</td>\n<td>✅</td>\n<td>✅ (per-interpreter GIL)</td>\n<td>❌</td>\n</tr>\n<tr>\n<td>Shared Python objects</td>\n<td>❌</td>\n<td>❌</td>\n<td>✅</td>\n</tr>\n<tr>\n<td>Startup</td>\n<td>slow (spawn re-imports)</td>\n<td>faster</td>\n<td>fastest</td>\n</tr>\n<tr>\n<td>Data passing</td>\n<td>pickle over pipes</td>\n<td>copy / queues (some types shareable)</td>\n<td>direct</td>\n</tr>\n<tr>\n<td>Crash isolation</td>\n<td>✅ process</td>\n<td>❌ one process</td>\n<td>❌</td>\n</tr>\n<tr>\n<td>C-extension support</td>\n<td>all</td>\n<td>limited, must opt in</td>\n<td>all</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Where sub-interpreters win",
+        "claim": "many short CPU tasks inside one process",
+        "html": "<ul>\n<li>Many short CPU-bound tasks where spawning or pickling costs more than the work.</li>\n<li>Isolation of untrusted-ish plugin code state without process overhead (not a security sandbox).</li>\n</ul>\n<p><strong>💻 Prove it — the 3.14 API:</strong></p>\n<pre><code class=\"language-python\">from concurrent import interpreters\nfrom concurrent.futures import InterpreterPoolExecutor\ninterp = interpreters.create()\nprint(interp.call(pow, 2, 10)); interp.close()\ndef square(n): return n * n\nwith InterpreterPoolExecutor(4) as ex:\n    print(list(ex.map(square, range(5))))\n# → 1024\n# → [0, 1, 4, 9, 16]\n</code></pre>\n<p>Checked on CPython 3.14. <code>square</code> runs in other interpreters: it's shared by pickling, like with processes.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where multiprocessing still wins",
+        "claim": "compatibility, isolation and maturity",
+        "html": "<ul>\n<li>Any dependency without multi-interpreter support: much of the scientific and ML stack at the time of writing.</li>\n<li>Crash isolation and memory limits per worker (cgroups, <code>max_tasks_per_child</code>).</li>\n<li>Mature tooling, debugging and years of production use.</li>\n</ul>"
+      },
+      {
         "number": 4,
         "name": "The deciding question",
         "claim": "do your extensions support it, and is spawn cost the bottleneck?",
         "html": "<ul>\n<li>If any import fails with \"module does not support loading in subinterpreters\", the answer is made.</li>\n<li>If tasks run for seconds, process spawn is noise and multiprocessing is fine.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "process pools today, sub-interpreters on the watch-list",
+        "html": "<ul>\n<li>Production CPU work: <code>ProcessPoolExecutor</code> or a worker service.</li>\n<li>Watch-list: sub-interpreters for pure-Python parsing tasks once the pipeline's dependencies support them; compare against free-threading, which shares objects instead of isolating them.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2009,10 +2231,28 @@
         "html": "<ul>\n<li>How stale can it be? Seconds, minutes, never?</li>\n<li>How expensive is a miss? A 2 ms DB read vs a 3 s LLM call.</li>\n<li>Is it per user or shared? Personal data in a shared cache needs tenant-scoped keys.</li>\n</ul>"
       },
       {
+        "number": 2,
+        "name": "The layers",
+        "claim": "each layer trades speed for a single view",
+        "html": "<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Latency</th>\n<th>Consistency</th>\n<th>Good for</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>in-process (<code>lru_cache</code>, <code>cachetools.TTLCache</code>)</td>\n<td>~ns–µs</td>\n<td>per worker</td>\n<td>config, tokenizers, immutable lookups</td>\n</tr>\n<tr>\n<td>shared (Redis/Memcached)</td>\n<td>~0.2–1 ms + serialisation</td>\n<td>one view</td>\n<td>sessions, counters, expensive shared results</td>\n</tr>\n<tr>\n<td>CDN / HTTP</td>\n<td>edge</td>\n<td>by headers</td>\n<td>public GETs</td>\n</tr>\n<tr>\n<td>provider-side prompt caching</td>\n<td>—</td>\n<td>provider-managed</td>\n<td>long repeated prompt prefixes</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it — one cache per process:</strong></p>\n<pre><code class=\"language-python\">import os\nfrom functools import lru_cache\nfrom concurrent.futures import ProcessPoolExecutor\n@lru_cache(maxsize=None)\ndef lookup(k): return k * 2\ndef worker(k):\n    lookup(k); return os.getpid(), lookup.cache_info().currsize\nif __name__ == \"__main__\":\n    with ProcessPoolExecutor(4) as ex:\n        last = dict(ex.map(worker, range(400), chunksize=1))\n    print(len(last), sorted(last.values()))\n# → 4 [36, 106, 128, 130]   (one run, CPython 3.12; the split changes every run)\n</code></pre>\n<p>Four processes, four separate caches that together hold the 400 keys. Which worker served a request decides whether it hits: there is no single cache.</p>"
+      },
+      {
         "number": 3,
         "name": "The hard part",
         "claim": "invalidation",
         "html": "<ul>\n<li><strong>TTL:</strong> simple, bounded staleness; jitter the TTL to avoid synchronised expiry.</li>\n<li><strong>Delete on write:</strong> write DB → delete key. Race: a reader can repopulate stale data between; short TTL as a safety net.</li>\n<li><strong>Versioned keys:</strong> <code>emb:{model_version}:{sha256(text)}</code> — changing the model changes every key; nothing to invalidate.</li>\n<li><strong>Stampede:</strong> a hot key expires and 500 requests recompute it. Fixes: a lock or single-flight per key, early probabilistic refresh, serve-stale-while-revalidate.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "outages, stampedes and unbounded growth",
+        "html": "<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Redis down</td>\n<td>fail open to the source with a timeout (~50 ms), not a hang</td>\n</tr>\n<tr>\n<td>Cache holds errors</td>\n<td>don't cache failures, or cache them briefly</td>\n</tr>\n<tr>\n<td>Unbounded in-process cache</td>\n<td>memory growth; always <code>maxsize</code></td>\n</tr>\n<tr>\n<td><code>@cache</code> on a method</td>\n<td>pins <code>self</code> forever (see <span class=\"vault-ref\" title=\"model-answers/01-PYTHON/43-cached-property-lru-cache\">cached-property-lru-cache</span>)</td>\n</tr>\n<tr>\n<td>Semantic cache false hit</td>\n<td>high threshold; include tenant, model and prompt version in the key</td>\n</tr>\n<tr>\n<td>Pickle in Redis</td>\n<td>code execution risk if the cache is writable by others; use JSON/msgpack</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "hit rate, latency and money saved",
+        "html": "<ul>\n<li>Hit rate per key family, latency of the cache itself, evictions, memory; for LLM caches, tokens and money saved, plus sampled audits of semantic hits.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2082,6 +2322,12 @@
     "spoken": "<p>\"The client sends an <code>Idempotency-Key</code> header, a UUID it generates once per logical operation and reuses on retries. The server's job is to execute the operation once per key and return the same response to every retry.</p>\n<p>The flow is claim, execute, record. First I atomically claim the key: insert a row with status 'in progress', protected by a unique constraint. If the insert succeeds, I'm the first; I run the operation and store the status code and response body against the key. If the insert conflicts, someone already has it: if it's completed, I replay the stored response; if it's still in progress, I return 409 or tell the client to retry shortly, rather than running it twice.</p>\n<p>The subtle part is atomicity with the side effect. If the side effect is in the same database, I write the key's final state in the same transaction as the effect, so a crash can't leave one without the other. If the side effect is external, like charging a card or calling an LLM that costs money, I pass the key through to the provider if it supports idempotency, and otherwise record intermediate state so recovery can check what actually happened.</p>\n<p>I also store a hash of the request body: the same key with a different body is a client bug, answered with 422. Keys expire after a TTL, typically 24 hours.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "retries are guaranteed, duplicates must not be",
+        "html": "<ul>\n<li>Clients retry on timeouts; the network can drop the response after the server committed.</li>\n<li>The operation has a side effect that must happen once: create an order, charge, send, start an expensive job.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Runtime model",
         "claim": "claim, execute, record, replay",
@@ -2092,6 +2338,18 @@
         "name": "The hard part",
         "claim": "the crash window",
         "html": "<table>\n<thead>\n<tr>\n<th>Order of operations</th>\n<th>Crash between steps leaves</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>effect → then store key</td>\n<td>effect done, no key → retry repeats the effect ❌</td>\n</tr>\n<tr>\n<td>store key \"done\" → then effect</td>\n<td>key says done, no effect → retry replays a lie ❌</td>\n</tr>\n<tr>\n<td>claim \"in progress\" → effect + \"done\" in one transaction</td>\n<td>either both or neither ✅</td>\n</tr>\n<tr>\n<td>external effect (payment, LLM job)</td>\n<td>pass the key to the provider, or record \"started\" and reconcile</td>\n</tr>\n</tbody></table>\n<ul>\n<li>A stuck \"in progress\" row (worker died) needs a lease: <code>locked_until</code>; after expiry another request may take over, checking the external system first.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "scope, replay and cleanup mistakes",
+        "html": "<ul>\n<li>Key scoped globally rather than per tenant → cross-tenant collisions.</li>\n<li>Replaying a stored 500 → should transient errors be replayed? Usually store only final outcomes (2xx and deterministic 4xx), release the key on 5xx.</li>\n<li>Body mismatch on the same key → 422, don't silently replay.</li>\n<li>Unbounded table → TTL cleanup job.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "replays, stuck claims and body mismatches",
+        "html": "<ul>\n<li>Replay rate (high means clients retry a lot: look at timeouts), 409 in-progress rate, stuck in-progress count, body-mismatch count.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2183,6 +2441,12 @@
         "name": "The deciding question",
         "claim": "what are you protecting?",
         "html": "<ul>\n<li>Your own capacity from clients → token bucket per tenant.</li>\n<li>A fragile upstream from you → leaky bucket or a concurrency semaphore on the outbound side.</li>\n<li>Fair share among tenants → per-tenant buckets plus a global cap.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "token buckets on requests and tokens, per tenant",
+        "html": "<ul>\n<li>Inbound: token buckets for requests/min and tokens/min per tenant, Redis + Lua, <code>429</code> with <code>Retry-After</code> and <code>X-RateLimit-*</code> headers.</li>\n<li>Outbound to the LLM provider: stay under the provider's RPM/TPM with a client-side bucket plus an <code>asyncio.Semaphore</code> on concurrency, and back off on the provider's 429s using their retry hints.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2268,6 +2532,18 @@
         "name": "The hard part",
         "claim": "the partial-failure policy",
         "html": "<pre><code class=\"language-python\">async def safe(name):\n    try: return {\"src\": name, \"ok\": True, \"data\": await call(name)}\n    except Exception as e: return {\"src\": name, \"ok\": False, \"error\": type(e).__name__}\nasync with asyncio.timeout(3):\n    async with asyncio.TaskGroup() as tg:\n        tasks = [tg.create_task(safe(n)) for n in providers]\nresults = [t.result() for t in tasks]\nok = [r for r in results if r[\"ok\"]]\nif len(ok) &lt; QUORUM: raise DegradedError(results)\n</code></pre>\n<ul>\n<li>Response carries <code>\"degraded\": [\"b\", \"d\"]</code> so the UI or the LLM prompt can say what's missing.</li>\n<li><code>safe</code> catches <code>Exception</code>, not <code>BaseException</code>, so cancellation still propagates.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "first-error-only and unchecked results",
+        "html": "<table>\n<thead>\n<tr>\n<th>Mistake</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>gather</code> default</td>\n<td>first error only; other tasks keep running</td>\n</tr>\n<tr>\n<td><code>gather(return_exceptions=True)</code> unchecked</td>\n<td>failures silently treated as results</td>\n</tr>\n<tr>\n<td><code>except Exception</code> around a <code>TaskGroup</code></td>\n<td>catches the whole group as one error; per-type handling lost; use <code>except*</code></td>\n</tr>\n<tr>\n<td>per-call timeouts only</td>\n<td>total latency = slowest call; set an overall budget</td>\n</tr>\n<tr>\n<td>no per-provider breaker</td>\n<td>a dead provider costs its timeout on every request</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "per-provider errors feeding the breakers",
+        "html": "<ul>\n<li>Error rate and latency per provider; degraded-response rate; quorum failures. Feed provider error rates into circuit breakers so a failing source is skipped quickly.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2359,6 +2635,12 @@
         "name": "The deciding question",
         "claim": "do I own the implementers, and do they share code?",
         "html": "<ul>\n<li>Don't own them, or want zero coupling → Protocol.</li>\n<li>Own them and share implementation, or need runtime enforcement → ABC.</li>\n<li>Both are fine together: a Protocol for the port, an ABC as an optional convenience base.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "Protocols for ports, ABCs for owned hierarchies",
+        "html": "<ul>\n<li>Ports and adapters: <code>Embedder</code>, <code>VectorStore</code>, <code>LLMClient</code>, <code>Reranker</code> as Protocols. Real clients and test fakes satisfy them without inheritance; swapping providers doesn't touch the core.</li>\n<li>Internal plugin hierarchies with shared lifecycle (pipeline steps, tool base class with auth and logging): ABC.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2441,10 +2723,28 @@
         "html": "<p><strong>💻 Prove it — the diff names the line that's growing:</strong></p>\n<pre><code class=\"language-python\">import tracemalloc\nCACHE = {}\ndef handle(i): CACHE[i] = bytes(1000)           # the \"leak\": unbounded module-level dict\ntracemalloc.start()\nfor i in range(1000): handle(i)\nbefore = tracemalloc.take_snapshot()\nfor i in range(1000, 11000): handle(i)\nafter = tracemalloc.take_snapshot()\ntop = after.compare_to(before, \"lineno\")[0]\nprint(top.traceback[0].lineno, f\"+{top.size_diff / 1e6:.0f} MB\")\n# → 3 +11 MB   (CPython 3.12)\n</code></pre>\n<p>Line 3 grew by ~11 MB between snapshots: 10,000 new 1 KB objects plus the dict's growth. (A constant like <code>\"x\" * 1000</code> would be folded into one shared object and hide the leak.) In a service, expose snapshot-and-diff behind an admin endpoint, or run it in a staging soak test.</p>"
       },
       {
+        "number": 3,
+        "name": "Rank the suspects",
+        "claim": "unbounded structures first, native memory last",
+        "html": "<ol>\n<li>Unbounded module-level dict/list (cache, registry, \"seen\" set).</li>\n<li><code>@cache</code> / <code>@lru_cache(maxsize=None)</code> with unbounded keys, or on methods (pins <code>self</code>).</li>\n<li>Closures or callbacks registered on a long-lived object and never removed.</li>\n<li>Tasks created and never awaited; exceptions stored with tracebacks holding frames.</li>\n<li>Native memory: a C extension, large NumPy arrays referenced from a cache, tokenizers.</li>\n<li>Fragmentation after very large requests (a 500 MB JSON body).</li>\n</ol>"
+      },
+      {
         "number": 4,
         "name": "Confirm",
         "claim": "who holds it",
         "html": "<ul>\n<li><code>objgraph.show_growth()</code> between requests: which type counts rise.</li>\n<li><code>objgraph.show_backrefs(obj)</code> or <code>gc.get_referrers(obj)</code>: the chain back to a module global.</li>\n<li><code>memray run</code> / <code>memray attach &lt;pid&gt;</code> for native allocations and a flame graph of who allocated what's still live.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "Fix",
+        "claim": "bound it, weaken it, or isolate it",
+        "html": "<table>\n<thead>\n<tr>\n<th>Cause</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>unbounded cache</td>\n<td><code>lru_cache(maxsize=N)</code>, <code>cachetools.TTLCache</code>, or Redis</td>\n</tr>\n<tr>\n<td>method cache pinning <code>self</code></td>\n<td>cache on a module-level function keyed by ID, or <code>cached_property</code></td>\n</tr>\n<tr>\n<td>listener registries</td>\n<td><code>weakref.WeakSet</code> / <code>WeakValueDictionary</code>, or explicit unsubscribe</td>\n</tr>\n<tr>\n<td>fragmentation</td>\n<td>stream large payloads; recycle workers (<code>--max-requests</code> with jitter)</td>\n</tr>\n<tr>\n<td>native leak</td>\n<td>upgrade/pin the library; isolate in a worker process</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Guard against the next one",
+        "claim": "memory metrics, a soak test, recycling as a net",
+        "html": "<ul>\n<li>Metrics: RSS per worker and Python-traced memory; alert on slope, not just the limit.</li>\n<li>A soak test in CI/staging: 30 minutes of replayed traffic, fail if memory grows beyond a threshold per 10k requests.</li>\n<li>Worker recycling as a safety net, not a fix.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2518,10 +2818,34 @@
     "spoken": "<p>\"It depends on the workload shape, so I start there and then load-test.</p>\n<p>For an async ASGI service, each worker process runs one event loop, and one loop can hold hundreds or thousands of concurrent I/O-bound requests. So workers are about using cores, not about concurrency: roughly one worker per core available to the container, sometimes fewer. In Kubernetes I often run one or two workers per pod and scale pods instead, because it keeps memory and CPU limits simple.</p>\n<p>For a sync framework, like Django or Flask under Gunicorn, concurrency comes from threads or workers, so I size with Little's law: in-flight requests equals throughput times latency. 200 requests a second at 100 milliseconds needs about 20 in flight, spread over workers times threads.</p>\n<p>Then memory, which is usually the real ceiling in AI backends. If each worker loads a 2 GB model or a big index, 8 workers is 16 GB. Options: preload the app before forking so read-only pages are shared copy-on-write, with <code>gc.freeze()</code> to keep them shared; or move the model to a separate inference service and keep API workers lean.</p>\n<p>Finally, I verify: load-test at the target concurrency, and watch CPU per worker, event-loop lag and p99. If CPU is low but latency is high, more workers won't help; something is blocking.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "quota, memory and the workload&#39;s shape",
+        "html": "<ul>\n<li>Cores and memory per pod (the cgroup limits, not the node's).</li>\n<li>Workload: async I/O-bound, sync I/O-bound, or CPU-bound; per-request memory; model size.</li>\n<li>Target throughput and p99.</li>\n</ul>"
+      },
+      {
+        "number": 2,
+        "name": "Runtime model",
+        "claim": "concurrency comes from the loop, threads or workers",
+        "html": "<table>\n<thead>\n<tr>\n<th>Stack</th>\n<th>Concurrency comes from</th>\n<th>Starting point</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Uvicorn/Gunicorn + async FastAPI</td>\n<td>the event loop</td>\n<td>workers ≈ cores (per pod: 1–4)</td>\n</tr>\n<tr>\n<td>FastAPI <code>def</code> handlers</td>\n<td>AnyIO threadpool (40 default)</td>\n<td>workers ≈ cores; raise threadpool if I/O-bound</td>\n</tr>\n<tr>\n<td>Gunicorn sync (Flask/Django)</td>\n<td>workers × threads</td>\n<td>Little's law; <code>2 × cores + 1</code> only as a first guess</td>\n</tr>\n<tr>\n<td>Model-in-process</td>\n<td>memory</td>\n<td>workers = memory budget ÷ per-worker footprint</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it — Little's law for in-flight requests:</strong></p>\n<pre><code class=\"language-python\">def in_flight(rps, latency_s): return rps * latency_s\nfor rps, lat in [(200, 0.1), (50, 2.0), (500, 0.02)]:\n    print(rps, lat, in_flight(rps, lat))\n# → 200 0.1 20.0\n# → 50 2.0 100.0\n# → 500 0.02 10.0\n</code></pre>\n<p>50 rps of 2-second LLM calls needs 100 concurrent requests: trivial for one event loop, 100 threads for a sync stack.</p>"
+      },
+      {
         "number": 3,
         "name": "The hard part",
         "claim": "memory per worker",
         "html": "<ul>\n<li><code>gunicorn --preload</code>: import the app (and load the model) in the master, then fork. Read-only pages are shared until touched.</li>\n<li>Refcount updates touch pages, so \"read-only\" Python objects get copied over time; <code>gc.freeze()</code> after loading reduces it.</li>\n<li>GPU models don't share across forked processes safely; one process per GPU, or a dedicated inference server (vLLM, Triton, TorchServe).</li>\n<li>CPU count in containers: <code>os.cpu_count()</code> returns the host's cores; use the cgroup quota (<code>os.process_cpu_count()</code> 3.13+ respects affinity, not quota).</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "each symptom points at a different ceiling",
+        "html": "<table>\n<thead>\n<tr>\n<th>Symptom</th>\n<th>Cause</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>p99 high, CPU low, more workers barely help</td>\n<td>blocking call on the loop</td>\n</tr>\n<tr>\n<td>OOM kills after scaling workers</td>\n<td>workers × model size</td>\n</tr>\n<tr>\n<td>DB \"too many connections\" after scaling</td>\n<td>pool × workers × pods</td>\n</tr>\n<tr>\n<td>CPU throttling, latency spikes</td>\n<td>more workers than the CPU quota</td>\n</tr>\n<tr>\n<td>all workers restart together</td>\n<td><code>max_requests</code> without jitter</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "throttling, RSS, loop lag and pool wait",
+        "html": "<ul>\n<li>CPU per worker vs quota (throttling), RSS per worker, event-loop lag, in-flight requests, threadpool saturation, DB pool wait. Load-test after every sizing change.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2596,10 +2920,40 @@
     "spoken": "<p>\"Async lets one worker accept hundreds of concurrent requests, but the connection pool might have 10 connections. Everything beyond that queues at checkout, waiting for a connection. So the symptom is latency climbing under load while the database itself looks idle: low CPU, fast queries. It's pool wait, not query time.</p>\n<p>Two other things go wrong. The pool is per process, so real database connections equal pool size times workers times pods, plus overflow. Scale from 4 pods to 12 and you may hit Postgres's <code>max_connections</code>. And requests hold connections too long: a transaction opened at the start of the request stays open while the handler awaits an LLM call for three seconds, so the connection is idle but unavailable.</p>\n<p>To confirm, I measure checkout wait time separately from query time. SQLAlchemy exposes pool status, and tracing spans for 'acquire' vs 'execute' make it obvious.</p>\n<p>The fixes, in order: keep transactions narrow — never hold a connection across an external call; set a checkout timeout so overload fails fast with a clear error instead of hanging; bound concurrency with a semaphore matched to the pool; and put PgBouncer in transaction mode in front of Postgres when there are many pods. Growing the pool is last, because the database has a hard limit.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Read the symptom",
+        "claim": "slow requests, idle database",
+        "html": "<ul>\n<li>p99 rises with concurrency; DB CPU and query latency flat.</li>\n<li>Errors like <code>QueuePool limit of size 10 overflow 10 reached, connection timed out</code> or <code>TimeoutError</code> on acquire.</li>\n<li>After scaling out: <code>FATAL: sorry, too many clients already</code>.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Measure before guessing",
         "claim": "checkout wait vs query time",
         "html": "<p><strong>💻 Prove it — 50 concurrent requests, a pool of 5 (simulated with a semaphore):</strong></p>\n<pre><code class=\"language-python\">import asyncio, time\npool = asyncio.Semaphore(5)                     # stands in for a 5-connection pool\nasync def request():\n    t0 = time.perf_counter()\n    async with pool:                            # checkout\n        wait = time.perf_counter() - t0\n        await asyncio.sleep(0.1)                # a 100 ms query\n    return wait\nasync def main():\n    waits = await asyncio.gather(*(request() for _ in range(50)))\n    print(f\"max wait {max(waits):.1f}s for a 0.1s query\")\nasyncio.run(main())\n# → max wait 0.9s for a 0.1s query\n</code></pre>\n<p>The last requests wait 9 rounds of 0.1 s. The DB saw only 5 fast queries at a time.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Rank the suspects",
+        "claim": "connections held across slow awaits come first",
+        "html": "<ol>\n<li>Connection held across an <code>await</code> to something slow (LLM, HTTP, S3).</li>\n<li>Concurrency ≫ pool size with no bound.</li>\n<li>Pool × workers × pods &gt; <code>max_connections</code>.</li>\n<li>Leaked connections: sessions not closed on error paths (no context manager).</li>\n<li>Long queries or lock waits (then the DB does show it).</li>\n</ol>"
+      },
+      {
+        "number": 4,
+        "name": "Confirm",
+        "claim": "separate checkout wait from query time",
+        "html": "<ul>\n<li><code>engine.pool.status()</code>; OpenTelemetry spans for connect/acquire; asyncpg <code>pool.get_size()</code> / <code>get_idle_size()</code>.</li>\n<li>Postgres: <code>pg_stat_activity</code> shows many <code>idle in transaction</code> sessions → connections held across awaits.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "Fix",
+        "claim": "narrow transactions, then timeouts and pooling",
+        "html": "<pre><code class=\"language-python\">async def handle(q):\n    async with Session() as s:                  # short: read what we need\n        ctx = await load_context(s, q)\n    answer = await llm.generate(ctx)            # no connection held here\n    async with Session.begin() as s:            # short: write the result\n        await save(s, q, answer)\n</code></pre>\n<ul>\n<li><code>pool_timeout</code> (SQLAlchemy) / <code>timeout</code> on acquire → fail fast with 503.</li>\n<li>A semaphore around DB work sized to the pool.</li>\n<li>PgBouncer (transaction pooling) when pods × pools gets large; with asyncpg, disable its prepared-statement cache or use a PgBouncer version that supports prepared statements.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "Guard against the next one",
+        "claim": "pool metrics and a capacity formula",
+        "html": "<ul>\n<li>Metrics: pool in-use, waiters, checkout wait p99; Postgres connection count vs <code>max_connections</code>.</li>\n<li>A capacity formula in the deploy config: <code>pods × workers × (pool + overflow) &lt; max_connections − reserve</code>.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2669,6 +3023,12 @@
     "spoken": "<p>\"For one-way token streaming I use Server-Sent Events: plain HTTP, <code>text/event-stream</code>, one <code>data:</code> line per event, and the browser's <code>EventSource</code> or a fetch reader handles it. WebSockets only if I need two-way messaging, like interrupting mid-generation.</p>\n<p>In FastAPI, it's a <code>StreamingResponse</code> over an async generator that reads from the provider's stream and yields formatted events.</p>\n<p>What actually bites is everything around it. First, buffering: nginx, some load balancers, and compression middleware buffer the response, so nothing appears until the end. I send <code>X-Accel-Buffering: no</code>, disable gzip for that route, and check idle timeouts on the load balancer, since long generations can exceed them — heartbeat comments every 15 seconds keep the connection alive.</p>\n<p>Second, disconnects. If the user closes the tab, my generator must stop and the upstream call must be cancelled, or I keep paying for tokens nobody reads. I check for disconnect and make sure cancellation closes the provider stream in a <code>finally</code>.</p>\n<p>Third, errors mid-stream. Headers and a 200 are already sent, so I can't return a 500. I send an in-band error event and close, and the client handles it.</p>\n<p>Fourth, backpressure: a slow client shouldn't make me buffer unbounded tokens. With an async generator, the server only pulls the next token when the previous one was sent, so it's naturally bounded — as long as I don't read the provider stream into a queue with no limit.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "TTFT matters and every token costs",
+        "html": "<ul>\n<li>Time to first token matters more than total time.</li>\n<li>Streams last seconds to minutes; proxies and load balancers sit in between.</li>\n<li>Every generated token costs money.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Runtime model",
         "claim": "async generator → SSE",
@@ -2679,6 +3039,18 @@
         "name": "The hard part",
         "claim": "disconnects and backpressure",
         "html": "<ul>\n<li>On disconnect, Starlette stops iterating the response and the task is cancelled; the <code>finally</code> in the generator must close the provider's HTTP stream (<code>async with client.stream(...)</code> does this).</li>\n<li>For long pauses between tokens (tool calls), also poll <code>await request.is_disconnected()</code> so you notice without trying to send.</li>\n<li>Backpressure: <code>async for</code> pulls one token at a time. If you decouple with a queue (e.g. to fan out to logging), bound it: <code>asyncio.Queue(maxsize=100)</code>.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "buffering, cut-offs, cost leaks and duplicates",
+        "html": "<table>\n<thead>\n<tr>\n<th>Symptom</th>\n<th>Cause</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>everything arrives at the end</td>\n<td>proxy buffering / gzip</td>\n<td><code>X-Accel-Buffering: no</code>, no compression on SSE</td>\n</tr>\n<tr>\n<td>stream cut at 60 s</td>\n<td>LB/proxy idle timeout</td>\n<td>heartbeats (<code>: ping\\n\\n</code>), raise timeouts</td>\n</tr>\n<tr>\n<td>cost continues after tab close</td>\n<td>upstream not cancelled</td>\n<td>close provider stream in <code>finally</code></td>\n</tr>\n<tr>\n<td>client shows a broken half answer</td>\n<td>error after headers sent</td>\n<td><code>event: error</code> in-band, client renders it</td>\n</tr>\n<tr>\n<td>duplicate generations on reconnect</td>\n<td><code>EventSource</code> auto-reconnects</td>\n<td>event IDs + <code>Last-Event-ID</code>, or disable auto-reconnect for generations</td>\n</tr>\n<tr>\n<td>worker memory grows with slow clients</td>\n<td>unbounded internal queue</td>\n<td>bound it, or pull directly</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "TTFT, aborts and tokens after disconnect",
+        "html": "<ul>\n<li>TTFT and inter-token latency (p50/p99), stream completion vs client-abort rate, tokens generated after disconnect (should be near zero), active streams per worker.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2753,10 +3125,22 @@
     "spoken": "<p>\"First I pin down what 'slow' means: which endpoint or job, which percentile, since when, and under what load. A p99 regression since yesterday's deploy is a different problem from a batch job that was always slow.</p>\n<p>Then I split wall-clock time into CPU versus waiting. If a request takes 2 seconds and uses 50 milliseconds of CPU, profiling Python code won't help; the time is in the database, a downstream call or a lock. Distributed traces answer that quickly: which span is long.</p>\n<p>If it's CPU, I pick the profiler for the situation. In production, <code>py-spy</code>: a sampling profiler that attaches to a running process by PID, no restart, low overhead, and it can produce a flame graph. <code>py-spy dump</code> shows where a hung process is stuck right now. Locally, <code>cProfile</code> gives exact call counts and cumulative times, which I view with snakeviz. For line-level detail, <code>line_profiler</code> or Scalene, which also separates Python time from native time and shows memory.</p>\n<p>Async services need care: a stalled event loop shows as idle CPU, so I look at loop lag and task-level traces, not just CPU profiles.</p>\n<p>Then I fix only what's at the top of the profile — usually an algorithm, an N+1 query, or repeated work that can be cached or batched — re-measure, and stop when the latency budget is met.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Read the symptom",
+        "claim": "which percentile moved, and since when",
+        "html": "<ul>\n<li>Which percentile moved (p50 = everything slower; p99 only = contention, GC, a slow dependency, a blocked loop)?</li>\n<li>Correlates with deploys, traffic, data size, time of day?</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Measure before guessing",
         "claim": "wall vs CPU",
         "html": "<p><strong>💻 Prove it — the two clocks tell you which kind of slow:</strong></p>\n<pre><code class=\"language-python\">import time\ndef waits(): time.sleep(0.3)\ndef computes(): sum(i * i for i in range(3_000_000))\nfor fn in (waits, computes):\n    w, c = time.perf_counter(), time.process_time()\n    fn()\n    print(fn.__name__, f\"wall {time.perf_counter() - w:.2f}s\", f\"cpu {time.process_time() - c:.2f}s\")\n# → waits wall 0.31s cpu 0.00s\n# → computes wall 0.11s cpu 0.11s      (CPython 3.12, M-series Mac)\n</code></pre>\n<p>Wall ≫ CPU → waiting: look at traces, not profilers. Wall ≈ CPU → profile.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Rank the suspects",
+        "claim": "waiting beats CPU as the usual cause",
+        "html": "<table>\n<thead>\n<tr>\n<th>Kind</th>\n<th>Typical cause in an AI backend</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>waiting</td>\n<td>N+1 queries, sequential awaits that could be concurrent, a slow provider, pool wait</td>\n</tr>\n<tr>\n<td>CPU (Python)</td>\n<td>JSON (de)serialisation of big payloads, per-item loops, regex, Pydantic on huge lists</td>\n</tr>\n<tr>\n<td>CPU (native)</td>\n<td>tokenisation or NumPy on unbatched inputs</td>\n</tr>\n<tr>\n<td>contention</td>\n<td>GIL with a CPU thread; locks; loop blocked</td>\n</tr>\n<tr>\n<td>memory</td>\n<td>GC pauses with millions of objects; swapping</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 4,
@@ -2769,6 +3153,12 @@
         "name": "Fix",
         "claim": "top of the profile only",
         "html": "<ul>\n<li>Algorithm or query shape first (O(n²) → O(n), N+1 → one query).</li>\n<li>Concurrency for independent waits (<code>TaskGroup</code>), batching for per-item model calls.</li>\n<li>Caching for repeated pure work; faster libraries (<code>orjson</code>) for hot serialisation.</li>\n<li>Re-measure after each change. Stop at the budget.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "Guard against the next one",
+        "claim": "SLOs, benchmarks and a continuous profiler",
+        "html": "<ul>\n<li>Per-endpoint latency SLOs with alerts; benchmark tests (<code>pytest-benchmark</code>) on known hot paths in CI; a continuous profiler (Pyroscope / Grafana) for production flame graphs over time.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2848,10 +3238,28 @@
         "html": "<table>\n<thead>\n<tr>\n<th>Signal</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>longer than request budget</td>\n<td>ingesting and embedding a large document</td>\n</tr>\n<tr>\n<td>must survive crashes, retryable</td>\n<td>sending emails, billing events</td>\n</tr>\n<tr>\n<td>spiky load</td>\n<td>batch uploads at 9 a.m.</td>\n</tr>\n<tr>\n<td>different resources</td>\n<td>GPU embedding, OCR</td>\n</tr>\n<tr>\n<td>not a fit</td>\n<td>a 50 ms step the user waits for: do it inline or with a process pool</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Runtime model",
+        "claim": "enqueue, return a job ID, ack after the effect",
+        "html": "<figure><div class=\"mermaid\">flowchart LR\n  API --&gt;|enqueue job_id| Q[(queue)]\n  API --&gt;|201 job_id| C[client]\n  Q --&gt; W1[worker] &amp; W2[worker]\n  W1 --&gt;|upsert result, mark done| DB[(DB)]\n  W1 --&gt;|ack| Q\n  Q --&gt;|max retries exceeded| DLQ[(dead-letter)]\n  C --&gt;|GET /jobs/id| API --&gt; DB\n</div></figure>"
+      },
+      {
         "number": 3,
         "name": "The hard part",
         "claim": "at-least-once means duplicates",
         "html": "<p><strong>💻 Prove it — the same message delivered twice, processed once:</strong></p>\n<pre><code class=\"language-python\">import sqlite3\ndb = sqlite3.connect(\":memory:\")\ndb.execute(\"CREATE TABLE processed (msg_id TEXT PRIMARY KEY)\")\ndb.execute(\"CREATE TABLE chunks (doc TEXT, n INT)\")\ndef consume(msg_id, doc):\n    with db:                                        # one transaction\n        if db.execute(\"INSERT OR IGNORE INTO processed VALUES (?)\", (msg_id,)).rowcount == 0:\n            return \"duplicate, skipped\"\n        db.execute(\"INSERT INTO chunks VALUES (?, 42)\", (doc,))\n        return \"processed\"\nprint(consume(\"m1\", \"a.pdf\"), \"|\", consume(\"m1\", \"a.pdf\"))\nprint(db.execute(\"SELECT COUNT(*) FROM chunks\").fetchone())\n# → processed | duplicate, skipped\n# → (1,)\n</code></pre>\n<p>The dedupe record and the effect commit together, so a crash between them can't leave one without the other.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "every failure needs a guard",
+        "html": "<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>duplicate processing</td>\n<td>idempotent consumer (above), upserts</td>\n</tr>\n<tr>\n<td>visibility timeout &lt; processing time</td>\n<td>extend timeout / heartbeat; size from p99 job time</td>\n</tr>\n<tr>\n<td>poison message</td>\n<td>max retries + exponential backoff + DLQ + alert</td>\n</tr>\n<tr>\n<td>lost work on crash with early ack</td>\n<td>ack after completion (<code>acks_late</code>)</td>\n</tr>\n<tr>\n<td>huge payloads in the message</td>\n<td>pass a reference (S3 key), not the document</td>\n</tr>\n<tr>\n<td>queue grows forever</td>\n<td>autoscale workers on queue depth; backpressure at the API (429)</td>\n</tr>\n<tr>\n<td>pickle serializer in Celery</td>\n<td>code execution risk; use JSON</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "depth, oldest message, retries and DLQ size",
+        "html": "<ul>\n<li>Queue depth and age of the oldest message (the real latency), processing time p99, retry rate, DLQ size, duplicate-skip rate.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -2921,6 +3329,12 @@
     "spoken": "<p>\"I use OpenTelemetry for distributed tracing, and I make sure one trace ID follows the request everywhere.</p>\n<p>At the edge, the first service starts a trace, or continues one if the client sent a <code>traceparent</code> header, which is the W3C standard. Every outbound call — HTTP, gRPC, a message on a queue — carries that header, and the receiving service continues the same trace. Auto-instrumentation for FastAPI, httpx, SQLAlchemy and Redis does most of this, and each hop becomes a span with timing and attributes, so I can see causality and where the time went, not just a pile of logs.</p>\n<p>Inside a Python service, the current trace context lives in <code>contextvars</code>. That's important under asyncio: each Task gets a copy of the context when it's created, so the trace follows <code>await</code>s correctly. Thread-locals don't — they'd be shared across all coroutines on the loop thread.</p>\n<p>Logs are structured JSON with <code>trace_id</code> and <code>span_id</code> as fields, injected automatically, so I can jump from a trace to its logs.</p>\n<p>The two gaps to close by hand: queues, where I put the trace context into message headers and extract it in the worker; and thread pools, where <code>run_in_executor</code> doesn't copy context, but <code>asyncio.to_thread</code> does.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "one ID, per-hop timing, linked logs",
+        "html": "<ul>\n<li>Several services, possibly several languages; sync HTTP, async calls and queues.</li>\n<li>Need: one ID to search by, per-hop timing, and logs linked to the trace.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Runtime model",
         "claim": "propagate, continue, record",
@@ -2931,6 +3345,18 @@
         "name": "The hard part",
         "claim": "context across boundaries",
         "html": "<p><strong>💻 Prove it — contextvars follow tasks; plain executors don't:</strong></p>\n<pre><code class=\"language-python\">import asyncio, contextvars\ntrace_id = contextvars.ContextVar(\"trace_id\", default=\"-\")\ndef read(): return trace_id.get()\nasync def aread(): return trace_id.get()\nasync def handler(tid):\n    trace_id.set(tid)\n    loop = asyncio.get_running_loop()\n    a = await asyncio.to_thread(read)                  # copies the context\n    b = await loop.run_in_executor(None, read)         # does not\n    c = await asyncio.create_task(aread())            # tasks copy it\n    return tid, a, b, c\nasync def main(): print(await asyncio.gather(handler(\"t1\"), handler(\"t2\")))\nasyncio.run(main())\n# → [('t1', 't1', '-', 't1'), ('t2', 't2', '-', 't2')]\n</code></pre>\n<p>Two concurrent requests keep separate IDs; the bare executor loses it.</p>\n<table>\n<thead>\n<tr>\n<th>Boundary</th>\n<th>What to do</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>HTTP out</td>\n<td>auto-instrument httpx/requests (injects <code>traceparent</code>)</td>\n</tr>\n<tr>\n<td>queue</td>\n<td>inject context into message headers; extract in the consumer and start a linked span</td>\n</tr>\n<tr>\n<td>thread pool</td>\n<td><code>asyncio.to_thread</code> or <code>contextvars.copy_context().run</code></td>\n</tr>\n<tr>\n<td>fire-and-forget tasks</td>\n<td>created inside the request, so they inherit the context; make sure spans end</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "the queue hop and the logs break first",
+        "html": "<ul>\n<li>Broken traces at the queue: the worker starts a new trace. Fix with header propagation.</li>\n<li>Log lines without trace IDs: logging not wired to OTel (<code>LoggingInstrumentor</code> or a filter reading the current span).</li>\n<li>Cost: tracing every request at high volume; use head sampling plus tail-based sampling to keep errors and slow traces.</li>\n<li>High-cardinality attributes (full prompts) blowing up storage; store sizes and hashes, sample content.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "complete traces and per-service RED metrics",
+        "html": "<ul>\n<li>Span-derived RED metrics per service (rate, errors, duration); percentage of traces that are complete end to end; for AI calls, span attributes for model, tokens and cost (OTel GenAI semantic conventions).</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3010,10 +3436,28 @@
         "html": "<table>\n<thead>\n<tr>\n<th>Property</th>\n<th>Design consequence</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>slow (1–30 s)</td>\n<td>async end to end; streaming; generous but bounded timeouts</td>\n</tr>\n<tr>\n<td>streams</td>\n<td>SSE, TTFT as a first-class metric, disconnect handling</td>\n</tr>\n<tr>\n<td>expensive per token</td>\n<td>token budgets, rate limits by tokens, caching, cost attribution</td>\n</tr>\n<tr>\n<td>flaky / rate-limited</td>\n<td>retries with jitter, breaker, fallback model</td>\n</tr>\n<tr>\n<td>untrusted output</td>\n<td>schema validation, allow-listed actions</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Runtime model",
+        "claim": "edge, service logic and a gateway that owns reliability",
+        "html": "<figure><div class=\"mermaid\">flowchart LR\n  C[Client] --&gt; E[Edge: validate · auth · rate limit · idempotency]\n  E --&gt; S[Service logic: prompt build · token budget · cache]\n  S --&gt; G[LLM gateway: timeout · retry · breaker · fallback]\n  G --&gt; P1[Primary model]\n  G -.-&gt;|breaker open| P2[Fallback model]\n  G --&gt;|stream| S --&gt;|SSE| C\n  S --&gt; O[(Metrics · traces · cost ledger)]\n</div></figure>\n<ul>\n<li>One <code>httpx.AsyncClient</code> created in the lifespan, closed at shutdown.</li>\n<li><code>asyncio.Semaphore</code> caps concurrent calls per provider to stay under its limits.</li>\n</ul>"
+      },
+      {
         "number": 3,
         "name": "The hard part",
         "claim": "reliability without multiplying cost",
         "html": "<p><strong>💻 Prove it — backoff with full jitter, bounded:</strong></p>\n<pre><code class=\"language-python\">import random\nrng = random.Random(0)                     # seeded for a repeatable demo\ndef backoff(attempt, base=0.5, cap=8.0):\n    return rng.uniform(0, min(cap, base * 2 ** attempt))\nprint([round(backoff(a), 2) for a in range(5)])\n# → [0.42, 0.76, 0.84, 1.04, 4.09]\n</code></pre>\n<p>Delays grow but are randomised, so retries from many clients don't arrive in synchronised waves.</p>\n<ul>\n<li>Retry only idempotent-safe failures before any tokens were streamed; once streaming started, don't silently retry (the user saw partial output).</li>\n<li>Breaker: open after N failures or error rate &gt; X% in a window; half-open probes; fallback when open.</li>\n<li>Budget: <code>count_tokens(prompt) + max_tokens ≤ tenant remaining</code>; reserve then settle.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "each LLM failure mode has a guard",
+        "html": "<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>provider 429 storm</td>\n<td>backoff honouring <code>Retry-After</code>, client-side rate limiter, fallback</td>\n</tr>\n<tr>\n<td>provider hangs</td>\n<td>TTFT timeout + total timeout; breaker</td>\n</tr>\n<tr>\n<td>retry amplification</td>\n<td>bounded attempts, retry budget per request</td>\n</tr>\n<tr>\n<td>prompt too long</td>\n<td>count tokens first; truncate context by priority, not blindly</td>\n</tr>\n<tr>\n<td>client disconnects</td>\n<td>cancel upstream</td>\n</tr>\n<tr>\n<td>model output invalid</td>\n<td>validation + bounded repair</td>\n</tr>\n<tr>\n<td>cost spike from one tenant</td>\n<td>per-tenant token limits and alerts</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "TTFT, tokens, cost, fallbacks — by version",
+        "html": "<ul>\n<li>TTFT p50/p99, total latency, inter-token latency; tokens in/out; cost per request, per tenant, per feature; error and 429 rate per provider; breaker state; fallback rate; cache hit rate; validation failure rate — all by model and prompt version.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3107,6 +3551,18 @@
         "name": "The hard part",
         "claim": "batching",
         "html": "<p><strong>💻 Prove it — a micro-batcher: many concurrent callers, few model calls:</strong></p>\n<pre><code class=\"language-python\">import asyncio\ncalls = []\ndef model(batch): calls.append(len(batch)); return [len(t) for t in batch]\nclass Batcher:\n    def __init__(self, max_size=16, max_wait=0.01): self.q, self.n, self.w = asyncio.Queue(), max_size, max_wait\n    async def embed(self, text):\n        fut = asyncio.get_running_loop().create_future(); await self.q.put((text, fut)); return await fut\n    async def run(self):\n        while True:\n            items = [await self.q.get()]\n            try:\n                async with asyncio.timeout(self.w):\n                    while len(items) &lt; self.n: items.append(await self.q.get())\n            except TimeoutError: pass\n            for (_, f), r in zip(items, model([t for t, _ in items])): f.set_result(r)\nasync def main():\n    b = Batcher(); asyncio.create_task(b.run())\n    await asyncio.gather(*(b.embed(\"x\" * i) for i in range(40))); print(calls)\nasyncio.run(main())\n# → [16, 16, 8]\n</code></pre>\n<p>40 requests became 3 model calls. In production the model call runs in a thread or on the GPU so the loop stays free.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "one process for both shapes is the root mistake",
+        "html": "<table>\n<thead>\n<tr>\n<th>Mistake</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>inference in the API process</td>\n<td>loop blocked, p99 spikes for LLM traffic too</td>\n</tr>\n<tr>\n<td>model per API worker</td>\n<td>memory × workers; OOM when scaling</td>\n</tr>\n<tr>\n<td>per-item embedding calls</td>\n<td>GPU underused, network overhead dominates</td>\n</tr>\n<tr>\n<td>unbounded queue</td>\n<td>ingestion backlog grows silently; stale results</td>\n</tr>\n<tr>\n<td>no timeout on online rerank</td>\n<td>a slow GPU stalls user requests; fall back to un-reranked results</td>\n</tr>\n<tr>\n<td>model version mismatch</td>\n<td>query and document embeddings from different models; silent quality drop</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "batch sizes, GPU use, and an unaffected API",
+        "html": "<ul>\n<li>Inference: batch size distribution, queue wait vs compute time, GPU utilisation and memory, p99 per model.</li>\n<li>Ingestion: queue depth, oldest message age, documents per minute.</li>\n<li>API: loop lag and p99, unaffected by ingestion bursts (the point of the split).</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3180,10 +3636,34 @@
     "spoken": "<p>\"The policy has four parts.</p>\n<p>Declare direct dependencies with ranges in <code>pyproject.toml</code>: only what the code imports, with sensible lower bounds. Then resolve them into a lockfile that pins every package, direct and transitive, with hashes, and commit it. Today I'd use <code>uv</code>, which does this quickly with <code>uv lock</code> and <code>uv sync</code>; pip-tools or Poetry work the same way. The lockfile is the artifact CI and Docker install from, so every environment is identical.</p>\n<p>Applications pin everything; libraries don't. A library publishes ranges, because pinning would make it impossible to install alongside other packages.</p>\n<p>One virtual environment per project, created from the lock, never a shared global environment, and the Python version itself is pinned too.</p>\n<p>Then an upgrade path, or the lock rots: Dependabot or Renovate opens PRs weekly, CI runs the test suite against them, and security advisories from <code>pip-audit</code> get a fast lane.</p>\n<p>The hard part in AI projects is the ML stack: torch builds are tied to CUDA versions and come from a separate index, wheels differ by platform, and some packages have conflicting pins. I pin torch and CUDA explicitly, configure the index per platform in the lock tool, and build the image in CI from the lock so the GPU image is reproducible.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "many machines, one reproducible build",
+        "html": "<ul>\n<li>Many developers, CI, Docker images, maybe Mac laptops and Linux GPU servers.</li>\n<li>Reproducible builds; quick, safe upgrades; security patches.</li>\n</ul>"
+      },
+      {
+        "number": 2,
+        "name": "The policy",
+        "claim": "ranges declared, everything locked, installs from the lock",
+        "html": "<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>How</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>declare direct deps with ranges</td>\n<td><code>pyproject.toml</code> <code>[project.dependencies]</code>; dev deps in groups</td>\n</tr>\n<tr>\n<td>lock everything, with hashes</td>\n<td><code>uv lock</code> → <code>uv.lock</code> (or pip-compile <code>--generate-hashes</code>)</td>\n</tr>\n<tr>\n<td>install only from the lock</td>\n<td><code>uv sync --frozen</code> in CI and Docker</td>\n</tr>\n<tr>\n<td>pin the interpreter</td>\n<td><code>requires-python</code>, <code>.python-version</code></td>\n</tr>\n<tr>\n<td>apps pin, libraries range</td>\n<td>no upper-pinning in published libraries</td>\n</tr>\n<tr>\n<td>scheduled upgrades</td>\n<td>Renovate/Dependabot weekly; CI must pass</td>\n</tr>\n<tr>\n<td>security</td>\n<td><code>pip-audit</code> in CI; fast path for CVEs</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it — why <code>pip freeze</code> isn't a lockfile:</strong></p>\n<pre><code class=\"language-python\">from importlib.metadata import distribution\nreq = distribution(\"requests\").requires or []\nprint([r.split(\";\")[0].strip() for r in req][:4])\n# → ['charset_normalizer&lt;4,&gt;=2', 'idna&lt;4,&gt;=2.5', 'urllib3&lt;3,&gt;=1.26', 'certifi&gt;=2023.5.7']   (requests 2.34.2)\n</code></pre>\n<p><code>pip freeze</code> prints all of these as if you chose them. It can't tell your direct dependency from what it pulled in, so removing <code>requests</code> later leaves orphans pinned forever, and it has no hashes or platform markers.</p>"
+      },
+      {
         "number": 3,
         "name": "The hard part",
         "claim": "the AI stack",
         "html": "<ul>\n<li><strong>torch + CUDA:</strong> different wheels per CUDA version from <code>download.pytorch.org</code>; configure per-platform indexes (uv supports <code>[tool.uv.sources]</code> with markers) so Mac gets CPU wheels and Linux gets CUDA wheels.</li>\n<li><strong>Big transitive trees:</strong> transformers, langchain-style frameworks pull in many packages; keep direct deps minimal, prefer provider SDKs you actually use.</li>\n<li><strong>Native builds:</strong> avoid sdists that compile at install; prefer wheels; build in CI once.</li>\n<li><strong>Base images:</strong> pin the image digest as well as the Python packages.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "no lock, no cadence, no hashes",
+        "html": "<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Cause</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>\"works on my machine\"</td>\n<td>no lock, or installing with ranges</td>\n</tr>\n<tr>\n<td>surprise break on deploy</td>\n<td>a transitive dependency released a breaking change</td>\n</tr>\n<tr>\n<td>lock rot, 2 years behind</td>\n<td>no upgrade cadence; big-bang upgrade fails</td>\n</tr>\n<tr>\n<td>supply-chain attack</td>\n<td>unpinned installs from a public index without hashes</td>\n</tr>\n<tr>\n<td>GPU image differs from dev</td>\n<td>torch index not pinned per platform</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "staleness, advisories and reproducible images",
+        "html": "<ul>\n<li>Age of the oldest dependency behind latest; open security advisories; upgrade PR merge time; image build reproducibility (same lock → same digest).</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3253,6 +3733,12 @@
     "spoken": "<p>\"On top of the usual request rate, errors and latency, four groups of things.</p>\n<p>First, latency shape. For streaming, total latency hides what users feel, so I measure time to first token and inter-token latency separately, as histograms, because averages hide the tail.</p>\n<p>Second, tokens and cost. Input and output tokens per request, converted to cost, attributed per tenant, feature and model. That's how you find the feature that quietly costs ten times the others, or a tenant sending 100k-token prompts. Cache hit rates belong here too, measured in money saved.</p>\n<p>Third, quality signals, which CRUD services don't have. For retrieval: empty-result rate, top-k similarity scores, how much reranking reorders things. For generation: structured-output validation failures, refusal and guardrail trigger rates, and user feedback like thumbs down or regenerate clicks. Offline evals run on a sample of production traffic.</p>\n<p>Fourth, versions. Every span and metric carries the model name, prompt version and retrieval config. Without that, when quality drops after a change, you can't tell which change did it.</p>\n<p>I emit all of this as OpenTelemetry spans and metrics, following the GenAI semantic conventions, with prompt content either redacted or stored separately under access control.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Constraints",
+        "claim": "failures here often return 200",
+        "html": "<ul>\n<li>Failures in AI systems are often \"200 OK, wrong answer\" or \"200 OK, 10× cost\".</li>\n<li>Prompts and outputs may contain personal data.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Runtime model",
         "claim": "what to emit",
@@ -3263,6 +3749,18 @@
         "name": "The hard part",
         "claim": "quality signals",
         "html": "<ul>\n<li>Online proxies: validation failures, refusals, regenerate/abandon rates, thumbs.</li>\n<li>Sampled offline evaluation: take N production traces per day, score with rubric-based LLM judges or heuristics, track by version.</li>\n<li>Retrieval: log retrieved IDs and scores per request so bad answers can be traced to bad context.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Failure modes",
+        "claim": "averages, missing tags and PII in labels",
+        "html": "<table>\n<thead>\n<tr>\n<th>Mistake</th>\n<th>Consequence</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>average latency only</td>\n<td>streaming UX regressions invisible</td>\n</tr>\n<tr>\n<td>tokens not attributed</td>\n<td>cost spikes found on the invoice</td>\n</tr>\n<tr>\n<td>no version tags</td>\n<td>regressions unattributable</td>\n</tr>\n<tr>\n<td>full prompts as metric labels</td>\n<td>cardinality explosion, PII in metrics</td>\n</tr>\n<tr>\n<td>only online metrics</td>\n<td>slow quality drift unnoticed</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd monitor",
+        "claim": "per-feature dashboards by model and prompt version",
+        "html": "<ul>\n<li>Dashboards per feature: TTFT p99, cost per request and per tenant per day, validation failure rate, fallback rate, feedback rate — each filterable by model and prompt version. Alerts on cost anomalies and on validation-failure rate jumps after deploys.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3344,10 +3842,22 @@
         "html": "<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>Typical gain</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>fix the algorithm</td>\n<td>orders of magnitude</td>\n<td>thinking</td>\n</tr>\n<tr>\n<td>vectorise (NumPy)</td>\n<td>10–100× on numeric loops</td>\n<td>rewrite in array style</td>\n</tr>\n<tr>\n<td>existing native lib</td>\n<td>large</td>\n<td>a dependency</td>\n</tr>\n<tr>\n<td>Numba / Cython / mypyc</td>\n<td>several × to large</td>\n<td>build step, typed subset</td>\n</tr>\n<tr>\n<td>custom Rust/C extension</td>\n<td>large</td>\n<td>build matrix, maintenance</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it — vectorising beats rewriting:</strong></p>\n<pre><code class=\"language-python\">import time, numpy as np\nx = np.random.default_rng(0).random(2_000_000)\nt = time.perf_counter(); s1 = sum(v * v for v in x); py = time.perf_counter() - t\nt = time.perf_counter(); s2 = float(np.dot(x, x)); vec = time.perf_counter() - t\nprint(f\"loop {py:.3f}s  numpy {vec:.4f}s  same={np.isclose(s1, s2)}\")\n# → loop 0.119s  numpy 0.0006s  same=True   (CPython 3.12, NumPy 2, M-series Mac)\n</code></pre>"
       },
       {
+        "number": 3,
+        "name": "Where native code wins",
+        "claim": "irregular loops, parallel CPU work, memory layout",
+        "html": "<ul>\n<li>Irregular per-element logic that can't be vectorised: parsing, state machines, custom string algorithms.</li>\n<li>Parallel CPU work: release the GIL in Rust (<code>py.allow_threads</code>) and use threads.</li>\n<li>Memory layout control: avoiding millions of Python objects.</li>\n</ul>"
+      },
+      {
         "number": 4,
         "name": "The deciding question",
         "claim": "is there a proven hot loop that the cheaper rungs can&#39;t fix?",
         "html": "<ul>\n<li>Profile with <code>py-spy</code>/<code>scalene</code>: is ≥50% of CPU in one Python function?</li>\n<li>Boundary cost: if each call does tiny work, call overhead dominates — batch the interface.</li>\n<li>Team: who maintains it in a year?</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "fix queries first, native code for proven hot paths",
+        "html": "<ul>\n<li>95% of the time: fix queries, batch model calls, use orjson/NumPy/existing Rust-backed libraries.</li>\n<li>Custom native code for a proven hot path in ingestion (normalisation, chunking of huge corpora), written in Rust with PyO3, batch API, wheels built in CI for each target platform.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3440,10 +3950,22 @@
         "html": "<p><strong>\"A leak grows with request count; this spiked within single requests and fell back.\"</strong></p>\n<ul>\n<li>Tool: <code>&lt;fill: tracemalloc snapshot diff / memray flame graph / py-spy + RSS per request&gt;</code>.</li>\n<li>Signal: peak memory correlated with input size (number of skills/sections), not with uptime.</li>\n<li>Located: the matching step's list of all pairs.</li>\n</ul>\n<p><strong>Why a product explodes:</strong></p>\n<pre><code class=\"language-python\">from itertools import product\nskills = [\"python\"] * 40 + [\"sql\"] * 40            # duplicates from overlapping CV sections\nreqs = [\"python\", \"sql\"] * 30\nprint(len(list(product(skills, reqs))), len(set(skills)) * len(set(reqs)))\n# → 4800 4\n</code></pre>\n<p>Duplicates on both sides multiply; deduplicating first shrinks the work by orders of magnitude.</p>"
       },
       {
+        "number": 4,
+        "name": "The fix, and what I didn't do",
+        "claim": "dedupe first, no bigger memory limit",
+        "html": "<ul>\n<li>Did: dedupe both sides, and <code>&lt;fill: match via set intersection / dict lookup / lazy iteration instead of a materialised list&gt;</code>.</li>\n<li>Didn't: raise the memory limit, add workers, or restart pods on a schedule — each hides an input-dependent blow-up until a larger input arrives.</li>\n<li>Alternatives considered: <code>&lt;fill: e.g. streaming pairs with a generator, capping input size&gt;</code>.</li>\n</ul>"
+      },
+      {
         "number": 5,
         "name": "What broke and what I added",
         "claim": "the guardrail",
         "html": "<ul>\n<li>Why staging didn't catch it: <code>&lt;fill: small test CVs; no worst-case fixture&gt;</code>.</li>\n<li>Added: <code>&lt;fill: worst-case CV in the test suite, per-request peak memory metric, input-size limits, alert on restarts&gt;</code>.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "The number",
+        "claim": "before and after, in numbers",
+        "html": "<ul>\n<li>Peak memory per request: <code>&lt;fill: before → after&gt;</code>.</li>\n<li>OOMKills / restarts: <code>&lt;fill: before → after&gt;</code>.</li>\n<li>Latency or throughput side effect: <code>&lt;fill, if any&gt;</code>.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3525,10 +4047,40 @@
     "spoken": "<p>\"It's almost always the start method. On Linux, before 3.14, the default was <code>fork</code>: the child is a copy of the parent process, memory shared copy-on-write, so it already has every module, global and loaded model, and nothing needs pickling except the task arguments. On macOS since 3.8, and on Windows always, the default is <code>spawn</code>: a fresh interpreter starts, re-imports your main module, and receives everything else by pickling.</p>\n<p>That breaks three kinds of code. First, missing <code>if __name__ == '__main__':</code> — under spawn, the child re-imports the module, reaches the pool creation again, and either errors out or tries to start processes recursively. Second, unpicklable arguments: lambdas, local functions, open connections, locks. Under fork they never needed pickling. Third, state set at runtime in the parent, like a configured global or a model loaded in <code>main()</code>, isn't there in a spawned child.</p>\n<p>The memory and startup story differs too: under fork, a big model loaded before the pool is shared cheaply; under spawn, each worker loads its own copy and startup takes seconds.</p>\n<p>Fork isn't simply better: forking a process that has threads is unsafe, because locks held by other threads are copied in the locked state. That's why 3.14 changed Linux's default to <code>forkserver</code>. So I choose the start method explicitly and write code that works under spawn.\"</p>",
     "stages": [
       {
+        "number": 1,
+        "name": "Read the symptom",
+        "claim": "each error message points to a cause",
+        "html": "<ul>\n<li><code>RuntimeError: An attempt has been made to start a new process before the current process has finished its bootstrapping phase</code> → missing main guard.</li>\n<li><code>PicklingError</code> / <code>AttributeError: Can't get local object</code> → unpicklable callable or argument.</li>\n<li>Workers see default config or <code>None</code> model → runtime state not inherited.</li>\n<li>Much slower startup and higher RSS on Mac.</li>\n</ul>"
+      },
+      {
         "number": 2,
         "name": "Measure before guessing",
         "claim": "which start method?",
         "html": "<p><strong>💻 Prove it — a global set at runtime is inherited by fork, not by spawn:</strong></p>\n<pre><code class=\"language-python\">import multiprocessing as mp\nCONFIG = {\"model\": None}\ndef worker(_): return CONFIG[\"model\"]\nif __name__ == \"__main__\":\n    CONFIG[\"model\"] = \"loaded-in-main\"\n    for method in (\"fork\", \"spawn\"):\n        with mp.get_context(method).Pool(1) as pool:\n            print(method, pool.map(worker, [0]))\n# → fork ['loaded-in-main']\n# → spawn [None]\n</code></pre>\n<p><code>mp.get_start_method()</code> tells you the default on the current platform. (<code>fork</code> on macOS may be unsafe with some system libraries; it runs here for the demonstration.)</p>"
+      },
+      {
+        "number": 3,
+        "name": "Rank the suspects",
+        "claim": "missing guards and unpicklable arguments first",
+        "html": "<table>\n<thead>\n<tr>\n<th>Suspect</th>\n<th>Under spawn</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>no <code>__main__</code> guard</td>\n<td>re-import runs pool creation again</td>\n</tr>\n<tr>\n<td>lambda / nested function / bound method of unpicklable object</td>\n<td>can't be pickled</td>\n</tr>\n<tr>\n<td>state configured in <code>main()</code></td>\n<td>missing in child</td>\n</tr>\n<tr>\n<td>DB connections / clients created at import</td>\n<td>recreated per child (fine) or broken if created at runtime and passed</td>\n</tr>\n<tr>\n<td>large arguments</td>\n<td>pickled per task: slow</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Confirm",
+        "claim": "force spawn on Linux to reproduce it",
+        "html": "<ul>\n<li>Force <code>spawn</code> on Linux (<code>mp.set_start_method(\"spawn\")</code> or <code>get_context(\"spawn\")</code>) and run the test suite: it reproduces the Mac failure on CI.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "Fix",
+        "claim": "main guard, module-level functions, initializers",
+        "html": "<ul>\n<li>Main guard everywhere a pool is created.</li>\n<li>Module-level functions; pass plain data; pass paths or IDs instead of big objects.</li>\n<li>Initialise per-worker state with <code>Pool(initializer=load_model)</code> or <code>ProcessPoolExecutor(initializer=...)</code>, not globals set in the parent.</li>\n<li>Pick the start method explicitly: <code>get_context(\"spawn\")</code> for portability and thread safety; <code>forkserver</code> on Linux when you want cheaper starts without forking a threaded parent.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "Guard against the next one",
+        "claim": "run the tests under spawn in CI",
+        "html": "<ul>\n<li>CI runs multiprocessing tests with <code>spawn</code> on Linux.</li>\n<li>Lint for lambdas passed to executors; code review rule: no runtime-mutated globals read by workers.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3614,6 +4166,18 @@
         "name": "Prove it",
         "claim": "a harmless payload that calls a function on load",
         "html": "<pre><code class=\"language-python\">import pickle\nclass Payload:\n    def __reduce__(self):\n        return (print, (\"code ran during pickle.loads\",))\nblob = pickle.dumps(Payload())\npickle.loads(blob)\n# → code ran during pickle.loads\n</code></pre>\n<p>Replace <code>print</code> with <code>os.system</code> and the string with a shell command: that's the attack. Nothing about <code>Payload</code> needs to exist on the loading side.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where it bites in production",
+        "claim": "brokers, caches and model files are trust boundaries",
+        "html": "<table>\n<thead>\n<tr>\n<th>Place</th>\n<th>Risk</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Celery with <code>pickle</code> serializer</td>\n<td>anyone who can write to the broker runs code on workers</td>\n</tr>\n<tr>\n<td>shared Redis cache storing pickles</td>\n<td>cache write access = code execution in every reader</td>\n</tr>\n<tr>\n<td><code>torch.load</code> of downloaded checkpoints</td>\n<td>older defaults unpickled arbitrary objects; 2.6+ defaults to <code>weights_only=True</code></td>\n</tr>\n<tr>\n<td><code>joblib</code>/pickle model files from the internet</td>\n<td>same as above</td>\n</tr>\n<tr>\n<td><code>pandas.read_pickle</code> on uploaded files</td>\n<td>same</td>\n</tr>\n<tr>\n<td><code>shelve</code>, <code>multiprocessing</code></td>\n<td>pickle underneath; fine within your own process tree</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What to use instead",
+        "claim": "data-only formats; signed pickles only in-house",
+        "html": "<ul>\n<li>API payloads, queue messages, cache values: JSON (<code>orjson</code>), msgpack, protobuf; validate with Pydantic.</li>\n<li>Model weights: <code>safetensors</code>; for sklearn, <code>skops.io</code> restricts loadable types.</li>\n<li>Trusted internal pickles: sign or hash, store in a bucket only your pipeline writes, pin library versions, record them next to the artifact.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3689,10 +4253,28 @@
         "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Scope</th>\n<th>Key</th>\n<th>Bound</th>\n<th>Freed when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>cached_property</code></td>\n<td>instance</td>\n<td>attribute name</td>\n<td>1 value</td>\n<td>instance is freed</td>\n</tr>\n<tr>\n<td><code>lru_cache(maxsize=N)</code></td>\n<td>function</td>\n<td>args</td>\n<td>N entries</td>\n<td>evicted or <code>cache_clear()</code></td>\n</tr>\n<tr>\n<td><code>cache</code></td>\n<td>function</td>\n<td>args</td>\n<td>unbounded</td>\n<td><code>cache_clear()</code> / process exit</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Where `cached_property` wins",
+        "claim": "per-object values that die with the object",
+        "html": "<ul>\n<li>Expensive values derived from immutable-ish instance state: parsed metadata, token counts, compiled regex for a config object.</li>\n<li>Invalidate with <code>del obj.attr</code>. Needs an instance <code>__dict__</code> (not with plain <code>__slots__</code>).</li>\n<li>Not thread-safe for the first computation since 3.12 (the lock was removed); two threads may compute twice.</li>\n</ul>"
+      },
+      {
+        "number": 3,
+        "name": "Where `lru_cache` wins",
+        "claim": "bounded, argument-keyed, module-level functions",
+        "html": "<ul>\n<li>Pure module-level functions with hashable arguments: config lookups, tokenizer loading by name, small repeated computations.</li>\n<li><code>cache_info()</code> gives hits, misses and size, useful for checking it helps.</li>\n</ul>"
+      },
+      {
         "number": 4,
         "name": "The method trap",
         "claim": "pinned instances",
         "html": "<p><strong>💻 Prove it — instances that should die stay alive:</strong></p>\n<pre><code class=\"language-python\">import functools, gc, weakref\nclass Doc:\n    @functools.cache\n    def score(self, q): return len(q)\nrefs = []\nfor _ in range(3):\n    d = Doc(); d.score(\"x\"); refs.append(weakref.ref(d))\ndel d; gc.collect()\nprint(sum(r() is not None for r in refs), Doc.score.cache_info().currsize)\n# → 3 3\n</code></pre>\n<p>All three documents are alive, held by the cache. With <code>cached_property</code> instead, they'd all be freed. ruff flags this as <code>B019</code>.</p>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "match the cache&#39;s lifetime to the data&#39;s",
+        "html": "<ul>\n<li>Per-object derived values → <code>cached_property</code>.</li>\n<li>Loading tokenizers or prompt templates by name → module-level <code>@lru_cache(maxsize=32)</code> function.</li>\n<li>Anything request-varying or shared across workers → a real cache (Redis) with TTL (see <span class=\"vault-ref\" title=\"model-answers/01-PYTHON/23-where-to-put-the-cache\">where-to-put-the-cache</span>).</li>\n<li>Methods that need memoisation → a per-instance dict, or a module-level function keyed by an ID, not <code>self</code>.</li>\n</ul>"
       }
     ],
     "followUps": [
@@ -3772,10 +4354,28 @@
         "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>CPython</th>\n<th>PyPy</th>\n<th>mypyc / Cython</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>pure-Python loops</td>\n<td>baseline (faster since 3.11)</td>\n<td>often several × faster after warm-up</td>\n<td>faster for compiled modules</td>\n</tr>\n<tr>\n<td>C extensions (NumPy, torch)</td>\n<td>✅ native</td>\n<td>via compatibility layer, slower / gaps</td>\n<td>✅ (still CPython)</td>\n</tr>\n<tr>\n<td>startup / warm-up</td>\n<td>fast</td>\n<td>JIT warm-up</td>\n<td>fast</td>\n</tr>\n<tr>\n<td>memory</td>\n<td>baseline</td>\n<td>often lower for objects, JIT overhead</td>\n<td>baseline</td>\n</tr>\n<tr>\n<td>version currency</td>\n<td>newest</td>\n<td>lags</td>\n<td>follows CPython</td>\n</tr>\n</tbody></table>"
       },
       {
+        "number": 2,
+        "name": "Where CPython wins",
+        "claim": "the AI stack&#39;s native extensions",
+        "html": "<ul>\n<li>Anything using the scientific/ML stack; any service where most time is I/O.</li>\n<li>Newest language features; best tooling (profilers, debuggers, free-threaded builds).</li>\n</ul>\n<p><strong>💻 Prove it — which interpreter and what features am I running?</strong></p>\n<pre><code class=\"language-python\">import platform, sys\nprint(platform.python_implementation(), platform.python_version())\nprint(\"jit\" if getattr(sys, \"_jit\", None) and sys._jit.is_enabled() else \"no jit\")\n# → CPython 3.14.6\n# → no jit      (standard 3.14 build; the experimental JIT is off unless built in and enabled)\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "name": "Where PyPy or compiled Python wins",
+        "claim": "pure-Python hot paths with few extensions",
+        "html": "<ul>\n<li>PyPy: long-running pure-Python services or batch jobs (parsers, simulations, rule engines) with few C extensions.</li>\n<li>mypyc: an already type-annotated pure-Python library with a hot path; no language change.</li>\n<li>Cython: wrapping C libraries, or numeric loops with typed memoryviews.</li>\n</ul>"
+      },
+      {
         "number": 4,
         "name": "The deciding question",
         "claim": "what&#39;s in your dependency tree, and is the hot path pure Python?",
         "html": "<ul>\n<li>Any heavy C-extension dependency → CPython.</li>\n<li>Pure-Python hot path identified by profiling → compile that module (mypyc/Cython) or move it to Rust.</li>\n<li>Whole app pure Python, long-running, CPU-bound → benchmark PyPy.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick for an AI backend",
+        "claim": "CPython, and compile only the proven hot module",
+        "html": "<ul>\n<li>CPython (latest stable the dependencies support), always.</li>\n<li>Upgrading CPython minor versions is itself a performance lever: benchmark 3.11+ vs older before any exotic option.</li>\n<li>For hot pure-Python code: vectorise or native-compile the module (see <span class=\"vault-ref\" title=\"model-answers/01-PYTHON/39-when-to-drop-to-c-rust\">when-to-drop-to-c-rust</span>).</li>\n</ul>"
       }
     ],
     "followUps": [

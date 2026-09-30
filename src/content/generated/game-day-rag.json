@@ -1862,7 +1862,7 @@
           "id": "rag-q48",
           "number": 48,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q1 · S1 Foundations) \"What problem does RAG actually solve that a bigger prompt or a better model doesn't? You have 30 seconds.",
+          "text": "What problem does RAG actually solve that a bigger prompt or a better model doesn't? You have 30 seconds.",
           "points": [
             "The model's <strong>parametric knowledge</strong> is frozen at training time and inscrutable — you can't update it, can't cite it, can't permission it.",
             "RAG attaches <strong>non-parametric memory</strong> at inference: a store you can update tonight, inspect per-answer, and gate per-user.",
@@ -1887,7 +1887,7 @@
           "id": "rag-q49",
           "number": 49,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q4 · S1 Foundations) \"Give me three situations where you'd talk a team out of building RAG.",
+          "text": "Give me three situations where you'd talk a team out of building RAG.",
           "points": [
             "<strong>Reasoning/skill tasks, not knowledge tasks</strong> — math, code transforms, general writing: there's nothing to retrieve; RAG adds latency and a new failure surface.",
             "<strong>Tiny stable corpus</strong> — if the whole thing fits comfortably in context and rarely changes, a system prompt or prompt-cached context beats an index.",
@@ -1912,7 +1912,7 @@
           "id": "rag-q50",
           "number": 50,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q5 · S2 Ingestion & Parsing) \"Your PDF ingestion 'works,' but every question about a table gets a confidently wrong answer. What happened upstream?",
+          "text": "Your PDF ingestion 'works,' but every question about a table gets a confidently wrong answer. What happened upstream?",
           "points": [
             "Naive PDF extraction <strong>linearizes by position</strong>, not meaning: multi-column pages interleave, tables flatten into word soup, headers/footers pollute every page, reading order breaks.",
             "A flattened table loses <strong>row-column association</strong> — the embedding still \"looks\" relevant (right entities, right numbers), so retrieval logs look fine while the cell relationships are gone. That's why the answer is <em>confidently</em> wrong.",
@@ -1937,7 +1937,7 @@
           "id": "rag-q51",
           "number": 51,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q6 · S2 Ingestion & Parsing) \"When does layout-aware parsing earn its cost over plain text extraction?",
+          "text": "When does layout-aware parsing earn its cost over plain text extraction?",
           "points": [
             "Plain extraction is fine for <strong>linear prose</strong> (articles, transcripts, plain reports). Layout parsing earns its cost when <strong>structure carries semantics</strong>: headings hierarchy, tables, forms, multi-column, figures with captions.",
             "What layout-aware parsing buys: correct <strong>reading order</strong>, section hierarchy you can chunk on, tables as tables, and <strong>metadata</strong> (section titles, page numbers) that powers filtering and citations later.",
@@ -1966,7 +1966,7 @@
           "id": "rag-q52",
           "number": 52,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q8 · S3 Chunking) \"Why chunk at all — why not embed each document whole?",
+          "text": "Why chunk at all — why not embed each document whole?",
           "points": [
             "An embedding is a <strong>fixed-size vector</strong>: embed a whole document and every topic in it gets averaged into one point — the vector becomes a blurry centroid that matches nothing sharply. <strong>Dilution</strong>, not truncation, is the core argument.",
             "Second reason: retrieval granularity — you want to hand the LLM the <strong>relevant passage</strong>, not 40 pages, for cost, latency, and attention.",
@@ -1986,7 +1986,7 @@
           "id": "rag-q53",
           "number": 53,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q12 · S4 Embeddings) \"What is an embedding, mechanically — and why is cosine similarity between two of them a meaningful number?",
+          "text": "What is an embedding, mechanically — and why is cosine similarity between two of them a meaningful number?",
           "points": [
             "An embedding is a <strong>learned map from text to a fixed-dimension vector</strong> where the training objective (typically <strong>contrastive</strong>: pull related pairs together, push unrelated apart) makes geometric closeness track semantic relatedness.",
             "Cosine similarity measures the <strong>angle</strong> between vectors — meaningful <em>only because</em> training shaped the space that way; it's a property of the model, not of math.",
@@ -2011,7 +2011,7 @@
           "id": "rag-q54",
           "number": 54,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q15 · S4 Embeddings) \"Your vector storage and memory bill is the biggest line item. Walk me through shrinking it without gutting recall.",
+          "text": "Your vector storage and memory bill is the biggest line item. Walk me through shrinking it without gutting recall.",
           "points": [
             "Vector footprint = count × dimensions × bytes-per-dimension. You can attack all three.",
             "<strong>Matryoshka embeddings</strong>: trained so meaning concentrates in the leading dimensions — <strong>truncate</strong> to a prefix for a large storage cut with modest quality loss; pick the cut by re-running your eval at each size.",
@@ -2041,7 +2041,7 @@
           "id": "rag-q55",
           "number": 55,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q20 · S6 Retrieval) \"What does dense bi-encoder retrieval do well — and name two query classes where it reliably loses to keyword search.",
+          "text": "What does dense bi-encoder retrieval do well — and name two query classes where it reliably loses to keyword search.",
           "points": [
             "Bi-encoder dense retrieval: query and passages embedded <strong>independently</strong>, similarity = one vector comparison — that independence is what makes pre-computing an index possible and search fast.",
             "Its strength: <strong>vocabulary mismatch</strong> — \"How do I get my money back?\" finds the refund policy with zero shared words; synonyms, paraphrase, cross-lingual.",
@@ -2066,7 +2066,7 @@
           "id": "rag-q56",
           "number": 56,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q26 · S7 Query Transformation & Routing) \"You have a SQL warehouse, a document index, and a web search tool behind one chat box. Design the routing layer — and defend semantic routing vs LLM routing.",
+          "text": "You have a SQL warehouse, a document index, and a web search tool behind one chat box. Design the routing layer — and defend semantic routing vs LLM routing.",
           "points": [
             "The router's job: classify each query to a <strong>datasource/tool</strong> (metrics question → Text-to-SQL; policy question → doc index; current events → web) — sending a SQL-shaped question to the vector index is a structural failure no retriever fixes.",
             "<strong>Semantic routing</strong>: embed the query, compare against embedded <strong>route descriptions/exemplars</strong> — single embedding call, milliseconds, cheap, deterministic-ish; weak on compound or genuinely ambiguous queries.",
@@ -2091,7 +2091,7 @@
           "id": "rag-q57",
           "number": 57,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q33 · S9 Generation & Augmentation) \"Citations in RAG answers: how do you make them load-bearing rather than decorative?",
+          "text": "Citations in RAG answers: how do you make them load-bearing rather than decorative?",
           "points": [
             "The failure mode to name up front: <strong>hallucinated citations</strong> — the model emits a marker pointing at a chunk that doesn't support the sentence. A wrong citation is worse than none: it manufactures false confidence.",
             "Mechanics: assign each retrieved chunk a <strong>stable ID in the prompt</strong>, instruct sentence-level attribution to those IDs, and prefer <strong>structured output</strong> (claims with source-ID arrays) over free-text markers so citations are machine-checkable.",
@@ -2120,7 +2120,7 @@
           "id": "rag-q58",
           "number": 58,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q38 · S11 Evaluation) \"Recall@k, precision@k, MRR, nDCG, hit rate — which metric answers which question about your retriever?",
+          "text": "Recall@k, precision@k, MRR, nDCG, hit rate — which metric answers which question about your retriever?",
           "points": [
             "<strong>Recall@k</strong> — \"of all relevant chunks, what fraction landed in the top k?\" — <em>the</em> RAG workhorse: it directly answers \"is the evidence in the pool I hand to the reranker/LLM?\" Sets stage-1 k (Q28).",
             "<strong>Precision@k</strong> — \"what fraction of the top k is relevant?\" — the context-noise metric; matters because irrelevant chunks cost tokens and attention.",
@@ -2142,7 +2142,7 @@
           "id": "rag-q59",
           "number": 59,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q39 · S11 Evaluation) \"Walk me through the RAG triad — and how does a framework like RAGAS actually compute faithfulness under the hood?",
+          "text": "Walk me through the RAG triad — and how does a framework like RAGAS actually compute faithfulness under the hood?",
           "points": [
             "The <strong>triad</strong> covers the three edges: <strong>context relevance</strong> (question ↔ retrieved context: did we fetch the right stuff?), <strong>groundedness/faithfulness</strong> (context ↔ answer: is every claim supported?), <strong>answer relevance</strong> (answer ↔ question: did we address what was asked?). One edge failing tells you <em>which</em> component to open.",
             "Why three: an answer can be fully grounded in irrelevant context, or relevant-and-hallucinated, or faithful-but-off-topic — a single score hides which sin occurred.",
@@ -2167,7 +2167,7 @@
           "id": "rag-q60",
           "number": 60,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q40 · S11 Evaluation) \"Your LLM-as-judge scores look great. Why don't you trust them yet?",
+          "text": "Your LLM-as-judge scores look great. Why don't you trust them yet?",
           "points": [
             "The known biases, rapid-fire: <strong>position bias</strong> (favors the first answer in pairwise comparisons — mitigate by swapping order and averaging), <strong>verbosity bias</strong> (longer reads as better), <strong>self-preference</strong> (favors outputs of its own model family), style-over-substance (fluent-but-wrong scores well — exactly the RAG failure mode you care most about).",
             "Plus mechanical fragility: score distributions shift with the <strong>rubric wording, scale, and judge model/version</strong> — a 4.2 is not comparable across setups, so absolute numbers mean little.",
@@ -2188,7 +2188,7 @@
           "id": "rag-q61",
           "number": 61,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q41 · S11 Evaluation) \"New domain, zero labeled data. Build me a golden set I can trust — then use it to judge a chunking change.",
+          "text": "New domain, zero labeled data. Build me a golden set I can trust — then use it to judge a chunking change.",
           "points": [
             "Bootstrap: <strong>synthetic Q&amp;A generation</strong> — sample chunks, have an LLM write questions each chunk answers; you get (question, gold-chunk, reference-answer) triples with retrieval labels for free.",
             "Trust ingredient 1 — <strong>human curation</strong>: synthetic questions skew easy, chunk-phrased, and single-hop; filter unanswerable/trivial ones and rewrite toward how users actually ask. Trust ingredient 2 — <strong>real distribution</strong>: mine production queries (or pilot logs) so the set reflects actual intents, including the messy, ambiguous, multi-hop ones synthesis undersamples.",
@@ -2213,7 +2213,7 @@
           "id": "rag-q62",
           "number": 62,
           "marks": [],
-          "text": "🗣️ (jbtiq_rag Q45 · S12 Production RAG Systems) \"Six months live, no deploys, and users say answers got worse. What drifted — and what monitoring would have caught it before the complaints?",
+          "text": "Six months live, no deploys, and users say answers got worse. What drifted — and what monitoring would have caught it before the complaints?",
           "points": [
             "The drift suspects: <strong>corpus drift</strong> (documents grew, aged, contradicted each other; ingestion quietly failing on a new document format — check indexing lag and error rates from Q7), <strong>query drift</strong> (users now ask about topics/products the golden set never covered — new-intent clusters with poor retrieval), and <strong>relevance drift</strong> (yesterday's correct answer is stale today even though retrieval is \"right\").",
             "What catches it: <strong>continuous scoring of sampled production traffic</strong> — the reference-free triad metrics (Q39) on a sample of real queries, trended weekly; falling faithfulness or context relevance is the alarm that precedes complaints.",

@@ -910,7 +910,7 @@
           "id": "llm-serving-inference-q26",
           "number": 26,
           "marks": [],
-          "text": "🗣️ (jbtiq_llm Q26 · S12 LLMOps & Production Systems) \"Sketch the reference architecture for a serious LLM application — the layers between the user and the model API.",
+          "text": "Sketch the reference architecture for a serious LLM application — the layers between the user and the model API.",
           "points": [
             "Inbound layers: <strong>gateway</strong> (auth, per-tenant rate limits/quotas), <strong>input guardrails</strong> (moderation, injection screening, PII redaction), <strong>context assembly</strong> (retrieval, memory, few-shot, tool schemas — the context engineering layer), and a <strong>router</strong> (model choice by task/difficulty/tenant tier).",
             "The model tier sits behind a <strong>provider abstraction</strong>: unified interface over multiple providers/self-hosted, with fallback chains, timeout/retry policy, and prompt+model version pinning — the model is a swappable dependency, not a hardcoded call.",
@@ -931,7 +931,7 @@
           "id": "llm-serving-inference-q27",
           "number": 27,
           "marks": [],
-          "text": "🗣️ (jbtiq_llm Q29 · S12 LLMOps & Production Systems) \"What does observability mean for an LLM system beyond request logs — what do you capture, and what do you alert on?",
+          "text": "What does observability mean for an LLM system beyond request logs — what do you capture, and what do you alert on?",
           "points": [
             "Capture per request: full <strong>trace</strong> (prompt version, model+params, retrieved context IDs, tool calls, completion, token counts, cost, latency split TTFT/TPOT) — with PII discipline (hash/redact content, keep structure). Sampling for payloads, 100% for metadata.",
             "The LLM-specific layer: <strong>quality signals in production</strong> — guardrail trigger rates, schema-validation failures, refusal rates, groundedness/judge scores on a sampled stream, and <em>user</em> signals (regenerations, edits, thumbs, abandonment) as the honest quality proxy.",
@@ -956,7 +956,7 @@
           "id": "llm-serving-inference-q28",
           "number": 28,
           "marks": [],
-          "text": "🗣️ (jbtiq_llm Q30 · S12 LLMOps & Production Systems) \"Design rate limiting and quotas for a multi-tenant LLM API — what's different from limiting a normal REST API?",
+          "text": "Design rate limiting and quotas for a multi-tenant LLM API — what's different from limiting a normal REST API?",
           "points": [
             "The unit is <strong>tokens, not requests</strong>: one request can be 100 or 100,000 tokens — limit on <strong>tokens per minute</strong> (input and output separately, since they cost differently) alongside requests per minute; token-bucket algorithms port cleanly with tokens as the literal currency.",
             "The <strong>noisy-neighbor problem is worse</strong> than in stateless APIs: capacity is batch slots and KV memory — one tenant's long-context flood inflates everyone's TTFT. Needs per-tenant admission control, fair-share scheduling/weighted queues, and isolation tiers (dedicated capacity for premium tenants).",
@@ -977,7 +977,7 @@
           "id": "llm-serving-inference-q29",
           "number": 29,
           "marks": [],
-          "text": "🗣️ (jbtiq_llm Q32 · S12 LLMOps & Production Systems) \"Your model provider has a bad day: elevated latency, intermittent 529s, and a silent model update that changed behavior. What did the resilient version of your system already have?",
+          "text": "Your model provider has a bad day: elevated latency, intermittent 529s, and a silent model update that changed behavior. What did the resilient version of your system already have?",
           "points": [
             "<strong>Availability failures</strong> (529s/outage): retries with jittered backoff and budgets, <strong>circuit breakers</strong> per provider, and a <strong>fallback chain</strong> — alternate provider, smaller model, cached/degraded response — behind the provider abstraction; failover is only real if the <em>prompts and evals were tested</em> on the fallback model beforehand.",
             "<strong>Capacity/latency degradation</strong>: timeout discipline shorter than the user's patience, queue with backpressure, load-shed to degraded mode rather than pile up, and streaming so partial progress reaches users.",
@@ -1002,7 +1002,7 @@
           "id": "llm-serving-inference-q30",
           "number": 30,
           "marks": [],
-          "text": "🗣️ (jbtiq_dl Q37 · S7 Inference Optimization) \"Your inference GPUs idle at 15% utilization while a request queue builds. Batch size is hard-coded to 8. Diagnose and fix.",
+          "text": "Your inference GPUs idle at 15% utilization while a request queue builds. Batch size is hard-coded to 8. Diagnose and fix.",
           "points": [
             "Diagnosis: <strong>static batching</strong> — the batch of 8 waits for its <em>longest</em> sequence to finish; finished slots sit idle, new requests queue, and padding to the longest prompt burns memory. Utilization collapses exactly this way.",
             "Fix 1 — <strong>continuous (iteration-level) batching</strong>: the scheduler admits and evicts requests <strong>every decode step</strong>, so a finishing sequence's slot is refilled immediately.",

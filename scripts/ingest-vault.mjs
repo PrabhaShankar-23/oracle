@@ -536,9 +536,13 @@ function parseQuestionHeading(raw) {
       rest = rest.split(glyph).join('')
     }
   }
-  // Merged questions carry a band tag before the quote: `*(D)* "Why …?"`. Keep the tag, drop the quotes.
-  const tag = /^\*?(\([A-Z]\))\*?\s*/.exec(rest.trim())
-  const body = (tag ? rest.trim().slice(tag[0].length) : rest).trim().replace(/^["“”]+|["“”]+$/g, '').trim()
+  // Merged questions carry a tag before the quote. A band tag (`*(D)* "Why …?"`) is kept; a drill
+  // provenance tag (`🗣️ *(`jbtiq_ml` Q12 · S3 …)* "Why …?"`) is dropped. The quotes go either way.
+  rest = rest.trim().replace(/^🗣️\s*/, '')
+  const prov = /^\*?\([^)]*\bQ\d+[^)]*\)\*?\s*/.exec(rest)
+  if (prov) rest = rest.slice(prov[0].length)
+  const tag = /^\*?(\([A-Z]\))\*?\s*/.exec(rest)
+  const body = (tag ? rest.slice(tag[0].length) : rest).trim().replace(/^["“”]+|["“”]+$/g, '').trim()
   return {
     number: Number(numbered[1]),
     marks,
@@ -673,6 +677,8 @@ const MODEL_ANSWER_TYPES = {
   '🩺': 'diagnose', '🏗️': 'design', '⚖️': 'trade-off', '📖': 'concept', '📣': 'story',
   // Python edition (meta_prompts/python_model_answer_prompt_v1.md)
   '🔬': 'mechanism', '🐛': 'debug', '🧪': 'predict',
+  // AI-systems edition (meta_prompts/ai_model_answer_prompt_v1.md)
+  '🛡️': 'threat',
 }
 
 function mdToHtml(md) {
@@ -769,8 +775,11 @@ function parseModelAnswer(md) {
     if (/🎤 The spoken answer/.test(title)) {
       answer.spoken = html
     } else if (pos > walkStart && pos < followStart) {
-      const s = /^(\d+)\s*·\s*(.*?)\s*—\s*(.*)$/.exec(title)
-      if (s) answer.stages.push({ number: Number(s[1]), name: s[2], claim: mdInline(s[3]), html })
+      // `N · Stage name — the claim`; the claim is required by the template but a missing one
+      // must not drop the stage.
+      const s = /^(\d+)\s*·\s*(.*?)(?:\s+—\s+(.*))?$/.exec(title)
+      if (s) answer.stages.push({ number: Number(s[1]), name: s[2], claim: s[3] ? mdInline(s[3]) : '', html })
+      else console.warn(`  ⚠ ${chartSource}: stage heading not parsed: ${title}`)
     } else if (pos > followStart && pos < dontStart) {
       const f = /^F(\d+)\s*·\s*(.*)$/.exec(title)
       const tag = /<code>(\w+)<\/code>/.exec(summary)?.[1]

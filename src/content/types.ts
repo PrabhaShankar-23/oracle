@@ -325,7 +325,8 @@ export type GameDayQuestion = {
 
 export type GameDayAnswerType =
   | 'diagnose' | 'design' | 'trade-off' | 'concept' | 'story'
-  | 'mechanism' | 'debug' | 'predict' // Python edition
+  | 'mechanism' | 'debug' | 'predict' // Python and AI-systems editions
+  | 'threat' // AI-systems edition
 
 /** What a follow-up is for: drill deeper, tempt a shortcut, break an assumption, or go senior. */
 export type GameDayFollowUpTag = 'probe' | 'trap' | 'edge' | 'senior'

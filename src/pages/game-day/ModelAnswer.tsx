@@ -29,7 +29,8 @@ const TYPE_LABEL: Record<GameDayAnswerType, string> = {
   story: 'Story',
   mechanism: 'Mechanism',
   debug: 'Debug',
-  predict: 'Predict the output',
+  predict: 'Predict',
+  threat: 'Threat',
 }
 
 const TAG_COLOR: Record<GameDayFollowUpTag, 'primary' | 'warning' | 'secondary' | 'success'> = {
@@ -205,10 +206,12 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
           <Box component="section" key={s.number} sx={{ minWidth: 0 }}>
             <Typography component="h5" variant="subtitle1" sx={{ fontWeight: 700, lineHeight: 1.35, mb: 0.75, overflowWrap: 'anywhere' }}>
               {s.number} · {s.name}
-              <Box component="span" sx={{ fontWeight: 400, color: 'text.secondary' }}>
-                {' — '}
-                <Html html={s.claim} />
-              </Box>
+              {s.claim && (
+                <Box component="span" sx={{ fontWeight: 400, color: 'text.secondary' }}>
+                  {' — '}
+                  <Html html={s.claim} />
+                </Box>
+              )}
             </Typography>
             <HtmlContent html={s.html} sx={bodySx} />
           </Box>
