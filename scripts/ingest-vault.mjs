@@ -683,6 +683,8 @@ const MODEL_ANSWER_TYPES = {
   '🔬': 'mechanism', '🐛': 'debug', '🧪': 'predict',
   // AI-systems edition (meta_prompts/ai_model_answer_prompt_v1.md)
   '🛡️': 'threat',
+  // Real-time & voice pack (meta_prompts/voice_realtime_model_answer_prompt_v1.md)
+  '🏛️': 'defend',
 }
 
 function mdToHtml(md) {

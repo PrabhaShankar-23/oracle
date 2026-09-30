@@ -31,6 +31,7 @@ const TYPE_LABEL: Record<GameDayAnswerType, string> = {
   debug: 'Debug',
   predict: 'Predict',
   threat: 'Threat',
+  defend: 'Defend',
 }
 
 const TAG_COLOR: Record<GameDayFollowUpTag, 'primary' | 'warning' | 'secondary' | 'success'> = {

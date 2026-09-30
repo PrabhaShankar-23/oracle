@@ -2729,7 +2729,7 @@
       "number": 15,
       "icon": "🎙️",
       "title": "Real-Time & Voice",
-      "count": 25,
+      "count": 51,
       "bands": [
         {
           "id": "real-time-systems-the-latency-budget-the-spine-of-every-answer-here",
@@ -2772,6 +2772,30 @@
           "letter": null,
           "name": "Your story",
           "count": 1
+        },
+        {
+          "id": "real-time-systems-your-platform-the-tour",
+          "letter": null,
+          "name": "Your platform — the tour",
+          "count": 5
+        },
+        {
+          "id": "real-time-systems-your-platform-one-turn",
+          "letter": null,
+          "name": "Your platform — one turn",
+          "count": 8
+        },
+        {
+          "id": "real-time-systems-your-platform-the-agents",
+          "letter": null,
+          "name": "Your platform — the agents",
+          "count": 7
+        },
+        {
+          "id": "real-time-systems-your-platform-failure-scale-quality-honesty",
+          "letter": null,
+          "name": "Your platform — failure, scale, quality, honesty",
+          "count": 6
         }
       ]
     },
