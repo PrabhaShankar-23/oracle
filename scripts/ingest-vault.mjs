@@ -1275,6 +1275,7 @@ const PYTHON_ROUTE = '/python'
 const PYTHON_CHAPTERS = {
   '01-data-model-object-semantics': 'Data model & object semantics',
   '02-functions-scope-closures': 'Functions, scope & closures',
+  '03-iterators-generators-comprehensions': 'Iterators, generators & comprehensions',
 }
 
 const ingestPython = () =>

@@ -5232,6 +5232,54 @@
       "relevance": "Senior",
       "section": "02-functions-scope-closures",
       "sectionTitle": "Functions, scope & closures"
+    },
+    {
+      "slug": "iterator-protocol",
+      "title": "The Iterator Protocol",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
+    },
+    {
+      "slug": "generators-lazy-evaluation",
+      "title": "Generators & Lazy Evaluation",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
+    },
+    {
+      "slug": "yield-from-delegation",
+      "title": "yield from & Generator Delegation",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
+    },
+    {
+      "slug": "coroutine-style-generators",
+      "title": "Coroutine-Style Generators (.send() / .throw() / .close())",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
+    },
+    {
+      "slug": "comprehensions-genexps",
+      "title": "Comprehensions & Generator Expressions",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
+    },
+    {
+      "slug": "itertools-patterns",
+      "title": "itertools & functools.reduce Patterns",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
     }
   ],
   "gameDayDocs": [
