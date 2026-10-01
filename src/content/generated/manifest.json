@@ -5280,6 +5280,118 @@
       "relevance": "Senior",
       "section": "03-iterators-generators-comprehensions",
       "sectionTitle": "Iterators, generators & comprehensions"
+    },
+    {
+      "slug": "pyobject-refcounts-object-header",
+      "title": "PyObject, Refcounts & the Object Header",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "dict-internals",
+      "title": "dict Internals",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "set-frozenset-internals",
+      "title": "set / frozenset Internals",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "list-internals",
+      "title": "list Internals",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "str-internals",
+      "title": "str Internals",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "attribute-lookup-and-mro",
+      "title": "Attribute Lookup & the MRO",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "descriptors",
+      "title": "Descriptors",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "metaclasses-class-creation",
+      "title": "Metaclasses & Class Creation",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "bytecode-and-eval-loop",
+      "title": "Bytecode & the Evaluation Loop",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
+      "slug": "reference-counting",
+      "title": "Reference Counting",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-memory-management-gc",
+      "sectionTitle": "Memory management & GC"
+    },
+    {
+      "slug": "cyclic-garbage-collector",
+      "title": "The Cyclic Garbage Collector",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-memory-management-gc",
+      "sectionTitle": "Memory management & GC"
+    },
+    {
+      "slug": "weakref-and-finalization",
+      "title": "weakref & Finalization",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "05-memory-management-gc",
+      "sectionTitle": "Memory management & GC"
+    },
+    {
+      "slug": "memory-allocators-arenas",
+      "title": "Memory Allocators & Arenas",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "05-memory-management-gc",
+      "sectionTitle": "Memory management & GC"
+    },
+    {
+      "slug": "diagnosing-memory",
+      "title": "Diagnosing Memory",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-memory-management-gc",
+      "sectionTitle": "Memory management & GC"
     }
   ],
   "gameDayDocs": [

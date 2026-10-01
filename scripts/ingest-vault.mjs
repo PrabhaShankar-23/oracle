@@ -1276,6 +1276,8 @@ const PYTHON_CHAPTERS = {
   '01-data-model-object-semantics': 'Data model & object semantics',
   '02-functions-scope-closures': 'Functions, scope & closures',
   '03-iterators-generators-comprehensions': 'Iterators, generators & comprehensions',
+  '04-cpython-object-internals': 'CPython object internals',
+  '05-memory-management-gc': 'Memory management & GC',
 }
 
 const ingestPython = () =>
