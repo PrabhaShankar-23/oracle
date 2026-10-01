@@ -5392,6 +5392,70 @@
       "relevance": "Architect",
       "section": "05-memory-management-gc",
       "sectionTitle": "Memory management & GC"
+    },
+    {
+      "slug": "the-gil",
+      "title": "The GIL — What It Actually Is",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "concurrency-vs-parallelism",
+      "title": "Concurrency vs Parallelism",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "threading",
+      "title": "threading",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "multiprocessing",
+      "title": "multiprocessing",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "concurrent-futures",
+      "title": "concurrent.futures",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "synchronization-hazards",
+      "title": "Synchronization & Hazards",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "no-gil-free-threaded-cpython",
+      "title": "No-GIL / Free-Threaded CPython",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "sub-interpreters",
+      "title": "Sub-Interpreters",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
     }
   ],
   "gameDayDocs": [

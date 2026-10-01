@@ -1278,6 +1278,7 @@ const PYTHON_CHAPTERS = {
   '03-iterators-generators-comprehensions': 'Iterators, generators & comprehensions',
   '04-cpython-object-internals': 'CPython object internals',
   '05-memory-management-gc': 'Memory management & GC',
+  '06-concurrency-gil': 'Concurrency & the GIL',
 }
 
 const ingestPython = () =>
