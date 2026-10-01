@@ -592,10 +592,12 @@ function prettifyTitle(raw) {
 const escapeHtml = (t) =>
   t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-const vaultRefSpan = (raw) => {
+const vaultRefSpan = (raw, resolve) => {
   const [target, alias] = String(raw).split('|')
   const leaf = alias ?? (target.split('/').pop() ?? target)
   const label = leaf.replace(/^\d+[a-z]?-/, '').replace(/\.md$/, '').trim()
+  const href = resolve?.(target.trim())
+  if (href) return `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`
   return `<span class="vault-ref" title="${escapeHtml(target.trim())}">${escapeHtml(label)}</span>`
 }
 
@@ -609,7 +611,7 @@ function flattenVaultRefs(html) {
  * Mermaid uses `[[label]]` for a subroutine node, so a blind string replace turns a valid
  * diagram into a broken one. Run this after `promoteMermaidFences` and it never sees either.
  */
-function flattenVaultRefsWithin($, body) {
+function flattenVaultRefsWithin($, body, resolve) {
   const SKIP = new Set(['pre', 'code', 'script', 'style'])
   const walk = (node) => {
     for (const child of $(node).contents().toArray()) {
@@ -617,7 +619,7 @@ function flattenVaultRefsWithin($, body) {
         const t = child.data ?? ''
         if (!t.includes('[[')) continue
         const html = t.replace(/(\[\[[^\]]+\]\])|([^[]+|\[)/g, (m, ref, lit) =>
-          ref ? vaultRefSpan(ref.slice(2, -2)) : escapeHtml(lit),
+          ref ? vaultRefSpan(ref.slice(2, -2), resolve) : escapeHtml(lit),
         )
         if (html !== t) $(child).replaceWith(html)
       } else if (child.type === 'tag' && !SKIP.has(child.name) && !$(child).hasClass('mermaid')) {
@@ -1200,7 +1202,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
         // no single note, so those take the title — including when it currently holds just one.
         const shared = /^breadth\./.test(file)
         const slug = shared ? slugify(title) : agenticSlug(file)
-        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, number: item || fileNo, title, ...meta })
+        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, stem: file.replace(/\.md$/, ''), number: item || fileNo, title, ...meta })
       }
     }
   }
@@ -1217,6 +1219,15 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
 
   const published = new Set(parsed.map((n) => n.slug))
   const byFile = new Map(parsed.map((n) => [`${n.dir}/${n.number}`, n.slug]))
+  // Exact file stems first: `04-…` and `04a-…` share a number, so the number alone can pick the wrong note.
+  const byStem = new Map(parsed.map((n) => [`${n.dir}/${n.stem}`, n.slug]))
+  const resolveNote = (ref, fromDir) => {
+    const leaf = decodeURIComponent(ref.split('/').pop() ?? '').replace(/\.md$/, '').trim()
+    const dir = /(?:^|\/)(\d{2}-[a-z-]+)\/[^/]*$/.exec(ref)?.[1] ?? fromDir
+    const n = /^(\d+)[a-z]?-/.exec(leaf)
+    const slug = byStem.get(`${dir}/${leaf}`) ?? (n ? byFile.get(`${dir}/${Number(n[1])}`) : undefined)
+    return slug && published.has(slug) ? slug : null
+  }
   const out = []
 
   for (const note of parsed) {
@@ -1224,15 +1235,16 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
     // Links to another note in this series become site routes; anything else flattens to text.
     body.find('a[href$=".md"]').each((_, node) => {
       const a = $(node)
-      const href = a.attr('href') ?? ''
-      const n = /(?:^|\/)(\d+)[a-z]?-[^/]*\.md$/.exec(href)
-      const chapterDir = /(?:^|\/)(\d{2}-[a-z-]+)\//.exec(href)?.[1] ?? note.dir
-      const target = n ? byFile.get(`${chapterDir}/${Number(n[1])}`) : undefined
-      if (target && published.has(target)) a.attr('href', `${route}/${target}`)
+      const target = resolveNote(a.attr('href') ?? '', note.dir)
+      if (target) a.attr('href', `${route}/${target}`)
     })
     rewriteLinks($, body)
     promoteMermaidFences($, body)
-    flattenVaultRefsWithin($, body)
+    // Wikilinks to a published note in this series (`[[03-iterators-…/15-generators…|generators]]`) become routes too.
+    flattenVaultRefsWithin($, body, (target) => {
+      const slug = resolveNote(target, note.dir)
+      return slug ? `${route}/${slug}` : null
+    })
 
     const chapter = out.find((c) => c.id === note.dir) ?? { id: note.dir, title: note.chapterTitle, notes: [] }
     if (!out.includes(chapter)) out.push(chapter)
