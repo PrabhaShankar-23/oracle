@@ -1322,6 +1322,7 @@ const PYTHON_CHAPTERS = {
   '10-performance-profiling': 'Performance & profiling',
   '11-packaging-environments-tooling': 'Packaging, environments & tooling',
   '12-stdlib-systems': 'Stdlib & systems',
+  '13-production-services': 'Production services',
 }
 
 const ingestPython = () =>

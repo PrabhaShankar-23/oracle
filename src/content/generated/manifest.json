@@ -5836,6 +5836,93 @@
       "relevance": "Senior",
       "section": "12-stdlib-systems",
       "sectionTitle": "Stdlib & systems"
+    },
+    {
+      "slug": "production-services-map",
+      "title": "Chapter map: Production services",
+      "tier": "MAP",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "asgi-wsgi-worker-model",
+      "title": "ASGI vs WSGI & the Worker Model",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "reliability-mechanics",
+      "title": "Reliability Mechanics (Retries · Timeouts · Backoff + Jitter · Circuit Breakers)",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "idempotency",
+      "title": "Idempotency (Keys · At-Least-Once vs Exactly-Once · Safe Retries)",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "rate-limiting",
+      "title": "Rate Limiting (Token Bucket · Sliding Window · Where to Enforce)",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "streaming-transport",
+      "title": "Streaming Transport (SSE vs WebSocket · Async Generators as Producer · Backpressure · Mid-Stream Cancellation)",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "connection-pooling-async",
+      "title": "Connection Pooling from Async Code",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "caching-patterns",
+      "title": "Caching Patterns (lru_cache · TTL · Redis-backed · Stampedes)",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "queues-background-workers",
+      "title": "Queues & Background Workers (SQS Consumers · Visibility Timeouts · acks_late · The Poison-Pill Pattern)",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "structured-logging-context-propagation",
+      "title": "Structured Logging & Context Propagation (Structured Logs · contextvars · What Not To Log)",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
+    },
+    {
+      "slug": "observability-instrumentation",
+      "title": "Observability Instrumentation (OpenTelemetry Spans · Traces · Metrics)",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "13-production-services",
+      "sectionTitle": "Production services"
     }
   ],
   "gameDayDocs": [
