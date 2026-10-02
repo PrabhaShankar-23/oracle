@@ -5970,6 +5970,61 @@
       "relevance": "Senior",
       "section": "14-applied-adjacent",
       "sectionTitle": "Applied & adjacent"
+    },
+    {
+      "slug": "oop-design-map",
+      "title": "Chapter map: OOP design",
+      "tier": "MAP",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
+    },
+    {
+      "slug": "encapsulation-public-api-boundary",
+      "title": "Encapsulation & the Public-API Boundary",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
+    },
+    {
+      "slug": "classmethod-vs-staticmethod",
+      "title": "classmethod vs staticmethod — the Design Call",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
+    },
+    {
+      "slug": "new-vs-init",
+      "title": "__new__ vs __init__ — When Construction Is the Problem",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
+    },
+    {
+      "slug": "multiple-inheritance-mixins",
+      "title": "Multiple Inheritance & Mixin Design",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
+    },
+    {
+      "slug": "composition-delegation-python",
+      "title": "Composition & Delegation in Python",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
+    },
+    {
+      "slug": "patterns-solid-python-delta",
+      "title": "Patterns & SOLID — the Python Delta",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "15-oop-design",
+      "sectionTitle": "OOP design"
     }
   ],
   "gameDayDocs": [

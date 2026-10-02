@@ -601,6 +601,21 @@ const vaultRefSpan = (raw, resolve) => {
   return `<span class="vault-ref" title="${escapeHtml(target.trim())}">${escapeHtml(label)}</span>`
 }
 
+/**
+ * A wikilink whose alias holds Markdown (`[[x/42-tasks|`TaskGroup`]]`, `|__slots__`) is split by marked
+ * into text + <code>/<strong> + text, so the DOM pass never sees it whole. Outside code fences, turn it
+ * into a .md link before parsing; the `a[href$=".md"]` pass then routes it like any note link.
+ */
+function linkMarkdownAliases(md) {
+  return md
+    .split(/(^```[\s\S]*?^```)/m)
+    .map((part, i) =>
+      i % 2 ? part : part.replace(/\[\[([^\]|\\]+)\\?\|([^\]]*[`*_][^\]]*)\]\]/g, (_, target, alias) =>
+        `[${alias}](${encodeURI(target.trim())}.md)`),
+    )
+    .join('')
+}
+
 function flattenVaultRefs(html) {
   return html.replace(/\[\[([^\]]+)\]\]/g, (_, raw) => vaultRefSpan(raw))
 }
@@ -1182,7 +1197,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
       // A chapter's `00-chapter-map.md` (concept map, reading order, decision tree) becomes the
       // chapter's first page, rendered and link-resolved like any note.
       if (mapHeader && file === '00-chapter-map.md' && raw.startsWith(`# ${mapHeader}: `)) {
-        const $ = cheerio.load(marked.parse(raw, { gfm: true, mangle: false, headerIds: false }))
+        const $ = cheerio.load(marked.parse(linkMarkdownAliases(raw), { gfm: true, mangle: false, headerIds: false }))
         const body = $('body')
         body.find('h1').first().remove()
         body.find('blockquote').first().remove()
@@ -1199,17 +1214,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
 
       for (const md of notes) {
         chartSource = `${chapterDir}/${file}`
-        // A wikilink whose alias holds Markdown (`[[x/42-tasks|`TaskGroup`]]`, `|__slots__`) is split by
-        // marked into text + <code>/<strong> + text, so the DOM pass never sees it whole. Outside code
-        // fences, turn it into a .md link up front; the `a[href$=".md"]` pass below routes it.
-        const linked = md
-          .split(/(^```[\s\S]*?^```)/m)
-          .map((part, i) =>
-            i % 2 ? part : part.replace(/\[\[([^\]|\\]+)\\?\|([^\]]*[`*_][^\]]*)\]\]/g, (_, target, alias) =>
-              `[${alias}](${encodeURI(target.trim())}.md)`),
-          )
-          .join('')
-        const $ = cheerio.load(marked.parse(linked, { gfm: true, mangle: false, headerIds: false }))
+        const $ = cheerio.load(marked.parse(linkMarkdownAliases(md), { gfm: true, mangle: false, headerIds: false }))
         const body = $('body')
 
         const title = text(body.find('h1').first()).replace(stripRe, '')
@@ -1324,6 +1329,7 @@ const PYTHON_CHAPTERS = {
   '12-stdlib-systems': 'Stdlib & systems',
   '13-production-services': 'Production services',
   '14-applied-adjacent': 'Applied & adjacent',
+  '15-oop-design': 'OOP design',
 }
 
 const ingestPython = () =>
