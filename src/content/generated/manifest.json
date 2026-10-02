@@ -5616,6 +5616,85 @@
       "relevance": "Architect",
       "section": "08-typing-interfaces",
       "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "idiomatic-structural-map",
+      "title": "Chapter map: Idiomatic & structural",
+      "tier": "MAP",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "context-managers",
+      "title": "Context Managers",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "dataclasses",
+      "title": "dataclasses",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "enum",
+      "title": "enum",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "pattern-matching",
+      "title": "Pattern Matching (match / case)",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "exception-model",
+      "title": "The Exception Model",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "designing-custom-exceptions",
+      "title": "Designing Custom Exceptions",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "exception-groups",
+      "title": "Exception Groups (ExceptionGroup / except*)",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "string-formatting-io",
+      "title": "String Formatting & I/O",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "text-processing-unicode",
+      "title": "Text Processing & Unicode",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "09-idiomatic-structural",
+      "sectionTitle": "Idiomatic & structural"
     }
   ],
   "gameDayDocs": [

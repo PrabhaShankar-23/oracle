@@ -1199,7 +1199,17 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
 
       for (const md of notes) {
         chartSource = `${chapterDir}/${file}`
-        const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+        // A wikilink whose alias holds Markdown (`[[x/42-tasks|`TaskGroup`]]`, `|__slots__`) is split by
+        // marked into text + <code>/<strong> + text, so the DOM pass never sees it whole. Outside code
+        // fences, turn it into a .md link up front; the `a[href$=".md"]` pass below routes it.
+        const linked = md
+          .split(/(^```[\s\S]*?^```)/m)
+          .map((part, i) =>
+            i % 2 ? part : part.replace(/\[\[([^\]|\\]+)\\?\|([^\]]*[`*_][^\]]*)\]\]/g, (_, target, alias) =>
+              `[${alias}](${encodeURI(target.trim())}.md)`),
+          )
+          .join('')
+        const $ = cheerio.load(marked.parse(linked, { gfm: true, mangle: false, headerIds: false }))
         const body = $('body')
 
         const title = text(body.find('h1').first()).replace(stripRe, '')
@@ -1308,6 +1318,7 @@ const PYTHON_CHAPTERS = {
   '06-concurrency-gil': 'Concurrency & the GIL',
   '07-async-io': 'Async I/O',
   '08-typing-interfaces': 'Typing & interfaces',
+  '09-idiomatic-structural': 'Idiomatic & structural',
 }
 
 const ingestPython = () =>
