@@ -5789,6 +5789,53 @@
       "relevance": "Senior",
       "section": "11-packaging-environments-tooling",
       "sectionTitle": "Packaging, environments & tooling"
+    },
+    {
+      "slug": "stdlib-systems-map",
+      "title": "Chapter map: Stdlib & systems",
+      "tier": "MAP",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems"
+    },
+    {
+      "slug": "collections-heapq",
+      "title": "collections & heapq",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems"
+    },
+    {
+      "slug": "serialization",
+      "title": "Serialization (pickle, json, marshal)",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems"
+    },
+    {
+      "slug": "filesystem-subprocess",
+      "title": "Filesystem & Subprocess",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems"
+    },
+    {
+      "slug": "logging",
+      "title": "Logging",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems"
+    },
+    {
+      "slug": "datetime-numerics-gotchas",
+      "title": "Datetime & Numerics Gotchas",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems"
     }
   ],
   "gameDayDocs": [

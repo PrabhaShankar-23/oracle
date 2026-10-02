@@ -1,0 +1,243 @@
+{
+  "id": "12-stdlib-systems",
+  "title": "Stdlib & systems",
+  "notes": [
+    {
+      "slug": "stdlib-systems-map",
+      "number": -1,
+      "title": "Chapter map: Stdlib & systems",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems",
+      "headings": [
+        {
+          "id": "how-should-this-object-cross-a-boundary",
+          "text": "🌳 How should this object cross a boundary?",
+          "level": 2
+        }
+      ],
+      "html": "<p>The standard-library modules a service touches every day, each with one trap that only shows in production. These notes are mostly independent; read each arrow as a sentence: <em>serialization</em> <strong>used by</strong> <em>multiprocessing</em>.</p>\n<figure><div class=\"mermaid\">flowchart TD\n    LI[\"📋 22 · list internals\"]\n    MP[\"🏭 35 · multiprocessing\"]\n    SL[\"🧾 81 · structured logging\"]\n    N68[\"🧺 68 · collections &amp; heapq\"]\n    N69[\"📦 69 · serialization\"]\n    N70[\"📁 70 · filesystem &amp; subprocess\"]\n    N71[\"📝 71 · logging\"]\n    N72[\"🕰️ 72 · datetime &amp; numerics\"]\n    N68 -.-&gt;|\"built on\"| LI\n    N69 -.-&gt;|\"used by\"| MP\n    N71 -.-&gt;|\"used by\"| SL\n    N72 --&gt;|\"used by\"| N69\n    classDef core fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef sup fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N69,N72 sup; class N68,N70,N71 br; class LI,MP,SL in\n</div></figure>\n<p>Blue = SUPPORTING, yellow = BREADTH, grey = another chapter (dashed edges). No CORE notes: each is a module, not a mechanism.</p>\n<p><strong>Reading order:</strong> <a href=\"/python/collections-heapq\">68 collections &amp; heapq</a> ─▶ <a href=\"/python/serialization\">69 serialization</a> ─▶ <a href=\"/python/filesystem-subprocess\">70 filesystem &amp; subprocess</a> ─▶ <a href=\"/python/logging\">71 logging</a> ─▶ <a href=\"/python/datetime-numerics-gotchas\">72 datetime &amp; numerics</a></p>\n<h2 id=\"how-should-this-object-cross-a-boundary\">🌳 How should this object cross a boundary?</h2>\n<p>The serializers in 69 are alternatives, so the choice lives here (moved from note 69).</p>\n<figure><div class=\"mermaid\">flowchart TD\n    Q1{\"🤔 do you fully trust\\nwhoever produced the bytes?\"}\n    Q2{\"🤔 another language or\\na human must read it?\"}\n    Q3{\"🤔 must it outlive the\\ncurrent class definitions?\"}\n    L1((\"🛂 json + a schema\\n(Pydantic)\"))\n    L2((\"📄 json\"))\n    L3((\"🗄️ a database or a\\nschema'd format\"))\n    L4((\"📦 pickle, pinned protocol\"))\n    Q1 --&gt;|\"no\"| L1\n    Q1 --&gt;|\"yes\"| Q2\n    Q2 --&gt;|\"yes\"| L2\n    Q2 --&gt;|\"no\"| Q3\n    Q3 --&gt;|\"yes\"| L3\n    Q3 --&gt;|\"no\"| L4\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    class Q1,Q2,Q3 ask; class L1,L2,L3,L4 ok\n</div></figure>\n<p>What each leaf is, and <strong>the one condition that would change the answer</strong>:</p>\n<ul>\n<li><p><strong>🛂 json + schema</strong> (<a href=\"/python/pydantic-validation-boundary\">Pydantic</a>): if the payload is huge and on a hot path, parse with <code>model_validate_json</code> straight from bytes rather than <code>json.loads</code> first.</p>\n</li>\n<li><p><strong>📄 json</strong> (<a href=\"/python/serialization\">serialization</a>): if you start writing nested <code>default=</code> encoders, you've grown an untyped schema; switch to Pydantic.</p>\n</li>\n<li><p><strong>🗄️ database or schema'd format</strong>: if the data is a short-lived cache entry you can rebuild, pickle is fine; it's durability that rules it out.</p>\n</li>\n<li><p><strong>📦 pickle</strong> (<a href=\"/python/serialization\">serialization</a>): if the bytes ever travel through a queue another team can write to, go back to the first question: it's untrusted now.</p>\n</li>\n<li><p><strong>The one big idea:</strong> each module's dangerous default is the convenient one: <code>shell=True</code>, <code>utcnow()</code>, <code>pickle.loads</code>, f-strings in log calls, <code>float</code> for money. The safe form is one argument or one constructor away.</p>\n</li>\n<li><p><strong>The two most-confused pairs:</strong> <em>naive vs aware datetime</em> (72: comparing them raises <code>TypeError</code>) · <em><code>pickle</code> vs <code>json</code></em> (69: reconstruction instructions vs a photograph of six types).</p>\n</li>\n<li><p><strong>Ten minutes before an interview:</strong> 69's hostile-pickle sequence diagram, 72's UTC pipeline, then this tree.</p>\n</li>\n<li><p><strong>Cross-chapter:</strong> <a href=\"/python/list-internals\">list internals</a> (why <code>deque</code> exists) · <a href=\"/python/multiprocessing\">multiprocessing</a> (pickle is its wire format) · <span class=\"vault-ref\" title=\"13-production-services/81-structured-logging-context-propagation\">structured logging</span> (where 71 goes in production).</p>\n</li>\n</ul>"
+    },
+    {
+      "slug": "collections-heapq",
+      "number": 68,
+      "title": "collections & heapq",
+      "category": "Language Fundamentals",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/collections.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>collections</code>: container datatypes</a> · 📘 <a href=\"https://docs.python.org/3/library/heapq.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>heapq</code>: heap queue algorithm</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p><code>defaultdict</code> for grouping, <code>Counter</code> for counting, <code>deque</code> for O(1) at both ends, <code>heapq</code> for a min-heap on a plain list.\nPush heap entries as <code>(priority, counter, item)</code>: ties compare the next element.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>deque</code> vs <code>list</code> for a queue?</strong></td>\n<td><code>deque</code> is O(1) at both ends; <code>list.insert(0)</code> / <code>pop(0)</code> shifts every element (<a href=\"/python/list-internals\">list internals</a>).</td>\n</tr>\n<tr>\n<td><strong>Is <code>OrderedDict</code> obsolete since 3.7?</strong></td>\n<td>Mostly: <code>dict</code> keeps insertion order. <code>OrderedDict</code> still has <code>move_to_end</code> and order-sensitive <code>==</code>.</td>\n</tr>\n<tr>\n<td><strong>The <code>heapq</code> tuple gotcha?</strong></td>\n<td>Equal priorities compare the payload: two dicts raised <code>TypeError: '&lt;' not supported</code>.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p><code>defaultdict(list)</code> removes the check-then-insert dance from grouping code. <code>Counter</code> is a multiset (<code>most_common()</code>). <code>deque</code> is the queue and sliding-window primitive: on CPython 3.12 a push and pop at the front of a 100,000-item list took 25 µs, against 28 ns for <code>deque</code>, and <code>maxlen</code> makes it a ring buffer that evicts the oldest. <code>heapq</code> keeps a list in min-heap order: O(log n) push and pop, O(1) peek, the engine under schedulers and <code>nsmallest</code>. <code>OrderedDict</code> survives for hand-rolled LRUs, and because <code>OrderedDict(a=1, b=2) == OrderedDict(b=2, a=1)</code> is <code>False</code> while the plain-dict version is <code>True</code>.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">from collections import defaultdict, deque\nimport heapq, itertools\ngroups = defaultdict(list)\ngroups[\"retry\"].append(\"job-7\")          # a missing key builds the list\nwindow = deque(maxlen=3)\nfor i in range(5): window.append(i)      # → deque([2, 3, 4], maxlen=3)\nh, tie = [], itertools.count()\nheapq.heappush(h, (2, next(tie), {\"name\": \"low\"}))\nheapq.heappush(h, (1, next(tie), {\"name\": \"urgent\"}))\nprint(heapq.heappop(h)[2])               # → {'name': 'urgent'}: smallest tuple first\n</code></pre>"
+    },
+    {
+      "slug": "serialization",
+      "number": 69,
+      "title": "Serialization (pickle, json, marshal)",
+      "category": "Production Python",
+      "relevance": "Architect",
+      "tier": "SUPPORTING",
+      "created": "21 Jul 2026",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "how-it-works",
+          "text": "⚙️ How it works",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        },
+        {
+          "id": "interview",
+          "text": "🗣️ Interview",
+          "level": 3
+        },
+        {
+          "id": "compare",
+          "text": "⚖️ Compare",
+          "level": 3
+        },
+        {
+          "id": "pitfalls",
+          "text": "🚫 Pitfalls",
+          "level": 3
+        },
+        {
+          "id": "connections",
+          "text": "🕸️ Connections",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/pickle.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>pickle</code></a> · 📘 <a href=\"https://docs.python.org/3/library/json.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>json</code></a> · 📘 <a href=\"https://docs.python.org/3/library/marshal.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>marshal</code></a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p><code>pickle</code> stores <em>reconstruction instructions</em> for almost any object graph, so unpickling untrusted bytes is remote code execution.\n<code>json</code> is safe and interoperable but knows six types; <code>marshal</code> is CPython's private <code>.pyc</code> format, for nothing else.</p>\n<p><strong>🧭 Flow:</strong> <code>pickle.dumps(obj)</code> ─▶ classes and functions recorded <strong>by import path</strong>, state by <code>__dict__</code> or <code>__reduce__</code> ─▶ bytes travel ─▶ <code>pickle.loads</code> runs a small stack machine ─▶ re-imports each named callable and calls it ─▶ object rebuilt (or, from a stranger, whatever they named runs)</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The pickle security rule?</strong></td>\n<td>Unpickling calls whatever the payload names (<code>__reduce__</code>): never unpickle untrusted bytes. Validation can't fix it.</td>\n</tr>\n<tr>\n<td><strong>What can't <code>json</code> represent?</strong></td>\n<td>Sets, tuples (they come back as lists), bytes, datetimes, custom classes, non-string keys (<code>{1: \"a\"}</code> became <code>{\"1\": \"a\"}</code>).</td>\n</tr>\n<tr>\n<td><strong>Where does pickle cost you invisibly?</strong></td>\n<td>Multiprocessing: every argument and result is pickled per call.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>A pickle isn't a data snapshot; it's a program. On CPython 3.12:</p>\n<pre><code class=\"language-python\">import os, pickle\nclass Evil:\n    def __reduce__(self):\n        return (os.system, (\"echo PWNED-during-load\",))  # \"rebuild me by calling this\"\nblob = pickle.dumps(Evil())\npickle.loads(blob)        # prints PWNED-during-load, then returns 0\n</code></pre>\n<p>The command ran <em>during</em> <code>loads</code>, before any object existed to inspect. That's the documented extension mechanism, not a bug, so \"we validate after loading\" is too late by definition. The same design explains every pickling error: functions and classes are stored by qualified name and <a href=\"/python/import-system\">re-imported</a> at load, so a lambda (<code>PicklingError: Can't pickle &lt;function &lt;lambda&gt;&gt;</code>) has no name to store, and a socket (<code>cannot pickle 'socket' object</code>) is kernel state, meaningless in another process.</p>\n<p><strong>The trade: pickle round-trips almost any Python object graph, cycles included, and in exchange the bytes can execute code and are coupled to your class names.</strong></p>\n<h3 id=\"how-it-works\">⚙️ How it works</h3>\n<p>What <code>loads</code> actually does with a hostile payload:</p>\n<figure><div class=\"mermaid\">sequenceDiagram\n    participant A as attacker bytes\n    participant L as pickle.loads\n    participant I as import system\n    participant O as os.system\n    A-&gt;&gt;L: opcodes: STACK_GLOBAL posix system, TUPLE1, REDUCE\n    L-&gt;&gt;I: import posix, fetch attribute system\n    I--&gt;&gt;L: the real os.system\n    L-&gt;&gt;O: call it with the payload's argument\n    O--&gt;&gt;L: shell command already ran\n    L--&gt;&gt;A: returns 0: nothing left to validate\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>What actually happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>By name, not by code</strong></td>\n<td><code>myapp.models.User</code> is written as an import path; rename the class and every stored pickle breaks with <code>AttributeError</code> or <code>ModuleNotFoundError</code>.</td>\n</tr>\n<tr>\n<td><strong>State</strong></td>\n<td>The instance <code>__dict__</code> (or <code>__getstate__</code>'s result), pickled recursively with memoization, which is how cycles survive.</td>\n</tr>\n<tr>\n<td><strong>Mitigations</strong></td>\n<td>Sign the channel (HMAC), or restrict <code>Unpickler.find_class</code> to an allowlist; the honest default for untrusted input is not pickle.</td>\n</tr>\n<tr>\n<td><strong>Protocols</strong></td>\n<td>Protocol 5 (3.8+) adds out-of-band buffers for large arrays. <code>DEFAULT_PROTOCOL</code> is 4 on 3.12 and 5 on 3.14; readers must be at least as new.</td>\n</tr>\n</tbody></table>\n<h3 id=\"code\">💻 Code</h3>\n<p>One object, two boundaries:</p>\n<pre><code class=\"language-python\">import json, pickle\nfrom dataclasses import dataclass, asdict\nfrom datetime import datetime, timezone\n\n@dataclass\nclass Event:\n    name: str\n    at: datetime\n\ne = Event(\"deploy\", datetime(2026, 10, 2, 9, 0, tzinfo=timezone.utc))\n\n# untrusted or cross-language boundary: explicit encoding\nwire = json.dumps(asdict(e), default=lambda o: o.isoformat())\n# → {\"name\": \"deploy\", \"at\": \"2026-10-02T09:00:00+00:00\"}   (a string comes back)\n\n# trusted internal hop, e.g. our own task queue: the real object round-trips\nblob = pickle.dumps(e, protocol=pickle.HIGHEST_PROTOCOL)\ntype(pickle.loads(blob).at)      # → datetime, ONLY safe because we produced blob\n</code></pre>\n<p>Nested <code>default=</code> lambdas grow into an untyped shadow schema; at real API boundaries that's <a href=\"/python/pydantic-validation-boundary\">Pydantic</a>'s job.</p>\n<h3 id=\"interview\">🗣️ Interview</h3>\n<p><strong>30-second answer:</strong> Three serializers, three contracts. <code>pickle</code> handles nearly any object graph by recording reconstruction instructions, which is exactly why unpickling untrusted data is remote code execution: <code>__reduce__</code> can name any callable. <code>json</code> is safe, interoperable and readable, but limited to six types, so everything else needs explicit encoding. <code>marshal</code> is CPython's private, version-unstable <code>.pyc</code> format. Pickle for trusted internal hops only; json or a schema at every boundary.</p>\n<p><strong>Q · Mechanism —</strong> What decides whether an object is picklable, and why do lambdas and sockets fail?\nPickle stores classes and functions by qualified name and re-imports them at load, plus instance state from <code>__dict__</code> or <code>__getstate__</code>. So both sides need compatible code, and anything without an importable name fails: lambdas and classes defined inside functions. Sockets, file handles, locks and DB connections fail because they're kernel state; objects holding them need <code>__getstate__</code>/<code>__setstate__</code> to drop and re-establish them. That's also why <a href=\"/python/multiprocessing\">multiprocessing</a> with spawn rejects lambda targets.</p>\n<h3 id=\"compare\">⚖️ Compare</h3>\n<table>\n<thead>\n<tr>\n<th></th>\n<th><code>pickle</code></th>\n<th><code>json</code></th>\n<th><code>marshal</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Coverage</strong></td>\n<td>almost any object graph, cycles</td>\n<td>six types; the rest is your encoder</td>\n<td>code objects, primitives</td>\n</tr>\n<tr>\n<td><strong>Untrusted input</strong></td>\n<td>❌ arbitrary code execution</td>\n<td>✅ worst case a big or deep payload</td>\n<td>❌ can crash the interpreter</td>\n</tr>\n<tr>\n<td><strong>Cross-language, readable</strong></td>\n<td>no, no</td>\n<td>yes, yes</td>\n<td>no, no</td>\n</tr>\n<tr>\n<td><strong>Stable across versions</strong></td>\n<td>protocols yes; <em>your classes</em> are the risk</td>\n<td>universal</td>\n<td>no: changes per release</td>\n</tr>\n<tr>\n<td><strong>Use for</strong></td>\n<td>trusted IPC, task queues, caches</td>\n<td>APIs, config, logs</td>\n<td>nothing (CPython's own <code>.pyc</code>)</td>\n</tr>\n</tbody></table>\n<h3 id=\"pitfalls\">🚫 Pitfalls</h3>\n<ul>\n<li>❌ <strong>\"Pickle is unsafe like <code>eval</code>; I can sanitize it\"</strong><br>✅ <strong>The unsafety is the feature:</strong> reconstruction calls what the payload names.<br>↳ <em>Fix:</em> an allowlisted <code>find_class</code>, a signed channel, or not pickle.</li>\n<li>🪞 <strong>\"If <code>dumps</code> succeeded, <code>loads</code> works anywhere\"</strong><br>✅ <strong>Dumps records import paths;</strong> a rename or a missing module breaks every stored blob.<br>↳ <em>Classic:</em> the broken cache after a deploy.</li>\n<li>⚠️ <strong>Never pickle across a trust boundary.</strong><br>↳ <em>Includes:</em> user uploads, other teams' services, any message bus you don't fully control.</li>\n<li>⚠️ <strong>Don't pickle long-lived data for durable storage.</strong><br>↳ <em>Why:</em> bytes are <strong>coupled to class definitions</strong>; a refactor strands them. Use a database or a schema'd format.</li>\n<li>⚠️ <strong>Don't ship big arrays through default pickling in multiprocessing.</strong><br>↳ <em>Why:</em> per-call serialization can <strong>exceed the compute</strong>; use shared memory or protocol 5 buffers.</li>\n<li>🔖 <strong>Version:</strong> protocol 5 <strong>3.8+</strong> (PEP 574); <code>DEFAULT_PROTOCOL</code> 4 through 3.13, <strong>5 from 3.14</strong>; <code>json</code>'s six-type limit is permanent by design.<br>↳ <em>Note:</em> checked on CPython 3.12.13 and 3.14.6.</li>\n</ul>\n<h3 id=\"connections\">🕸️ Connections</h3>\n<p><strong>Path:</strong> <a href=\"/python/import-system\">import system</a> ─▶ <strong>serialization</strong> ─▶ <a href=\"/python/multiprocessing\">multiprocessing</a></p>\n<ul>\n<li><strong>Builds on</strong> <a href=\"/python/import-system\">the import system</a>: pickle stores qualified names and re-imports them at load.</li>\n<li><strong>Used by</strong> <a href=\"/python/multiprocessing\">multiprocessing</a>: pickle is the IPC wire format, and its cost decides what parallelizes.</li>\n<li><strong>Contrasts with</strong> <a href=\"/python/pydantic-validation-boundary\">Pydantic</a>: a schema-first answer to json's six types, safe on untrusted input.</li>\n<li><strong>Used by</strong> <a href=\"/python/designing-custom-exceptions\">custom exceptions</a>: exceptions crossing processes must pickle.</li>\n<li><strong>Same idea elsewhere:</strong> Java deserialization (<code>ObjectInputStream</code>) has the same gadget-chain RCE class, for the same reason.</li>\n</ul>"
+    },
+    {
+      "slug": "filesystem-subprocess",
+      "number": 70,
+      "title": "Filesystem & Subprocess",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/pathlib.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>pathlib</code></a> · 📘 <a href=\"https://docs.python.org/3/library/subprocess.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>subprocess</code></a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p><code>pathlib.Path</code> joins with <code>/</code> and reads, writes and globs as methods; no string surgery.\n<code>subprocess.run([...], check=True, capture_output=True, timeout=…)</code> with a <em>list</em> of arguments: no shell, no injection, no pipe deadlock.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The <code>shell=True</code> trap?</strong></td>\n<td>The string goes through a shell: interpolated input becomes shell injection. Pass a list, <code>shell=False</code>.</td>\n</tr>\n<tr>\n<td><strong>The pipe deadlock?</strong></td>\n<td>The child fills a full <code>PIPE</code> while the parent <code>wait()</code>s: both block. <code>run()</code> and <code>communicate()</code> drain both pipes.</td>\n</tr>\n<tr>\n<td><strong><code>Path(\"etc\") / \"app\"</code>?</strong></td>\n<td><code>__truediv__</code> overloaded for joining, with the OS's separator.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p><code>shell=True</code> hands your string to a second interpreter whose grammar gives <code>;</code>, <code>$()</code> and <code>|</code> meaning. On CPython 3.12, <code>name = \"x; echo INJECTED\"</code> passed through <code>f\"echo {name}\"</code> with <code>shell=True</code> printed <code>x</code> and then ran the injected <code>echo INJECTED</code>; <code>[\"echo\", name]</code> printed <code>x; echo INJECTED</code> as one harmless argument. The other trap is silence: without <code>check=True</code>, a nonzero exit returns normally, which is how a failed backup passes CI. With it, <code>run([\"false\"], check=True)</code> raised <code>CalledProcessError: … returned non-zero exit status 1</code>. <code>timeout=</code> kills a hung child, and <code>mkdir(parents=True, exist_ok=True)</code> is idempotent, with no <code>exists()</code> race.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">from pathlib import Path\nimport subprocess\ncfg = Path.home() / \".config\" / \"app\"            # an object, not string concatenation\ncfg.mkdir(parents=True, exist_ok=True)           # idempotent\nr = subprocess.run(\n    [\"pg_dump\", \"--dbname\", db_url],             # LIST of args: no shell, no injection\n    capture_output=True, text=True,              # drains both pipes: no deadlock\n    check=True, timeout=300,                     # nonzero exit RAISES; a hung child is killed\n)\n(cfg / \"backup.sql\").write_text(r.stdout, encoding=\"utf-8\")\n</code></pre>"
+    },
+    {
+      "slug": "logging",
+      "number": 71,
+      "title": "Logging",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/howto/logging.html\" target=\"_blank\" rel=\"noopener noreferrer\">Logging HOWTO</a> · 📘 <a href=\"https://docs.python.org/3/library/logging.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>logging</code></a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Loggers form a tree by dotted name; records propagate up to root, where handlers (destination) and formatters (rendering) live.\nLibraries only call <code>getLogger(__name__)</code>; the <em>application</em> configures handlers once, at the entry point.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Logger vs handler vs formatter?</strong></td>\n<td>Logger: a named emit point in a tree. Handler: a destination. Formatter: the rendering.</td>\n</tr>\n<tr>\n<td><strong>The library logging rule?</strong></td>\n<td>Libraries add no handlers; only the application configures them, once.</td>\n</tr>\n<tr>\n<td><strong>Why are f-strings in log calls wrong?</strong></td>\n<td><code>log.debug(f\"{x}\")</code> formats even when DEBUG is off; <code>log.debug(\"%s\", x)</code> defers it.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p><code>getLogger(__name__)</code> makes the logger tree mirror your package layout, so levels can be tuned per module, and records propagate to root, where one configuration decides where and how they go. Code decides <em>what</em> to say; the entry point decides <em>where</em>. On CPython 3.12 with the level at INFO, <code>log.debug(f\"{obj}\")</code> still called <code>obj.__str__()</code>, while <code>log.debug(\"%s\", obj)</code> never did: deferred formatting is free when a level is off, and keeps arguments as separate fields for structured handlers. Production logs are JSON lines queried by machines, with <code>request_id</code> carried across async boundaries by context variables (<span class=\"vault-ref\" title=\"13-production-services/81-structured-logging-context-propagation\">structured logging</span>).</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">import logging\nlog = logging.getLogger(__name__)                 # module level; tree = package path\n\ndef charge(user_id: str, cents: int):\n    log.info(\"charge started user=%s amount=%d\", user_id, cents)  # deferred formatting\n    try:\n        ...\n    except PaymentError:\n        log.exception(\"charge failed user=%s\", user_id)   # ERROR level + traceback\n        raise                                              # log-and-raise only at boundaries\n\n# entry point ONLY, never in library code:\n# logging.basicConfig(level=logging.INFO)   # real apps: dictConfig with a JSON formatter\n</code></pre>"
+    },
+    {
+      "slug": "datetime-numerics-gotchas",
+      "number": 72,
+      "title": "Datetime & Numerics Gotchas",
+      "category": "Language Fundamentals",
+      "relevance": "Senior",
+      "tier": "SUPPORTING",
+      "created": "21 Jul 2026",
+      "section": "12-stdlib-systems",
+      "sectionTitle": "Stdlib & systems",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "how-it-works",
+          "text": "⚙️ How it works",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        },
+        {
+          "id": "interview",
+          "text": "🗣️ Interview",
+          "level": 3
+        },
+        {
+          "id": "compare",
+          "text": "⚖️ Compare",
+          "level": 3
+        },
+        {
+          "id": "pitfalls",
+          "text": "🚫 Pitfalls",
+          "level": 3
+        },
+        {
+          "id": "connections",
+          "text": "🕸️ Connections",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/datetime.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>datetime</code></a> · 📘 <a href=\"https://docs.python.org/3/library/zoneinfo.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>zoneinfo</code></a> · 📘 <a href=\"https://docs.python.org/3/tutorial/floatingpoint.html\" target=\"_blank\" rel=\"noopener noreferrer\">Floating-point arithmetic: issues and limitations</a> · 📘 <a href=\"https://docs.python.org/3/library/decimal.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>decimal</code></a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Store and compute time as aware UTC; attach a <code>ZoneInfo</code> only for display, or when the requirement really is wall-clock time.\nFloats are binary, so <code>0.1</code> is already inexact: compare with <code>math.isclose</code>, do money in <code>Decimal(\"…\")</code> or integer minor units.</p>\n<p><strong>🧭 Flow:</strong> a datetime arrives ─▶ naive? attach the <em>known</em> source zone ─▶ convert to UTC: store, order and compute here ─▶ convert to the viewer's <code>ZoneInfo</code> at display ─▶ a number arrives ─▶ money? <code>Decimal</code> from a string, or int paise ─▶ measurements? float + <code>isclose</code></p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Naive vs aware datetime?</strong></td>\n<td>Aware carries <code>tzinfo</code>; naive is a wall-clock reading. Comparing the two raises <code>TypeError</code>.</td>\n</tr>\n<tr>\n<td><strong>Why is <code>datetime.utcnow()</code> a trap?</strong></td>\n<td>It returns a <em>naive</em> datetime that only implies UTC; deprecated since 3.12. Use <code>datetime.now(timezone.utc)</code>.</td>\n</tr>\n<tr>\n<td><strong>Why does <code>0.1 + 0.2 != 0.3</code>?</strong></td>\n<td>Binary floats can't represent 1/10; each literal is the nearest double, and sums round again.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>Two families of \"works in the demo, breaks in prod\". On CPython 3.12:</p>\n<pre><code class=\"language-python\">datetime.utcnow().tzinfo                 # → None, plus a DeprecationWarning\ndatetime.utcnow() &lt; datetime.now(timezone.utc)\n# → TypeError: can't compare offset-naive and offset-aware datetimes\n0.1 + 0.2                                # → 0.30000000000000004\nDecimal(0.1)                             # → 0.1000000000000000055511151231257827021181583404541015625\n</code></pre>\n<p><code>utcnow()</code>'s UTC-ness lives only in your head, so the first mix with an aware value fails or, worse, gets serialized and the reader guesses the zone. The float error is in the <em>representation</em>: <code>0.1</code> is rounded at parse time, before any arithmetic, and <code>Decimal(0.1)</code> faithfully preserves that wrong double, which is why <code>Decimal</code> must be built from strings.</p>\n<p><strong>The trade: aware UTC and base-10 money types cost a little ceremony at the edges, and in return ordering, DST and rounding stop being silent bugs.</strong></p>\n<h3 id=\"how-it-works\">⚙️ How it works</h3>\n<figure><div class=\"mermaid\">flowchart TD\n    A([\"📥 a datetime enters\"]) --&gt; B{\"🤔 tzinfo attached?\"}\n    B --&gt;|\"no\"| C[\"⚙️ attach the KNOWN source\\nzone, fold-aware\"]\n    B --&gt;|\"yes\"| E[\"📦 astimezone(UTC):\\nstore and order here\"]\n    C --&gt; E\n    E --&gt; F[[\"🧮 elapsed-time arithmetic\\nin UTC: no DST, total order\"]]\n    F --&gt; G((\"✅ display: astimezone\\nthe viewer's ZoneInfo\"))\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef proc fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    class A in; class C,E proc; class F calc; class B ask; class G ok\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>What actually happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>DST: elapsed vs wall-clock</strong></td>\n<td>From 09:00 on 7 Mar 2026 in New York, UTC + 24 h converted back gave <strong>10:00</strong> local (spring-forward); <code>+ timedelta(days=1)</code> in the local zone gave <strong>09:00</strong>, only 23 h later. Pick the one the requirement means.</td>\n</tr>\n<tr>\n<td><strong>Gaps and folds</strong></td>\n<td>Some local times don't exist (spring) and some happen twice (autumn); <code>fold=0/1</code> picks which. Naive values can't express this.</td>\n</tr>\n<tr>\n<td><strong>Base 2</strong></td>\n<td>A float is a 53-bit significand × 2ⁿ, exact only for m/2ⁿ. 1/10 has a factor of 5, so it repeats forever in binary and is truncated.</td>\n</tr>\n<tr>\n<td><strong><code>Decimal</code> and <code>Fraction</code></strong></td>\n<td><code>Decimal</code> is base 10 with set precision and explicit rounding (<code>ROUND_HALF_EVEN</code> gave <code>2.5 → 2</code>); <code>Fraction</code> is exact ratios, unbounded and slow.</td>\n</tr>\n</tbody></table>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">from datetime import datetime, timezone\nfrom zoneinfo import ZoneInfo\nfrom decimal import Decimal, ROUND_HALF_EVEN\nimport math\n\ncreated = datetime.now(timezone.utc)                  # aware UTC, never utcnow()\nist = created.astimezone(ZoneInfo(\"Asia/Kolkata\"))    # zone only at the display edge\n\nprice = Decimal(\"199.99\")                             # STRING constructor\ngst = (price * Decimal(\"0.18\")).quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_EVEN)\n# → Decimal('36.00'): explicit rounding, banker's rule, unbiased over many rows\n\nassert 0.1 + 0.2 != 0.3                               # binary base, not a bug\nassert math.isclose(0.1 + 0.2, 0.3)                   # the right float comparison\n</code></pre>\n<p><code>Decimal</code> arithmetic measured ~50 ns against ~8 ns for the same float expression on 3.12: fine for ledgers, wasteful for ML and metrics, where data was never base-10 exact. For money at scale, integer minor units (paise, cents) are exact, fast and database-friendly.</p>\n<h3 id=\"interview\">🗣️ Interview</h3>\n<p><strong>30-second answer:</strong> Time: store and compute in aware UTC with <code>datetime.now(timezone.utc)</code>, and convert with <code>zoneinfo</code> only at display; naive datetimes hide an assumption that breaks at the first DST change or cross-region deploy, and <code>utcnow()</code> is the deprecated trap that looks right. Numbers: floats are binary, so <code>0.1</code> is already inexact: <code>math.isclose</code> for comparison, <code>Decimal</code> from strings or integer minor units for money.</p>\n<p><strong>Q · Mechanism —</strong> Why can't binary floating point hold 0.1, and what do <code>Decimal</code> and <code>Fraction</code> fix?\nA double represents exactly the values m/2ⁿ with a 53-bit m. 1/10 has a 5 in its denominator, so it's an infinite binary expansion truncated at parse time: <code>0.1</code> is stored as 0.1000000000000000055…, and every operation rounds again, so <code>0.1 + 0.2</code> lands on a different double than <code>0.3</code>. <code>Decimal</code> moves to base 10 with explicit precision and rounding modes, but only exact if built from a string. <code>Fraction</code> keeps integer ratios: exact, unbounded, slow.</p>\n<h3 id=\"compare\">⚖️ Compare</h3>\n<table>\n<thead>\n<tr>\n<th></th>\n<th><code>float</code></th>\n<th><code>Decimal</code></th>\n<th><code>Fraction</code></th>\n<th>int minor units</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Exact for</strong></td>\n<td>powers of two</td>\n<td>base-10 decimals at set precision</td>\n<td>all rationals</td>\n<td>whole paise or cents</td>\n</tr>\n<tr>\n<td><strong>Speed</strong></td>\n<td>hardware, fastest</td>\n<td>~6× slower here</td>\n<td>slowest, grows unbounded</td>\n<td>hardware int</td>\n</tr>\n<tr>\n<td><strong>Rounding</strong></td>\n<td>IEEE, fixed</td>\n<td>explicit modes</td>\n<td>never rounds</td>\n<td>written once, at display</td>\n</tr>\n<tr>\n<td><strong>Reach for it</strong></td>\n<td>science, ML, metrics</td>\n<td>money with fractional rates</td>\n<td>exact ratio math</td>\n<td>money at scale</td>\n</tr>\n</tbody></table>\n<h3 id=\"pitfalls\">🚫 Pitfalls</h3>\n<ul>\n<li>❌ <strong>\"<code>utcnow()</code> gives me a UTC datetime\"</strong><br>✅ <strong>It gives a naive one;</strong> mixing it with aware values raises <code>TypeError</code>.</li>\n<li>🪞 <strong>\"A literal like <code>0.1</code> is stored exactly; errors come from arithmetic\"</strong><br>✅ <strong>The error is in the representation,</strong> and <code>Decimal(0.1)</code> preserves it.</li>\n<li>⚠️ <strong>Don't compare floats with <code>==</code> after any arithmetic.</strong><br>↳ <em>Fix:</em> <code>math.isclose</code>, or <code>pytest.approx</code> in <a href=\"/python/testing-quality-tooling\">tests</a>.</li>\n<li>⚠️ <strong>Don't store local time with a zone when UTC works.</strong><br>↳ <em>Why:</em> ordering, range queries and dedup get harder; the zone belongs to the <strong>viewer</strong>.<br>↳ <em>Exception:</em> future civil events (\"9 am on-site\"), where wall time is the contract.</li>\n<li>⚠️ <strong>Don't measure durations with <code>time.time()</code>.</strong><br>↳ <em>Why:</em> the wall clock <strong>steps under NTP</strong>; <code>time.monotonic()</code> is the duration clock.</li>\n<li>🔖 <strong>Version:</strong> <code>zoneinfo</code> <strong>3.9+</strong> (before it, <code>pytz</code>'s different <code>localize()</code> API); <code>fold</code> <strong>3.6+</strong>; <code>utcnow()</code> deprecated <strong>3.12</strong>.<br>↳ <em>Note:</em> checked on CPython 3.12.13.</li>\n</ul>\n<h3 id=\"connections\">🕸️ Connections</h3>\n<p><strong>Path:</strong> <a href=\"/python/is-vs-equals-identity-interning\">is vs ==</a> ─▶ <strong>datetime &amp; numerics</strong> ─▶ <a href=\"/python/serialization\">serialization</a></p>\n<ul>\n<li><strong>Contrasts with</strong> <a href=\"/python/is-vs-equals-identity-interning\">is vs ==</a>: float <code>==</code> compares exact bits, which after arithmetic is rarely what you mean.</li>\n<li><strong>Used by</strong> <a href=\"/python/serialization\">serialization</a>: datetimes are json's most common gap; ISO format with an offset is the wire convention.</li>\n<li><strong>Used by</strong> <a href=\"/python/testing-quality-tooling\">testing</a>: <code>pytest.approx</code>, frozen clocks and time-zone matrix tests pin these down.</li>\n<li><strong>Same idea elsewhere:</strong> Java's <code>Instant</code> vs <code>ZonedDateTime</code> and <code>BigDecimal</code> split time and money the same way.</li>\n</ul>"
+    }
+  ]
+}

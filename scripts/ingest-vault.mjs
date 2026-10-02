@@ -1321,6 +1321,7 @@ const PYTHON_CHAPTERS = {
   '09-idiomatic-structural': 'Idiomatic & structural',
   '10-performance-profiling': 'Performance & profiling',
   '11-packaging-environments-tooling': 'Packaging, environments & tooling',
+  '12-stdlib-systems': 'Stdlib & systems',
 }
 
 const ingestPython = () =>
