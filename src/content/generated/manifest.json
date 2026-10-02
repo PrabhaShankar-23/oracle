@@ -5303,6 +5303,13 @@
       "sectionTitle": "Iterators, generators & comprehensions"
     },
     {
+      "slug": "cpython-object-internals-map",
+      "title": "Chapter map: CPython object internals",
+      "tier": "MAP",
+      "section": "04-cpython-object-internals",
+      "sectionTitle": "CPython object internals"
+    },
+    {
       "slug": "pyobject-refcounts-object-header",
       "title": "PyObject, Refcounts & the Object Header",
       "tier": "CORE",
