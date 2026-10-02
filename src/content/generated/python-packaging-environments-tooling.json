@@ -1,0 +1,268 @@
+{
+  "id": "11-packaging-environments-tooling",
+  "title": "Packaging, environments & tooling",
+  "notes": [
+    {
+      "slug": "packaging-environments-tooling-map",
+      "number": -1,
+      "title": "Chapter map: Packaging, environments & tooling",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling",
+      "headings": [
+        {
+          "id": "which-dependency-workflow",
+          "text": "🌳 Which dependency workflow?",
+          "level": 2
+        }
+      ],
+      "html": "<p>How code gets <em>found</em> (63, 64), <em>installed</em> (65, 66) and <em>checked</em> (67). Read each arrow as a sentence: <em>import machinery</em> <strong>built on</strong> <em>the import system</em>.</p>\n<figure><div class=\"mermaid\">flowchart TD\n    NB[\"🏷️ 01 · names &amp; binding\"]\n    GEN[\"⏸️ 15 · generators\"]\n    N63[\"📥 63 · import system\"]\n    N64[\"🔎 64 · import machinery\"]\n    N65[\"🧪 65 · venvs &amp; resolution\"]\n    N66[\"📦 66 · packaging\"]\n    N67[\"✅ 67 · testing &amp; tooling\"]\n    N63 -.-&gt;|\"built on\"| NB\n    N64 --&gt;|\"built on\"| N63\n    N65 --&gt;|\"built on\"| N64\n    N66 --&gt;|\"built on\"| N65\n    N67 --&gt;|\"built on\"| N63\n    N67 -.-&gt;|\"built on\"| GEN\n    N67 --&gt;|\"built on\"| N65\n    classDef core fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef sup fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N63 core; class N65,N67 sup; class N64,N66 br; class NB,GEN in\n</div></figure>\n<p>Green = CORE, blue = SUPPORTING, yellow = BREADTH, grey = another chapter (dashed edges).</p>\n<p><strong>Reading order:</strong> <a href=\"/python/import-system\">63 import system</a> ─▶ <a href=\"/python/import-machinery-internals\">64 import machinery</a> ─▶ <a href=\"/python/virtual-environments-dependency-resolution\">65 venvs &amp; resolution</a> ─▶ <a href=\"/python/packaging-distribution\">66 packaging</a> ─▶ <a href=\"/python/testing-quality-tooling\">67 testing &amp; tooling</a></p>\n<h2 id=\"which-dependency-workflow\">🌳 Which dependency workflow?</h2>\n<p>The tools in 65 are alternatives for one job, so the choice lives here (moved from note 65).</p>\n<figure><div class=\"mermaid\">flowchart TD\n    Q1{\"🤔 a throwaway script\\nor notebook?\"}\n    Q2{\"🤔 need a reproducible\\nlocked install?\"}\n    Q3{\"🤔 is uv allowed\\nhere?\"}\n    Q4{\"🤔 must one tool also\\nbuild and publish?\"}\n    L1((\"⚡ uv run --with pkg\"))\n    L2((\"🧰 pip + venv\"))\n    L3((\"🚀 uv project:\\nuv.lock + uv sync --frozen\"))\n    L4((\"📜 Poetry\"))\n    L5((\"🧩 pip-tools:\\npip-compile\"))\n    Q1 --&gt;|\"yes\"| L1\n    Q1 --&gt;|\"no\"| Q2\n    Q2 --&gt;|\"no\"| L2\n    Q2 --&gt;|\"yes\"| Q3\n    Q3 --&gt;|\"yes\"| L3\n    Q3 --&gt;|\"no\"| Q4\n    Q4 --&gt;|\"yes\"| L4\n    Q4 --&gt;|\"no\"| L5\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    class Q1,Q2,Q3,Q4 ask; class L1,L2,L3,L4,L5 ok\n</div></figure>\n<p>What each leaf is, and <strong>the one condition that would change the answer</strong>:</p>\n<ul>\n<li><p><strong>⚡ <code>uv run --with</code></strong> (<a href=\"/python/virtual-environments-dependency-resolution\">venvs</a>): if the script gets shared or scheduled, give it a project and a lock.</p>\n</li>\n<li><p><strong>🧰 pip + venv</strong> (<a href=\"/python/virtual-environments-dependency-resolution\">venvs</a>): if two installs ever disagree, you needed a lock; the first \"works on my machine\" is the signal.</p>\n</li>\n<li><p><strong>🚀 uv project</strong> (<a href=\"/python/virtual-environments-dependency-resolution\">venvs</a>): if the organisation mandates the PEP 751 <code>pylock.toml</code> format, export to it rather than switching tools.</p>\n</li>\n<li><p><strong>📜 Poetry</strong> (<a href=\"/python/packaging-distribution\">packaging</a>): if resolver speed hurts CI, uv reads the same <code>pyproject.toml</code> intent.</p>\n</li>\n<li><p><strong>🧩 pip-tools</strong> (<a href=\"/python/virtual-environments-dependency-resolution\">venvs</a>): if you also need building and publishing, add a <a href=\"/python/packaging-distribution\">build backend</a> rather than a second resolver.</p>\n</li>\n<li><p><strong>The one big idea:</strong> every tool here separates <em>intent</em> from <em>resolution</em>: imports resolve names through a cache, environments resolve versions into a lock, and tests resolve fixtures by name; reproducibility comes from recording the resolution.</p>\n</li>\n<li><p><strong>The two most-confused pairs:</strong> <em><code>import m</code> vs <code>from m import name</code></em> (63: use-time vs import-time lookup, which also decides where to patch in 67) · <em>requirements vs lockfile</em> (65: intent vs solution).</p>\n</li>\n<li><p><strong>Ten minutes before an interview:</strong> 63's circular-import sequence diagram, 65's resolver flowchart, 67's fixture-resolution flowchart.</p>\n</li>\n<li><p><strong>Cross-chapter:</strong> <a href=\"/python/names-binding-assignment\">names &amp; binding</a> (<code>import</code> is a binding statement) · <a href=\"/python/generators-lazy-evaluation\">generators</a> (<code>yield</code> fixtures) · <a href=\"/python/multiprocessing\">multiprocessing</a> (spawn re-imports your module).</p>\n</li>\n</ul>"
+    },
+    {
+      "slug": "import-system",
+      "number": 63,
+      "title": "The Import System",
+      "category": "Language Fundamentals",
+      "relevance": "Architect",
+      "tier": "CORE",
+      "created": "21 Jul 2026",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "how-it-works",
+          "text": "⚙️ How it works",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        },
+        {
+          "id": "interview",
+          "text": "🗣️ Interview",
+          "level": 3
+        },
+        {
+          "id": "compare",
+          "text": "⚖️ Compare",
+          "level": 3
+        },
+        {
+          "id": "pitfalls",
+          "text": "🚫 Pitfalls",
+          "level": 3
+        },
+        {
+          "id": "connections",
+          "text": "🕸️ Connections",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/reference/import.html\" target=\"_blank\" rel=\"noopener noreferrer\">The import system</a> · 📘 <a href=\"https://docs.python.org/3/reference/import.html#the-module-cache\" target=\"_blank\" rel=\"noopener noreferrer\">The module cache</a> · 📘 <a href=\"https://docs.python.org/3/library/__main__.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>__main__</code>: top-level code</a> · 📘 <a href=\"https://docs.python.org/3/library/importlib.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>importlib</code></a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p><code>import</code> checks <code>sys.modules</code>; on a miss it finds the module, <strong>registers it before running its body</strong>, runs the body, then binds a name.\nRegistration-before-execution makes imports idempotent and circular imports \"work\" until something touches a half-built module.</p>\n<p><strong>🧭 Flow:</strong> <code>import m</code> ─▶ <code>sys.modules[\"m\"]</code> hit? bind it, done ─▶ miss: finders on <code>sys.meta_path</code> return a spec ─▶ create an empty module ─▶ insert into <code>sys.modules</code> NOW ─▶ execute the body top to bottom ─▶ bind the name in the importer ─▶ body raised? evict the entry</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What makes <code>import</code> idempotent?</strong></td>\n<td>The <code>sys.modules</code> cache: the first import executes the module; later ones are a dict lookup.</td>\n</tr>\n<tr>\n<td><strong>When does a module enter <code>sys.modules</code>?</strong></td>\n<td><em>Before</em> its body executes, which is why a cycle sees a half-initialized module.</td>\n</tr>\n<tr>\n<td><strong>Why does <code>from m import name</code> fail in a cycle when <code>import m</code> survives?</strong></td>\n<td><code>from</code> reads the attribute at import time; <code>import m</code> defers the lookup to use time.</td>\n</tr>\n<tr>\n<td><strong>What does <code>if __name__ == \"__main__\":</code> test?</strong></td>\n<td>Whether this module is the process entry point (<code>\"__main__\"</code>) or was imported (its dotted name).</td>\n</tr>\n<tr>\n<td><strong>What is <code>from . import x</code> resolved against?</strong></td>\n<td>The package in <code>__package__</code>, which is unset when the file runs as a script.</td>\n</tr>\n<tr>\n<td><strong>✏️ Draw by hand: the cycle</strong></td>\n<td>models registered ─▶ imports services ─▶ services gets cached half-built models ─▶ <code>models.User</code> at top level ─▶ <code>AttributeError</code>.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>A module is executed once, and every later import gets the same object: that's why module-level state is a process-wide singleton. The ordering detail is what interviews probe. Two modules that import each other, on CPython 3.12:</p>\n<pre><code class=\"language-python\"># models.py                         # services.py\nimport services                     import models          # cache hit: half-built\nclass User: ...                     first = models.User    # runs NOW\n</code></pre>\n<pre><code>$ python -c \"import models\"\nAttributeError: partially initialized module 'models' has no attribute 'User'\n(most likely due to a circular import)\n</code></pre>\n<p><code>models</code> was in <code>sys.modules</code> before its body ran, so <code>services</code> got it from the cache instead of recursing, but <code>class User</code> hadn't executed yet. A function body that says <code>models.User</code> is fine, because that lookup happens at call time, when both modules are complete. The cycle isn't the crash; <em>module-level access</em> during the cycle is.</p>\n<p><strong>The trade: one cache makes imports cheap, idempotent and safe in cycles, and in exchange a module can be observed half-built, so module-level code must not lean on its importers.</strong></p>\n<h3 id=\"how-it-works\">⚙️ How it works</h3>\n<p>The algorithm for one <code>import</code>:</p>\n<figure><div class=\"mermaid\">flowchart TD\n    A([\"📥 import myapp.services\"]) --&gt; B{\"🤔 in sys.modules?\"}\n    B --&gt;|\"yes\"| C((\"✅ bind the cached module\"))\n    B --&gt;|\"no\"| D[\"⚙️ sys.meta_path finders\\nreturn a spec\"]\n    D --&gt; E[\"📦 create an empty module\"]\n    E --&gt; F[\"🧩 insert into sys.modules NOW\"]\n    F --&gt; G[[\"🧮 execute the body\\ntop to bottom\"]]\n    G --&gt; H((\"🎯 bind the name\\nin the importer\"))\n    G -.-&gt;|\"body raises\"| I((\"❌ entry evicted,\\nimport fails\"))\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef proc fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    class A in; class D,E,F proc; class G calc; class B ask; class C,H ok; class I bad\n</div></figure>\n<p>The cycle from The idea, step by step (markers match the Code section):</p>\n<figure><div class=\"mermaid\">sequenceDiagram\n    participant M as models.py\n    participant C as sys.modules\n    participant S as services.py\n    M-&gt;&gt;C: ① register models (empty), start its body\n    M-&gt;&gt;S: import services: register it, start its body\n    S-&gt;&gt;C: ② import models\n    C--&gt;&gt;S: cache hit: half-built models, no User yet\n    S-&gt;&gt;S: ③ def make_user compiles: lookup deferred\n    S-&gt;&gt;C: ④ first = models.User raises AttributeError\n    C--&gt;&gt;M: ⑤ services and models evicted, error unwinds\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>What actually happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Binding</strong></td>\n<td><code>import a.b</code> binds <code>a</code>; <code>from a import b</code> copies the <em>current</em> binding of <code>b</code> into your namespace, which is why mocks must patch where a name is used, not where it's defined.</td>\n</tr>\n<tr>\n<td><strong>Packages</strong></td>\n<td>Importing <code>myapp</code> executes <code>myapp/__init__.py</code>, so a heavy <code>__init__</code> taxes every importer, and re-exports there create import-order coupling.</td>\n</tr>\n<tr>\n<td><strong>Scripts vs <code>-m</code></strong></td>\n<td><code>python pkg/tool.py</code> has no package context: <code>from . import sib</code> gave <code>ImportError: attempted relative import with no known parent package</code>; <code>python -m pkg.tool</code> worked.</td>\n</tr>\n<tr>\n<td><strong>Thread safety</strong></td>\n<td>A per-module import lock means two threads importing one module never execute it twice.</td>\n</tr>\n</tbody></table>\n<h3 id=\"code\">💻 Code</h3>\n<p>The cycle annotated, and the fixes in order of preference:</p>\n<pre><code class=\"language-python\"># models.py: the entry point imports this FIRST\nimport services                    # ① models is registered and half-built\nclass User:                        #   defined only AFTER services.py finishes\n    def __init__(self, name): self.name = name\n\n# services.py\nimport models                      # ② cache HIT: the half-initialized models\ndef make_user():                   # ③ models.User is looked up at CALL time: safe\n    return models.User(\"prabha\")\nfirst = models.User                # ④ ❌ module-level access runs NOW → AttributeError\n                                   # ⑤ both entries are evicted; the error unwinds into models\n\n# Fixes, best first:\n#  1. restructure: move User to a third module both import (cycles are a layering smell)\n#  2. defer: import inside the function that needs it (one dict lookup per call)\n#  3. weaken: `import models` + `models.User` at use time, never `from models import User`\n#  4. typing-only cycles: `if TYPE_CHECKING:` imports + string annotations\n</code></pre>\n<p>Reordering statements until the cycle \"happens to work\" is load-bearing luck: the next added line breaks it. <code>from m2 import User</code> in the same shape fails louder, with <code>ImportError: cannot import name 'User' from partially initialized module 'm2'</code>.</p>\n<p><strong>⚠️ Break it:</strong> side effects at import time.</p>\n<pre><code class=\"language-python\"># util.py, imported by every entry point\nimport torch                       # ❌ heavy optional dependency at module level\nCLIENT = make_db_client()          # ❌ a connection opened by merely importing\n# look for: `python -X importtime -c \"import util\"` puts torch at the top\n# naive model predicts: imports are free; the work happens when you call something\n</code></pre>\n<p>Import time is cold-start latency: every worker, Lambda cold start, CLI call and <code>pytest</code> session pays the whole transitive graph first. <code>-X importtime</code> prints per-module microseconds (<code>json</code> took 6.2 ms cumulative here) and names the culprit line; the fix is a function-local import at the point of use.</p>\n<h3 id=\"interview\">🗣️ Interview</h3>\n<p><strong>30-second answer:</strong> <code>import</code> checks <code>sys.modules</code>; on a miss it finds and loads the module, then binds a name. The critical detail is order: the empty module goes into <code>sys.modules</code> before its body runs. That makes imports idempotent and lets circular imports work, because the second importer gets a cache hit on a half-initialized module. It fails only when something touches an attribute not defined yet, which is why <code>from x import name</code> is the classic trigger and <code>import x</code> usually survives.</p>\n<p><strong>Q · Mechanism —</strong> Walk through <code>import myapp.services</code>, statement to bound name.\nCheck <code>sys.modules[\"myapp.services\"]</code>; a hit binds immediately. On a miss, import the parent <code>myapp</code> first, recursively. Ask the <code>sys.meta_path</code> finders for a spec: the path finder walks <code>myapp.__path__</code> for <code>services.py</code> or <code>services/__init__.py</code> (<a href=\"/python/import-machinery-internals\">import machinery</a>). The loader creates an empty module, inserts it into <code>sys.modules</code> immediately, then executes the body. Finally the name is bound: <code>myapp</code> for <code>import myapp.services</code>. If the body raises, the entry is evicted so a retry re-executes.</p>\n<p><strong>Q · Failure —</strong> After a refactor, startup dies with <code>cannot import name 'User' from partially initialized module</code>. What happened, and which fix first?\nSomeone created a cycle: <code>models</code> imports <code>services</code> at the top, and <code>services</code> does <code>from models import User</code> at the top, so it cache-hits a <code>models</code> that never got past its first line. Fix by preference: restructure (extract the shared type downward), defer the import into the function, switch to <code>import models</code> with use-time lookup, and <code>TYPE_CHECKING</code> for typing-only cycles. Reordering lines isn't a fix. Then add an import-linter contract so the cycle can't return.</p>\n<p><strong>Q · Design —</strong> Startup for a large FastAPI service: fast imports, no cycles, heavy optional deps off the common path.\nModule level holds definitions only; connections, clients and model loading live in lifespan hooks or explicit <code>init()</code>. Heavy optional imports (torch, pandas) are deferred into the handlers or subcommands that need them. Enforce a one-way layering, <code>schemas → services → api</code>, with import-linter in CI, plus a startup budget test running <code>python -X importtime -c \"import app\"</code>. It breaks by creep: a transitive dependency starts importing pandas at module level. I'd watch cold-start p99 per release.</p>\n<h3 id=\"compare\">⚖️ Compare</h3>\n<table>\n<thead>\n<tr>\n<th></th>\n<th><code>import m</code></th>\n<th><code>from m import name</code></th>\n<th><code>from . import m</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Binds</strong></td>\n<td>the module object</td>\n<td>one attribute, copied</td>\n<td>a sibling via the current package</td>\n</tr>\n<tr>\n<td><strong>Attribute resolved</strong></td>\n<td>at use time</td>\n<td>at import time</td>\n<td>at import time</td>\n</tr>\n<tr>\n<td><strong>In a cycle</strong></td>\n<td>usually survives</td>\n<td>the classic trigger</td>\n<td>same trigger as <code>from</code></td>\n</tr>\n<tr>\n<td><strong>Breaks when</strong></td>\n<td>rarely</td>\n<td>the name isn't defined yet</td>\n<td>the file runs as a script</td>\n</tr>\n</tbody></table>\n<h3 id=\"pitfalls\">🚫 Pitfalls</h3>\n<ul>\n<li>❌ <strong>\"Circular imports are always an error\"</strong><br>✅ <strong>Cycles that only reference each other lazily run fine;</strong> module-level access fails.<br>↳ <em>Worse:</em> it works until someone adds one line.</li>\n<li>🪞 <strong>\"<code>from m import f</code> gives me a live view of <code>m.f</code>\"</strong><br>✅ <strong>It copies the binding at import time.</strong><br>↳ <em>So:</em> patch where the name is <em>used</em>, not where it's defined.</li>\n<li>❌ <strong>\"<code>__init__.py</code> is just an empty marker\"</strong><br>✅ <strong>It's the package's module body,</strong> run on first import; its absence makes a namespace package.</li>\n<li>🔀 <strong>Not the same as running a file</strong><br>↳ <em>Difference:</em> <code>python file.py</code> has <strong>no package context</strong>; <code>python -m pkg.mod</code> does, so relative imports work.</li>\n<li>⚠️ <strong>Don't mutate <code>sys.path</code> in application code.</strong><br>↳ <em>Why:</em> resolution then <strong>depends on the working directory</strong>; that's a <a href=\"/python/packaging-distribution\">packaging</a> problem.</li>\n<li>⚠️ <strong>Don't use <code>importlib.reload</code> in services.</strong><br>↳ <em>Why:</em> names other modules copied with <code>from</code> <strong>still point at the old objects</strong>. Restart instead.</li>\n<li>🔖 <strong>Version:</strong> semantics stable since 3.3 (per-module import locks); \"partially initialized\" wording <strong>3.8+</strong>; <code>-P</code> / <code>PYTHONSAFEPATH</code> <strong>3.11+</strong> stops prepending the script's directory to <code>sys.path</code>.<br>↳ <em>Note:</em> checked on CPython 3.12.13.</li>\n</ul>\n<h3 id=\"connections\">🕸️ Connections</h3>\n<p><strong>Path:</strong> <a href=\"/python/names-binding-assignment\">names &amp; binding</a> ─▶ <strong>import system</strong> ─▶ <a href=\"/python/import-machinery-internals\">import machinery</a> ─▶ <a href=\"/python/packaging-distribution\">packaging</a></p>\n<ul>\n<li><strong>Builds on</strong> <a href=\"/python/names-binding-assignment\">names &amp; binding</a>: <code>import</code> is a binding statement; module object vs name is the whole story.</li>\n<li><strong>Used by</strong> <a href=\"/python/testing-quality-tooling\">testing</a>: <code>mock.patch</code> targets import paths, and <code>from</code>-imports decide where to patch.</li>\n<li><strong>Breaks when combined with</strong> <a href=\"/python/multiprocessing\">multiprocessing</a>: spawn re-imports your module, so unguarded top-level code runs again in every child.</li>\n<li><strong>Contrasts with</strong> <a href=\"/python/import-machinery-internals\">import machinery</a>: this note is the algorithm; that one is the pluggable finders and loaders under the \"find\" step.</li>\n<li><strong>Same idea elsewhere:</strong> Node's CommonJS <code>require</code> also caches before executing, and returns a partially filled <code>exports</code> object in a cycle.</li>\n</ul>"
+    },
+    {
+      "slug": "import-machinery-internals",
+      "number": 64,
+      "title": "Import Machinery Internals",
+      "category": "Language Fundamentals",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/importlib.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>importlib</code>: the implementation of import</a> · 📜 <a href=\"https://peps.python.org/pep-0420/\" target=\"_blank\" rel=\"noopener noreferrer\">PEP 420: namespace packages</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Import is a pluggable protocol: finders on <code>sys.meta_path</code> return a <em>spec</em>, and the spec's <em>loader</em> executes the module.\n<code>sys.path</code> order decides shadowing, and <code>sys.path[0]</code> is the script's directory, so a local <code>logging.py</code> beats the stdlib.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Finder vs loader?</strong></td>\n<td>A finder locates a module and returns a spec; the spec's loader executes it.</td>\n</tr>\n<tr>\n<td><strong>The <code>sys.path[0]</code> gotcha?</strong></td>\n<td>It's the script's directory, prepended, so local files shadow the stdlib. <code>-P</code> (3.11+) disables it.</td>\n</tr>\n<tr>\n<td><strong>Namespace package?</strong></td>\n<td>A package with no <code>__init__.py</code>, assembled from several <code>sys.path</code> locations (PEP 420).</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>The <a href=\"/python/import-system\">import algorithm</a>'s \"find\" step asks <code>sys.meta_path</code> in order: <code>BuiltinImporter</code>, <code>FrozenImporter</code>, then <code>PathFinder</code>, which searches <code>sys.path</code> and caches per-directory results in <code>sys.path_importer_cache</code>. Because the protocol is pluggable, zip imports, PyInstaller and pytest's assertion rewriting are just extra finders. Because <code>sys.path</code> order decides who wins, a local <code>logging.py</code> silently replaces the stdlib for every import in that process. <code>PYTHONPATH</code> hacks reorder this globally and invisibly; <a href=\"/python/packaging-distribution\">packaging</a> fixes what path hacks patch.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">import sys, importlib.util\nprint(sys.meta_path)                             # BuiltinImporter, FrozenImporter, PathFinder\nspec = importlib.util.find_spec(\"json\")\nprint(spec.origin, spec.loader)                  # where it lives, and what will execute it\nprint(importlib.util.find_spec(\"logging\").origin)  # WHICH file will `import logging` run?\n# CPython 3.12, with a logging.py beside the script → …/shadow/logging.py  (your bug)\n# same script under `python -P`                    → …/lib/python3.12/logging/__init__.py\n</code></pre>"
+    },
+    {
+      "slug": "virtual-environments-dependency-resolution",
+      "number": 65,
+      "title": "Virtual Environments & Dependency Resolution",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "SUPPORTING",
+      "created": "21 Jul 2026",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "how-it-works",
+          "text": "⚙️ How it works",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        },
+        {
+          "id": "interview",
+          "text": "🗣️ Interview",
+          "level": 3
+        },
+        {
+          "id": "compare",
+          "text": "⚖️ Compare",
+          "level": 3
+        },
+        {
+          "id": "pitfalls",
+          "text": "🚫 Pitfalls",
+          "level": 3
+        },
+        {
+          "id": "connections",
+          "text": "🕸️ Connections",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/venv.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>venv</code></a> · 📘 <a href=\"https://pip.pypa.io/en/stable/topics/dependency-resolution/\" target=\"_blank\" rel=\"noopener noreferrer\">pip: dependency resolution</a> · 📘 <a href=\"https://docs.astral.sh/uv/\" target=\"_blank\" rel=\"noopener noreferrer\">uv docs</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>A venv is a <code>pyvenv.cfg</code> plus its own <code>site-packages</code>: it redirects <code>sys.prefix</code>, and nothing is copied.\nThe hard part is resolution: one version per package for the whole environment, so keep intent and the resolved <em>lock</em> as separate files.</p>\n<p><strong>🧭 Flow:</strong> humans edit loose intent in <code>pyproject.toml</code> ─▶ resolver picks one version per package meeting every transitive constraint ─▶ conflict? backtrack and retry older candidates ─▶ solution written to a lockfile with hashes ─▶ CI and prod install exactly the lock, no resolving</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What does a venv actually change?</strong></td>\n<td><code>sys.prefix</code>, via <code>pyvenv.cfg</code>: its own <code>site-packages</code>, the base interpreter's binary and stdlib.</td>\n</tr>\n<tr>\n<td><strong><code>requirements.txt</code> vs a lockfile?</strong></td>\n<td>Requirements are <em>intent</em> (loose constraints); a lock is the <em>solution</em> (every transitive dependency pinned and hashed).</td>\n</tr>\n<tr>\n<td><strong>Why can <code>pip install</code> spend minutes \"resolving\"?</strong></td>\n<td>Backtracking: a wrong guess deep in the tree forces discarding candidates and retrying.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>Activation is cosmetic: it prepends the venv's <code>bin/</code> to <code>PATH</code>. The real mechanism runs at interpreter startup, on CPython 3.12:</p>\n<pre><code class=\"language-python\"># .venv/pyvenv.cfg →  home = …/cpython-3.12-macos-aarch64-none/bin\nimport sys\nsys.prefix              # …/.venv: where site-packages comes from\nsys.base_prefix         # …/cpython-3.12.13-…: where the stdlib comes from\nsys.prefix != sys.base_prefix   # True: the canonical \"am I in a venv?\" check\n</code></pre>\n<p><code>.venv/bin/python</code> is a symlink to the base interpreter, which finds <code>pyvenv.cfg</code> beside itself. So calling it directly equals activating (what Dockerfiles, systemd units and CI do), and deleting the base Python bricks every venv built from it. Copying a venv to another path breaks too: scripts hardcode absolute shebangs. Because Python allows only <strong>one version of a package per environment</strong>, two dependencies wanting incompatible versions of a third is a real conflict, and the resolver's job is to find one assignment that satisfies everything.</p>\n<p><strong>The trade: a flat, single-version environment keeps imports simple, and in exchange resolution is a search that can be slow or impossible, so you record its answer instead of re-solving it.</strong></p>\n<h3 id=\"how-it-works\">⚙️ How it works</h3>\n<figure><div class=\"mermaid\">flowchart TD\n    A([\"📄 pyproject.toml:\\nloose constraints\"]) --&gt; B[[\"🧮 resolver: one version per\\npackage, all constraints met\"]]\n    B --&gt;|\"conflict\"| C[\"⚙️ backtrack: discard the\\nchoice, try an older candidate\"]\n    C --&gt; B\n    B --&gt;|\"solution\"| D[\"📦 lockfile: pinned\\nversions + hashes\"]\n    D --&gt; E((\"✅ CI installs from the lock:\\nno resolving, hash-verified\"))\n    B -.-&gt;|\"unsolvable\"| F((\"❌ ResolutionImpossible\"))\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef proc fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    class A in; class C,D proc; class B calc; class E ok; class F bad\n</div></figure>\n<p>Loose requirements are re-solved on every install, so today's environment differs from last month's the moment any transitive dependency releases. A lock skips resolution and verifies hashes: same input, same bytes, plus tamper detection. Which tool owns that loop is a choice in the <a href=\"/python/packaging-environments-tooling-map\">chapter map</a>.</p>\n<h3 id=\"code\">💻 Code</h3>\n<p>The reproducibility loop, with uv:</p>\n<pre><code class=\"language-bash\">uv add \"httpx&gt;=0.27\"     # edits pyproject.toml (intent) AND re-locks uv.lock (solution)\nuv lock --upgrade-package httpx   # deliberate upgrade: the lock diff is the review\nuv sync --frozen         # CI and prod: install EXACTLY the lock; fail if it drifted\nuv run --with rich python script.py   # throwaway script: no project pollution\n# Never `pip install pkg` ad hoc into a locked project: that's unrecorded drift.\n</code></pre>\n<p>The two-file discipline is what code review needs: edit intent, regenerate the lock, commit both, and the lock diff <em>is</em> the dependency change.</p>\n<h3 id=\"interview\">🗣️ Interview</h3>\n<p><strong>30-second answer:</strong> A venv is an isolated <code>site-packages</code> selected by <code>pyvenv.cfg</code> and <code>sys.prefix</code>: cheap, disposable, one per project. Resolution is the hard part: pip's backtracking resolver must find one version of every package satisfying all transitive constraints, because an environment holds one version per package. So humans edit loose constraints in <code>pyproject.toml</code>, a tool generates a lockfile with exact versions and hashes, and CI installs only from the lock.</p>\n<p><strong>Q · Mechanism —</strong> Why isn't <code>pip install -r requirements.txt</code> reproducible, and what makes a lockfile different?\nLoose pins (<code>requests&gt;=2.28</code>) are a constraint set solved fresh each time, and even pinned top-level requirements leave transitives floating unless you froze them all. <code>pip freeze</code> photographs an environment, including stale and dev-only packages, with no hashes and no link to intent. A lock is the recorded solution derived from intent (<code>uv lock</code>, <code>poetry lock</code>, <code>pip-compile</code>): every package, exact version, artifact hashes. Installs from it skip resolution and verify bytes.</p>\n<h3 id=\"compare\">⚖️ Compare</h3>\n<table>\n<thead>\n<tr>\n<th>Tool</th>\n<th>What it is</th>\n<th>Lock</th>\n<th>Reach for it when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>pip + venv</strong></td>\n<td>installer + isolation</td>\n<td><code>pip freeze</code> (a snapshot, not a derivation)</td>\n<td>minimal deps, base images</td>\n</tr>\n<tr>\n<td><strong>pip-tools</strong></td>\n<td><code>pip-compile</code>: intent → pinned requirements</td>\n<td>✅ compiled <code>requirements.txt</code></td>\n<td>locking with no new workflow</td>\n</tr>\n<tr>\n<td><strong>Poetry</strong></td>\n<td>project manager: build, publish, lock</td>\n<td>✅ <code>poetry.lock</code></td>\n<td>one tool owning packaging and deps</td>\n</tr>\n<tr>\n<td><strong>uv</strong></td>\n<td>Rust-fast pip, pip-tools, venv and project manager</td>\n<td>✅ <code>uv.lock</code></td>\n<td>the 2026 default: 10–100× faster installs</td>\n</tr>\n</tbody></table>\n<h3 id=\"pitfalls\">🚫 Pitfalls</h3>\n<ul>\n<li>❌ <strong>\"A venv is a copy of Python\"</strong><br>✅ <strong>It's a config file plus an empty <code>site-packages</code>;</strong> the binary and stdlib stay in the base install.</li>\n<li>❌ <strong>\"<code>pip freeze &gt; requirements.txt</code> gives reproducible builds\"</strong><br>✅ <strong>It snapshots whatever is installed,</strong> with no hashes and no link to intent.</li>\n<li>⚠️ <strong>Don't install into the system interpreter.</strong><br>↳ <em>Why:</em> one shared <code>site-packages</code> guarantees conflicts and can break OS tools (PEP 668's <code>externally-managed-environment</code> refusal).</li>\n<li>⚠️ <strong>Don't ship a venv as an artifact.</strong><br>↳ <em>Why:</em> absolute shebangs and <code>pyvenv.cfg</code> paths <strong>break on another machine</strong>; rebuild from the lock, which <em>is</em> the artifact.</li>\n<li>⚠️ <strong>Don't hand-pin transitive deps to fix one conflict.</strong><br>↳ <em>Why:</em> you've become a <strong>manual resolver without hashes</strong>; regenerate the lock from intent.</li>\n<li>🔖 <strong>Version:</strong> pip's backtracking resolver since <strong>pip 20.3</strong>; PEP 751 standardizes a <code>pylock.toml</code> lock format, with tool support still rolling out.<br>↳ <em>Note:</em> venv behaviour checked with uv 0.11 on CPython 3.12.13.</li>\n</ul>\n<h3 id=\"connections\">🕸️ Connections</h3>\n<p><strong>Path:</strong> <a href=\"/python/import-system\">import system</a> ─▶ <strong>venvs &amp; resolution</strong> ─▶ <a href=\"/python/packaging-distribution\">packaging</a></p>\n<ul>\n<li><strong>Builds on</strong> <a href=\"/python/import-machinery-internals\">import machinery</a>: <code>sys.prefix</code> → <code>site-packages</code> → <code>sys.path</code> is how a venv changes what <code>import</code> finds.</li>\n<li><strong>Used by</strong> <a href=\"/python/packaging-distribution\">packaging</a>: the same <code>pyproject.toml</code> declares dependency intent and your package's build.</li>\n<li><strong>Used by</strong> <a href=\"/python/testing-quality-tooling\">testing</a>: CI correctness starts with <code>--frozen</code> installs; \"flaky env\" failures are usually resolution drift.</li>\n<li><strong>Same idea elsewhere:</strong> npm's <code>package.json</code> + <code>package-lock.json</code> and Cargo's <code>Cargo.toml</code> + <code>Cargo.lock</code> split intent from solution the same way.</li>\n</ul>"
+    },
+    {
+      "slug": "packaging-distribution",
+      "number": 66,
+      "title": "Packaging & Distribution",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://packaging.python.org/en/latest/guides/writing-pyproject-toml/\" target=\"_blank\" rel=\"noopener noreferrer\">Writing your pyproject.toml</a> · 📘 <a href=\"https://packaging.python.org/tutorials/packaging-projects/\" target=\"_blank\" rel=\"noopener noreferrer\">Packaging Python projects</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>One <code>pyproject.toml</code> declares metadata, dependencies and a build <em>backend</em> that produces two artifacts: sdists and wheels.\nA wheel is prebuilt, so install is just unpacking; entry points turn <code>python path/to/script.py</code> into a real command.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Wheel vs sdist?</strong></td>\n<td>Wheel: a prebuilt zip, install is unpack. Sdist: source that needs a build step, maybe a compiler, at install time.</td>\n</tr>\n<tr>\n<td><strong>Build backend?</strong></td>\n<td>The tool <code>[build-system]</code> names to turn source into artifacts (setuptools, hatchling, maturin); pip, uv and <code>build</code> just call it.</td>\n</tr>\n<tr>\n<td><strong>Entry point?</strong></td>\n<td><code>[project.scripts]</code> maps <code>cli-name = \"pkg.mod:func\"</code>; the installer generates the executable.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>PEP 517 decouples frontend from backend, so pip, uv or <code>python -m build</code> can drive any backend; a wheel is why <code>pip install numpy</code> needs no compiler. Entry points also kill the relative-import-in-scripts problem, since the command runs your code as an installed package (<a href=\"/python/import-system\">import system</a>). Dependencies here are abstract intent (<code>httpx&gt;=0.27</code>); the <a href=\"/python/virtual-environments-dependency-resolution\">lockfile</a> pins them. Internal code deserves the same treatment: package it, version it, install it, even if \"publishing\" means a private index.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-toml\">[build-system]\nrequires = [\"hatchling\"]                 # what the frontend installs to build you\nbuild-backend = \"hatchling.build\"        # who produces the wheel and sdist\n\n[project]\nname = \"algo-toolkit\"\nversion = \"0.3.0\"\ndependencies = [\"httpx&gt;=0.27\"]           # intent; the lockfile pins it\n\n[project.scripts]\nalgo = \"algo_toolkit.cli:main\"           # installs an `algo` command on PATH\n# `uv build` → algo_toolkit-0.3.0-py2.py3-none-any.whl + algo_toolkit-0.3.0.tar.gz;\n# the wheel's entry_points.txt holds [console_scripts] algo = algo_toolkit.cli:main\n</code></pre>"
+    },
+    {
+      "slug": "testing-quality-tooling",
+      "number": 67,
+      "title": "Testing & Quality Tooling",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "SUPPORTING",
+      "created": "21 Jul 2026",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "how-it-works",
+          "text": "⚙️ How it works",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        },
+        {
+          "id": "interview",
+          "text": "🗣️ Interview",
+          "level": 3
+        },
+        {
+          "id": "compare",
+          "text": "⚖️ Compare",
+          "level": 3
+        },
+        {
+          "id": "pitfalls",
+          "text": "🚫 Pitfalls",
+          "level": 3
+        },
+        {
+          "id": "connections",
+          "text": "🕸️ Connections",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.pytest.org/en/stable/how-to/fixtures.html\" target=\"_blank\" rel=\"noopener noreferrer\">pytest: how to use fixtures</a> · 📘 <a href=\"https://docs.python.org/3/library/unittest.mock.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>unittest.mock</code></a> · 📘 <a href=\"https://docs.pytest.org/en/stable/how-to/parametrize.html\" target=\"_blank\" rel=\"noopener noreferrer\">pytest: parametrize</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>pytest injects fixtures by parameter <em>name</em>, resolving a dependency graph with per-scope caching and teardown after <code>yield</code>.\nThe number-one mocking rule: patch where a name is <strong>used</strong>, not where it's defined.</p>\n<p><strong>🧭 Flow:</strong> <code>def test_login(client, db)</code> ─▶ match each parameter name to a fixture (nearest <code>conftest.py</code> wins) ─▶ resolve that fixture's own parameters first ─▶ reuse it if cached for its scope ─▶ run up to <code>yield</code>, inject, run the test ─▶ teardown after <code>yield</code>, in reverse order, even on failure</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How does pytest inject a fixture?</strong></td>\n<td>By name: the parameter is matched to a registered fixture; the graph resolves recursively, cached per scope.</td>\n</tr>\n<tr>\n<td><strong>The number-one <code>mock.patch</code> rule?</strong></td>\n<td>Patch where the name is used: a <code>from</code>-import copied the binding into the consumer.</td>\n</tr>\n<tr>\n<td><strong>Fixture scopes?</strong></td>\n<td>function (default), class, module, package, session: wider is faster but shares mutable state.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>A mock that \"isn't taking effect\" is the most common Python testing bug, and it's the <a href=\"/python/import-system\">import system</a>'s <code>from</code>-import copy in disguise. With pytest on CPython 3.12:</p>\n<pre><code class=\"language-python\"># payments.py\ndef stripe_charge(amount): raise RuntimeError(\"REAL API CALLED\")\n# checkout.py\nfrom payments import stripe_charge          # copies the binding into checkout\ndef pay(amount): return stripe_charge(amount)\n\n# test_pay.py\ndef test_patch_where_defined():\n    with mock.patch(\"payments.stripe_charge\", return_value=\"ok\"):\n        assert checkout.pay(10) == \"ok\"     # → RuntimeError: REAL API CALLED\ndef test_patch_where_used():\n    with mock.patch(\"checkout.stripe_charge\", return_value=\"ok\") as m:\n        assert checkout.pay(10) == \"ok\"     # passes\n    m.assert_called_once_with(10)\n</code></pre>\n<p>The first patch rebound <code>payments.stripe_charge</code>, a room nobody looks in; <code>checkout</code> still held the original. Patch the consumer's copy, or have <code>checkout</code> use <code>import payments</code> so there's one live binding. Better still, inject the client and nothing needs patching.</p>\n<p><strong>The trade: fixtures and patching make setup composable and dependencies swappable, and in exchange tests couple to import paths and scopes, so a careless patch or a wide scope gives tests that lie.</strong></p>\n<h3 id=\"how-it-works\">⚙️ How it works</h3>\n<p>How pytest resolves <code>def test_login(client, db)</code>:</p>\n<figure><div class=\"mermaid\">flowchart TD\n    A([\"📥 def test_login(client, db)\"]) --&gt; B[\"⚙️ match parameter names\\nagainst the fixture registry\"]\n    B --&gt; C{\"🤔 cached for\\nits scope?\"}\n    C --&gt;|\"yes\"| D[\"📦 reuse the instance\"]\n    C --&gt;|\"no\"| F[\"🧩 resolve ITS parameters first\"]\n    F --&gt; E[[\"🧮 run the fixture up to\\nyield, cache the value\"]]\n    D --&gt; G((\"✅ inject, run the test\"))\n    E --&gt; G\n    G --&gt; H[\"⚙️ teardown: resume after\\nyield, reverse order\"]\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef proc fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    class A in; class B,D,F,H proc; class E calc; class C ask; class G ok\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>What actually happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Lookup order</strong></td>\n<td>The test module, <code>conftest.py</code> files up the tree, then plugins; the nearest definition wins.</td>\n</tr>\n<tr>\n<td><strong>Teardown</strong></td>\n<td>A <code>yield</code> fixture is a <a href=\"/python/generators-lazy-evaluation\">generator</a>: code after <code>yield</code> runs even when the test fails, which is why it replaced setUp/tearDown pairs.</td>\n</tr>\n<tr>\n<td><strong>Assert rewriting</strong></td>\n<td>pytest rewrites <code>assert</code> at import time through its own import hook, so a failure shows the operand values.</td>\n</tr>\n</tbody></table>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">import pytest\nfrom checkout import price_with_tax\n\n@pytest.fixture\ndef fx_rates(monkeypatch):                    # composes with the built-in monkeypatch\n    monkeypatch.setattr(\"checkout.fetch_rates\", lambda: {\"IN\": 0.18})  # where USED\n    yield                                     # the test runs here\n    # monkeypatch undoes itself after yield: no manual teardown\n\n@pytest.mark.parametrize((\"amount\", \"expected\"), [\n    (100.0, 118.0),\n    (0.0, 0.0),                               # the boundary rides the same body\n])\ndef test_price_with_tax(fx_rates, amount, expected):\n    assert price_with_tax(amount, region=\"IN\") == pytest.approx(expected)\n</code></pre>\n<p>Around the tests sits the merge gate: <code>ruff</code> (lint and format), <code>mypy</code> or <code>pyright</code> (types), and <code>pytest --cov</code> with branch coverage, all installed from a frozen lock so the gate is reproducible.</p>\n<h3 id=\"interview\">🗣️ Interview</h3>\n<p><strong>30-second answer:</strong> pytest's core idea is dependency injection by name: a test declares parameters, and pytest resolves each against the fixture graph, recursively, with per-scope caching, so setup composes (<code>db → session → user</code>). <code>parametrize</code> runs one body over a case table. <code>monkeypatch</code> and <code>mock.patch</code> swap dependencies with automatic undo; the classic bug is patching where a name is defined instead of where it's used. Around it: ruff, a type checker and coverage as the CI gate.</p>\n<p><strong>Q · Mechanism —</strong> The team's mock \"isn't taking effect\": the real API still gets called. Diagnose it.\n<code>mock.patch(\"payments.stripe_charge\")</code> replaces the attribute on the module named in the string. If <code>checkout.py</code> did <code>from payments import stripe_charge</code>, it copied the binding at import time, so patching <code>payments</code> rebinds an attribute <code>checkout</code> no longer reads. Fix: <code>mock.patch(\"checkout.stripe_charge\")</code>, or <code>import payments</code> in <code>checkout</code> for one live binding. Architecturally, inject the client instead of using a module-level global; injected dependencies need no patching.</p>\n<h3 id=\"compare\">⚖️ Compare</h3>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>pytest</th>\n<th>unittest</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Setup</strong></td>\n<td>fixture DI graph, scoped caching</td>\n<td><code>setUp</code>/<code>tearDown</code>, inheritance</td>\n</tr>\n<tr>\n<td><strong>Assertions</strong></td>\n<td>plain <code>assert</code>, rewritten to show values</td>\n<td><code>self.assertEqual</code> family</td>\n</tr>\n<tr>\n<td><strong>Parametrization</strong></td>\n<td>first-class <code>parametrize</code></td>\n<td><code>subTest</code>, weaker isolation</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>the default for apps and libraries</td>\n<td>no dependencies allowed; legacy suites</td>\n</tr>\n</tbody></table>\n<h3 id=\"pitfalls\">🚫 Pitfalls</h3>\n<ul>\n<li>🔀 <strong>Not the same: <code>monkeypatch</code> vs <code>mock.patch</code></strong><br>↳ <em>Difference:</em> <code>monkeypatch</code> <strong>replaces</strong> attributes, env vars and paths with auto-undo; <code>mock.patch</code> also hands you a <code>Mock</code> to <strong>interrogate</strong> (<code>assert_called_once_with</code>).</li>\n<li>🪞 <strong>\"Fixtures run once per test file\"</strong><br>✅ <strong>Scope decides; the default is once per test function.</strong><br>↳ <em>And:</em> a <code>session</code> fixture returning a mutable dict is a hidden global.</li>\n<li>⚠️ <strong>Don't over-mock.</strong><br>↳ <em>Why:</em> a test that mocks every collaborator <strong>verifies the mocks</strong>; mock at process boundaries (network, clock, filesystem).</li>\n<li>⚠️ <strong>Don't widen fixture scope for speed without checking mutability.</strong><br>↳ <em>Why:</em> tests couple through shared state and <strong>fail by execution order</strong>, then vanish under <code>-x</code> or <code>xdist</code>.</li>\n<li>⚠️ <strong>Don't chase 100% coverage.</strong><br>↳ <em>Why:</em> coverage measures <strong>execution, not assertion</strong>; a branch-coverage threshold catches regressions.</li>\n<li>⚠️ <strong>Don't <code>time.sleep</code> in async or concurrent tests.</strong><br>↳ <em>Why:</em> <strong>flaky by construction</strong>; inject a clock or await a real completion signal.</li>\n</ul>\n<h3 id=\"connections\">🕸️ Connections</h3>\n<p><strong>Path:</strong> <a href=\"/python/import-system\">import system</a> ─▶ <strong>testing</strong> ─▶ <span class=\"vault-ref\" title=\"13-production-services/81-structured-logging-context-propagation\">structured logging</span></p>\n<ul>\n<li><strong>Builds on</strong> <a href=\"/python/import-system\">the import system</a>: patch-where-used follows from <code>from</code>-import binding copies.</li>\n<li><strong>Builds on</strong> <a href=\"/python/generators-lazy-evaluation\">generators</a>: <code>yield</code> fixtures are generators; teardown is resuming them.</li>\n<li><strong>Builds on</strong> <a href=\"/python/virtual-environments-dependency-resolution\">venvs &amp; locks</a>: a reproducible gate needs <code>--frozen</code> installs.</li>\n<li><strong>Contrasts with</strong> <a href=\"/python/protocols-structural-typing\">protocols</a>: an injected fake that fits a Protocol needs no patching at all.</li>\n<li><strong>Same idea elsewhere:</strong> JUnit 5 injects parameters by type and Spring's test context caches beans per context, the same DI-plus-scope idea.</li>\n</ul>"
+    }
+  ]
+}

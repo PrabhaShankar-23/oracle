@@ -5742,6 +5742,53 @@
       "relevance": "Senior",
       "section": "10-performance-profiling",
       "sectionTitle": "Performance & profiling"
+    },
+    {
+      "slug": "packaging-environments-tooling-map",
+      "title": "Chapter map: Packaging, environments & tooling",
+      "tier": "MAP",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling"
+    },
+    {
+      "slug": "import-system",
+      "title": "The Import System",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling"
+    },
+    {
+      "slug": "import-machinery-internals",
+      "title": "Import Machinery Internals",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling"
+    },
+    {
+      "slug": "virtual-environments-dependency-resolution",
+      "title": "Virtual Environments & Dependency Resolution",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling"
+    },
+    {
+      "slug": "packaging-distribution",
+      "title": "Packaging & Distribution",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling"
+    },
+    {
+      "slug": "testing-quality-tooling",
+      "title": "Testing & Quality Tooling",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "11-packaging-environments-tooling",
+      "sectionTitle": "Packaging, environments & tooling"
     }
   ],
   "gameDayDocs": [

@@ -1320,6 +1320,7 @@ const PYTHON_CHAPTERS = {
   '08-typing-interfaces': 'Typing & interfaces',
   '09-idiomatic-structural': 'Idiomatic & structural',
   '10-performance-profiling': 'Performance & profiling',
+  '11-packaging-environments-tooling': 'Packaging, environments & tooling',
 }
 
 const ingestPython = () =>
