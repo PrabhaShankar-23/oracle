@@ -1,0 +1,187 @@
+{
+  "id": "14-applied-adjacent",
+  "title": "Applied & adjacent",
+  "notes": [
+    {
+      "slug": "applied-adjacent-map",
+      "number": -1,
+      "title": "Chapter map: Applied & adjacent",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent",
+      "headings": [],
+      "html": "<p>Five tools a Python engineer meets at the edges of the language, each a BREADTH note with one trap worth knowing. Each one applies a mechanism from an earlier chapter; read each arrow as a sentence: <em>NumPy vectorization</em> <strong>built on</strong> <em>why Python is slow</em>.</p>\n<figure><div class=\"mermaid\">flowchart TD\n    SLOW[\"🐢 58 · why Python is slow\"]\n    TEST[\"✅ 67 · testing &amp; tooling\"]\n    LOCK[\"🧪 65 · venvs &amp; resolution\"]\n    N83[\"🧮 83 · NumPy vectorization\"]\n    N84[\"🐼 84 · pandas memory\"]\n    N85[\"🗄️ 85 · SQLAlchemy vs raw SQL\"]\n    N86[\"🐒 86 · monkey patching\"]\n    N87[\"🐳 87 · Docker for Python\"]\n    N83 -.-&gt;|\"built on\"| SLOW\n    N84 --&gt;|\"built on\"| N83\n    N86 -.-&gt;|\"same mechanism as\"| TEST\n    N87 -.-&gt;|\"built on\"| LOCK\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N83,N84,N85,N86,N87 br; class SLOW,TEST,LOCK in\n</div></figure>\n<p>Yellow = BREADTH, grey = another chapter (dashed edges). 85 stands alone here; its neighbour is <a href=\"/python/connection-pooling-async\">connection pooling</a> (N+1 queries exhaust any pool).</p>\n<p><strong>Reading order:</strong> <a href=\"/python/numpy-vectorization\">83 NumPy vectorization</a> ─▶ <a href=\"/python/pandas-memory-efficiency\">84 pandas memory</a> ─▶ <a href=\"/python/sqlalchemy-vs-raw-sql\">85 SQLAlchemy vs raw SQL</a> ─▶ <a href=\"/python/monkey-patching\">86 monkey patching</a> ─▶ <a href=\"/python/docker-for-python\">87 Docker for Python</a></p>\n<p>No decision tree here: these notes are separate tools, not alternatives for one choice.</p>\n<ul>\n<li><strong>The one big idea:</strong> each tool hides a cost you only see when you measure it: interpreter dispatch (83), dtype width (84), implicit queries (85), invisible global state (86), layer order (87).</li>\n<li><strong>The two most-confused pairs:</strong> <em>vectorized vs <code>.apply()</code></em> (83: C loop vs a Python callable per row) · <em>patch where defined vs where used</em> (86: only the second takes effect after a <code>from</code>-import).</li>\n<li><strong>Ten minutes before an interview:</strong> the measured numbers: 127× for vectorizing, 67 MB → 9 MB for dtypes, 101 → 2 queries for <code>selectinload</code>.</li>\n<li><strong>Cross-chapter:</strong> <a href=\"/python/why-python-is-slow\">why Python is slow</a> (the cost model behind 83–84) · <a href=\"/python/testing-quality-tooling\">testing</a> (patch-where-used, measured) · <a href=\"/python/virtual-environments-dependency-resolution\">venvs &amp; locks</a> (what the Docker build installs from).</li>\n</ul>"
+    },
+    {
+      "slug": "numpy-vectorization",
+      "number": 83,
+      "title": "NumPy Vectorization",
+      "category": "Performance & Profiling",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://numpy.org/doc/stable/user/basics.broadcasting.html\" target=\"_blank\" rel=\"noopener noreferrer\">NumPy: broadcasting</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Vectorizing pushes the loop into C over one contiguous, typed buffer: one dispatch instead of N interpreter iterations.\nBroadcasting lines up mismatched shapes <em>without copying</em>; a Python <code>for</code> over an array throws the whole win away.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What makes an operation \"vectorized\"?</strong></td>\n<td>The loop runs in C over one typed buffer: a single dispatch (<a href=\"/python/why-python-is-slow\">why Python is slow</a>).</td>\n</tr>\n<tr>\n<td><strong>What is broadcasting?</strong></td>\n<td>Stretching a smaller array's shape across a larger one without copying, via stride 0.</td>\n</tr>\n<tr>\n<td><strong>Why is a <code>for</code> loop over an <code>ndarray</code> slow?</strong></td>\n<td>Every element is re-boxed into a Python object and pays full interpreter dispatch.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>An <code>ndarray</code> is one block of one dtype, so <code>a * a</code> is one call that loops in C, with no boxing or bytecode. On CPython 3.12 with NumPy 2.5.3, squaring a million ints took 33.9 ms as a list comprehension over the array and 0.27 ms vectorized: about 127×. Broadcasting is how mismatched shapes combine: <code>np.broadcast_to(row, (1000, 1000))</code> reported strides <code>(0, 8)</code>: the same 1,000 values reread, never copied. The trap: a <code>for</code> or <code>.apply()</code> pushes the loop back into Python.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">import numpy as np\na = np.arange(1_000_000)\nsquared_slow = [x * x for x in a]         # ❌ a million re-boxed iterations\nsquared_fast = a * a                      # ✅ one C pass over the int64 buffer (~127× here)\ngrid = np.arange(1000)[:, None] + np.arange(1000)   # (1000, 1) + (1000,) → (1000, 1000)\n# inputs broadcast with stride 0; only the result is allocated\n</code></pre>"
+    },
+    {
+      "slug": "pandas-memory-efficiency",
+      "number": 84,
+      "title": "Pandas Memory Efficiency",
+      "category": "Performance & Profiling",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://pandas.pydata.org/docs/user_guide/scale.html\" target=\"_blank\" rel=\"noopener noreferrer\">pandas user guide: scaling to large datasets</a> · 📘 <a href=\"https://pandas.pydata.org/docs/user_guide/copy_on_write.html\" target=\"_blank\" rel=\"noopener noreferrer\">pandas: Copy-on-Write</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Pandas memory is dtype-driven: downcast numerics, make low-cardinality strings <code>category</code>, declare <code>dtype=</code> at read time, stream chunks when it won't fit.\nSince pandas 3.0, Copy-on-Write is always on: chained assignment never modifies the original.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Biggest quick memory win?</strong></td>\n<td>Downcast numerics (<code>int64</code> → <code>uint32</code>, <code>float64</code> → <code>float32</code>) and turn low-cardinality strings into <code>category</code>.</td>\n</tr>\n<tr>\n<td><strong><code>df[mask][\"b\"] = 99</code> in pandas 3?</strong></td>\n<td>Never sticks: Copy-on-Write makes the intermediate a copy, with a <code>ChainedAssignmentError</code> warning. Use <code>df.loc[mask, \"b\"] = 99</code>.</td>\n</tr>\n<tr>\n<td><strong>A file bigger than RAM?</strong></td>\n<td><code>read_csv(chunksize=…)</code>, reducing per chunk.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>Columns are arrays, so memory follows dtype. A 1M-row frame of <code>int64</code> user IDs, four country strings and <code>float64</code> amounts took 67.0 MB (pandas 3.0.6, <code>memory_usage(deep=True)</code>); with <code>uint32</code>, <code>category</code> and <code>float32</code> it took 9.0 MB. A <code>category</code> stores integer codes plus one lookup table. Declare dtypes in <code>read_csv</code> so the wasteful version is never built. Pandas 3 also settled copy-vs-view: Copy-on-Write is always enabled, so <code>d[d[\"a\"] &gt; 1][\"b\"] = 99</code> left <code>b</code> as <code>[1, 2, 3]</code> and raised <code>ChainedAssignmentError</code>. Past one machine's memory, leave pandas for Polars or DuckDB.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">import pandas as pd\ndf = pd.read_csv(\"events.csv\", dtype={\"user_id\": \"uint32\", \"country\": \"category\"})\ndf[\"amount\"] = pd.to_numeric(df[\"amount\"], downcast=\"float\")    # float64 → float32\nprint(df.memory_usage(deep=True))           # deep: count string bytes\ndf.loc[df[\"amount\"] &gt; 100, \"flag\"] = True   # one indexing step: the CoW-safe way to write\ntotal = sum(chunk[\"amount\"].sum()           # out-of-core: one chunk resident at a time\n            for chunk in pd.read_csv(\"events.csv\", chunksize=100_000))\n</code></pre>"
+    },
+    {
+      "slug": "sqlalchemy-vs-raw-sql",
+      "number": 85,
+      "title": "SQLAlchemy vs Raw SQL",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.sqlalchemy.org/en/20/orm/queryguide/relationships.html\" target=\"_blank\" rel=\"noopener noreferrer\">SQLAlchemy 2: relationship loading techniques</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Core is a Pythonic SQL builder; the ORM maps rows to objects tracked in a session, and charges for it: hydration, bookkeeping and <em>implicit</em> lazy loads.\nDefault to the ORM for CRUD, eager-load relationships you'll touch, and drop to Core or raw SQL for bulk and analytical queries.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What is the \"ORM tax\"?</strong></td>\n<td>Object hydration, identity-map and unit-of-work bookkeeping, and lazy loads you don't see in your code.</td>\n</tr>\n<tr>\n<td><strong>N+1: cause and fix?</strong></td>\n<td>A lazy relationship fires one query per parent; eager-load with <code>selectinload</code> (one <code>IN</code> query) or <code>joinedload</code> (a JOIN).</td>\n</tr>\n<tr>\n<td><strong>When is Core or raw SQL right?</strong></td>\n<td>Bulk writes, analytical queries, and hot paths where per-row object overhead dominates.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>The ORM's queries are implicit. With SQLAlchemy 2.1.2 on SQLite, counting each of 100 users' orders took <strong>101 queries</strong> with the default lazy relationship (one for users, one per <code>user.orders</code> access) and <strong>2</strong> with <code>selectinload</code> (users, then every order through one <code>IN</code>). Eager loading is declared up front, so know what SQL the ORM emits: <code>echo=True</code>, or count statements in a test.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">from sqlalchemy import select, text\nfrom sqlalchemy.orm import selectinload\n\n# ❌ N+1: one query, then one lazy SELECT per user (101 for 100 users)\nfor u in session.scalars(select(User)).all():\n    print(u.name, len(u.orders))\n\n# ✅ eager load: 2 queries in total\nusers = session.scalars(select(User).options(selectinload(User.orders))).all()\n\n# analytics or bulk: skip object hydration entirely\nrows = session.execute(text(\"SELECT country, COUNT(*) FROM users GROUP BY country\")).all()\n# → [('IN', 50), ('US', 50)]\n</code></pre>"
+    },
+    {
+      "slug": "monkey-patching",
+      "number": 86,
+      "title": "Monkey Patching",
+      "category": "Advanced Python",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://docs.python.org/3/library/unittest.mock.html\" target=\"_blank\" rel=\"noopener noreferrer\"><code>unittest.mock.patch</code></a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Monkey patching rebinds an attribute on a class or module at runtime, from outside its definition; every caller sees the replacement.\nLegitimate in tests via <code>mock.patch</code>, which auto-restores; in production it's a global, invisible, order-dependent mutation.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What is monkey patching?</strong></td>\n<td>Replacing an attribute or method on a class or module at runtime, from outside its own definition.</td>\n</tr>\n<tr>\n<td><strong>The mainstream legitimate use?</strong></td>\n<td><code>unittest.mock.patch</code>: swap a dependency for one test, restored automatically, even on exception.</td>\n</tr>\n<tr>\n<td><strong>Why is it fragile in production?</strong></td>\n<td>Global, invisible at the call site, and order-dependent: patch after a <code>from</code>-import copied the name and it never takes effect.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>Classes and modules are mutable objects, so <code>SomeClass.method = mine</code> or <code>module.func = mine</code> changes behaviour for everyone. <code>patch</code> is safe because it scopes and undoes the change. Outside tests it's a last resort: hotfixing an unupgradable third-party bug, or gevent's <code>monkey.patch_all()</code>. The danger is visibility: nothing at the call site shows the change, and two libraries can clobber each other's patch. The <a href=\"/python/testing-quality-tooling\">testing note</a> measured the classic miss: patching where a name is <em>defined</em> still called the real API, because the consumer had copied it with <code>from … import</code>. Prefer injection or subclassing.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-python\">from unittest.mock import patch\n# patch WHERE IT'S LOOKED UP (myapp.service.requests), not where requests is defined\nwith patch(\"myapp.service.requests.get\") as mock_get:\n    mock_get.return_value.json.return_value = {\"ok\": True}\n    result = myapp.service.fetch_status()          # the network call is replaced\nassert result[\"ok\"]\n# outside the block requests.get is restored automatically: no manual teardown\n</code></pre>"
+    },
+    {
+      "slug": "docker-for-python",
+      "number": 87,
+      "title": "Docker for Python",
+      "category": "Production Python",
+      "relevance": "Senior",
+      "tier": "BREADTH",
+      "created": "21 Jul 2026",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent",
+      "headings": [
+        {
+          "id": "tldr",
+          "text": "⚡ TL;DR",
+          "level": 3
+        },
+        {
+          "id": "recall",
+          "text": "🎯 Recall",
+          "level": 3
+        },
+        {
+          "id": "the-idea",
+          "text": "💡 The idea",
+          "level": 3
+        },
+        {
+          "id": "code",
+          "text": "💻 Code",
+          "level": 3
+        }
+      ],
+      "html": "<h5>📚 References</h5>\n<p>📘 <a href=\"https://pythonspeed.com/articles/multi-stage-docker-python/\" target=\"_blank\" rel=\"noopener noreferrer\">pythonspeed: multi-stage builds for Python</a> · 📘 <a href=\"https://pythonspeed.com/articles/smaller-python-docker-images/\" target=\"_blank\" rel=\"noopener noreferrer\">pythonspeed: smaller Python Docker images</a></p>\n<h3 id=\"tldr\">⚡ TL;DR</h3>\n<p>Slim base, multi-stage build (compile in a builder, ship only installed packages), dependencies copied <em>before</em> app code, non-root user.\nLayers cache in order: put code first and every one-line edit reinstalls every dependency.</p>\n<h3 id=\"recall\">🎯 Recall</h3>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What does a multi-stage build buy?</strong></td>\n<td>Compilers and build caches stay in the builder; the final image ships only runtime files: smaller, less attack surface.</td>\n</tr>\n<tr>\n<td><strong>The layer-caching rule?</strong></td>\n<td>Copy the dependency manifest and install <em>before</em> copying app code.</td>\n</tr>\n<tr>\n<td><strong>Two hygiene defaults?</strong></td>\n<td>A non-root <code>USER</code>, and a <code>.dockerignore</code> keeping <code>.git</code>, <code>.venv</code> and secrets out of the build context.</td>\n</tr>\n</tbody></table>\n<h3 id=\"the-idea\">💡 The idea</h3>\n<p>Use <code>python:3.12-slim</code>, not Alpine, whose musl libc forces slow source builds of many wheels. Layers cache in order: after editing <code>main.py</code>, the rebuild showed the <code>pip install</code> layer <code>CACHED</code>. Two traps hide in common snippets: Dockerfiles don't allow trailing <code>#</code> comments, so <code>COPY requirements.txt .   # deps first</code> failed to parse, and <code>chown -R app /app</code> is pointless without <code>WORKDIR /app</code>. With uv, install with <code>uv sync --frozen --no-dev</code> from the <a href=\"/python/virtual-environments-dependency-resolution\">lockfile</a>.</p>\n<h3 id=\"code\">💻 Code</h3>\n<pre><code class=\"language-dockerfile\">FROM python:3.12-slim AS build\nWORKDIR /src\n# dependencies FIRST: this layer stays cached across code edits\nCOPY requirements.txt .\nRUN pip install --no-cache-dir --prefix=/install -r requirements.txt\n\n# clean runtime stage: no compilers or build caches shipped\nFROM python:3.12-slim\nCOPY --from=build /install /usr/local\nRUN useradd --create-home app\nWORKDIR /app\n# app code LAST: editing it doesn't reinstall dependencies\nCOPY --chown=app:app . .\nUSER app\nCMD [\"python\", \"main.py\"]\n</code></pre>"
+    }
+  ]
+}

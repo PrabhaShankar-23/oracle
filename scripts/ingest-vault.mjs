@@ -1323,6 +1323,7 @@ const PYTHON_CHAPTERS = {
   '11-packaging-environments-tooling': 'Packaging, environments & tooling',
   '12-stdlib-systems': 'Stdlib & systems',
   '13-production-services': 'Production services',
+  '14-applied-adjacent': 'Applied & adjacent',
 }
 
 const ingestPython = () =>

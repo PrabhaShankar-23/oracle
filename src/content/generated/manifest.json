@@ -5923,6 +5923,53 @@
       "relevance": "Senior",
       "section": "13-production-services",
       "sectionTitle": "Production services"
+    },
+    {
+      "slug": "applied-adjacent-map",
+      "title": "Chapter map: Applied & adjacent",
+      "tier": "MAP",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent"
+    },
+    {
+      "slug": "numpy-vectorization",
+      "title": "NumPy Vectorization",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent"
+    },
+    {
+      "slug": "pandas-memory-efficiency",
+      "title": "Pandas Memory Efficiency",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent"
+    },
+    {
+      "slug": "sqlalchemy-vs-raw-sql",
+      "title": "SQLAlchemy vs Raw SQL",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent"
+    },
+    {
+      "slug": "monkey-patching",
+      "title": "Monkey Patching",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent"
+    },
+    {
+      "slug": "docker-for-python",
+      "title": "Docker for Python",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "14-applied-adjacent",
+      "sectionTitle": "Applied & adjacent"
     }
   ],
   "gameDayDocs": [
