@@ -5382,6 +5382,13 @@
       "sectionTitle": "CPython object internals"
     },
     {
+      "slug": "memory-management-gc-map",
+      "title": "Chapter map: Memory management & GC",
+      "tier": "MAP",
+      "section": "05-memory-management-gc",
+      "sectionTitle": "Memory management & GC"
+    },
+    {
       "slug": "reference-counting",
       "title": "Reference Counting",
       "tier": "CORE",
