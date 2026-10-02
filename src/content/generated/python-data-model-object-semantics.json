@@ -310,7 +310,7 @@
     },
     {
       "slug": "eq-hash-contract",
-      "number": 4,
+      "number": 4.1,
       "title": "The __eq__ / __hash__ Contract",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Architect",

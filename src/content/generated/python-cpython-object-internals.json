@@ -122,7 +122,7 @@
     },
     {
       "slug": "set-frozenset-internals",
-      "number": 21,
+      "number": 21.1,
       "title": "set / frozenset Internals",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",

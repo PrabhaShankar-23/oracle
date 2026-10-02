@@ -80,7 +80,7 @@
     },
     {
       "slug": "concurrency-vs-parallelism",
-      "number": 33,
+      "number": 33.1,
       "title": "Concurrency vs Parallelism",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",

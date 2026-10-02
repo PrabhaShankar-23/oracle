@@ -1211,7 +1211,8 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
 
         // Order by the metadata's item number where there is one, else by the filename.
         const item = Number(/\(Item\s+(\d+)\)/.exec(meta.category ?? '')?.[1] ?? 0)
-        const fileNo = Number(/^(\d+)/.exec(file)?.[1] ?? 0)
+        // `04a-…` sorts after `04-…`: a letter suffix adds a tenth per letter (a = .1, b = .2).
+        const fileNo = Number(/^(\d+)/.exec(file)?.[1] ?? 0) + ((/^\d+([a-z])-/.exec(file)?.[1]?.charCodeAt(0) ?? 96) - 96) / 10
         // A note's own file gives it a short, hand-chosen URL. A shared file (breadth.md) names
         // no single note, so those take the title — including when it currently holds just one.
         const shared = /^breadth\./.test(file)
