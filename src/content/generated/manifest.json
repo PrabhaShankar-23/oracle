@@ -5114,6 +5114,13 @@
   ],
   "python": [
     {
+      "slug": "data-model-object-semantics-map",
+      "title": "Chapter map: Data model & object semantics",
+      "tier": "MAP",
+      "section": "01-data-model-object-semantics",
+      "sectionTitle": "Data model & object semantics"
+    },
+    {
       "slug": "fundamentals-refresher",
       "title": "The CPython Execution Model",
       "tier": "SUPPORTING",
@@ -5194,6 +5201,13 @@
       "sectionTitle": "Data model & object semantics"
     },
     {
+      "slug": "functions-scope-closures-map",
+      "title": "Chapter map: Functions, scope & closures",
+      "tier": "MAP",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures"
+    },
+    {
       "slug": "scope-legb-rule",
       "title": "Scope & the LEGB Rule",
       "tier": "CORE",
@@ -5232,6 +5246,13 @@
       "relevance": "Senior",
       "section": "02-functions-scope-closures",
       "sectionTitle": "Functions, scope & closures"
+    },
+    {
+      "slug": "iterators-generators-comprehensions-map",
+      "title": "Chapter map: Iterators, generators & comprehensions",
+      "tier": "MAP",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions"
     },
     {
       "slug": "iterator-protocol",
@@ -5392,6 +5413,13 @@
       "relevance": "Architect",
       "section": "05-memory-management-gc",
       "sectionTitle": "Memory management & GC"
+    },
+    {
+      "slug": "concurrency-gil-map",
+      "title": "Chapter map: Concurrency & the GIL",
+      "tier": "MAP",
+      "section": "06-concurrency-gil",
+      "sectionTitle": "Concurrency & the GIL"
     },
     {
       "slug": "the-gil",

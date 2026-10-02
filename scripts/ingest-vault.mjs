@@ -1161,7 +1161,7 @@ const NETWORKING_CHAPTERS = {
 }
 
 /** A vault series is one folder of chapters, each holding notes that share a header prefix. */
-async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
+async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeader }) {
   const { readdir } = await import('node:fs/promises')
   const headerRe = new RegExp(`^# ${header}: `)
   const stripRe = new RegExp(`^${header}:\\s*`, 'i')
@@ -1179,6 +1179,20 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix }) {
 
     for (const file of files) {
       const raw = await readFile(path.join(abs, file), 'utf8')
+      // A chapter's `00-chapter-map.md` (concept map, reading order, decision tree) becomes the
+      // chapter's first page, rendered and link-resolved like any note.
+      if (mapHeader && file === '00-chapter-map.md' && raw.startsWith(`# ${mapHeader}: `)) {
+        const $ = cheerio.load(marked.parse(raw, { gfm: true, mangle: false, headerIds: false }))
+        const body = $('body')
+        body.find('h1').first().remove()
+        body.find('blockquote').first().remove()
+        parsed.push({
+          $, body, dir: chapterDir, chapterTitle,
+          slug: `${chapterDir.replace(/^\d+-/, '')}-map`, stem: '00-chapter-map', number: -1,
+          title: `Chapter map: ${chapterTitle}`, tier: 'MAP', category: 'Concept map & reading order',
+        })
+        continue
+      }
       // A `breadth.md` carries several notes at once; every other file carries exactly one.
       const split = raw.split(new RegExp(`(?=${headerRe.source})`, 'm')).filter((x) => headerRe.test(x))
       const notes = split.length > 0 ? split : []
@@ -1300,6 +1314,7 @@ const ingestPython = () =>
     route: PYTHON_ROUTE,
     header: 'Python Topic',
     prefix: 'python',
+    mapHeader: 'Chapter Map',
   })
 
 async function ingestAgenticDecisions() {

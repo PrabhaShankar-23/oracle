@@ -191,7 +191,7 @@ export const sections: Section[] = [
     pages: manifest.python.map((n) => ({
       title: n.title,
       path: `/python/${n.slug}`,
-      description: `${n.tier} · ${n.relevance ?? 'Senior'} level.`,
+      description: n.tier === 'MAP' ? 'Concept map, reading order and how the notes connect.' : `${n.tier} · ${n.relevance ?? 'Senior'} level.`,
       group: n.sectionTitle,
     })),
   },

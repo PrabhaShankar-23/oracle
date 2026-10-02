@@ -3,6 +3,17 @@
   "title": "Iterators, generators & comprehensions",
   "notes": [
     {
+      "slug": "iterators-generators-comprehensions-map",
+      "number": -1,
+      "title": "Chapter map: Iterators, generators & comprehensions",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "03-iterators-generators-comprehensions",
+      "sectionTitle": "Iterators, generators & comprehensions",
+      "headings": [],
+      "html": "<p>Every note in this chapter is a way to <strong>produce or consume a one-shot position</strong>. Read each arrow as a sentence: <em>generators</em> <strong>is-a</strong> <em>iterator protocol</em>.</p>\n<figure><div class=\"mermaid\">flowchart TD\n    D[\"🧬 04 · dunder protocols\"] \n    C[\"🔒 10 · closures\"]\n    N14[\"🔁 14 · iterator protocol\"]\n    N15[\"⏸️ 15 · generators\"]\n    N16[\"🔀 16 · yield from\"]\n    N17[\"📨 17 · send / throw / close\"]\n    N18[\"🧺 18 · comprehensions &amp; genexps\"]\n    N19[\"🧰 19 · itertools\"]\n    A[\"⚡ 41 · async / await\"]\n    N14 -.-&gt;|\"built on\"| D\n    N15 --&gt;|\"is-a\"| N14\n    N18 --&gt;|\"genexp is-a\"| N15\n    N19 --&gt;|\"built on\"| N14\n    N16 --&gt;|\"built on\"| N15\n    N17 --&gt;|\"built on\"| N15\n    N15 -.-&gt;|\"contrasts with\"| C\n    N17 -.-&gt;|\"same mechanism as\"| A\n    classDef core fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef sup fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N14,N15 core; class N16,N18 sup; class N17,N19 br; class D,C,A in\n</div></figure>\n<p>Green = CORE, blue = SUPPORTING, yellow = BREADTH, grey = another chapter (dashed edges).</p>\n<p><strong>Reading order:</strong> <a href=\"/python/iterator-protocol\">14 iterator protocol</a> ─▶ <a href=\"/python/generators-lazy-evaluation\">15 generators</a> ─▶ <a href=\"/python/yield-from-delegation\">16 yield from</a> ─▶ <a href=\"/python/coroutine-style-generators\">17 send / throw / close</a> ─▶ <a href=\"/python/comprehensions-genexps\">18 comprehensions</a> ─▶ <a href=\"/python/itertools-patterns\">19 itertools</a></p>\n<ul>\n<li><strong>The one big idea:</strong> the iterable holds the data, the iterator holds the position. A generator is the shortest way to write an iterator, a genexp is the shortest way to write a generator, and <code>itertools</code> chains them because they all speak the same two calls, <code>iter()</code> and <code>next()</code>.</li>\n<li><strong>The two most-confused pairs:</strong> <em>iterable vs iterator vs generator</em> (14: <code>iter(x) is x</code>, and its class diagram) · <em><code>[...]</code> vs <code>(...)</code></em>: built now and reusable vs built on demand and one-shot (18).</li>\n<li><strong>Ten minutes before an interview:</strong> the ⚡ TL;DR, 🧭 Flow and ✏️ Draw-by-hand rows of 14 and 15, then the Break it in 14 (a container that is its own iterator).</li>\n<li><strong>Cross-chapter:</strong> <a href=\"/python/data-model-dunder-protocols\">dunder protocols</a> (lookup on the type) · <a href=\"/python/first-class-functions-closures\">closures</a> (keep variables, not execution) · <span class=\"vault-ref\" title=\"07-async-io/41-async-await-coroutines\">async / await</span> (the same parked frame, driven by an event loop).</li>\n</ul>\n<p>No decision tree: these notes build on each other rather than being alternatives to choose between.</p>"
+    },
+    {
       "slug": "iterator-protocol",
       "number": 14,
       "title": "The Iterator Protocol",

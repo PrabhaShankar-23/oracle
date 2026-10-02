@@ -424,7 +424,8 @@ export type GameDaySearchEntry = {
 
 /* ---------------- Agentic design decisions (06-ai-systems/agentic-design) ---------------- */
 
-export type DecisionTier = 'CORE' | 'SUPPORTING' | 'BREADTH'
+/** `MAP` is a chapter's concept-map page, not a depth tier. */
+export type DecisionTier = 'CORE' | 'SUPPORTING' | 'BREADTH' | 'MAP'
 
 /** One decision note: a fork an architect resolves out loud, rendered from vault Markdown. */
 export type AgenticDecision = {

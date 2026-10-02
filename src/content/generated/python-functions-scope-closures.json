@@ -3,6 +3,17 @@
   "title": "Functions, scope & closures",
   "notes": [
     {
+      "slug": "functions-scope-closures-map",
+      "number": -1,
+      "title": "Chapter map: Functions, scope & closures",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "02-functions-scope-closures",
+      "sectionTitle": "Functions, scope & closures",
+      "headings": [],
+      "html": "<p>A function is an <strong>object made at runtime that can carry its surroundings with it</strong>. Each note adds one layer on top of the last. Read each arrow as a sentence: <em>decorators</em> <strong>built on</strong> <em>closures</em>.</p>\n<figure><div class=\"mermaid\">flowchart TD\n    NM[\"🏷️ 01 · names &amp; binding\"]\n    N09[\"🔍 09 · scope &amp; LEGB\"]\n    N10[\"🎒 10 · closures\"]\n    N11[\"🎛️ 11 · arguments model\"]\n    N12[\"🎀 12 · decorators\"]\n    N13[\"🧰 13 · functools\"]\n    GN[\"⏸️ 15 · generators\"]\n    DS[\"🔧 25 · descriptors\"]\n    N09 -.-&gt;|\"built on\"| NM\n    N10 --&gt;|\"built on\"| N09\n    N12 --&gt;|\"built on\"| N10\n    N12 --&gt;|\"built on\"| N11\n    N13 --&gt;|\"built on\"| N12\n    N10 -.-&gt;|\"contrasts with\"| GN\n    N13 -.-&gt;|\"same mechanism as\"| DS\n    classDef core fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef sup fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N09,N10,N12 core; class N11,N13 sup; class NM,GN,DS in\n</div></figure>\n<p>Green = CORE, blue = SUPPORTING, grey = another chapter (dashed edges).</p>\n<p><strong>Reading order:</strong> <a href=\"/python/scope-legb-rule\">09 LEGB</a> ─▶ <a href=\"/python/first-class-functions-closures\">10 closures</a> ─▶ <a href=\"/python/arguments-model\">11 arguments</a> ─▶ <a href=\"/python/decorators\">12 decorators</a> ─▶ <a href=\"/python/functools-toolkit\">13 functools</a></p>\n<ul>\n<li><strong>The one big idea:</strong> scope is decided at compile time (09), a closure takes the enclosing <em>cells</em> with it and reads them at call time (10), a decorator is just <code>f = deco(f)</code> with a closure as the wrapper (12), and <code>functools</code> gives the common wrappers a name and a lifetime (13). <code>*args, **kwargs</code> (11) is how a wrapper passes any call through.</li>\n<li><strong>The two most-confused pairs:</strong> <em>late binding vs early binding</em>: a closure reads its variable when called, so loop lambdas all see the last value, while a default argument is evaluated once at <code>def</code> time (10, and 03 in the data model) · <em><code>lru_cache</code> vs <code>cached_property</code></em>: a cache on the function that pins every <code>self</code>, vs a value stored on the instance (13, the picture).</li>\n<li><strong>Ten minutes before an interview:</strong> the ⚡ TL;DR of 09 and 10, then 12's TL;DR (application bottom-up, execution top-down) and 13's picture.</li>\n<li><strong>Cross-chapter:</strong> <a href=\"/python/names-binding-assignment\">names &amp; binding</a> (what a scope binds) · <a href=\"/python/generators-lazy-evaluation\">generators</a> (a closure keeps variables, a generator keeps the whole call) · <a href=\"/python/descriptors\">descriptors</a> (<code>property</code> and <code>cached_property</code> are decorator-built descriptors).</li>\n</ul>\n<p>No decision tree: these notes are layers, not alternatives.</p>"
+    },
+    {
       "slug": "scope-legb-rule",
       "number": 9,
       "title": "Scope & the LEGB Rule",

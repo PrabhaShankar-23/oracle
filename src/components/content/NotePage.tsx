@@ -16,10 +16,11 @@ import PageContainer from './PageContainer'
 import PageHeader from './PageHeader'
 import TableOfContents from './TableOfContents'
 
-const TIER_COLOR: Record<DecisionTier, 'error' | 'warning' | 'success'> = {
+const TIER_COLOR: Record<DecisionTier, 'error' | 'warning' | 'success' | 'info'> = {
   CORE: 'error',
   SUPPORTING: 'warning',
   BREADTH: 'success',
+  MAP: 'info',
 }
 
 type Crumb = { label: string; to?: string }
