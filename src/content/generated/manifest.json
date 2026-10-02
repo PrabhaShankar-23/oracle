@@ -5553,6 +5553,69 @@
       "relevance": "Senior",
       "section": "07-async-io",
       "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "typing-interfaces-map",
+      "title": "Chapter map: Typing & interfaces",
+      "tier": "MAP",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "type-hints-typing",
+      "title": "Type Hints & typing",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "generics-variance",
+      "title": "Generics & Variance",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "protocols-structural-typing",
+      "title": "Protocols & Structural Typing",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "abcs-duck-typing",
+      "title": "ABCs & Duck Typing",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "runtime-introspection-types",
+      "title": "Runtime Introspection of Types",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "pydantic-validation-boundary",
+      "title": "Pydantic v2 as a Validation Boundary",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
+    },
+    {
+      "slug": "structured-outputs-tool-schemas",
+      "title": "Structured Outputs & Tool Schemas",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-typing-interfaces",
+      "sectionTitle": "Typing & interfaces"
     }
   ],
   "gameDayDocs": [

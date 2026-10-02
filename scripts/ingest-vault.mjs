@@ -1307,6 +1307,7 @@ const PYTHON_CHAPTERS = {
   '05-memory-management-gc': 'Memory management & GC',
   '06-concurrency-gil': 'Concurrency & the GIL',
   '07-async-io': 'Async I/O',
+  '08-typing-interfaces': 'Typing & interfaces',
 }
 
 const ingestPython = () =>
