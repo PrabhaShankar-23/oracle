@@ -5498,6 +5498,61 @@
       "relevance": "Senior",
       "section": "06-concurrency-gil",
       "sectionTitle": "Concurrency & the GIL"
+    },
+    {
+      "slug": "async-io-map",
+      "title": "Chapter map: Async I/O",
+      "tier": "MAP",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "async-execution-model",
+      "title": "The Async Execution Model",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "async-await-coroutines",
+      "title": "async/await & Coroutine Objects",
+      "tier": "CORE",
+      "relevance": "Senior",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "tasks-gather-cancellation",
+      "title": "Tasks, Gathering & Cancellation",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "bridging-sync-async",
+      "title": "Bridging Sync ↔ Async",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "async-primitives-patterns",
+      "title": "Async Primitives & Patterns",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
+    },
+    {
+      "slug": "async-ecosystem-comparatives",
+      "title": "Async Ecosystem & Comparatives",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "07-async-io",
+      "sectionTitle": "Async I/O"
     }
   ],
   "gameDayDocs": [

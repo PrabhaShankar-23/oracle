@@ -1306,6 +1306,7 @@ const PYTHON_CHAPTERS = {
   '04-cpython-object-internals': 'CPython object internals',
   '05-memory-management-gc': 'Memory management & GC',
   '06-concurrency-gil': 'Concurrency & the GIL',
+  '07-async-io': 'Async I/O',
 }
 
 const ingestPython = () =>
