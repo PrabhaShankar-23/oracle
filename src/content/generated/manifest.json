@@ -5695,6 +5695,53 @@
       "relevance": "Senior",
       "section": "09-idiomatic-structural",
       "sectionTitle": "Idiomatic & structural"
+    },
+    {
+      "slug": "performance-profiling-map",
+      "title": "Chapter map: Performance & profiling",
+      "tier": "MAP",
+      "section": "10-performance-profiling",
+      "sectionTitle": "Performance & profiling"
+    },
+    {
+      "slug": "why-python-is-slow",
+      "title": "Why Python Is \"Slow\" — And Where It Isn't",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "10-performance-profiling",
+      "sectionTitle": "Performance & profiling"
+    },
+    {
+      "slug": "profiling-the-right-way",
+      "title": "Profiling the Right Way",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "10-performance-profiling",
+      "sectionTitle": "Performance & profiling"
+    },
+    {
+      "slug": "micro-optimization-traps",
+      "title": "Micro-Optimization Traps",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "10-performance-profiling",
+      "sectionTitle": "Performance & profiling"
+    },
+    {
+      "slug": "c-extension-native-boundary",
+      "title": "The C-Extension & Native Acceleration Boundary",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "10-performance-profiling",
+      "sectionTitle": "Performance & profiling"
+    },
+    {
+      "slug": "interpreter-level-speedups",
+      "title": "Interpreter-Level Speedups",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "10-performance-profiling",
+      "sectionTitle": "Performance & profiling"
     }
   ],
   "gameDayDocs": [

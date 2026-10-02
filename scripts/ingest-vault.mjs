@@ -1319,6 +1319,7 @@ const PYTHON_CHAPTERS = {
   '07-async-io': 'Async I/O',
   '08-typing-interfaces': 'Typing & interfaces',
   '09-idiomatic-structural': 'Idiomatic & structural',
+  '10-performance-profiling': 'Performance & profiling',
 }
 
 const ingestPython = () =>
