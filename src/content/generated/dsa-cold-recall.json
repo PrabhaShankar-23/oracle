@@ -359,13 +359,13 @@
                 {
                   "label": "1.",
                   "text": "Shrink l one step at a time, removing from a set.",
-                  "complexity": "O(2n) / O(Σ)",
+                  "complexity": "O(2n) / O(1), ≤ 128 chars",
                   "winner": false
                 },
                 {
                   "label": "2.",
                   "text": "Jump l = max(l, last[c] + 1).",
-                  "complexity": "O(n) / O(Σ)",
+                  "complexity": "O(n) / O(1), ≤ 128 chars",
                   "winner": true
                 }
               ],
@@ -457,13 +457,13 @@
                 {
                   "label": "1.",
                   "text": "Test every substring against the count map.",
-                  "complexity": "O(n²·Σ)",
+                  "complexity": "O(52·n²) = O(n²)",
                   "winner": false
                 },
                 {
                   "label": "2.",
                   "text": "Expand to feasible, then contract while still feasible.",
-                  "complexity": "O(n + m) / O(Σ)",
+                  "complexity": "O(n + m) / O(1), ≤ 52 letters",
                   "winner": true
                 }
               ],
@@ -1410,7 +1410,7 @@
               "lists": [
                 "neetcode150"
               ],
-              "state": "<code>lo = 1</code>, <code>hi = max(pile)</code>; <code>feasible(k) = Σ ceil(p/k) &lt;= h</code>.",
+              "state": "<code>lo = 1</code>, <code>hi = max(pile)</code>; <code>feasible(k) = sum(ceil(p/k)) &lt;= h</code>.",
               "invariant": "Feasibility is monotone in k — a faster speed is never worse — which is the entire licence to binary search a value that is not in the array.",
               "approaches": [
                 {

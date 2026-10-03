@@ -9,7 +9,7 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
     {
       name: 'Shrink one at a time',
       time: 'O(2n)',
-      space: 'O(Σ)',
+      space: 'O(1), ≤ 128 chars',
       points: [
         'Keep a set of the characters inside the window.',
         'When the new character is already in it, drop characters from the left until it is free.',
@@ -42,7 +42,7 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
     {
       name: 'Jump l with last-seen',
       time: 'O(n)',
-      space: 'O(Σ)',
+      space: 'O(1), ≤ 128 chars',
       best: true,
       points: [
         'Store last[c] = the most recent index of each character.',
@@ -212,8 +212,8 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
   'P04-minimum-window-substring': [
     {
       name: 'Every substring',
-      time: 'O(n²·Σ)',
-      space: 'O(Σ)',
+      time: 'O(52·n²) = O(n²)',
+      space: 'O(1), ≤ 52 letters',
       points: [
         'Try every start i and every end j.',
         'Count the substring and check it covers every letter of t.',
@@ -238,7 +238,7 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
     {
       name: 'Expand then contract',
       time: 'O(n + m)',
-      space: 'O(Σ)',
+      space: 'O(1), ≤ 52 letters',
       best: true,
       points: [
         'need = counts of t, have = counts in the window, formed = how many letters are satisfied.',
