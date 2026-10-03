@@ -10,6 +10,8 @@ export const p05: Record<string, ApproachWalkthrough[]> = {
       name: 'Check the next k',
       time: 'O(n·k)',
       space: 'O(1)',
+      state: 'Index `i` and partner `j` in `(i, i + k]`.',
+      invariant: 'Every pair `(i′, j′)` with `i′ < i` and `j′ − i′ ≤ k` has already been compared and found different.',
       points: [
         'For each i, look at the next k elements.',
         'An equal value inside that range answers True.',
@@ -66,6 +68,8 @@ export const p05: Record<string, ApproachWalkthrough[]> = {
       name: 'All subarrays',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Start `i`, end `j`, running `total = sum(nums[i..j])`.',
+      invariant: '`count` holds the matching subarrays for every start before `i`, plus those from `i` ending before `j`.',
       points: [
         'Fix a start, extend the end, keeping a running total.',
         'Count every time the total equals k.',
@@ -126,6 +130,8 @@ export const p05: Record<string, ApproachWalkthrough[]> = {
       name: 'Prefix and suffix arrays',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`pre[i]` = product left of `i`, `suf[i]` = product right of `i`.',
+      invariant: '`pre[i] × suf[i]` multiplies every element except `nums[i]`, with no division.',
       points: [
         'pre[i] = product of everything left of i.',
         'suf[i] = product of everything right of i.',
@@ -184,7 +190,9 @@ export const p05: Record<string, ApproachWalkthrough[]> = {
     {
       name: 'Sort then scan',
       time: 'O(n log n)',
-      space: 'O(1)',
+      space: 'O(n)',
+      state: '`ordered` = the distinct values sorted; current `run` length; `best`.',
+      invariant: '`run` is the length of the consecutive block ending at `ordered[i]`; `best` is the longest block seen so far.',
       points: [
         'Sort the values and drop duplicates.',
         'Scan once, counting runs of consecutive values.',

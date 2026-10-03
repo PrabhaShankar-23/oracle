@@ -10,6 +10,8 @@ export const p28: Record<string, ApproachWalkthrough[]> = {
       name: 'DFS over an adjacency list',
       time: 'O(V + E)',
       space: 'O(V + E)',
+      state: 'Adjacency list `graph`, set `seen`, `count`.',
+      invariant: 'Each outer-loop start that is not in `seen` floods one whole new component, so `count` equals the components found so far.',
       points: [
         'Build the adjacency list; every unvisited node starts a new component.',
         'Flood it with a stack.',
@@ -47,6 +49,8 @@ export const p28: Record<string, ApproachWalkthrough[]> = {
       name: 'Edge count, then one DFS',
       time: 'O(V + E)',
       space: 'O(V + E)',
+      state: 'Edge count check, then `seen` from a DFS starting at node 0.',
+      invariant: 'With exactly `n − 1` edges, reaching all `n` nodes proves the graph is connected and acyclic, i.e. a tree.',
       points: [
         'A tree has exactly n − 1 edges and is connected. Either rule alone is not enough.',
         'Check the count, then DFS from 0 and confirm every node is reached.',
@@ -94,6 +98,8 @@ export const p28: Record<string, ApproachWalkthrough[]> = {
       name: 'Check reachability before each edge',
       time: 'O(n²)',
       space: 'O(n)',
+      state: '`graph` = the edges added so far (a forest).',
+      invariant: 'The edges added so far contain no cycle; an edge whose ends are already connected is the one that would close it.',
       points: [
         'Before adding edge (a, b), DFS: can a already reach b?',
         'If so, this edge closes the cycle, so return it.',
@@ -130,6 +136,8 @@ export const p28: Record<string, ApproachWalkthrough[]> = {
       name: 'Weighted graph, DFS per query',
       time: 'O(Q·(V + E))',
       space: 'O(V + E)',
+      state: 'Edges `a → b` with weight `v` and `b → a` with `1/v`; per query a stack of `(node, product)`.',
+      invariant: 'For each stacked `(u, acc)`, `acc` is `src / u` along the path taken, so reaching `dst` gives `src / dst`.',
       points: [
         'a / b = v gives edges a → b (v) and b → a (1/v).',
         'A query multiplies the weights along any path from a to b; no path ⇒ −1.',
@@ -167,6 +175,8 @@ export const p28: Record<string, ApproachWalkthrough[]> = {
       name: 'Kruskal on all n² edges',
       time: 'O(n² log n)',
       space: 'O(n²)',
+      state: 'All edges sorted by distance; `parent` for union-find; `total`, `used`.',
+      invariant: 'The edges taken so far form a minimum spanning forest; the cheapest edge joining two different trees is always safe to add.',
       points: [
         'List every pair with its Manhattan distance and sort.',
         'Take the cheapest edges that join two different trees (Union-Find) until n − 1 are taken.',
@@ -193,6 +203,8 @@ export const p28: Record<string, ApproachWalkthrough[]> = {
       name: 'Prim with a plain array',
       time: 'O(n²)',
       space: 'O(n)',
+      state: '`in_tree[i]`; `dist[v]` = the cheapest link from the tree to `v`; `total`.',
+      invariant: 'The tree built so far is a piece of some MST; the outside point with the smallest `dist` is the cheapest edge leaving the tree, so adding it is safe.',
       trick: true,
       points: [
         'On a complete graph, a heap is overkill.',

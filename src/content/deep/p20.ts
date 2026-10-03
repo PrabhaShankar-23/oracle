@@ -13,6 +13,8 @@ export const p20: Record<string, ApproachWalkthrough[]> = {
       name: 'DFS with per-depth sums',
       time: 'O(n)',
       space: 'O(h)',
+      state: '`sums[d]`, `counts[d]` per depth; recursion carries `depth`.',
+      invariant: 'After the walk, `sums[d]` and `counts[d]` cover exactly the nodes at depth `d`, whatever the visit order.',
       points: [
         'Walk the tree in any order, carrying the depth.',
         'Add each value to sums[depth] and bump counts[depth].',
@@ -58,6 +60,8 @@ export const p20: Record<string, ApproachWalkthrough[]> = {
       name: 'DFS, bucket by depth',
       time: 'O(n)',
       space: 'O(h)',
+      state: '`res[d]` = the values at depth `d` seen so far; recursion carries `depth`.',
+      invariant: 'Pre-order with left before right reaches the nodes of each depth from left to right, so every `res[d]` stays in level order.',
       points: [
         'Pre-order DFS with the depth; the first visit at a new depth opens res[depth].',
         'Left before right keeps each level in left-to-right order.',
@@ -97,6 +101,8 @@ export const p20: Record<string, ApproachWalkthrough[]> = {
       name: 'DFS right-first, first visit per depth',
       time: 'O(n)',
       space: 'O(h)',
+      state: '`res` with one value per depth reached so far; recursion carries `depth`.',
+      invariant: 'Visiting right before left, the first node reached at a new depth is the rightmost node at that depth.',
       points: [
         'Visit right before left.',
         'The first node you reach at each new depth is the one visible from the right.',
@@ -135,6 +141,8 @@ export const p20: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS, reverse every other level',
       time: 'O(n)',
       space: 'O(w)',
+      state: 'Queue holding one full level; `level` list; `res` so far.',
+      invariant: 'The traversal itself is plain level order; only the stored copy of each odd level is reversed.',
       points: [
         'Do plain level order.',
         'Reverse the lists at odd depths before appending.',

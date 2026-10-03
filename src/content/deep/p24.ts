@@ -13,6 +13,8 @@ export const p24: Record<string, ApproachWalkthrough[]> = {
       name: 'Nested dicts',
       time: 'O(L) per operation',
       space: 'O(total chars)',
+      state: 'Each node is a dict `char → child`; the key `$` marks a word end.',
+      invariant: 'The path from the root to a node spells a prefix; `$` in that node means the prefix is a whole inserted word.',
       points: [
         'Each node is a dict from character to child; a "$" key marks a complete word.',
         'insert walks and creates; search needs the walk to succeed and "$" at the end; startsWith only needs the walk.',
@@ -55,6 +57,8 @@ export const p24: Record<string, ApproachWalkthrough[]> = {
       name: 'Set of words, compare each',
       time: 'O(N·L) per search',
       space: 'O(total chars)',
+      state: '`words` = every added word.',
+      invariant: 'A pattern matches a stored word exactly when the lengths agree and every position is `.` or the same letter.',
       points: [
         'Store words in a set; a search with dots compares against every word of that length.',
         'Adding is O(L), but each search scans all N words.',
@@ -96,6 +100,8 @@ export const p24: Record<string, ApproachWalkthrough[]> = {
       name: 'Word Search once per word',
       time: 'O(W · mn · 4^L)',
       space: 'O(L)',
+      state: 'Current `word`; DFS position `(r, c)` and index `i`; visited cells marked `#`.',
+      invariant: '`dfs(r, c, i)` is True exactly when `word[i:]` can be traced from `(r, c)` without reusing a marked cell; every mark is undone on the way back.',
       points: [
         'Run the single-word grid DFS for every word.',
         'Words that share a prefix redo the same grid walks again and again.',

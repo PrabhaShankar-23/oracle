@@ -10,6 +10,8 @@ export const p31: Record<string, ApproachWalkthrough[]> = {
       name: 'Bitmask over 0 … 2ⁿ − 1',
       time: 'O(n·2ⁿ)',
       space: 'O(1) extra',
+      state: 'An integer `mask`; bit `i` set means `nums[i]` is taken.',
+      invariant: 'Each mask from 0 to 2ⁿ − 1 names a different subset, and every subset has exactly one mask.',
       points: [
         'Each number from 0 to 2ⁿ − 1 is one subset: bit i set ⇔ take nums[i].',
         'No recursion, but no pruning either. It does not carry over to Subsets II or Combination Sum.',
@@ -50,6 +52,8 @@ export const p31: Record<string, ApproachWalkthrough[]> = {
       name: 'All subsets, dedupe with a set',
       time: 'O(n·2ⁿ)',
       space: 'O(n·2ⁿ)',
+      state: 'Sorted `nums`; set `seen` of value tuples.',
+      invariant: 'Because `nums` is sorted, equal multisets produce equal tuples, so `seen` keeps each distinct subset once.',
       points: [
         'Sort, generate every subset, and keep a set of value tuples.',
         'Duplicates are still generated, then thrown away.',
@@ -115,6 +119,8 @@ export const p31: Record<string, ApproachWalkthrough[]> = {
       name: 'All subsets, filter by sum',
       time: 'O(n·2ⁿ)',
       space: 'O(n·2ⁿ)',
+      state: 'Sorted `candidates`; one `mask` per subset; set `found`.',
+      invariant: 'Sorted input makes equal multisets equal tuples, so `found` holds each distinct combination summing to `target` once.',
       points: [
         'Sort, try every subset, keep those that sum to target in a set.',
         'No pruning: every subset is built even after it has overshot.',
@@ -150,6 +156,8 @@ export const p31: Record<string, ApproachWalkthrough[]> = {
       name: 'Build level by level',
       time: 'O(4ⁿ·n)',
       space: 'O(4ⁿ·n)',
+      state: '`res` = every string for the digits processed so far.',
+      invariant: 'After digit `d`, `res` holds every combination of the first `d` digits, each exactly once.',
       points: [
         'Start with [""]; for each digit, extend every string by each of its letters.',
         'Short, but it keeps every partial string in memory at once.',
@@ -185,6 +193,8 @@ export const p31: Record<string, ApproachWalkthrough[]> = {
       name: 'Generate all, then validate',
       time: 'O(2^(2n)·n)',
       space: 'O(n)',
+      state: 'Each candidate string of `2n` brackets; a running `balance`.',
+      invariant: 'A string is valid exactly when `balance` never drops below 0 and ends at 0.',
       points: ['Every string of 2n brackets, kept if its running balance never drops below 0 and ends at 0.', 'n = 2: 16 strings for 2 answers.'],
       code: c['P31-generate-parentheses#all'],
       diagrams: [{ kind: 'cells', rows: [{ caption: 'n = 2: some of the 16', cells: ['))((', '()()', '(())', ')()('], states: { 0: 'miss', 1: 'match', 2: 'match', 3: 'miss' } }] }],
@@ -247,6 +257,8 @@ export const p31: Record<string, ApproachWalkthrough[]> = {
       name: 'Precompute a palindrome table',
       time: 'O(n·2ⁿ)',
       space: 'O(n²)',
+      state: '`pal[i][j]` = whether `s[i..j]` is a palindrome; `path` of pieces; `start`.',
+      invariant: '`path` always splits `s[:start]` into palindromes, and `pal` makes each check O(1).',
       trick: true,
       points: [
         'The same substring is checked many times across branches.',

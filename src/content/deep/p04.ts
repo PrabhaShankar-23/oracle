@@ -8,8 +8,10 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
   'P04-longest-substring-without-repeating-characters': [
     {
       name: 'Shrink one at a time',
-      time: 'O(2n)',
+      time: 'O(n)',
       space: 'O(1), ≤ 128 chars',
+      state: '`l`, the set `window` = the characters of `s[l..r−1]`, `best`.',
+      invariant: '`window` holds no duplicates; after the inner loop removes characters up to the old copy of `c`, `s[l..r]` is duplicate-free.',
       points: [
         'Keep a set of the characters inside the window.',
         'When the new character is already in it, drop characters from the left until it is free.',
@@ -78,8 +80,10 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
   'P04-longest-repeating-character-replacement': [
     {
       name: 'Recount the window max',
-      time: 'O(26n)',
+      time: 'O(n)',
       space: 'O(1)',
+      state: '`l`, `count[26]` for the window `s[l..r]`, `best`.',
+      invariant: 'After the inner loop, `len − max(count) ≤ k`: the window can be made one letter with at most `k` replacements.',
       points: [
         'Grow the window and count its letters.',
         'While (length − most common count) > k, move l right.',
@@ -142,6 +146,8 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
       name: 'Prefix + binary search',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: '`pre[i]` = sum of the first `i` numbers (strictly increasing); end `r`.',
+      invariant: '`sum(l..r) = pre[r] − pre[l]`; since `pre` increases, the rightmost `l` with `pre[l] ≤ pre[r] − target` gives the shortest valid window ending at `r`.',
       points: [
         'Build prefix sums; with positive values they increase.',
         'A window (l, r] sums to pre[r] − pre[l].',
@@ -212,13 +218,15 @@ export const p04: Record<string, ApproachWalkthrough[]> = {
   'P04-minimum-window-substring': [
     {
       name: 'Every substring',
-      time: 'O(52·n²) = O(n²)',
-      space: 'O(1), ≤ 52 letters',
+      time: 'O(n³)',
+      space: 'O(n)',
+      state: 'Start `i`, end `j`; `window` = counts of `s[i:j]`; `best` so far.',
+      invariant: '`best` is the shortest covering substring among the starts before `i`; for start `i` the first covering `j` is its shortest, so later `j` can stop.',
       points: [
         'Try every start i and every end j.',
         'Count the substring and check it covers every letter of t.',
         'Keep the shortest one that does.',
-        'Each check re-counts the whole substring.',
+        'Each check re-counts the whole substring: O(n) work for each of O(n²) pairs, so O(n³).',
       ],
       code: c['P04-minimum-window-substring#substrings'],
       diagrams: [

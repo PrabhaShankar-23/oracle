@@ -10,6 +10,8 @@ export const p22: Record<string, ApproachWalkthrough[]> = {
       name: 'Collect, sort, compare neighbours',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: '`vals` = every node value, then sorted.',
+      invariant: 'In sorted order the closest pair is always adjacent, so the smallest neighbour gap is the answer.',
       points: [
         'Gather every value, sort, and take the smallest gap between neighbours.',
         'Works on any binary tree, so it ignores the BST order you were given.',
@@ -50,6 +52,8 @@ export const p22: Record<string, ApproachWalkthrough[]> = {
       name: 'In-order must strictly increase',
       time: 'O(n)',
       space: 'O(h)',
+      state: '`prev` = the last value visited in in-order.',
+      invariant: 'Every value visited so far was strictly greater than the one before it; one violation means the tree is not a BST.',
       points: [
         'A tree is a BST ⇔ its in-order sequence is strictly increasing.',
         'Walk in-order, comparing each value with the previous one.',
@@ -97,6 +101,8 @@ export const p22: Record<string, ApproachWalkthrough[]> = {
       name: 'Full in-order into a list',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`vals` = all values in in-order.',
+      invariant: 'In-order lists a BST in ascending order, so `vals[k − 1]` is the k-th smallest.',
       points: [
         'In-order gives the sorted values; return vals[k − 1].',
         'Simple, but it walks the whole tree even when k is 1.',
@@ -138,6 +144,8 @@ export const p22: Record<string, ApproachWalkthrough[]> = {
       name: 'Flatten in the constructor',
       time: 'O(1) per call',
       space: 'O(n)',
+      state: '`vals` = the in-order sequence; cursor `i`.',
+      invariant: '`vals[i]` is the next smallest value not yet returned.',
       points: [
         'Do the whole in-order up front into a list; next() and hasNext() are index checks.',
         'Fast, but the follow-up asks for O(h) memory.',

@@ -289,7 +289,7 @@
                 {
                   "label": "1.",
                   "text": "Re-compare all 26 counts on every slide.",
-                  "complexity": "O(26n) / O(1)",
+                  "complexity": "O(n) / O(1)",
                   "winner": false
                 },
                 {
@@ -359,7 +359,7 @@
                 {
                   "label": "1.",
                   "text": "Shrink l one step at a time, removing from a set.",
-                  "complexity": "O(2n) / O(1), ≤ 128 chars",
+                  "complexity": "O(n) / O(1), ≤ 128 chars",
                   "winner": false
                 },
                 {
@@ -391,7 +391,7 @@
                 {
                   "label": "1.",
                   "text": "Recompute the window's max count on every step.",
-                  "complexity": "O(26n) / O(1)",
+                  "complexity": "O(n) / O(1)",
                   "winner": false
                 },
                 {
@@ -457,7 +457,7 @@
                 {
                   "label": "1.",
                   "text": "Test every substring against the count map.",
-                  "complexity": "O(52·n²) = O(n²)",
+                  "complexity": "O(n³) / O(n)",
                   "winner": false
                 },
                 {
@@ -2696,7 +2696,7 @@
                 {
                   "label": "▸",
                   "text": "Trie with a branching DFS for wildcards.",
-                  "complexity": "O(L) avg, O(26^d) worst / O(L) stack",
+                  "complexity": "O(L) avg, O(26^d) worst / O(total chars)",
                   "winner": true
                 }
               ],
@@ -2862,7 +2862,7 @@
                 {
                   "label": "2.",
                   "text": "Wildcard-pattern buckets + BFS.",
-                  "complexity": "O(N·L·26) / O(N·L)",
+                  "complexity": "O(N·L²) / O(N·L²)",
                   "winner": true
                 }
               ],
@@ -3041,7 +3041,7 @@
                 {
                   "label": "1.",
                   "text": "DFS with white/grey/black colouring to spot a back edge.",
-                  "complexity": "O(V+E) / O(V)",
+                  "complexity": "O(V+E) / O(V+E)",
                   "winner": false
                 },
                 {
@@ -3073,7 +3073,7 @@
                 {
                   "label": "▸",
                   "text": "Kahn's BFS, collecting the pop order.",
-                  "complexity": "O(V+E) / O(V)",
+                  "complexity": "O(V+E) / O(V+E)",
                   "winner": true
                 }
               ],
@@ -3259,7 +3259,7 @@
                 {
                   "label": "2.",
                   "text": "Prim's over the implicit complete graph.",
-                  "complexity": "O(n² log n) / O(n)",
+                  "complexity": "O(n² log n) / O(n²)",
                   "winner": true
                 }
               ],
@@ -3426,7 +3426,7 @@
                 {
                   "label": "1.",
                   "text": "Shift and test all 32 bit positions.",
-                  "complexity": "O(32) / O(1)",
+                  "complexity": "O(1) / O(1)",
                   "winner": false
                 },
                 {
@@ -3490,7 +3490,7 @@
                 {
                   "label": "▸",
                   "text": "32-step shift-and-push.",
-                  "complexity": "O(32) / O(1)",
+                  "complexity": "O(1) / O(1)",
                   "winner": true
                 }
               ],
@@ -3517,7 +3517,7 @@
                 {
                   "label": "1.",
                   "text": "Sum each of the 32 bit positions, take mod 3.",
-                  "complexity": "O(32n) / O(1)",
+                  "complexity": "O(n) / O(1)",
                   "winner": false
                 },
                 {
@@ -3551,7 +3551,7 @@
                 {
                   "label": "▸",
                   "text": "Iterative carry propagation.",
-                  "complexity": "O(32) / O(1)",
+                  "complexity": "O(1) / O(1)",
                   "winner": true
                 }
               ],
@@ -3853,7 +3853,7 @@
                 {
                   "label": "▸",
                   "text": "Single pass inserting into three sets.",
-                  "complexity": "O(81) / O(1)",
+                  "complexity": "O(1) / O(1)",
                   "winner": true
                 }
               ],
@@ -5130,7 +5130,7 @@
                 {
                   "label": "▸",
                   "text": "Max-heap over followee list heads, pop 10.",
-                  "complexity": "O(k log k) per feed",
+                  "complexity": "O(k) per feed / O(k)",
                   "winner": true
                 }
               ],

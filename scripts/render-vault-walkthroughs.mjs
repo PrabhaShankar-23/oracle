@@ -7,6 +7,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import path from 'node:path'
 import { walkthroughs } from '../src/content/deep/index.ts'
+import { inlineCodeHtml } from '../src/lib/inlineCode.ts'
 import { barsSvg, cellsSvg, gridSvg, intervalsSvg, treeSvg } from '../src/lib/recallDiagramSvg.ts'
 
 const VAULT = process.env.VAULT_DIR ?? path.join(homedir(), 'Desktop/java/Spring Boot/AlgoHandbook')
@@ -39,7 +40,16 @@ function diagram(d) {
   return `<figure class="walk-fig">${frames.join('')}</figure>`
 }
 
-function block(id, approaches) {
+// Each approach's own state and invariant. The card's pair describes the best approach, so only
+// that tab falls back to it. Class names avoid .row/.k/.v, which ingest-vault.mjs reads per card.
+function stateInvariant(a, fallback) {
+  const state = a.state ? inlineCodeHtml(a.state) : a.best ? fallback.state : ''
+  const invariant = a.invariant ? inlineCodeHtml(a.invariant) : a.best ? fallback.invariant : ''
+  const row = (k, v) => (v ? `<div class="walk-si-row"><div class="walk-si-k">${k}</div><div class="walk-si-v">${v}</div></div>` : '')
+  return state || invariant ? `<div class="walk-si">${row('State', state)}${row('Invariant', invariant)}</div>` : ''
+}
+
+function block(id, approaches, fallback = {}) {
   const best = Math.max(0, approaches.findIndex((a) => a.best))
   const tabs = approaches
     .map(
@@ -52,6 +62,7 @@ function block(id, approaches) {
       (a, i) =>
         `<div class="walk-panel${a.best ? ' walk-best' : ''}" role="tabpanel" data-i="${i}"${i === best ? '' : ' hidden'}>` +
         `<div class="walk-cx"><span>Time ${esc(a.time)}</span><span>Space ${esc(a.space)}</span>${a.trick ? '<span class="walk-trick">Interview trick</span>' : ''}</div>` +
+        stateInvariant(a, fallback) +
         `<div class="walk-grid"><div class="walk-figs">${a.diagrams.map(diagram).join('')}</div>` +
         `<ul class="walk-points">${a.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul></div>` +
         `<pre>${esc(a.code)}</pre></div>`,
@@ -82,6 +93,11 @@ const CSS = `<style id="walk-css">
 .walk-hl{color:var(--accent);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .walk-fnote{font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin-top:2px}
 .walk-points{margin:0;padding-left:18px;font-size:12.5px}
+.walk-si{margin:0 0 8px}
+.walk-si-row{display:grid;grid-template-columns:92px 1fr;gap:10px;font-size:12.5px;margin:0 0 4px}
+.walk-si-k{color:var(--dim);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+@media (max-width:720px){.walk-si-row{grid-template-columns:1fr;gap:0}}
+.card:has(.walk) > .row{display:none}
 .walk-points li{margin:0 0 4px}
 .walk text{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;fill:var(--dim)}
 .walk .rd-cell rect,.walk .rd-cell circle{fill:var(--card);stroke:var(--line)}
@@ -193,11 +209,20 @@ const $ = cheerio.load(html)
 
 // Card ids in document order, built exactly like scripts/ingest-vault.mjs.
 const ids = []
+const cardRows = {}
 $('.wrap > details').each((_, d) => {
   $(d)
     .find('.card')
     .each((_, c) => {
-      ids.push(`${$(d).attr('id')}-${slugify($(c).find('.hd a').first().text().replace(/\s+/g, ' ').trim())}`)
+      const id = `${$(d).attr('id')}-${slugify($(c).find('.hd a').first().text().replace(/\s+/g, ' ').trim())}`
+      ids.push(id)
+      const rows = {}
+      $(c)
+        .children('.row')
+        .each((_, r) => {
+          rows[$(r).find('.k').text().trim().toLowerCase()] = $(r).find('.v').html()
+        })
+      cardRows[id] = rows
     })
 })
 
@@ -214,7 +239,7 @@ let written = 0
 slots.forEach((m, i) => {
   const approaches = walkthroughs[ids[i]]
   if (!approaches) return
-  out += html.slice(last, m.index) + block(ids[i], approaches)
+  out += html.slice(last, m.index) + block(ids[i], approaches, cardRows[ids[i]])
   last = m.index + m[0].length
   written++
 })

@@ -8,8 +8,10 @@ export const p03: Record<string, ApproachWalkthrough[]> = {
   'P03-permutation-in-string': [
     {
       name: 'Re-compare 26 counts',
-      time: 'O(26n)',
+      time: 'O(n)',
       space: 'O(1)',
+      state: '`need[26]` for `s1`, `window[26]` for the current `len(s1)` slice of `s2`.',
+      invariant: '`window` always counts exactly the last `len(s1)` characters; the slice is a permutation of `s1` exactly when `window == need`.',
       points: [
         'Count the 26 letters of s1.',
         'Slide a window of len(s1) across s2, keeping its own counts.',
@@ -80,6 +82,8 @@ export const p03: Record<string, ApproachWalkthrough[]> = {
       name: 'Re-count at every index',
       time: 'O(n·k·w)',
       space: 'O(k)',
+      state: 'Start `i`; a fresh counter `seen` of the words read so far from `i`.',
+      invariant: 'From start `i`, `seen` never exceeds `need`; reading all `k` words without breaking means `i` is a valid start.',
       points: [
         'Try every start index independently.',
         'Split the next k words of length w and count them against need.',

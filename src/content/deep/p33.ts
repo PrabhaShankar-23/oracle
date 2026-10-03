@@ -18,8 +18,10 @@ export const p33: Record<string, ApproachWalkthrough[]> = {
   'P33-valid-sudoku': [
     {
       name: 'Check each row, column and box',
-      time: 'O(81)',
+      time: 'O(1)',
       space: 'O(1)',
+      state: 'One unit of nine cells at a time.',
+      invariant: 'A unit is valid exactly when its filled digits have no repeats; the board is valid when all 27 units are.',
       points: [
         'Validate 27 units separately: 9 rows, 9 columns, 9 boxes.',
         'A unit is fine if its digits have no repeats.',
@@ -30,7 +32,7 @@ export const p33: Record<string, ApproachWalkthrough[]> = {
     },
     {
       name: 'One pass, three sets per unit',
-      time: 'O(81)',
+      time: 'O(1)',
       space: 'O(1)',
       best: true,
       points: [
@@ -91,6 +93,8 @@ export const p33: Record<string, ApproachWalkthrough[]> = {
       name: 'Scan placed queens for conflicts',
       time: 'O(n!·n)',
       space: 'O(n)',
+      state: '`queens[r]` = column of the queen in row `r`, for the rows filled so far.',
+      invariant: 'No two placed queens share a column or a diagonal; a new queen is checked against every placed one before it goes down.',
       points: [
         'One queen per row, so try each column in the current row.',
         'Before placing, scan every queen already placed: same column, or |Δcol| = Δrow (a diagonal).',
@@ -143,6 +147,8 @@ export const p33: Record<string, ApproachWalkthrough[]> = {
       name: 'Bitmasks for the attacks',
       time: 'O(n!)',
       space: 'O(n)',
+      state: 'Ints `cols`, `diag`, `anti`: the columns attacked in the current row; `free`.',
+      invariant: 'Shifting `diag` left and `anti` right each row keeps the masks pointing at the squares the placed queens attack in this row.',
       trick: true,
       points: [
         'Hold the attacked columns for the current row in three ints: cols, diag, anti.',

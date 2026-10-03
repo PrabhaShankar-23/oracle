@@ -9,7 +9,9 @@ export const x5: Record<string, ApproachWalkthrough[]> = {
     {
       name: 'Convert to integers and back',
       time: 'O(m + n)',
-      space: 'O(1) extra',
+      space: 'O(m + n)',
+      state: '`to_int` reads each list into a number; `total`; `tail` of the output.',
+      invariant: 'Digits are least significant first, so `place` multiplies by 10 per node; writing `total` back with `divmod` gives digits in the same order.',
       points: [
         'Read each list into a number (digits are least significant first), add, and write the digits back out.',
         'Fine in Python, whose ints never overflow.',
@@ -47,6 +49,8 @@ export const x5: Record<string, ApproachWalkthrough[]> = {
       name: 'Map original → clone',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`clones` = original node → its copy, with `clones[None] = None`.',
+      invariant: 'After pass 1 every node has exactly one clone, so pass 2 can wire every `next` and `random` by lookup.',
       points: [
         'Pass 1: make a clone for every node and store it in a map.',
         'Pass 2: clone.next = map[node.next], clone.random = map[node.random].',

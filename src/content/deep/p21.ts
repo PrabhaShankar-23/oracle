@@ -10,6 +10,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS, count the levels',
       time: 'O(n)',
       space: 'O(w)',
+      state: 'Queue holding one full level; `depth` counter.',
+      invariant: 'At the top of each loop the queue holds exactly the nodes at level `depth + 1`, so the number of loops is the depth.',
       points: [
         'Run the level loop and count how many levels there are.',
         'No recursion, so no risk on a very deep, skewed tree.',
@@ -47,8 +49,10 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
   'P21-same-tree': [
     {
       name: 'Compare serialisations',
-      time: 'O(n)',
+      time: 'O(n·h)',
       space: 'O(n)',
+      state: 'Preorder strings of both trees, with `#` for each missing child.',
+      invariant: 'With a `#` for every missing child the serialisation is unique, so equal strings mean equal trees.',
       points: [
         'Write each tree as preorder with a marker (#) for every missing child.',
         'With the markers, equal strings ⇔ equal trees.',
@@ -93,6 +97,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS, swap at each node',
       time: 'O(n)',
       space: 'O(w)',
+      state: 'Queue of nodes still to visit.',
+      invariant: 'Every node dequeued so far has its two children swapped; each node is dequeued exactly once.',
       points: [
         'Visit every node with a queue; swap its two children.',
         'Order does not matter: every node gets swapped exactly once.',
@@ -129,6 +135,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'Recompute heights at every node',
       time: 'O(n²)',
       space: 'O(h)',
+      state: 'Each call holds `root`; `height()` is recomputed from scratch.',
+      invariant: 'The diameter of a subtree is the best of the path through its root and the diameters of its two subtrees.',
       points: [
         'The diameter either passes through the root (height(left) + height(right)) or lies inside one subtree.',
         'Recurse on both subtrees and take the max.',
@@ -171,6 +179,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'Height check at every node',
       time: 'O(n²)',
       space: 'O(h)',
+      state: 'Each call holds `root`; `height()` is recomputed from scratch.',
+      invariant: 'A tree is balanced exactly when the root\'s two heights differ by ≤ 1 and both subtrees are balanced.',
       points: [
         'Balanced ⇔ at every node the two heights differ by ≤ 1.',
         'Checking each node with a fresh height() call repeats work: quadratic on a skewed tree.',
@@ -211,6 +221,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'Same Tree at every node',
       time: 'O(m·n)',
       space: 'O(h)',
+      state: 'Current `root` of the big tree; `same()` compares from there.',
+      invariant: '`sub_root` is a subtree exactly when `same(root, sub_root)` holds at some node of the big tree.',
       points: [
         'For each node of root, ask: is the tree starting here the same as sub_root?',
         'Reuses Same Tree directly.',
@@ -260,6 +272,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'Slice and scan',
       time: 'O(n²)',
       space: 'O(n²)',
+      state: 'Slices of `preorder` and `inorder` for the current subtree.',
+      invariant: '`preorder[0]` is the subtree\'s root; the `mid` values left of it in `inorder` form the left subtree, and they are the next `mid` values in `preorder`.',
       points: [
         'preorder[0] is the root; find it in inorder.',
         'Everything left of it in inorder is the left subtree, with the same count next in preorder.',
@@ -340,6 +354,8 @@ export const p21: Record<string, ApproachWalkthrough[]> = {
       name: 'Level order with # placeholders',
       time: 'O(n)',
       space: 'O(n)',
+      state: 'Encode: queue in level order. Decode: queue of built nodes and token index `i`.',
+      invariant: 'Tokens come in level order with a `#` for each missing child, so the next two tokens always belong to the node at the front of the queue.',
       points: [
         'BFS, writing # for each missing child (the format LeetCode shows).',
         'Decode with a queue: each node takes the next two tokens as its children.',

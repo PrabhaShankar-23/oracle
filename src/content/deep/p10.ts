@@ -10,6 +10,8 @@ export const p10: Record<string, ApproachWalkthrough[]> = {
       name: 'Check every pair',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Meeting indices `i < j`.',
+      invariant: 'No pair before `(i, j)` overlaps; two meetings clash exactly when `s1 < e2` and `s2 < e1`.',
       points: [
         'Two meetings clash when each starts before the other ends: s1 < e2 and s2 < e1.',
         'Test all n(n − 1) / 2 pairs; any clash ⇒ false.',
@@ -70,6 +72,8 @@ export const p10: Record<string, ApproachWalkthrough[]> = {
       name: 'DP on the longest chain',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: 'Intervals sorted by end; `keep[i]` = most non-overlapping intervals among the first `i`; `ends` for binary search.',
+      invariant: '`keep[i + 1] = max(skip i, take i)`; taking `i` extends the best chain among the `j` intervals ending at or before its start.',
       points: [
         'Removing the fewest = keeping the most non-overlapping intervals.',
         'Sort by end. keep[i] = the most you can keep among the first i intervals.',
@@ -139,6 +143,8 @@ export const p10: Record<string, ApproachWalkthrough[]> = {
       name: 'Sort by start, shrink the window',
       time: 'O(n log n)',
       space: 'O(1)',
+      state: 'Balloons sorted by start; `reach` = the smallest end in the current group; `arrows`.',
+      invariant: 'Every balloon in the current group contains the point `reach`, so one arrow there bursts them all; a start past `reach` cannot join.',
       points: [
         'Sort by start and grow a group of balloons that share a common point.',
         'The shared window ends at reach = the smallest end in the group.',
@@ -210,6 +216,8 @@ export const p10: Record<string, ApproachWalkthrough[]> = {
       name: 'Count meetings at each start',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'A candidate time `t` (some meeting\'s start); `best` so far.',
+      invariant: 'The peak overlap always begins at some start, so `best` over every start is the number of rooms.',
       points: [
         'Rooms needed = the most meetings running at the same moment.',
         'That peak always begins at some meeting’s start.',
@@ -239,6 +247,8 @@ export const p10: Record<string, ApproachWalkthrough[]> = {
       name: 'Sweep sorted starts and ends',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: 'Sorted `starts`, sorted `ends`, pointer `j` to the earliest unused end, `rooms`.',
+      invariant: '`rooms` is the peak number of meetings in progress so far; a start at or after `ends[j]` reuses a freed room instead of opening one.',
       points: [
         'Sort the starts and the ends separately; which end belongs to which meeting does not matter.',
         'Walk the starts. If a start is ≥ the earliest unused end, a room has just freed: reuse it.',

@@ -10,6 +10,8 @@ export const p13: Record<string, ApproachWalkthrough[]> = {
       name: 'Count up while r² ≤ x',
       time: 'O(√x)',
       space: 'O(1)',
+      state: 'Candidate `r`, starting at 0.',
+      invariant: '`r² ≤ x` holds throughout; the loop stops at the first `r` with `(r + 1)² > x`, which is ⌊√x⌋.',
       points: [
         'Try r = 1, 2, 3… while (r + 1)² ≤ x.',
         'Correct and obvious, but about 46 000 steps for x near 2³¹.',
@@ -62,6 +64,8 @@ export const p13: Record<string, ApproachWalkthrough[]> = {
       name: 'Newton’s method',
       time: 'O(log x)',
       space: 'O(1)',
+      state: 'Integer estimate `r`, starting at `x`.',
+      invariant: 'While `r² > x`, the Newton step lowers `r` and never drops below ⌊√x⌋, so the loop ends exactly on ⌊√x⌋.',
       trick: true,
       points: [
         'Solve r² = x with Newton steps: r ← (r + x / r) / 2.',
@@ -91,6 +95,8 @@ export const p13: Record<string, ApproachWalkthrough[]> = {
       name: 'Try every speed',
       time: 'O(max(p) · n)',
       space: 'O(1)',
+      state: 'Candidate speed `k`, counting up from 1.',
+      invariant: 'Every speed below `k` needs more than `h` hours; the first `k` that fits is the minimum.',
       points: [
         'At speed k, pile p takes ⌈p / k⌉ hours.',
         'Try k = 1, 2, 3… and return the first whose total hours ≤ h.',

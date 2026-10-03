@@ -10,6 +10,8 @@ export const p38: Record<string, ApproachWalkthrough[]> = {
       name: 'dp[i]: longest run ending at i',
       time: 'O(n²)',
       space: 'O(n)',
+      state: '`dp[i]` = length of the longest increasing subsequence ending exactly at `nums[i]`.',
+      invariant: 'When `dp[i]` is computed, every `dp[j]` with `j < i` is final; the answer is `max(dp)`, not `dp[n−1]`.',
       points: [
         'dp[i] = the longest increasing subsequence that ends at nums[i].',
         'dp[i] = 1 + max(dp[j]) over earlier j with nums[j] < nums[i].',

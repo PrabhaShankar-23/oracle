@@ -10,12 +10,53 @@ import HtmlContent from '../../components/content/HtmlContent'
 import RecallDiagram from '../../components/content/RecallDiagram'
 import type { ApproachWalkthrough } from '../../content/types'
 import { codeBlockHtml } from '../../lib/codeHtml'
+import { inlineCodeHtml } from '../../lib/inlineCode'
 import { FONT_MONO } from '../../theme/theme'
 
-type Props = { approaches: ApproachWalkthrough[] }
+/** The problem's own State / Invariant (HTML). They describe the best approach, so only that tab falls back to them. */
+type Fallback = { state?: string; invariant?: string }
+type Props = { approaches: ApproachWalkthrough[]; fallback?: Fallback }
 
-/** Naive → best approaches as tabs; each shows complexity, a diagram, the idea in a few lines and the code. */
-export default function ApproachTabs({ approaches }: Props) {
+const inlineCode = { fontFamily: FONT_MONO, fontSize: '0.9em', px: 0.5, borderRadius: 0.5, bgcolor: 'action.hover' }
+
+/** State and invariant of one approach: each approach keeps different things, so each tab has its own. */
+function StateInvariant({ a, fallback }: { a: ApproachWalkthrough; fallback?: Fallback }) {
+  const state = a.state ? inlineCodeHtml(a.state) : a.best ? fallback?.state : undefined
+  const invariant = a.invariant ? inlineCodeHtml(a.invariant) : a.best ? fallback?.invariant : undefined
+  if (!state && !invariant) return null
+  return (
+    <Box
+      component="dl"
+      sx={{
+        m: 0,
+        mb: 1.5,
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', sm: '92px 1fr' },
+        columnGap: 2,
+        rowGap: { xs: 0.25, sm: 1 },
+        '& dt': { typography: 'overline', color: 'text.secondary', lineHeight: 1.9 },
+        '& dd': { m: 0, mb: { xs: 1, sm: 0 }, typography: 'body2' },
+        '& code': inlineCode,
+      }}
+    >
+      {state && (
+        <>
+          <dt>State</dt>
+          <dd dangerouslySetInnerHTML={{ __html: state }} />
+        </>
+      )}
+      {invariant && (
+        <>
+          <dt>Invariant</dt>
+          <dd dangerouslySetInnerHTML={{ __html: invariant }} />
+        </>
+      )}
+    </Box>
+  )
+}
+
+/** Naive → best approaches as tabs; each shows complexity, its own state and invariant, a diagram, the idea in a few lines and the code. */
+export default function ApproachTabs({ approaches, fallback }: Props) {
   const id = useId()
   const [tab, setTab] = useState(() => Math.max(0, approaches.findIndex((a) => a.best)))
   const a = approaches[tab]
@@ -54,6 +95,8 @@ export default function ApproachTabs({ approaches }: Props) {
           <Chip size="small" label={`Space ${a.space}`} sx={{ fontFamily: FONT_MONO }} variant="outlined" />
           {a.trick && <Chip size="small" label="Interview trick" color="tertiary" icon={<LightbulbOutlined />} />}
         </Stack>
+
+        <StateInvariant a={a} fallback={fallback} />
 
         <Box
           sx={{

@@ -53,6 +53,8 @@ export const p12: Record<string, ApproachWalkthrough[]> = {
       name: 'Lower-bound template',
       time: 'O(log n)',
       space: 'O(1)',
+      state: 'Half-open `[lo, hi)`; `mid` is kept as a candidate on the right branch.',
+      invariant: 'Everything left of `lo` is `< target` and everything from `hi` on is `≥ target`, so when `lo == hi` it is the first index with `nums[i] ≥ target`.',
       trick: true,
       points: [
         'One template covers most binary searches: find the first index with nums[i] ≥ target.',
@@ -98,6 +100,8 @@ export const p12: Record<string, ApproachWalkthrough[]> = {
       name: 'Find the row, then search it',
       time: 'O(log m + log n)',
       space: 'O(1)',
+      state: 'Search 1: `lo`, `hi` over first-column values; search 2: `lo`, `r` inside the chosen `row`.',
+      invariant: 'Search 1 ends with `hi` = the last row whose first value ≤ `target`, the only row that can hold it; search 2 keeps `target` inside `[lo, r]` if it is present.',
       points: [
         'LeetCode requires O(log(m·n)). Walking from the top-right corner is O(m + n), so it is out.',
         'Binary search the first column for the last row whose first value ≤ target.',
@@ -202,6 +206,8 @@ export const p12: Record<string, ApproachWalkthrough[]> = {
       name: 'Keep searching after a hit',
       time: 'O(log n)',
       space: 'O(1)',
+      state: '`lo`, `hi`, and `hit` = the best matching index found so far; the flag `first` picks the direction.',
+      invariant: '`hit` is the leftmost (or rightmost) match seen; any match further out lies inside `[lo, hi]`, which keeps moving away from `hit`.',
       points: [
         'LeetCode requires O(log n). Finding one hit and walking outward is O(n) when the value repeats.',
         'Run the classic search twice. On a hit, record it and keep going left (for first) or right (for last).',
@@ -313,6 +319,8 @@ export const p12: Record<string, ApproachWalkthrough[]> = {
       name: 'Find the pivot, then search',
       time: 'O(log n)',
       space: 'O(1)',
+      state: 'Pass 1: `lo`, `hi` closing on the minimum\'s index `pivot`; pass 2: `lo`, `hi` inside one sorted segment.',
+      invariant: '`[pivot, n−1]` and `[0, pivot−1]` are each sorted; the target can only be in the segment whose value range covers it.',
       points: [
         'First find the minimum’s index (the rotation point), as in Find Minimum.',
         'That splits the array into two sorted segments.',
@@ -385,6 +393,8 @@ export const p12: Record<string, ApproachWalkthrough[]> = {
       name: 'Drop k/2 per step',
       time: 'O(log(m + n))',
       space: 'O(log(m + n))',
+      state: 'Recursive `kth(i, j, k)`: the k-th smallest of `a[i:] + b[j:]`.',
+      invariant: 'Every element dropped from the side with the smaller `k/2`-th candidate ranks below the k-th overall, so `k` shrinks by that many and the answer is unchanged.',
       points: [
         'LeetCode requires O(log(m + n)), so merging to the middle (O(m + n)) is out.',
         'The median is the k-th smallest element for k ≈ (m + n) / 2.',

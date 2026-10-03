@@ -10,6 +10,8 @@ export const p15: Record<string, ApproachWalkthrough[]> = {
       name: 'Recursive merge',
       time: 'O(m + n)',
       space: 'O(m + n) stack',
+      state: 'Each call holds the two remaining heads `l1`, `l2`.',
+      invariant: 'Each call returns the merged list of what remains; the smaller head comes first and its `next` is the merge of everything after it.',
       points: [
         'The smaller head goes first; its next is the merge of everything else.',
         'If either list is empty, return the other.',
@@ -66,6 +68,8 @@ export const p15: Record<string, ApproachWalkthrough[]> = {
       name: 'All sums, then sort',
       time: 'O(mn log mn)',
       space: 'O(mn)',
+      state: '`pairs` = every `(a, b)`, sorted by `a + b`.',
+      invariant: 'After the sort, the first `k` pairs have the `k` smallest sums.',
       points: [
         'Build every (a, b) pair, sort by a + b, take k.',
         'With 10⁵ values per array that is 10¹⁰ pairs, so it only works for tiny inputs.',
@@ -125,6 +129,8 @@ export const p15: Record<string, ApproachWalkthrough[]> = {
       name: 'Merge one list at a time',
       time: 'O(k·N)',
       space: 'O(1)',
+      state: '`merged` = the merge of the lists folded in so far.',
+      invariant: '`merged` is sorted and contains every node of the first `t` lists after `t` folds.',
       points: [
         'Fold the lists in: merged = merge(merged, next list).',
         'Reuses the two-list merge, but merged keeps growing.',
@@ -151,6 +157,8 @@ export const p15: Record<string, ApproachWalkthrough[]> = {
       name: 'Min-heap of the k heads',
       time: 'O(N log k)',
       space: 'O(k)',
+      state: 'Heap of `(value, list index, node)`, one entry per non-empty list; `tail` of the output.',
+      invariant: 'The heap holds the smallest unused node of every list, so its root is the smallest node left anywhere; everything appended so far is sorted.',
       points: [
         'Put each list’s head in a min-heap.',
         'Pop the smallest, append it, push its next.',

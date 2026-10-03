@@ -49,6 +49,8 @@ export const p08: Record<string, ApproachWalkthrough[]> = {
       name: 'Absorb into every overlap',
       time: 'O(n²)',
       space: 'O(n)',
+      state: '`merged` = disjoint intervals in no particular order; the incoming `[start, end]` grows as it absorbs.',
+      invariant: 'After each interval is processed, `merged` is disjoint and covers exactly the union of the intervals processed so far.',
       points: [
         'Keep a list of disjoint merged intervals, in any order.',
         'For each new interval, walk the whole list: absorb every one it overlaps, keep the rest.',
@@ -128,6 +130,8 @@ export const p08: Record<string, ApproachWalkthrough[]> = {
       name: 'Append, sort, merge again',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: 'The list sorted by start; `merged` with its last block as the open tail.',
+      invariant: 'Sorted by start, a new interval can only overlap `merged[-1]`; earlier blocks are final and disjoint.',
       points: [
         'Add the new interval to the list and run Merge Intervals.',
         'Always correct, and reuses code you already know.',

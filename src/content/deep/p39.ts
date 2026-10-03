@@ -10,6 +10,8 @@ export const p39: Record<string, ApproachWalkthrough[]> = {
       name: 'Full 2D grid',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = paths to cell `(i, j)`; first row and column are all 1.',
+      invariant: 'A cell is reached only from above or from the left, so `dp[i][j] = dp[i−1][j] + dp[i][j−1]`, both final when it is filled.',
       points: [
         'You arrive at a cell from above or from the left.',
         'dp[i][j] = dp[i − 1][j] + dp[i][j − 1]; the first row and column are all 1.',
@@ -62,6 +64,8 @@ export const p39: Record<string, ApproachWalkthrough[]> = {
       name: 'Choose the down moves',
       time: 'O(min(m, n))',
       space: 'O(1)',
+      state: 'No table: just `m` and `n`.',
+      invariant: 'Every path is exactly `m − 1` downs and `n − 1` rights in some order, so the count is the number of ways to place the downs.',
       trick: true,
       points: [
         'Every path is exactly m − 1 downs and n − 1 rights, in some order.',
@@ -90,6 +94,8 @@ export const p39: Record<string, ApproachWalkthrough[]> = {
       name: 'Full 2D grid',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = paths to `(i, j)`; obstacle cells stay 0.',
+      invariant: 'An obstacle holds 0 paths, so no path is ever counted through it; every other cell adds the paths from above and from the left.',
       points: [
         'Same as Unique Paths, but an obstacle cell holds 0 paths.',
         'dp[0][0] = 1 unless it is an obstacle; every other cell adds its top and left.',
@@ -136,6 +142,8 @@ export const p39: Record<string, ApproachWalkthrough[]> = {
       name: 'Full 2D table',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = cheapest path cost to `(i, j)`.',
+      invariant: 'Each cell is `grid[i][j]` plus the cheaper of its two possible predecessors; edge cells have only one.',
       points: [
         'dp[i][j] = the cheapest path cost to (i, j).',
         'First row and column have one way in; others take grid[i][j] + min(above, left).',
@@ -186,6 +194,8 @@ export const p39: Record<string, ApproachWalkthrough[]> = {
       name: '2D table of square sides',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = side of the largest all-1 square with its bottom-right corner at `(i, j)`; `best`.',
+      invariant: 'A square ending at `(i, j)` can only be one bigger than the smallest of the squares ending above, left and up-left.',
       points: [
         'dp[i][j] = the side of the largest all-1 square whose bottom-right corner is (i, j).',
         'dp = 1 + min(up, left, up-left): the square is only as big as its weakest neighbour allows.',
@@ -239,6 +249,8 @@ export const p39: Record<string, ApproachWalkthrough[]> = {
       name: 'Peel layers by out-degree',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`out[r][c]` = larger neighbours not yet peeled; `layer` = cells with `out` 0; `depth`.',
+      invariant: 'Peeled cells are exactly those whose longest increasing path is at most `depth`; each layer removes the current path ends.',
       points: [
         'Draw an edge to every larger neighbour; strict increase means no cycles, a DAG.',
         'Cells with no larger neighbour are path ends. Remove them as layer 1.',

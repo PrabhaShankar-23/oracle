@@ -10,6 +10,8 @@ export const x4: Record<string, ApproachWalkthrough[]> = {
       name: 'Cycle four cells at a time',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Layer `i`; offset `j` inside the layer; one saved value `top`.',
+      invariant: 'After the four-way swap at `(i, j)`, those four cells sit in their rotated positions; the layers already done are final.',
       points: [
         'Rotate layer by layer, outside in.',
         'Each cell of a layer moves in a four-way cycle: left → top → right → bottom → left.',
@@ -51,6 +53,8 @@ export const x4: Record<string, ApproachWalkthrough[]> = {
       name: 'Walk and turn right when blocked',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: 'Position `(r, c)`, direction `d`, `seen` grid.',
+      invariant: 'The walk visits each cell once in spiral order: it turns right only when the next cell is outside the grid or already seen.',
       points: [
         'Move right, down, left, up in turn.',
         'Turn right whenever the next cell is outside or already visited.',
@@ -91,6 +95,8 @@ export const x4: Record<string, ApproachWalkthrough[]> = {
       name: 'Row and column flag arrays',
       time: 'O(mn)',
       space: 'O(m + n)',
+      state: '`rows[i]`, `cols[j]` = whether the row or column held a 0 in the original matrix.',
+      invariant: 'Flags are recorded before any cell changes, so the zeros written in pass 2 cannot spread further.',
       points: [
         'Pass 1: record which rows and columns contain a 0.',
         'Pass 2: zero every cell whose row or column is flagged.',
@@ -127,6 +133,8 @@ export const x4: Record<string, ApproachWalkthrough[]> = {
       name: 'Multiply n times',
       time: 'O(n)',
       space: 'O(1)',
+      state: '`result` after each multiplication; negative `n` turned into `1/x` and `−n`.',
+      invariant: 'After `k` multiplications, `result = x^k`.',
       points: ['Negative n ⇒ use 1/x and −n.', 'n can be 2³¹ − 1: two billion multiplications is far too slow.'],
       code: c['X4-powx-n#loop'],
       diagrams: [{ kind: 'cells', rows: [{ caption: '2¹⁰', cells: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2], note: '10 multiplications' }] }],

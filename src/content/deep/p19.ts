@@ -10,6 +10,8 @@ export const p19: Record<string, ApproachWalkthrough[]> = {
       name: 'Recursive',
       time: 'O(n)',
       space: 'O(n) stack',
+      state: 'Each call holds `head`; the deeper call has already reversed `head.next` onward and returned `new_head`.',
+      invariant: 'When a call returns, the list from `head` on is reversed, `head` is its tail, and `new_head` is the original last node.',
       points: [
         'Reverse the rest of the list first; its new head is the answer.',
         'Then head.next (the old second node) is the tail of that reversed part: point it back at head.',
@@ -68,6 +70,8 @@ export const p19: Record<string, ApproachWalkthrough[]> = {
       name: 'Cut, reverse, reconnect',
       time: 'O(n)',
       space: 'O(1)',
+      state: '`before` = node at position `left − 1`; `prev`, `cur` for the reversal of the next `right − left + 1` nodes.',
+      invariant: '`prev` heads the reversed part of the segment and `cur` the rest; `before.next` still points at the old first node until the two ends are reconnected.',
       points: [
         'Walk to before, the node just before position left.',
         'Reverse the next right − left + 1 nodes with the three-pointer loop.',
@@ -120,6 +124,8 @@ export const p19: Record<string, ApproachWalkthrough[]> = {
       name: 'Nodes into an array',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`nodes` = every node in order; indices `i` (front) and `j` (back).',
+      invariant: 'Every node before `i` and after `j` is already linked in front-back-front order; the unlinked nodes are exactly `nodes[i..j]`.',
       points: [
         'Copy the node references into a list.',
         'Link front, back, front, back… with two indices moving inward.',
@@ -167,6 +173,8 @@ export const p19: Record<string, ApproachWalkthrough[]> = {
       name: 'Count, then walk',
       time: 'O(n), two passes',
       space: 'O(1)',
+      state: 'Pass 1: `length`; pass 2: `prev`, starting at a dummy head.',
+      invariant: 'After `length − n` steps from the dummy, `prev` is the node just before the n-th from the end.',
       points: [
         'Pass 1: count the length L.',
         'Pass 2: stop at node L − n (from a dummy head) and skip its next.',
@@ -227,6 +235,8 @@ export const p19: Record<string, ApproachWalkthrough[]> = {
       name: 'Stack of k nodes',
       time: 'O(n)',
       space: 'O(k)',
+      state: '`tail` of the output; `stack` of up to `k` nodes collected from `node`.',
+      invariant: 'The output ends at `tail` with every complete group so far reversed; a full stack pops its group in reverse order.',
       points: [
         'Collect up to k nodes on a stack.',
         'A full stack pops them in reversed order onto the output.',

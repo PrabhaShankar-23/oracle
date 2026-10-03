@@ -10,6 +10,8 @@ export const x3: Record<string, ApproachWalkthrough[]> = {
       name: 'OrderedDict',
       time: 'O(1) per operation',
       space: 'O(capacity)',
+      state: '`data`: an OrderedDict ordered from least to most recently used.',
+      invariant: 'Every `get` or `put` moves the key to the end, so the first key is always the least recently used, the one to evict.',
       points: [
         'An OrderedDict keeps keys in order: move_to_end on each use, popitem(last=False) to evict.',
         'Python’s LinkedHashMap. Fine in practice, but interviewers usually then ask you to build it.',
@@ -72,6 +74,8 @@ export const x3: Record<string, ApproachWalkthrough[]> = {
       name: 'Gather everything, sort',
       time: 'O(T log T) per feed',
       space: 'O(T)',
+      state: '`tweets[user]` = `(time, id)` pairs; `following[user]`; a global `time`.',
+      invariant: 'The pool holds every tweet by the user and their followees; sorting by time descending puts the 10 newest first.',
       points: [
         'Collect every tweet of the user and everyone they follow; sort by time; take 10.',
         'T grows with all tweets ever posted: slow for busy users.',
@@ -81,7 +85,7 @@ export const x3: Record<string, ApproachWalkthrough[]> = {
     },
     {
       name: 'Heap merge of the newest tweets',
-      time: 'O(k + 10 log k) per feed',
+      time: 'O(k) per feed',
       space: 'O(k)',
       best: true,
       points: [

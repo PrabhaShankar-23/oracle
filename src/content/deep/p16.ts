@@ -10,6 +10,8 @@ export const p16: Record<string, ApproachWalkthrough[]> = {
       name: 'Scan forward from each day',
       time: 'O(n²)',
       space: 'O(1) extra',
+      state: 'Day `i`; scan `j` from `i + 1`.',
+      invariant: '`res[i]` is set at the first `j > i` with `temps[j] > temps[i]`; days before `i` are already final.',
       points: [
         'For each day, walk ahead until a warmer day appears.',
         'Correct, but a long cooling stretch is rescanned from every day in it.',
@@ -62,6 +64,8 @@ export const p16: Record<string, ApproachWalkthrough[]> = {
       name: 'Jump from the right',
       time: 'O(n)',
       space: 'O(1) extra',
+      state: '`res[j]` already final for every `j > i`; jump cursor `j`.',
+      invariant: 'Every day skipped by `j += res[j]` is no warmer than `temps[j]`, hence no warmer than `temps[i]`, so no warmer day is ever jumped over.',
       trick: true,
       points: [
         'Fill res from right to left; everything to the right of i is already solved.',
@@ -125,6 +129,8 @@ export const p16: Record<string, ApproachWalkthrough[]> = {
       name: 'One variable instead of a stack',
       time: 'O(n log n)',
       space: 'O(1) extra',
+      state: 'Cars sorted by position, closest to target first; `slowest` = arrival time of the fleet just ahead; `fleets`.',
+      invariant: 'A car whose arrival time is ≤ `slowest` catches that fleet and joins it; a slower car starts a new fleet and becomes the new `slowest`.',
       trick: true,
       points: [
         'Only the stack top is ever compared, so the stack is not really needed.',
@@ -154,6 +160,8 @@ export const p16: Record<string, ApproachWalkthrough[]> = {
       name: 'Expand from each bar',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Bar `i` as the shortest bar; `l`, `r` stretched while neighbours are at least `h`.',
+      invariant: '`[l, r]` is the widest range around `i` with every bar ≥ `h`, so `h × (r − l + 1)` is the best rectangle with bar `i` as its minimum.',
       points: [
         'Treat each bar as the shortest bar of its rectangle.',
         'Extend left and right while the neighbours are at least as tall.',

@@ -10,6 +10,8 @@ export const p37: Record<string, ApproachWalkthrough[]> = {
       name: 'Full 2D table',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = LCS length of `a[:i]` and `b[:j]`, the whole table kept.',
+      invariant: 'When `dp[i][j]` is written, the three cells it reads are final; keeping every row lets you walk back from `dp[m][n]` to rebuild the subsequence.',
       points: [
         'dp[i][j] = LCS of a[:i] and b[:j]; row 0 and column 0 are 0.',
         'Match ⇒ dp[i − 1][j − 1] + 1. Mismatch ⇒ max(dp[i − 1][j], dp[i][j − 1]).',
@@ -64,6 +66,8 @@ export const p37: Record<string, ApproachWalkthrough[]> = {
       name: 'Full 2D table',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = fewest edits turning `a[:i]` into `b[:j]`; row 0 = inserts, column 0 = deletes.',
+      invariant: 'Each cell is final when written: a match copies the diagonal, a mismatch takes 1 + the cheapest of replace, delete and insert.',
       points: [
         'dp[i][j] = the fewest edits turning a[:i] into b[:j].',
         'Row 0 is j inserts; column 0 is i deletes.',
@@ -118,6 +122,8 @@ export const p37: Record<string, ApproachWalkthrough[]> = {
       name: 'Memoised (i, j)',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`ok(i, j)` cached per pair; the next character of `c` is always `c[i + j]`.',
+      invariant: '`ok(i, j)` is True exactly when `a[i:]` and `b[j:]` interleave to `c[i + j:]`; the index into `c` is fixed by `i + j`.',
       points: [
         'The next character of c is always c[i + j], so (i, j) is the whole state.',
         'ok(i, j): take a[i] if it matches, or b[j] if it matches.',
@@ -171,6 +177,8 @@ export const p37: Record<string, ApproachWalkthrough[]> = {
       name: '2D table',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`dp[i][j]` = ways `s[:i]` forms `t[:j]`; column 0 is all 1.',
+      invariant: '`s[i − 1]` can always be skipped (`dp[i−1][j]`); when it equals `t[j − 1]` it can also be used (`+ dp[i−1][j−1]`), and the two cases never overlap.',
       points: [
         'dp[i][j] = ways s[:i] forms t[:j]; an empty t is formed one way.',
         'Always allowed: skip s[i − 1] ⇒ dp[i − 1][j].',
@@ -222,6 +230,8 @@ export const p37: Record<string, ApproachWalkthrough[]> = {
       name: 'Memoised recursion',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`match(i, j)` = whether `s[i:]` matches `p[j:]`, cached per pair.',
+      invariant: 'With `x*` next, the pattern either skips it or uses one more copy when `s[i]` matches; otherwise one character must match and both move on.',
       points: [
         'match(i, j) = s[i:] matches p[j:].',
         'first = s[i] exists and equals p[j] or p[j] is ".".',

@@ -10,6 +10,8 @@ export const p40: Record<string, ApproachWalkthrough[]> = {
       name: 'Table pal[i][j]',
       time: 'O(n²)',
       space: 'O(n²)',
+      state: '`pal[i][j]` = whether `s[i..j]` is a palindrome, filled `i` from right to left; best `start`, `length`.',
+      invariant: 'When `pal[i][j]` is filled, `pal[i+1][j−1]` (the inside) is already final, so each cell is correct when written.',
       points: [
         's[i..j] is a palindrome when s[i] == s[j] and the inside s[i + 1..j − 1] is one (or is ≤ 1 long).',
         'Fill i from right to left so the inside is ready.',
@@ -67,6 +69,8 @@ export const p40: Record<string, ApproachWalkthrough[]> = {
       name: 'Manacher’s algorithm',
       time: 'O(n)',
       space: 'O(n)',
+      state: 'Transformed string `t`; `radius[i]`; `center`, `right` of the rightmost palindrome seen.',
+      invariant: 'For `i < right`, the mirror `2·center − i` gives a radius `i` is guaranteed to reach; `right` only moves forward, so total expansion is linear.',
       trick: true,
       points: [
         'Put # between letters (and ^, $ at the ends) so every palindrome has odd length.',
@@ -98,6 +102,8 @@ export const p40: Record<string, ApproachWalkthrough[]> = {
       name: 'Table pal[i][j], count trues',
       time: 'O(n²)',
       space: 'O(n²)',
+      state: '`pal[i][j]` filled right to left; `count`.',
+      invariant: 'Every true cell is a distinct palindromic substring `s[i..j]`, counted once when it is filled.',
       points: [
         'Same table as Longest Palindromic Substring.',
         'Every true cell is one palindromic substring, so count them.',
@@ -154,6 +160,8 @@ export const p40: Record<string, ApproachWalkthrough[]> = {
       name: 'Memo over which balloons remain',
       time: 'O(2ⁿ·n)',
       space: 'O(2ⁿ)',
+      state: '`best(mask)` = max coins from the balloons still standing in `mask`, cached per mask.',
+      invariant: 'The coins for bursting `i` next depend only on its current neighbours, which `mask` determines, so `best(mask)` is a function of `mask` alone.',
       points: [
         'State = the set of balloons still standing (a bitmask). Try bursting each one next.',
         'Its coins depend on its current neighbours, which the mask tells you.',

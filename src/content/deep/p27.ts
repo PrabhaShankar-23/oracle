@@ -10,6 +10,8 @@ export const p27: Record<string, ApproachWalkthrough[]> = {
       name: 'DFS with three colours',
       time: 'O(V + E)',
       space: 'O(V)',
+      state: '`state[u]`: 0 new, 1 on the current path, 2 done.',
+      invariant: 'Courses marked 1 are exactly the current recursion path, so an edge into a 1 is a cycle; a course marked 2 has no cycle below it.',
       points: [
         'State per course: new, on the current path, or done.',
         'Reaching a course that is on the current path means a cycle ⇒ impossible.',
@@ -57,6 +59,8 @@ export const p27: Record<string, ApproachWalkthrough[]> = {
       name: 'DFS, reverse post-order',
       time: 'O(V + E)',
       space: 'O(V)',
+      state: '`state[u]` as in three-colour DFS; `order` of finished courses.',
+      invariant: 'A course is appended only after every course that depends on it has finished, so reversing `order` puts every prerequisite first.',
       points: [
         'Same three-colour DFS as Course Schedule.',
         'Append a course when it finishes, after everything that depends on it.',

@@ -13,6 +13,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'Cleaned copy',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`cleaned`: the letters and digits of `s`, lowercased, in order.',
+      invariant: '`s` is a palindrome exactly when `cleaned == cleaned[::-1]`; dropping junk characters never changes the answer.',
       points: [
         'Filter s down to letters and digits, lowercased, into a new list.',
         'Compare that list with its reverse.',
@@ -84,6 +86,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'All pairs',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Outer index `i`, inner index `j > i`.',
+      invariant: 'Every pair `(i′, j′)` with `i′ < i` has already been checked and missed the target.',
       points: [
         'Two nested loops: i from the left, j from i + 1.',
         'Check numbers[i] + numbers[j] == target.',
@@ -118,6 +122,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'Binary search',
       time: 'O(n log n)',
       space: 'O(1)',
+      state: 'Index `i` and `need = target − numbers[i]`; `bisect` searches `numbers[i+1:]`.',
+      invariant: 'No index before `i` belongs to a solution; because the array is sorted, `need` is either at the bisect position or not right of `i`.',
       points: [
         'The array is sorted, so the partner of numbers[i] can be binary searched.',
         'For each i, need = target − numbers[i].',
@@ -198,6 +204,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'Every triple',
       time: 'O(n³)',
       space: 'O(k) for results',
+      state: 'Indices `i < j < k`; a set `found` of sorted triples.',
+      invariant: '`found` holds every zero-sum triple among the index triples visited so far, each once as a sorted tuple.',
       points: [
         'Three nested loops over i < j < k.',
         'Keep triples that sum to 0.',
@@ -231,6 +239,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'Hash set',
       time: 'O(n²)',
       space: 'O(n)',
+      state: 'Fixed `i`; for the inner loop, `seen` = the values strictly between `i` and `j`.',
+      invariant: 'For the current `j`, a triple `(i, k, j)` with `i < k < j` exists exactly when `−nums[i] − nums[j]` is in `seen`.',
       points: [
         'Fix i, then find two values summing to −nums[i] with a hash set.',
         'For each j > i: need = −nums[i] − nums[j].',
@@ -310,6 +320,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'All pairs',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Walls `l < r`; `best` so far.',
+      invariant: '`best` is the largest area over every pair visited so far.',
       points: [
         'Try every pair of walls l < r.',
         'Water held = width (r − l) × the shorter wall.',
@@ -372,6 +384,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'Scan per column',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Column `i`; `left_max` and `right_max` recomputed by scanning.',
+      invariant: 'Water above `i` is `min(left_max, right_max) − h[i]`; `total` sums that for every column before `i`.',
       points: [
         'Water above column i = min(tallest wall on its left, tallest on its right) − h[i].',
         'For each i, scan left for the max and right for the max.',
@@ -401,6 +415,8 @@ export const p01: Record<string, ApproachWalkthrough[]> = {
       name: 'Prefix / suffix max',
       time: 'O(n)',
       space: 'O(n)',
+      state: 'Arrays `pre[i]` = max of `h[0..i]` and `suf[i]` = max of `h[i..n−1]`.',
+      invariant: 'Once both arrays are filled, the water above `i` is exactly `min(pre[i], suf[i]) − h[i]`: no column needs another scan.',
       points: [
         'Do the two scans once for all columns.',
         'pre[i] = max(pre[i − 1], h[i]), left to right.',

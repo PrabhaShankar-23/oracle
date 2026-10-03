@@ -10,6 +10,8 @@ export const p06: Record<string, ApproachWalkthrough[]> = {
       name: 'Prefix − min prefix',
       time: 'O(n)',
       space: 'O(1)',
+      state: 'Running `prefix` = sum of `nums[0..i]`; `min_prefix` = the smallest prefix strictly before `i` (starting at 0).',
+      invariant: 'The best subarray ending at `i` sums to `prefix − min_prefix`, so `best` is the maximum over every end seen so far.',
       points: [
         'The sum of a[j…i] is prefix[i] − prefix[j−1].',
         'Walk once, keeping the smallest prefix seen so far.',
@@ -73,6 +75,8 @@ export const p06: Record<string, ApproachWalkthrough[]> = {
       name: 'All subarrays',
       time: 'O(n²)',
       space: 'O(1)',
+      state: 'Start `i`, end `j`, running `product = nums[i] × … × nums[j]`.',
+      invariant: '`best` is the largest product over every subarray starting before `i`, plus those from `i` ending at or before `j`.',
       points: [
         'Multiply outward from every start index.',
         'Keep the largest product seen.',
@@ -134,6 +138,8 @@ export const p06: Record<string, ApproachWalkthrough[]> = {
       name: 'Doubled array',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`pre` = prefix sums of `nums + nums`; deque `dq` of start indices with increasing prefix values.',
+      invariant: '`dq` holds only starts within `n` of `r`, and its front is the smallest prefix among them, so `pre[r] − pre[dq[0]]` is the best window of length ≤ `n` ending at `r`.',
       points: [
         'Lay the array out twice so a wrap becomes an ordinary window.',
         'Every answer is a window of length ≤ n in that doubled array.',

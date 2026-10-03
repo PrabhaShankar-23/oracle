@@ -13,6 +13,8 @@ export const p23: Record<string, ApproachWalkthrough[]> = {
       name: 'General LCA, ignoring the order',
       time: 'O(n)',
       space: 'O(h)',
+      state: 'Each call holds `root` and returns `p`, `q`, the LCA, or `None`.',
+      invariant: 'A call returns the LCA once both targets are below it, otherwise whichever target it found.',
       points: [
         'The binary-tree solution works on a BST too.',
         'But it may search the whole tree when the ordering already says which way to go.',
@@ -54,6 +56,8 @@ export const p23: Record<string, ApproachWalkthrough[]> = {
       name: 'Parent pointers and an ancestor set',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`parent` map built by DFS; set `ancestors` = `p` and all its ancestors.',
+      invariant: 'Climbing from `q`, the first node in `ancestors` is the deepest node that is an ancestor of both.',
       points: [
         'Walk the tree to record every node’s parent.',
         'Put all of p’s ancestors (itself included) in a set.',

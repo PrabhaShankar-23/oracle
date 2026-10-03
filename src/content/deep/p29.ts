@@ -18,6 +18,8 @@ export const p29: Record<string, ApproachWalkthrough[]> = {
       name: 'Bellman-Ford',
       time: 'O(V·E)',
       space: 'O(V)',
+      state: '`dist[v]` after each round of relaxing every edge.',
+      invariant: 'After round `i`, `dist[v]` is no more than the cheapest path to `v` using at most `i` edges; `n − 1` rounds cover every simple path.',
       points: [
         'Relax every edge n − 1 times: dist[v] = min(dist[v], dist[u] + w).',
         'After round i, every shortest path with ≤ i edges is correct.',
@@ -59,6 +61,8 @@ export const p29: Record<string, ApproachWalkthrough[]> = {
       name: 'Dijkstra over (cost, city, edges)',
       time: 'O(E·K·log(E·K))',
       space: 'O(E·K)',
+      state: 'Heap of `(cost, node, edges used)`; `fewest[u]` = the fewest edges with which `u` has been popped.',
+      invariant: 'States pop in cost order, so the first time `dst` pops is the cheapest route; a state is skipped only if a cheaper pop already reached that city with no more edges.',
       points: [
         'The state must include how many flights were used, not just the city.',
         'Pop the cheapest state; reaching dst first is the answer.',
@@ -104,8 +108,10 @@ export const p29: Record<string, ApproachWalkthrough[]> = {
   'P29-swim-in-rising-water': [
     {
       name: 'Binary search the time, then flood',
-      time: 'O(n² log n²)',
+      time: 'O(n² log n)',
       space: 'O(n²)',
+      state: 'Bounds `lo`, `hi` on the answer `t`; `can(t)` floods cells with height ≤ `t`.',
+      invariant: 'If time `t` works, any larger `t` works too, so the smallest feasible `t` always stays inside `[lo, hi]`.',
       points: [
         'can(t): is there a path from the corner using only cells ≤ t? Flood fill answers it.',
         'Feasibility only improves as t grows, so binary search the smallest t.',

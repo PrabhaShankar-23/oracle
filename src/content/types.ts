@@ -102,6 +102,10 @@ export type ApproachWalkthrough = {
   best?: boolean
   /** A well-known clever move worth showing in an interview (e.g. Min Stack's 2·x − min encoding). Comes after the best tab. */
   trick?: boolean
+  /** What this approach keeps between steps. Plain text, `backticks` for code. The best approach may omit it and fall back to the problem's. */
+  state?: string
+  /** What stays true after every step of THIS approach — why it is correct. Same format as `state`. */
+  invariant?: string
   /** 4–6 short lines: the idea, the moves, why it is correct or where it wastes work. */
   points: string[]
   code: string

@@ -10,6 +10,8 @@ export const p07: Record<string, ApproachWalkthrough[]> = {
       name: 'Filter into a new list',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`kept` = every value `!= val`, in original order.',
+      invariant: '`kept` is exactly the answer; copying it over the front of `nums` leaves the first `len(kept)` slots correct.',
       points: [
         'Collect the values you keep into a new list.',
         'Copy them back over the front of nums.',
@@ -72,6 +74,8 @@ export const p07: Record<string, ApproachWalkthrough[]> = {
       name: 'Counting sort',
       time: 'O(n)',
       space: 'O(1)',
+      state: '`count[0..2]` after pass 1; write index `i` in pass 2.',
+      invariant: 'After pass 2 writes colour `c`, `nums[0..i)` holds every 0, then every 1, … up to `c`, in sorted order.',
       points: [
         'Pass 1 counts how many 0s, 1s and 2s there are.',
         'Pass 2 overwrites the array with that many of each, in order.',
@@ -140,6 +144,8 @@ export const p07: Record<string, ApproachWalkthrough[]> = {
       name: 'Count and rebuild',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`seen[x]` = copies of `x` kept so far; list `kept`.',
+      invariant: '`kept` holds at most two copies of each value, in the original order.',
       points: [
         'Count occurrences while scanning and keep the first two of each value.',
         'Copy the kept values back to the front.',

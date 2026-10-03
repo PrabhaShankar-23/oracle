@@ -10,6 +10,8 @@ export const p02: Record<string, ApproachWalkthrough[]> = {
       name: 'Visited set',
       time: 'O(n)',
       space: 'O(n)',
+      state: '`head` = the current node; `seen` = every node passed so far, by identity.',
+      invariant: 'The nodes in `seen` are distinct; the first node met that is already in `seen` proves a loop.',
       points: [
         'Walk the list one node at a time.',
         'Put every node in a set — by identity, not by value.',
@@ -80,6 +82,8 @@ export const p02: Record<string, ApproachWalkthrough[]> = {
       name: 'Seen set',
       time: 'O(log n)',
       space: 'O(log n)',
+      state: 'Current number `n`; `seen` = every value the chain has produced so far.',
+      invariant: 'Every value in `seen` led to the current `n` without reaching 1, so meeting one again means a cycle that never reaches 1.',
       points: [
         'Replace n by the sum of the squares of its digits, over and over.',
         'Remember every value in a set.',
@@ -143,6 +147,8 @@ export const p02: Record<string, ApproachWalkthrough[]> = {
       name: 'Sort a copy',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: '`ordered` = a sorted copy of `nums`; neighbour index `i`.',
+      invariant: 'Equal values are adjacent in `ordered`, so the first `i` with `ordered[i] == ordered[i−1]` is the duplicate.',
       points: [
         'Sort a copy of the array, leaving the input untouched.',
         'Equal values land next to each other.',

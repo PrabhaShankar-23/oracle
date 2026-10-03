@@ -17,6 +17,8 @@ export const p26: Record<string, ApproachWalkthrough[]> = {
       name: 'Recursive DFS, sink each island',
       time: 'O(mn)',
       space: 'O(mn) stack',
+      state: 'The grid itself: visited land is overwritten with `0`; `count`.',
+      invariant: 'Each call to `sink` from the scan turns one whole island to water, so every launch counts exactly one new island.',
       points: [
         'Scan the grid; each unvisited "1" starts a new island.',
         'Sink it: turn the whole connected region to "0" by recursing in four directions.',
@@ -62,6 +64,8 @@ export const p26: Record<string, ApproachWalkthrough[]> = {
       name: 'Recursive DFS returning the size',
       time: 'O(mn)',
       space: 'O(mn) stack',
+      state: 'The grid, with visited land set to 0; each call returns the area it sank.',
+      invariant: 'A cell is zeroed before its neighbours are explored, so every land cell is counted in exactly one island\'s area.',
       points: [
         'area(r, c) = 0 off the grid or on water; otherwise mark it and return 1 + the four neighbours’ areas.',
         'Mark before recursing, so no cell is counted twice.',
@@ -89,6 +93,8 @@ export const p26: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS with an old → new map',
       time: 'O(V + E)',
       space: 'O(V)',
+      state: '`clones` = original → copy for every node seen; queue of originals whose edges are not copied yet.',
+      invariant: 'Each original gets exactly one copy, made on first sight; when a node is dequeued, every one of its edges is copied onto its clone.',
       points: [
         'The map from original to clone is both the memo and the visited set.',
         'Make a clone the first time a node is seen, and queue the original.',
@@ -137,6 +143,8 @@ export const p26: Record<string, ApproachWalkthrough[]> = {
       name: 'Check each region for the border',
       time: 'O(mn)',
       space: 'O(mn)',
+      state: '`seen` cells; for the current region: its cell list and a `border` flag.',
+      invariant: 'Each region is collected exactly once; it is captured only if none of its cells lies on the border.',
       points: [
         'Flood each O region, remembering its cells and whether any is on the border.',
         'Capture (flip to X) only regions that never touched the border.',
@@ -186,6 +194,8 @@ export const p26: Record<string, ApproachWalkthrough[]> = {
       name: 'Flow downhill from every cell',
       time: 'O((mn)²)',
       space: 'O(mn)',
+      state: 'For one start cell: `seen`, a stack, and flags `pac`, `atl`.',
+      invariant: '`seen` is every cell water can reach from the start by moving to equal or lower ground; the flags record which ocean edges it touched.',
       points: [
         'From each cell, follow water to neighbours of equal or lower height.',
         'Record whether the Pacific (top or left edge) and the Atlantic (bottom or right edge) are reached.',

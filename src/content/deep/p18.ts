@@ -10,6 +10,8 @@ export const p18: Record<string, ApproachWalkthrough[]> = {
       name: 'Erase "()" pairs until stuck',
       time: 'O(n²)',
       space: 'O(n)',
+      state: 'The string `s` after each round of erasing adjacent pairs.',
+      invariant: 'Removing an adjacent matched pair never changes whether the string is valid; `s` is valid exactly when it erases down to empty.',
       points: [
         'An innermost pair like "()" can always be removed without changing validity.',
         'Keep erasing pairs; the string is valid if it ends empty.',
@@ -81,6 +83,8 @@ export const p18: Record<string, ApproachWalkthrough[]> = {
       name: 'Recurse into each paren group',
       time: 'O(n)',
       space: 'O(depth)',
+      state: 'Each call holds `res`, `num`, `sign` for its own group; the call stack holds the outer groups.',
+      invariant: '`res + sign × num` is the value of the current group read so far; a returned group value acts as one number in its parent.',
       points: [
         'Evaluate + and − left to right with a running result and a sign.',
         'On "(", recurse; the group comes back as one number, and the outer sign applies to it.',
@@ -137,6 +141,8 @@ export const p18: Record<string, ApproachWalkthrough[]> = {
       name: 'Second stack of minimums',
       time: 'O(1)',
       space: 'O(n)',
+      state: '`stack` of values; `mins` of every value that was ≤ the minimum when pushed.',
+      invariant: '`mins[-1]` is the minimum of `stack`; pushing on `≤` keeps duplicate minimums, so popping one copy leaves the right minimum.',
       points: [
         'LeetCode 155 needs every operation, getMin included, in O(1), so scanning with min() is out.',
         'Keep the stack plus a mins stack of each new minimum.',
@@ -200,6 +206,8 @@ export const p18: Record<string, ApproachWalkthrough[]> = {
       name: 'Encode 2·x − min',
       time: 'O(1)',
       space: 'O(n)',
+      state: 'One `stack` of possibly encoded values; `min` = the current minimum.',
+      invariant: 'A stored value below `min` marks the point where `min` changed, and `2·min − stored` gives back the previous minimum on pop.',
       trick: true,
       points: [
         'One stack and a single min variable, no second stack.',

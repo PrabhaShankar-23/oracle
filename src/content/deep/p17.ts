@@ -9,7 +9,9 @@ export const p17: Record<string, ApproachWalkthrough[]> = {
     {
       name: 'Recompute every window',
       time: 'O(n·k)',
-      space: 'O(1) extra',
+      space: 'O(k)',
+      state: 'Window start `i`; `max(nums[i:i + k])`.',
+      invariant: 'Each result is the maximum of exactly one window, computed from scratch.',
       points: [
         'Take max() of every window of size k.',
         'Correct and one line, but each slide repeats k − 1 comparisons it already made.',
@@ -33,6 +35,8 @@ export const p17: Record<string, ApproachWalkthrough[]> = {
       name: 'Max-heap, lazy deletion',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: 'Heap of `(−value, index)` that may contain stale entries.',
+      invariant: 'After the stale-top pops, the heap\'s root has an index inside the window and the largest value among in-window entries.',
       points: [
         'Push (−value, index) into a heap.',
         'Before reading the top, pop entries whose index has left the window.',

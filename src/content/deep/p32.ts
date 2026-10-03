@@ -10,6 +10,8 @@ export const p32: Record<string, ApproachWalkthrough[]> = {
       name: 'used[] and a path',
       time: 'O(n!·n)',
       space: 'O(n)',
+      state: '`path` = the numbers placed so far; `used[i]` marks the indices in `path`.',
+      invariant: '`path` never repeats an index; once `len(path) == n` it is one full permutation, and every undo restores `path` and `used` together.',
       points: [
         'At each depth, try every number not used yet: mark it, add it to the path, recurse, undo.',
         'A full path is one permutation.',
@@ -55,6 +57,8 @@ export const p32: Record<string, ApproachWalkthrough[]> = {
       name: 'Swap, with a set per slot',
       time: 'O(n!·n)',
       space: 'O(n²)',
+      state: 'Slots `0 … i−1` fixed in `nums`; `tried` = the values already placed in slot `i`.',
+      invariant: 'Each distinct value is placed in slot `i` only once, so no two branches produce the same permutation.',
       points: [
         'The plain swap version produces duplicates when values repeat.',
         'Fix: at each slot, remember which values you already placed there, and skip repeats.',

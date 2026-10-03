@@ -10,6 +10,8 @@ export const p11: Record<string, ApproachWalkthrough[]> = {
       name: 'Rescan every round',
       time: 'O(k·n)',
       space: 'O(n)',
+      state: 'Capital `w`; `done[i]` for projects already taken.',
+      invariant: 'After each round `w` is the best capital reachable with that many projects: taking the most profitable affordable project never shrinks future choices.',
       points: [
         'Each round, take the most profitable unused project whose capital fits in w.',
         'Taking a project only raises w, so greedy by profit is safe.',
@@ -78,6 +80,8 @@ export const p11: Record<string, ApproachWalkthrough[]> = {
       name: 'Keep one sorted list',
       time: 'O(n) add · O(1) median',
       space: 'O(n)',
+      state: '`nums`, always sorted.',
+      invariant: '`nums` is sorted after every `addNum`, so the median is the middle element or the mean of the middle two.',
       points: [
         'Sorting on every findMedian works, but costs O(n log n) per call.',
         'Better: keep the list sorted as you go. Binary search finds the spot for each new number.',
@@ -131,8 +135,10 @@ export const p11: Record<string, ApproachWalkthrough[]> = {
     },
     {
       name: 'Count buckets for 0…100',
-      time: 'O(1) add · O(100) median',
+      time: 'O(1) add · O(1) median',
       space: 'O(1)',
+      state: '`count[v]` for `v` in 0…100 and the total `n`.',
+      invariant: '`count` holds every number added, so walking the buckets in order reaches the `k`-th smallest value.',
       trick: true,
       points: [
         'LeetCode’s follow-up: what if every number is in 0…100?',

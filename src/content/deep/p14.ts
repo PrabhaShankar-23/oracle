@@ -10,6 +10,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Sort by frequency',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: '`count` = frequency of each value; the distinct values sorted by count.',
+      invariant: 'After sorting by count descending, the first `k` values are the `k` most frequent.',
       points: [
         'Count with a Counter, sort the distinct values by count, take k.',
         'Fine, but the follow-up asks for better than O(n log n).',
@@ -29,6 +31,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Min-heap of size k',
       time: 'O(n log k)',
       space: 'O(n)',
+      state: 'Min-heap of `(freq, value)` holding at most `k` entries.',
+      invariant: 'The heap holds the `k` most frequent values seen so far; its root is the least frequent of them, the first to drop.',
       points: [
         'Push (count, value) into a min-heap; when it grows past k, pop the least frequent.',
         'The heap ends holding the k most frequent.',
@@ -84,6 +88,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Sort by distance',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: 'All points ordered by `x² + y²`.',
+      invariant: 'After sorting, the first `k` points are the `k` closest; comparing squares gives the same order as distances.',
       points: [
         'Sort all points by x² + y² (no square root needed) and take k.',
         'Simple, but it orders all n points when only k are needed.',
@@ -131,6 +137,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Quickselect',
       time: 'O(n) average',
       space: 'O(1)',
+      state: '`lo`, `hi` = the range that still contains index `k − 1`; a 3-way partition around a random `pivot`.',
+      invariant: 'After each partition, everything left of `lt` is closer than the pivot and everything right of `gt` is farther; only the side containing `k − 1` is kept.',
       trick: true,
       points: [
         'Partition by distance around a random pivot, as in quicksort.',
@@ -162,6 +170,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Sort and index',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: '`sorted(nums)`.',
+      invariant: 'In sorted order the k-th largest sits at index `n − k`.',
       points: [
         'sorted(nums)[−k].',
         'LeetCode asks whether you can do it without sorting. Show this first, then improve.',
@@ -185,6 +195,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Min-heap of size k',
       time: 'O(n log k)',
       space: 'O(k)',
+      state: 'Min-heap of the `k` largest values seen so far.',
+      invariant: 'The heap holds the `k` largest of the prefix; its root is the k-th largest so far, so after the last element it is the answer.',
       points: [
         'Keep the k largest seen so far in a min-heap.',
         'Past k, pop the smallest; the root is always the k-th largest so far.',
@@ -248,6 +260,8 @@ export const p14: Record<string, ApproachWalkthrough[]> = {
       name: 'Simulate with a heap',
       time: 'O(T)',
       space: 'O(1)',
+      state: 'Max-heap of remaining counts; `cooling` queue of `(ready_time, count)`; clock `time`.',
+      invariant: 'At each tick the heap holds exactly the tasks allowed to run now; running the one with the most left never adds idle time later.',
       points: [
         'Each tick, run the task with the most left among those not cooling down.',
         'A task that just ran waits in a queue until tick + n.',

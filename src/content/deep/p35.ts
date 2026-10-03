@@ -10,6 +10,8 @@ export const p35: Record<string, ApproachWalkthrough[]> = {
       name: '2D table dp[i][s]',
       time: 'O(n·S)',
       space: 'O(n·S)',
+      state: '`dp[i][s]` = some subset of the first `i` numbers sums to `s`.',
+      invariant: 'Row `i` is filled from row `i − 1` only, so each number is used at most once: skip it (`dp[i−1][s]`) or take it (`dp[i−1][s − x]`).',
       points: [
         'An odd total can never split evenly ⇒ false. Otherwise target S = total / 2.',
         'dp[i][s] = some subset of the first i numbers sums to s.',
@@ -65,6 +67,8 @@ export const p35: Record<string, ApproachWalkthrough[]> = {
       name: 'Bitset shift',
       time: 'O(n·S / w)',
       space: 'O(S) bits',
+      state: 'One integer `bits`: bit `s` set means sum `s` is reachable.',
+      invariant: 'After processing `x`, `bits` = the old sums OR the old sums shifted by `x`, i.e. every subset sum of the numbers so far, each number used once.',
       trick: true,
       points: [
         'Store reachable sums as bits of one integer: bit s set ⇔ sum s is reachable.',
@@ -96,6 +100,8 @@ export const p35: Record<string, ApproachWalkthrough[]> = {
       name: 'Memoised (index, running sum)',
       time: 'O(n·total)',
       space: 'O(n·total)',
+      state: '`ways(i, total)` = sign choices for `nums[i:]` that reach `target` from `total`, cached per pair.',
+      invariant: '`ways(i, total) = ways(i+1, total + x) + ways(i+1, total − x)`; each `(i, total)` is solved once.',
       points: [
         'At each number, choose + or −.',
         'ways(i, total) = ways(i + 1, total + x) + ways(i + 1, total − x).',

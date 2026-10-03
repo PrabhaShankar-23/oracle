@@ -24,8 +24,10 @@ export const p30: Record<string, ApproachWalkthrough[]> = {
   'P30-number-of-1-bits': [
     {
       name: 'Test all 32 positions',
-      time: 'O(32)',
+      time: 'O(1)',
       space: 'O(1)',
+      state: 'Bit position `i` from 0 to 31; `count`.',
+      invariant: '`count` = the number of set bits among positions `0 … i−1`.',
       points: ['Add (n >> i) & 1 for i = 0 … 31.', 'Always 32 steps, however few bits are set.'],
       code: c['P30-number-of-1-bits#shift'],
       diagrams: [{ kind: 'cells', rows: [{ caption: '11 = 1011 (low 4 bits shown)', cells: [1, 0, 1, 1], states: { 0: 'match', 2: 'match', 3: 'match' }, note: '3 ones' }] }],
@@ -57,6 +59,8 @@ export const p30: Record<string, ApproachWalkthrough[]> = {
       name: 'Popcount each number',
       time: 'O(n log n)',
       space: 'O(n)',
+      state: 'Each `i` from 0 to `n`, counted on its own by clearing its lowest set bit.',
+      invariant: 'For each `x`, `c` counts the bits cleared so far; when `x` reaches 0, `c` is its popcount.',
       points: ['Run the clear-lowest-bit loop for every i from 0 to n.', 'Fine, but it ignores the answers already computed.'],
       code: c['P30-counting-bits#each'],
       diagrams: [{ kind: 'cells', rows: [{ caption: 'i = 0…5', cells: [0, 1, 1, 2, 1, 2] }] }],
@@ -86,7 +90,7 @@ export const p30: Record<string, ApproachWalkthrough[]> = {
   'P30-reverse-bits': [
     {
       name: 'Shift out, shift in, 32 times',
-      time: 'O(32)',
+      time: 'O(1)',
       space: 'O(1)',
       best: true,
       points: [
@@ -110,6 +114,8 @@ export const p30: Record<string, ApproachWalkthrough[]> = {
       name: 'Swap halves, bytes, nibbles…',
       time: 'O(1): 5 steps',
       space: 'O(1)',
+      state: '`n` after each swap step.',
+      invariant: 'After the swap at block size `b`, every block of size `b` is in reversed position; the final 1-bit swap leaves all 32 bits reversed.',
       trick: true,
       points: [
         'Reverse by swapping ever-smaller blocks: 16-bit halves, then bytes, nibbles, pairs, single bits.',
@@ -134,8 +140,10 @@ export const p30: Record<string, ApproachWalkthrough[]> = {
   'P30-single-number-ii': [
     {
       name: 'Count each bit mod 3',
-      time: 'O(32·n)',
+      time: 'O(n)',
       space: 'O(1)',
+      state: 'Bit position `bit`; `count` of numbers with it set; `res`.',
+      invariant: 'Numbers appearing three times add a multiple of 3 to every column, so `count % 3` is exactly the loner\'s bit there.',
       points: [
         'LeetCode requires linear time and O(1) space, so no count map.',
         'For each of the 32 bit positions, count how many numbers have it set.',
@@ -181,7 +189,7 @@ export const p30: Record<string, ApproachWalkthrough[]> = {
   'P30-sum-of-two-integers': [
     {
       name: 'XOR for the sum, AND for the carry',
-      time: 'O(32)',
+      time: 'O(1)',
       space: 'O(1)',
       best: true,
       points: [

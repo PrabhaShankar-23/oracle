@@ -10,6 +10,8 @@ export const p09: Record<string, ApproachWalkthrough[]> = {
       name: 'Sort and find the gap',
       time: 'O(n log n)',
       space: 'O(1)',
+      state: '`nums` sorted; scan index `i`.',
+      invariant: 'Every slot before `i` holds its own index, so 0…i−1 are all present; the first slot with `x != i` means `i` is missing.',
       points: [
         'After sorting, slot i should hold i.',
         'The first slot that does not is the missing number; if every slot matches, it is n.',
@@ -35,6 +37,8 @@ export const p09: Record<string, ApproachWalkthrough[]> = {
       name: 'Gauss sum minus actual',
       time: 'O(n)',
       space: 'O(1)',
+      state: '`n` and the running sum of `nums`.',
+      invariant: '`0 + 1 + … + n` counts every value once; subtracting the values present leaves exactly the missing one.',
       points: [
         '0 + 1 + … + n = n(n + 1) / 2.',
         'Subtract the actual sum; what is left is the missing value.',
@@ -121,6 +125,8 @@ export const p09: Record<string, ApproachWalkthrough[]> = {
       name: 'Mark presence with signs',
       time: 'O(n)',
       space: 'O(1)',
+      state: 'After pass 1 every slot holds a positive number; the sign of slot `v − 1` marks whether `v` is present.',
+      invariant: 'After pass 2, `nums[i] < 0` exactly when `i + 1` appears in the input; `abs()` keeps the original values readable.',
       trick: true,
       points: [
         'Another way to use the array as its own hash set, without swaps.',

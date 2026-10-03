@@ -10,6 +10,8 @@ export const p25: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS from each rotten orange',
       time: 'O(k·mn)',
       space: 'O(mn)',
+      state: '`best[r][c]` = earliest minute any source reaches the cell; `dist` for the current BFS.',
+      invariant: 'After every source\'s BFS, `best` holds the true minimum distance to the nearest rotten orange.',
       points: [
         'Run a separate BFS from every rotten orange, keeping the earliest minute each fresh cell is reached.',
         'Answer = the latest of those minutes, or −1 if some fresh orange is never reached.',
@@ -56,6 +58,8 @@ export const p25: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS from each gate',
       time: 'O(g·mn)',
       space: 'O(mn)',
+      state: 'Each room holds the smallest distance found so far; `dist` for the current gate\'s BFS.',
+      invariant: 'After a gate\'s BFS every room holds `min(previous value, distance to this gate)`; after all gates, the distance to the nearest gate.',
       points: [
         'BFS out from every gate separately; each room keeps the minimum distance seen.',
         'Correct, but g gates means g full BFS runs, and rooms are revisited from every gate.',
@@ -137,6 +141,8 @@ export const p25: Record<string, ApproachWalkthrough[]> = {
       name: 'Compare every pair of words',
       time: 'O(N²·L)',
       space: 'O(N²)',
+      state: '`graph` of one-letter neighbours; BFS queue of `(word, steps)`; `seen`.',
+      invariant: 'Edges join words that differ in one letter, and every edge costs 1, so the first time BFS reaches `end_word` gives the fewest steps.',
       points: [
         'Two words are neighbours when they differ in exactly one letter.',
         'Build the graph by comparing every pair, then BFS from begin_word.',
@@ -172,14 +178,17 @@ export const p25: Record<string, ApproachWalkthrough[]> = {
     },
     {
       name: 'Bidirectional BFS',
-      time: 'O(N·L·26)',
+      time: 'O(N·L²)',
       space: 'O(N)',
+      state: '`front` and `back` frontiers; unused `words`; `steps`.',
+      invariant: 'Each frontier holds the words exactly `d` steps from its own end; the first candidate found in the other frontier joins two shortest half-paths.',
       trick: true,
       points: [
         'Search from both ends at once and stop when the two frontiers touch.',
         'Always expand the smaller frontier.',
         'With branching factor b and distance d, that is about 2·b^(d/2) nodes instead of b^d.',
         'A classic follow-up when the word list is large.',
+        'Each word tries 26 letters at each of its L positions and builds each candidate in O(L), so O(N·L²) like the bucket version; it wins by visiting far fewer words.',
       ],
       code: c['P25-word-ladder#bidirectional'],
       diagrams: [

@@ -10,6 +10,8 @@ export const p36: Record<string, ApproachWalkthrough[]> = {
       name: 'BFS over amounts',
       time: 'O(A·n)',
       space: 'O(A)',
+      state: 'Queue of `(amount, coins used)` in BFS order; `seen` amounts.',
+      invariant: 'BFS reaches amounts in order of coins used, so the first time `amount` is dequeued, `used` is the fewest coins.',
       points: [
         'Each amount is a node; adding a coin is an edge.',
         'BFS from 0: the level where you first reach the amount is the fewest coins.',
@@ -62,6 +64,8 @@ export const p36: Record<string, ApproachWalkthrough[]> = {
       name: '2D table: first i coins',
       time: 'O(A·n)',
       space: 'O(A·n)',
+      state: '`dp[i][a]` = ways to make `a` with only the first `i` coin types.',
+      invariant: 'Each combination is counted once, with its coins added in type order: skip coin `i` (`dp[i−1][a]`) or use it again (`dp[i][a − c]`).',
       points: [
         'dp[i][a] = ways to make a using only the first i coin types.',
         'Skip coin i ⇒ dp[i − 1][a]; use it again ⇒ dp[i][a − c], the same row.',

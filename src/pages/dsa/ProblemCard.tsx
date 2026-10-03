@@ -107,87 +107,89 @@ function ProblemCard({ problem: p, recallMode, open, onToggle }: Props) {
             </Button>
           ) : (
             <>
-              <Box
-                component="dl"
-                sx={{
-                  m: 0,
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', sm: '92px 1fr' },
-                  columnGap: 2,
-                  rowGap: { xs: 0.25, sm: 1 },
-                  '& dt': { typography: 'overline', color: 'text.secondary', lineHeight: 1.9 },
-                  '& dd': { m: 0, mb: { xs: 1, sm: 0 }, typography: 'body2' },
-                  '& code': inlineCode,
-                }}
-              >
-                <dt>State</dt>
-                <dd>
-                  <Html html={p.state} />
-                </dd>
-                <dt>Invariant</dt>
-                <dd>
-                  <Html html={p.invariant} />
-                </dd>
-              </Box>
-
               {walkthrough ? (
-                <ApproachTabs approaches={walkthrough} />
+                <ApproachTabs approaches={walkthrough} fallback={{ state: p.state, invariant: p.invariant }} />
               ) : (
-                <Box
-                  component="ol"
-                  sx={(t) => ({
-                    listStyle: 'none',
-                    p: 0,
-                    m: 0,
-                    mt: 1.5,
-                    pt: 1.5,
-                    borderTop: `1px dashed ${t.vars.palette.divider}`,
-                    '& code': inlineCode,
-                  })}
-                >
-                  {p.approaches.map((a) => (
-                    <Box
-                      component="li"
-                      key={a.label}
-                      sx={(t) => ({
-                        display: 'flex',
-                        flexWrap: { xs: 'wrap', sm: 'nowrap' },
-                        alignItems: 'baseline',
-                        columnGap: 1,
-                        py: 0.5,
-                        px: 1,
-                        mx: -1,
-                        borderRadius: 1,
-                        typography: 'body2',
-                        ...(a.winner && { backgroundColor: t.vars.palette.container.primary, color: t.vars.palette.container.onPrimary }),
-                      })}
-                    >
-                      {a.winner ? (
-                        <CheckCircleIcon sx={{ fontSize: 16, alignSelf: 'center', color: 'primary.main' }} aria-label="Best approach" />
-                      ) : (
-                        <Box component="span" sx={{ color: 'text.secondary', minWidth: 16 }}>
-                          {a.label}
-                        </Box>
-                      )}
-                      <Box component="span" sx={{ flex: 1, minWidth: 0 }}>
-                        <Html html={a.text} />
-                      </Box>
+                <>
+                  <Box
+                    component="dl"
+                    sx={{
+                      m: 0,
+                      display: 'grid',
+                      gridTemplateColumns: { xs: '1fr', sm: '92px 1fr' },
+                      columnGap: 2,
+                      rowGap: { xs: 0.25, sm: 1 },
+                      '& dt': { typography: 'overline', color: 'text.secondary', lineHeight: 1.9 },
+                      '& dd': { m: 0, mb: { xs: 1, sm: 0 }, typography: 'body2' },
+                      '& code': inlineCode,
+                    }}
+                  >
+                    <dt>State</dt>
+                    <dd>
+                      <Html html={p.state} />
+                    </dd>
+                    <dt>Invariant</dt>
+                    <dd>
+                      <Html html={p.invariant} />
+                    </dd>
+                  </Box>
+
+                  <Box
+                    component="ol"
+                    sx={(t) => ({
+                      listStyle: 'none',
+                      p: 0,
+                      m: 0,
+                      mt: 1.5,
+                      pt: 1.5,
+                      borderTop: `1px dashed ${t.vars.palette.divider}`,
+                      '& code': inlineCode,
+                    })}
+                  >
+                    {p.approaches.map((a) => (
                       <Box
-                        component="span"
-                        sx={{
-                          fontFamily: FONT_MONO,
-                          fontSize: '0.75rem',
-                          whiteSpace: 'nowrap',
-                          opacity: 0.85,
-                          width: { xs: '100%', sm: 'auto' },
-                          pl: { xs: 3, sm: 1 },
-                        }}
+                        component="li"
+                        key={a.label}
+                        sx={(t) => ({
+                          display: 'flex',
+                          flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                          alignItems: 'baseline',
+                          columnGap: 1,
+                          py: 0.5,
+                          px: 1,
+                          mx: -1,
+                          borderRadius: 1,
+                          typography: 'body2',
+                          ...(a.winner && { backgroundColor: t.vars.palette.container.primary, color: t.vars.palette.container.onPrimary }),
+                        })}
                       >
-                        {a.complexity}
+                        {a.winner ? (
+                          <CheckCircleIcon sx={{ fontSize: 16, alignSelf: 'center', color: 'primary.main' }} aria-label="Best approach" />
+                        ) : (
+                          <Box component="span" sx={{ color: 'text.secondary', minWidth: 16 }}>
+                            {a.label}
+                          </Box>
+                        )}
+                        <Box component="span" sx={{ flex: 1, minWidth: 0 }}>
+                          <Html html={a.text} />
+                        </Box>
+                        <Box
+                          component="span"
+                          sx={{
+                            fontFamily: FONT_MONO,
+                            fontSize: '0.75rem',
+                            whiteSpace: 'nowrap',
+                            opacity: 0.85,
+                            width: { xs: '100%', sm: 'auto' },
+                            pl: { xs: 3, sm: 1 },
+                          }}
+                        >
+                          {a.complexity}
+                        </Box>
                       </Box>
-                    </Box>
-                  ))}
-                </Box>
+                    ))}
+                  </Box>
+                </>
               )}
 
               {p.why && (
