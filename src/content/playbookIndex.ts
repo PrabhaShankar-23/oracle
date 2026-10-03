@@ -20,6 +20,7 @@ export const playbookIndex = [
   { id: 'composition', title: 'Medium and hard = pattern composition' },
   { id: 'defaults', title: 'Ten-second scans' },
   { id: 'practice', title: 'Turning effort into offers' },
+  { id: 'failure-log', title: 'Track where you failed' },
   { id: 'mindset', title: 'What actually gets forgiven' },
 ] as const
 

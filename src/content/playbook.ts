@@ -637,6 +637,56 @@ const bodies: Record<PlaybookId, PlaybookBody> = {
   },
 
   /* ------------------------------------------------------------------ */
+  'failure-log': {
+    lede: 'A wrong answer breaks at one stage, not everywhere. Mark the stage after every problem — fixing the wrong one is how practice gets wasted.',
+    blocks: [
+      {
+        kind: 'code',
+        lang: 'text',
+        title: 'Log this under every problem',
+        code: `LC 76 · Minimum Window Substring · 3 Oct
+
+Pattern identification  ❌
+Invariant               ❌
+Algorithm derivation    ✅
+Implementation          ❌
+Edge cases              ❌
+Complexity analysis     ✅`,
+        note: 'Six lines, ten seconds. Mark ❌ honestly: a hint, a peek at the solution or a second submission all count as a fail at that stage.',
+      },
+      {
+        kind: 'table',
+        title: 'What a ❌ means, and where to fix it',
+        columns: ['Stage', 'Failed if…', 'Fix by'],
+        rows: [
+          ['Pattern identification', 'You had no pattern after ~2 minutes, or picked a sibling (window for a prefix-sum problem)', 'The pattern sheet’s Trigger and “Looks like X, isn’t” lines; Recognition, not solving'],
+          ['Invariant', 'You could not say, in one sentence, what stays true after each iteration', 'The sheet’s Core invariant, said out loud before coding; Name the thing that stays true'],
+          ['Algorithm derivation', 'You could not climb from brute force to the better and best versions', 'The recall line: Brute → Better → Best'],
+          ['Implementation', 'Right idea, wrong code: loop guard, update in the wrong place, off-by-one', 'Rewrite the sheet’s skeleton cold, three times; Micro-templates'],
+          ['Edge cases', 'Failed on empty, single element, all equal, negatives or overflow', 'The edge case ritual, run before you say done'],
+          ['Complexity analysis', 'Wrong big-O, or you could not justify it (“each index enters once, leaves once”)', 'Read the constraints, get the complexity'],
+        ],
+      },
+      {
+        kind: 'checklist',
+        title: 'Every Sunday, count the ❌',
+        items: [
+          'The stage with the most ❌ picks next week’s warm-up.',
+          'Pattern ❌ → warm up on triggers only: read the problem, name the pattern and its sibling, don’t code.',
+          'Invariant or implementation ❌ → rewrite one sheet’s invariants and skeletons from memory, then diff.',
+          'Edge-case ❌ → before every run, write the four inputs that break you.',
+        ],
+        note: 'Stages are ordered: an early ❌ makes the later ones meaningless. Fix the first failing stage first.',
+      },
+      {
+        kind: 'callout',
+        tone: 'primary',
+        text: 'The log turns “I’m bad at DSA” into “I lose invariants on window problems”. Only the second one can be practised.',
+      },
+    ],
+  },
+
+  /* ------------------------------------------------------------------ */
   'mindset': {
     blocks: [
       {
