@@ -2,6 +2,14 @@ import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import BlockOutlined from '@mui/icons-material/BlockOutlined'
+import MapOutlined from '@mui/icons-material/MapOutlined'
+import MicNoneOutlined from '@mui/icons-material/MicNoneOutlined'
+import QuizOutlined from '@mui/icons-material/QuizOutlined'
+import RecordVoiceOverOutlined from '@mui/icons-material/RecordVoiceOverOutlined'
+import StairsOutlined from '@mui/icons-material/StairsOutlined'
+import TrackChangesOutlined from '@mui/icons-material/TrackChangesOutlined'
+import WarningAmberOutlined from '@mui/icons-material/WarningAmberOutlined'
 import type { SxProps, Theme } from '@mui/material/styles'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import HtmlContent from '../../components/content/HtmlContent'
@@ -51,13 +59,19 @@ const bodySx: SxProps<Theme> = {
   '& pre': { fontSize: { xs: '0.75rem', sm: '0.8125rem' } },
 }
 
-/** A section heading inside the answer: an h4 under the card's question. */
-const SectionHeading = ({ children }: { children: ReactNode }) => (
+/** Icons sit on the text baseline and take the text's colour and size. */
+const iconSx = { fontSize: '1.15em', verticalAlign: '-0.2em', mr: 0.75 } as const
+
+/** A section heading inside the answer: an h4 under the card's question, led by a Material icon. */
+const SectionHeading = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
   <Typography
     variant="overline"
     component="h4"
     sx={(t) => ({
-      display: 'block',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 0.75,
+      '& svg': { fontSize: '1.1rem' },
       color: t.vars.palette.primary.main,
       mt: 3,
       mb: 1.25,
@@ -66,6 +80,7 @@ const SectionHeading = ({ children }: { children: ReactNode }) => (
       borderBottom: `1px solid ${t.vars.palette.divider}`,
     })}
   >
+    {icon}
     {children}
   </Typography>
 )
@@ -112,7 +127,8 @@ export default function ModelAnswer({
     <Box ref={ref} sx={(t) => (standalone ? {} : { mt: 2, pt: 1.5, borderTop: `1px dashed ${t.vars.palette.divider}` })}>
       <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap', mb: 1 }}>
         <Typography variant="overline" component="p" sx={{ color: 'primary.main', lineHeight: 1.6 }}>
-          🎤 Model answer
+          <MicNoneOutlined sx={iconSx} />
+          Model answer
         </Typography>
         <Chip size="small" variant="outlined" label={TYPE_LABEL[type]} sx={{ height: 22, fontSize: '0.6875rem' }} />
       </Stack>
@@ -182,20 +198,22 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
         </Box>
       )}
       <Typography variant="body2" sx={{ mt: 2, mb: 0.75, overflowWrap: 'anywhere' }}>
-        <b>🎯 What they're testing:</b> <Html html={a.testing} />
+        <TrackChangesOutlined sx={iconSx} />
+        <b>What they're testing:</b> <Html html={a.testing} />
       </Typography>
       <Typography variant="body2" sx={{ color: 'warning.main', overflowWrap: 'anywhere' }}>
-        <b>🪤 The trap:</b> <Html html={a.trap} />
+        <WarningAmberOutlined sx={iconSx} />
+        <b>The trap:</b> <Html html={a.trap} />
       </Typography>
 
       {a.map && (
         <>
-          <SectionHeading>🗺️ Answer map</SectionHeading>
+          <SectionHeading icon={<MapOutlined />}>Answer map</SectionHeading>
           <HtmlContent html={a.map} sx={bodySx} />
         </>
       )}
 
-      <SectionHeading>🎤 The spoken answer{a.speakTime ? ` (${a.speakTime})` : ''}</SectionHeading>
+      <SectionHeading icon={<RecordVoiceOverOutlined />}>The spoken answer{a.speakTime ? ` (${a.speakTime})` : ''}</SectionHeading>
       <Box
         sx={(t) => ({
           px: 1.75,
@@ -208,7 +226,7 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
         <HtmlContent html={a.spoken} sx={bodySx} />
       </Box>
 
-      <SectionHeading>🪜 The walkthrough</SectionHeading>
+      <SectionHeading icon={<StairsOutlined />}>The walkthrough</SectionHeading>
       <Stack spacing={2.5}>
         {a.stages.map((s) => (
           <Box component="section" key={s.number} sx={{ minWidth: 0 }}>
@@ -226,7 +244,7 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
         ))}
       </Stack>
 
-      <SectionHeading>🔁 Follow-ups they'll fire</SectionHeading>
+      <SectionHeading icon={<QuizOutlined />}>Follow-ups they'll fire</SectionHeading>
       <Stack spacing={2}>
         {a.followUps.map((f) => (
           <Box component="section" key={f.number} sx={{ minWidth: 0 }}>
@@ -249,7 +267,7 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
 
       {a.dontSay.length > 0 && (
         <>
-          <SectionHeading>🚫 Don't say</SectionHeading>
+          <SectionHeading icon={<BlockOutlined />}>Don't say</SectionHeading>
           <Box component="ul" sx={{ typography: 'body2', m: 0, pl: 2.5, '& li': { mb: 0.5, overflowWrap: 'anywhere' } }}>
             {a.dontSay.map((d) => (
               <li key={d}>

@@ -1,3 +1,7 @@
+import LocalFireDepartmentOutlined from '@mui/icons-material/LocalFireDepartmentOutlined'
+import PlaceOutlined from '@mui/icons-material/PlaceOutlined'
+import StarRounded from '@mui/icons-material/StarRounded'
+import type { ReactElement } from 'react'
 import TocIcon from '@mui/icons-material/Toc'
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
@@ -29,9 +33,14 @@ const TOPICS = import.meta.glob<{ default: GameDayTopic }>('../../content/genera
 const shortBandName = (name: string) => name.replace(/^[^\p{Letter}]+/u, '').split(/[\s—]/)[0] || 'Extra'
 
 const MARK_LABEL: Record<GameDayMark, string> = {
-  decides: '⭐ decides the round',
-  trending: '🔥 trending',
-  asked: '📍 actually asked',
+  decides: 'decides the round',
+  trending: 'trending',
+  asked: 'actually asked',
+}
+const MARK_ICON: Record<GameDayMark, ReactElement> = {
+  decides: <StarRounded />,
+  trending: <LocalFireDepartmentOutlined />,
+  asked: <PlaceOutlined />,
 }
 
 export default function GameDayRecallPage() {
@@ -228,7 +237,7 @@ function QuestionCard({ topic, question: q }: { topic: string; question: GameDay
             {(q.marks.length > 0 || q.badge) && (
               <Stack direction="row" spacing={0.5} useFlexGap sx={{ flexWrap: 'wrap', mt: 0.75 }}>
                 {q.marks.map((m) => (
-                  <Chip key={m} size="small" variant="outlined" label={MARK_LABEL[m]} sx={{ height: 22, fontSize: '0.6875rem' }} />
+                  <Chip key={m} size="small" variant="outlined" icon={MARK_ICON[m]} label={MARK_LABEL[m]} sx={{ height: 22, fontSize: '0.6875rem', '& .MuiChip-icon': { fontSize: '0.9rem' } }} />
                 ))}
                 {q.badge && <Chip size="small" label={q.badge} color="secondary" variant="outlined" sx={{ height: 22, fontSize: '0.6875rem' }} />}
               </Stack>

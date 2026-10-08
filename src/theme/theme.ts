@@ -117,6 +117,45 @@ export const chartColors = (scheme: SchemeName) => {
   }
 }
 
+/* Diagram node colours. Vault diagrams colour nodes by meaning with a fixed pastel palette (green = a step,
+ * blue = a good outcome, yellow = a computation, purple = a question, red = a failure, grey = an input).
+ * The site redraws those in light tints of the active scheme's own colours, with dark text, so a diagram
+ * belongs to the theme and stays readable in every scheme (light tints, never the dark container roles). */
+const hexToRgb = (hex: string) => {
+  const h = hex.replace('#', '')
+  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h
+  return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16))
+}
+const rgbToHex = (rgb: number[]) => '#' + rgb.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')
+const mix = (a: string, b: string, t: number) => {
+  const [x, y] = [hexToRgb(a), hexToRgb(b)]
+  return rgbToHex(x.map((v, i) => v + (y[i] - v) * t))
+}
+const luminance = (hex: string) => {
+  const [r, g, b] = hexToRgb(hex).map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4))
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+/** A light tint of `hue`: mixed towards white until dark text reads comfortably on it. */
+const tint = (hue: string) => {
+  let t = 0.5
+  while (t < 0.86 && luminance(mix(hue, '#ffffff', t)) < 0.68) t += 0.04
+  return { fill: mix(hue, '#ffffff', t), stroke: mix(hue, '#000000', luminance(hue) > 0.5 ? 0.3 : 0.05) }
+}
+export const DIAGRAM_TEXT = '#1b1c1e'
+/** Vault pastel (fill, stroke) → the scheme role that replaces it. */
+export const diagramTones = (scheme: SchemeName) => {
+  const s = SCHEMES[scheme]
+  return [
+    { fill: '#6EE7B7', stroke: '#34D399', ...asTone(tint(s.success)) },
+    { fill: '#93C5FD', stroke: '#60A5FA', ...asTone(tint(s.primary)) },
+    { fill: '#FCD34D', stroke: '#F59E0B', ...asTone(tint(s.warning)) },
+    { fill: '#C4B5FD', stroke: '#8B5CF6', ...asTone(tint(s.tertiary)) },
+    { fill: '#FCA5A5', stroke: '#F87171', ...asTone(tint(s.error)) },
+    { fill: '#D1D5DB', stroke: '#9CA3AF', ...asTone(tint(s.outline)) },
+  ]
+}
+const asTone = (t: { fill: string; stroke: string }) => ({ toFill: t.fill, toStroke: t.stroke })
+
 /** Hex values for Mermaid, which draws SVG and can't read the CSS variables. */
 export const mermaidThemeVariables = (scheme: SchemeName) => {
   const s = SCHEMES[scheme]

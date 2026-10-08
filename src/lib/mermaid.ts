@@ -1,4 +1,4 @@
-import { mermaidThemeVariables, type SchemeName } from '../theme/theme'
+import { DIAGRAM_TEXT, diagramTones, mermaidThemeVariables, type SchemeName } from '../theme/theme'
 
 let counter = 0
 
@@ -29,9 +29,13 @@ export async function renderMermaidWithin(root: HTMLElement, scheme: SchemeName)
     themeVariables: mermaidThemeVariables(scheme),
     securityLevel: 'strict',
     fontFamily: "'Roboto Flex Variable', system-ui, sans-serif",
+    // Mermaid 12's default "neo" look ignores `flowchart.padding` and draws roomy nodes; the classic look
+    // honours it, so nodes hug their text and diagrams stay within a screen.
+    look: 'classic',
+    themeCSS: '.nodeLabel p { margin: 0 } .node foreignObject div { line-height: 1.3 !important }',
     // Vault labels are broken by hand with <br/> at ~24 characters; the default 200px wrap adds a second,
     // unintended break at this font size and makes every node a line or two taller.
-    flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true, wrappingWidth: 280 },
+    flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true, wrappingWidth: 280, padding: 8 },
     sequence: { mirrorActors: false, useMaxWidth: true },
   })
 
@@ -39,7 +43,7 @@ export async function renderMermaidWithin(root: HTMLElement, scheme: SchemeName)
     el.dataset.source ??= el.textContent ?? ''
     try {
       const available = el.clientWidth || root.clientWidth || FALLBACK_WIDTH
-      let source = el.dataset.source
+      let source = withThemeColours(el.dataset.source, scheme)
       let { svg } = await mermaid.render(`mmd-${++counter}`, source)
       if (naturalWidth(svg) * MIN_SCALE > available && LEFT_TO_RIGHT.test(source)) {
         source = source.replace(LEFT_TO_RIGHT, '$1 TB')
@@ -63,6 +67,18 @@ export async function renderMermaidWithin(root: HTMLElement, scheme: SchemeName)
       el.classList.add('mermaid-error')
     }
   }
+}
+
+/**
+ * Vault diagrams carry a fixed pastel palette in their `classDef` lines. Swap each known colour for the
+ * active scheme's tint so nodes follow the theme; unknown colours are left alone.
+ */
+function withThemeColours(source: string, scheme: SchemeName): string {
+  let out = source
+  for (const t of diagramTones(scheme)) {
+    out = out.replace(new RegExp(`fill:${t.fill}`, 'gi'), `fill:${t.toFill}`).replace(new RegExp(`stroke:${t.stroke}`, 'gi'), `stroke:${t.toStroke}`)
+  }
+  return out.replace(/color:#000(?:000)?\b/gi, `color:${DIAGRAM_TEXT}`)
 }
 
 /** The diagram's drawn width, from the SVG's viewBox. */
