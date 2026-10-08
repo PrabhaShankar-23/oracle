@@ -788,6 +788,9 @@ function parseModelAnswer(md) {
   }
   const warning = line(/^>\s*⚠️\s*\*\*Fill before use\.\*\*\s*(.*)$/m)
   if (warning) answer.warning = mdInline(warning)
+  // 🗺️ Answer map (template v1.3): the Spine drawn as one diagram, always visible above the spoken answer.
+  const map = /^## 🗺️[^\n]*\n([\s\S]*?)(?=\n<details>|\n## )/m.exec(md)?.[1]
+  if (map?.trim()) answer.map = mdToHtml(map)
 
   for (const m of md.matchAll(/<details><summary>(.*?)<\/summary>\n([\s\S]*?)\n<\/details>/g)) {
     const summary = m[1]

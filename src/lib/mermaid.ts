@@ -29,7 +29,9 @@ export async function renderMermaidWithin(root: HTMLElement, scheme: SchemeName)
     themeVariables: mermaidThemeVariables(scheme),
     securityLevel: 'strict',
     fontFamily: "'Roboto Flex Variable', system-ui, sans-serif",
-    flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true },
+    // Vault labels are broken by hand with <br/> at ~24 characters; the default 200px wrap adds a second,
+    // unintended break at this font size and makes every node a line or two taller.
+    flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true, wrappingWidth: 280 },
     sequence: { mirrorActors: false, useMaxWidth: true },
   })
 

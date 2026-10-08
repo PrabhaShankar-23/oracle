@@ -3653,7 +3653,7 @@
       },
       {
         "label": "LR Schedules & the Loss Landscape",
-        "target": "02-DL/05-Training Mechanics that make transformers work/02-LR Schedules & the Loss Landscape"
+        "target": "02-DL/05-Training Mechanics that make transformers work/09-LR Schedules & the Loss Landscape"
       },
       {
         "label": "Capacity & throughput math",
@@ -4239,7 +4239,7 @@
       },
       {
         "label": "Batch Normalization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/15-Batch Normalization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/05-Batch Normalization"
       }
     ]
   },
@@ -4336,7 +4336,7 @@
       },
       {
         "label": "Weight Initialization Techniques",
-        "target": "02-DL/05-Training Mechanics that make transformers work/00-Weight Initialization Techniques"
+        "target": "02-DL/05-Training Mechanics that make transformers work/01-Weight Initialization Techniques"
       }
     ]
   },

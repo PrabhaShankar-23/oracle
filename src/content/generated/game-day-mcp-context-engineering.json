@@ -60,8 +60,8 @@
                 "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/03-MCP Primitives"
               },
               {
-                "label": "Why MCP Matters for Architects",
-                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/04-Why MCP Matters for Architects"
+                "label": "MCP (Model Context Protocol)",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/01-MCP (Model Context Protocol)"
               }
             ]
           }
@@ -103,8 +103,8 @@
           ],
           "links": [
             {
-              "label": "MCP Transports &amp; Connection Lifecycle",
-              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/02-MCP Transports &amp; Connection Lifecycle"
+              "label": "MCP Transports &amp; Stateless Requests",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/02-MCP Transports &amp; Stateless Requests"
             }
           ],
           "flow": "stdio local · streamable HTTP remote → initialise → negotiate capabilities → operate",
@@ -127,8 +127,8 @@
           ],
           "links": [
             {
-              "label": "Why MCP Matters for Architects",
-              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/04-Why MCP Matters for Architects"
+              "label": "MCP (Model Context Protocol)",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/01-MCP (Model Context Protocol)"
             }
           ],
           "flow": "capability decoupled from host → integrations become owned services → registry + reuse → lock-in drops",
@@ -173,8 +173,8 @@
           ],
           "links": [
             {
-              "label": "A2A &amp; Agent Interoperability",
-              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/05-A2A &amp; Agent Interoperability"
+              "label": "A2A — Agent to Agent Delegation",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/05-A2A — Agent-to-Agent Delegation"
             }
           ],
           "badge": "Evergreen (the comparative form is how it's asked)",
@@ -194,8 +194,8 @@
             "oneLiner": "Function calling is the in-app primitive, MCP standardizes agent-to-capability, A2A-class protocols standardize agent-to-agent delegation across trust domains — I commit to the tool boundary and keep peer-agent interop behind an abstraction.",
             "links": [
               {
-                "label": "A2A &amp; Agent Interoperability",
-                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/05-A2A &amp; Agent Interoperability"
+                "label": "A2A — Agent to Agent Delegation",
+                "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/05-A2A — Agent-to-Agent Delegation"
               },
               {
                 "label": "OpenAPI &amp; Tool Spec Standards",
@@ -357,8 +357,8 @@
           ],
           "links": [
             {
-              "label": "Why MCP Matters for Architects",
-              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/04-Why MCP Matters for Architects"
+              "label": "MCP (Model Context Protocol)",
+              "target": "03-Agentic-AI/04-Protocols&amp;-Interoperability/01-MCP (Model Context Protocol)"
             }
           ],
           "flow": "few fixed tools + one vendor → native calling · reuse across teams/agents → MCP",

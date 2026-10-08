@@ -347,6 +347,8 @@ export type GameDayModelAnswer = {
   speakTime?: string
   /** Present when the answer has `<fill>` slots the reader must complete. */
   warning?: string
+  /** 🗺️ Answer map: the spine drawn as one diagram (template v1.3). Absent on older answers. */
+  map?: string
   spoken: string
   stages: { number: number; name: string; claim: string; html: string }[]
   followUps: { number: number; question: string; tag: GameDayFollowUpTag; html: string }[]

@@ -12,31 +12,31 @@
     "testing": "whether you investigate before you optimise, and whether you know one symptom can have several root causes.",
     "trap": "opening with &quot;I&#39;d add dropout and regularization.&quot; It sounds right and skips the diagnosis.",
     "speakTime": "~90 s",
-    "spoken": "<p>\"A 27-point gap between train and test tells me the model isn't generalising, and my first hypothesis is overfitting, but I wouldn't reach for regularization yet.</p>\n<p>First I'd make sure the gap is real. I'd check the split for leakage: duplicates across train and test, a feature derived from the label, preprocessing fitted on the full dataset, or the same customer on both sides. I'd also check the test set is big enough and drawn from the same distribution.</p>\n<p>Then I'd confirm it with evidence: train and validation loss curves over epochs, and a learning curve over training-set size. Training loss falling while validation loss rises is overfitting. I'd also look past accuracy to per-class recall and a baseline, because on imbalanced data 99% can mean nothing.</p>\n<p>Once it's confirmed, I'd run controlled experiments, one change at a time: early stopping, then weight decay or dropout, then a smaller model, then better or more representative data, tracking each against validation.</p>\n<p>Finally I'd pick the winner on validation, evaluate once on the untouched test set, compare against the baseline, and ship with drift monitoring. The goal isn't a smaller gap for its own sake. It's reliable performance on real, unseen data.\"</p>",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Name it</strong></td>\n<td>\"A 27-point gap between train and test tells me the model isn't generalising. My first hypothesis is overfitting, but I wouldn't reach for regularization yet.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Rule out the fakes</strong></td>\n<td>\"First I'd make sure the gap is real. I'd check the split for leakage: duplicates across train and test, a feature derived from the label, preprocessing fitted on the full dataset, or the same customer on both sides. I'd also check the test set is big enough and from the same distribution.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Confirm with evidence</strong></td>\n<td>\"Then I'd confirm it: train and validation loss over epochs, and a learning curve over training-set size. Training loss falling while validation loss rises is overfitting. I'd look past accuracy to per-class recall and a baseline, because on imbalanced data 99% can mean nothing.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Experiment</strong></td>\n<td>\"Once it's confirmed, I'd run controlled experiments, one change at a time: early stopping, then weight decay or dropout, then a smaller model, then better or more representative data, each tracked against validation.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Interpret</strong></td>\n<td>\"I'd read each result before choosing the next lever, because the same gap can come from different causes.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Validate, monitor</strong></td>\n<td>\"Finally I'd pick the winner on validation, evaluate once on the untouched test set against the baseline, and ship with drift monitoring.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"The goal isn't a smaller gap for its own sake. It's reliable performance on real, unseen data.\"</td>\n</tr>\n</tbody></table>",
     "stages": [
       {
         "number": 1,
         "name": "Name it",
         "claim": "a generalisation gap, hypothesis: high variance",
-        "html": "<p><strong>\"Twenty-seven points is a generalisation gap. My working hypothesis is overfitting, but it's a hypothesis, not a diagnosis.\"</strong></p>\n<ul>\n<li><strong>Train 99%:</strong> the model fits the data it learned from almost perfectly.</li>\n<li><strong>Test 72%:</strong> it loses a quarter of that on unseen data.</li>\n<li><strong>Overfitting</strong> = the model learned the training set <em>too specifically</em>, including noise and accidental patterns. It's the student who memorises the practice paper and scores 72% on a new exam.</li>\n<li>Keep three rivals open: <strong>data leakage</strong>, <strong>distribution shift</strong> and an <strong>unreliable test set</strong>. All three produce the same two numbers.</li>\n</ul>\n<p><strong>Why this matters:</strong> naming the rivals up front is what earns you the right to investigate before fixing.</p>"
+        "html": "<p><strong>\"Twenty-seven points is a generalisation gap. My working hypothesis is overfitting, but it's a hypothesis, not a diagnosis.\"</strong></p>\n<p>The same two numbers have four explanations:</p>\n<table>\n<thead>\n<tr>\n<th>Explanation</th>\n<th>What is actually happening</th>\n<th>First clue</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Overfitting</strong> (working hypothesis)</td>\n<td>the model memorised the training set, noise included</td>\n<td>validation loss rises while training loss falls</td>\n</tr>\n<tr>\n<td><strong>Data leakage</strong></td>\n<td>training saw information it won't have in production</td>\n<td>validation is high too; only the truly held-out set is low</td>\n</tr>\n<tr>\n<td><strong>Distribution shift</strong></td>\n<td>test data differs from training data</td>\n<td>feature or label distributions differ between the two sets</td>\n</tr>\n<tr>\n<td><strong>Unreliable test set</strong></td>\n<td>too small or unrepresentative</td>\n<td>a wide confidence interval; odd slices</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> naming the rivals up front is what earns you the right to investigate before fixing.</p>"
       },
       {
         "number": 2,
         "name": "Rule out the fakes",
         "claim": "audit the split before the model",
-        "html": "<p><strong>\"Before I touch the model, I validate the pipeline. A flawed split can't be fixed by architecture.\"</strong></p>\n<p>Ask:</p>\n<ul>\n<li>Are train and test <strong>genuinely independent</strong>? Any duplicates or near-duplicates across them?</li>\n<li>Is any feature <strong>leaking the label</strong>, computed from or after the outcome?</li>\n<li>Was preprocessing (scaler, encoder, imputer) <strong>fitted on train only</strong>?</li>\n<li>Does the split match the data's structure: <strong>chronological</strong> for time series, <strong>group-based</strong> for users or devices?</li>\n<li>Is the test set <strong>big enough and representative</strong>? 72% on 200 rows is a wide interval.</li>\n</ul>\n<p><strong>Example:</strong> in fraud detection, if one customer's transactions sit in both train and test, the model learns <em>that customer</em>, not fraud. Use a group split.</p>\n<p><strong>Why this matters:</strong> leakage usually inflates <em>both</em> scores. If validation is high and only test is low, suspect the split or the test set before variance.</p>"
+        "html": "<p><strong>\"Before I touch the model, I validate the pipeline. A flawed split can't be fixed by architecture.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Check</th>\n<th>The question</th>\n<th>If it fails</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Independence</strong></td>\n<td>any duplicates or near-duplicates across train and test?</td>\n<td>de-duplicate, then re-split</td>\n</tr>\n<tr>\n<td><strong>Label leakage</strong></td>\n<td>is any feature computed from, or after, the outcome?</td>\n<td>drop or re-time the feature</td>\n</tr>\n<tr>\n<td><strong>Preprocessing</strong></td>\n<td>were the scaler, encoder and imputer fitted on train only?</td>\n<td>move them inside a pipeline fitted per fold</td>\n</tr>\n<tr>\n<td><strong>Split structure</strong></td>\n<td>time-ordered data, or repeated users or devices?</td>\n<td>chronological split; group split</td>\n</tr>\n<tr>\n<td><strong>Test size</strong></td>\n<td>is the test set big and representative enough?</td>\n<td>72% on 200 rows is a wide interval: get more, or bootstrap it</td>\n</tr>\n</tbody></table>\n<p><strong>Example:</strong> in fraud detection, if one customer's transactions sit in both train and test, the model learns <em>that customer</em>, not fraud. Use a group split.</p>\n<p><strong>Why this matters:</strong> leakage usually inflates <em>both</em> scores. If validation is high and only test is low, suspect the split or the test set before variance.</p>"
       },
       {
         "number": 3,
         "name": "Confirm with evidence",
         "claim": "curves, data and the right metric",
-        "html": "<p><strong>\"I don't diagnose from two final numbers. I read the curves.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Learning curve: training vs validation accuracy&quot;,&quot;caption&quot;:&quot;Illustrative. Train keeps climbing; validation peaks around epoch 8, then falls. The widening gap is overfitting, and the peak is where early stopping would stop.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;epochs&quot;,&quot;domain&quot;:[0,25]},&quot;y&quot;:{&quot;label&quot;:&quot;accuracy&quot;,&quot;unit&quot;:&quot;%&quot;,&quot;domain&quot;:[60,100]},&quot;series&quot;:[{&quot;name&quot;:&quot;train&quot;,&quot;points&quot;:[[0,62],[2,75],[4,84],[6,90],[8,93.5],[10,95.3],[12,96.5],[16,98],[20,98.8],[25,99]]},{&quot;name&quot;:&quot;validation&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[0,61],[2,70],[4,76],[6,79.5],[8,81],[10,80.2],[12,79],[16,76.5],[20,74],[25,72]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;band&quot;,&quot;between&quot;:[&quot;train&quot;,&quot;validation&quot;],&quot;from&quot;:8,&quot;label&quot;:&quot;overfitting zone&quot;},{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:8,&quot;label&quot;:&quot;best validation\\n→ stop here&quot;},{&quot;kind&quot;:&quot;point&quot;,&quot;x&quot;:8,&quot;y&quot;:81,&quot;tone&quot;:&quot;warn&quot;},{&quot;kind&quot;:&quot;gap&quot;,&quot;x&quot;:25,&quot;between&quot;:[&quot;train&quot;,&quot;validation&quot;],&quot;label&quot;:&quot;27-pt\\ngap&quot;}]}\"></div><figcaption>Illustrative. Train keeps climbing; validation peaks around epoch 8, then falls. The widening gap is overfitting, and the peak is where early stopping would stop.</figcaption></figure>\n<ul>\n<li><strong>Loss curves over epochs:</strong> train loss falling while validation loss <em>rises</em> = overfitting. Loss shows confidence problems that accuracy hides.</li>\n<li><strong>Learning curve over training-set size:</strong> gap narrowing as data grows = more data will help. Gap flat = it's capacity, not data.</li>\n<li><strong>Data checks:</strong></li>\n</ul>\n<table>\n<thead>\n<tr>\n<th>Look at</th>\n<th>What it reveals</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Class balance, train vs test</td>\n<td>imbalance or label shift</td>\n</tr>\n<tr>\n<td>Feature distributions</td>\n<td>covariate shift (clear train images, blurry test images)</td>\n</tr>\n<tr>\n<td>Label quality</td>\n<td>noisy or inconsistent labels the model memorised</td>\n</tr>\n<tr>\n<td>Test composition</td>\n<td>unusually hard or unrepresentative slices</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>Metrics:</strong> precision, recall, F1, confusion matrix, PR-AUC for rare classes, and <strong>per-class</strong> numbers. Always against a <strong>baseline</strong> (majority class or a simple model). In fraud, \"always legitimate\" can hit 99% accuracy.</li>\n</ul>\n<p><strong>Why this matters:</strong> overfitting and distribution shift are different problems with different fixes, and they can co-exist.</p>"
+        "html": "<p><strong>\"I don't diagnose from two final numbers. I read the curves.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Learning curve: training vs validation accuracy&quot;,&quot;caption&quot;:&quot;Illustrative. Train keeps climbing; validation peaks around epoch 8, then falls. The widening gap is overfitting, and the peak is where early stopping would stop.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;epochs&quot;,&quot;domain&quot;:[0,25]},&quot;y&quot;:{&quot;label&quot;:&quot;accuracy&quot;,&quot;unit&quot;:&quot;%&quot;,&quot;domain&quot;:[60,100]},&quot;series&quot;:[{&quot;name&quot;:&quot;train&quot;,&quot;points&quot;:[[0,62],[2,75],[4,84],[6,90],[8,93.5],[10,95.3],[12,96.5],[16,98],[20,98.8],[25,99]]},{&quot;name&quot;:&quot;validation&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[0,61],[2,70],[4,76],[6,79.5],[8,81],[10,80.2],[12,79],[16,76.5],[20,74],[25,72]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;band&quot;,&quot;between&quot;:[&quot;train&quot;,&quot;validation&quot;],&quot;from&quot;:8,&quot;label&quot;:&quot;overfitting zone&quot;},{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:8,&quot;label&quot;:&quot;best validation\\n→ stop here&quot;},{&quot;kind&quot;:&quot;point&quot;,&quot;x&quot;:8,&quot;y&quot;:81,&quot;tone&quot;:&quot;warn&quot;},{&quot;kind&quot;:&quot;gap&quot;,&quot;x&quot;:25,&quot;between&quot;:[&quot;train&quot;,&quot;validation&quot;],&quot;label&quot;:&quot;27-pt\\ngap&quot;}]}\"></div><figcaption>Illustrative. Train keeps climbing; validation peaks around epoch 8, then falls. The widening gap is overfitting, and the peak is where early stopping would stop.</figcaption></figure>\n<table>\n<thead>\n<tr>\n<th>Evidence</th>\n<th>What I look for</th>\n<th>What it tells me</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Loss over epochs</strong></td>\n<td>train loss falling while validation loss <em>rises</em></td>\n<td>overfitting; loss shows confidence problems accuracy hides</td>\n</tr>\n<tr>\n<td><strong>Learning curve over data size</strong></td>\n<td>does the gap narrow as data grows?</td>\n<td>narrowing: more data helps · flat: it's capacity, not data</td>\n</tr>\n<tr>\n<td><strong>Class balance, train vs test</strong></td>\n<td>different class mix</td>\n<td>imbalance or label shift</td>\n</tr>\n<tr>\n<td><strong>Feature distributions</strong></td>\n<td>clear train images, blurry test images</td>\n<td>covariate shift</td>\n</tr>\n<tr>\n<td><strong>Label quality</strong></td>\n<td>noisy or inconsistent labels</td>\n<td>the model memorised noise</td>\n</tr>\n<tr>\n<td><strong>Per-class metrics vs a baseline</strong></td>\n<td>precision, recall, PR-AUC for rare classes</td>\n<td>in fraud, \"always legitimate\" can score 99%</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> overfitting and distribution shift are different problems with different fixes, and they can co-exist.</p>"
       },
       {
         "number": 4,
         "name": "Experiment, one change at a time",
         "claim": "cheapest first",
-        "html": "<p><strong>\"Once overfitting is confirmed, I run controlled experiments, changing one factor at a time.\"</strong></p>\n<div class=\"exp-list\"><section class=\"exp\"><span class=\"exp-tag\">Experiment 1</span><h4 class=\"exp-title\">Early stopping</h4><p>I'd monitor validation loss and stop training when validation performance stops improving.</p><p><strong>Why?</strong> The model may learn general patterns in early epochs and memorise training-specific noise in later ones.</p><p class=\"exp-best\">Best suited when validation performance peaks before training finishes.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 2</span><h4 class=\"exp-title\">Regularization</h4><p>I'd add techniques that discourage the model from fitting noise:</p><ul>\n<li><strong>L2 regularization (weight decay):</strong> penalises large weights.</li>\n<li><strong>Dropout:</strong> randomly disables some neurons during training (neural nets).</li>\n<li><strong>L1 regularization:</strong> encourages sparse weights where that suits the model.</li>\n<li><strong>For trees:</strong> limit <code>max_depth</code>, raise <code>min_samples_leaf</code>, subsample rows and columns.</li>\n</ul><p><strong>Why?</strong> These reduce the model's sensitivity to training-specific patterns, which improves generalisation.</p><p class=\"exp-best\">Best suited when capacity is fine but the fit is too sharp.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 3</span><h4 class=\"exp-title\">Reduce capacity</h4><p>If the model is large relative to the data, I'd use fewer layers or units, a smaller model, or fewer features.</p><p><strong>Why?</strong> A model with excess capacity can memorise the training set instead of learning robust patterns.</p><p class=\"exp-best\">Best suited when the model is large relative to the data.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 4</span><h4 class=\"exp-title\">Better, more representative data</h4><p>I'd prioritise more representative, high-quality examples:</p><ul>\n<li>Targeted collection for weak-performing segments.</li>\n<li>Relabelling and removing corrupted examples.</li>\n<li>Augmentation where it's valid for the domain; class weighting for imbalance.</li>\n</ul><p><strong>Why?</strong> More diverse examples help the model learn patterns that generalise instead of memorising a limited set.</p><p class=\"exp-best\">Best suited when the learning curve says more data helps.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 5</span><h4 class=\"exp-title\">Tune hyperparameters</h4><p>Learning rate, batch size, weight decay, dropout rate and training length, all selected on <strong>validation</strong>.</p><p><strong>Why?</strong> The right settings interact; tuning finds the combination, but only on data the final test never sees.</p><p class=\"exp-best\">Best suited last, once the bigger levers above are in place.</p></section></div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n<table>\n<thead>\n<tr>\n<th>Experiment</th>\n<th>Train acc</th>\n<th>Val acc</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Baseline</td>\n<td>99%</td>\n<td>72%</td>\n</tr>\n<tr>\n<td>Early stopping</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>Weight decay / dropout</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>Smaller model</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>More representative data</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> the goal isn't to drag train accuracy down to 72%. It's to raise validation while keeping what the model genuinely learned.</p>"
+        "html": "<p><strong>\"Once overfitting is confirmed, I run controlled experiments, changing one factor at a time.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>#</th>\n<th>Change</th>\n<th>Why it should help</th>\n<th>Best suited when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><strong>Early stopping</strong> on validation loss</td>\n<td>the model learns general patterns early and noise later</td>\n<td>validation peaks before training ends</td>\n</tr>\n<tr>\n<td>2</td>\n<td><strong>Regularization</strong>: weight decay, dropout; for trees <code>max_depth</code>, <code>min_samples_leaf</code>, subsampling</td>\n<td>lowers sensitivity to training-specific patterns</td>\n<td>capacity is fine but the fit is too sharp</td>\n</tr>\n<tr>\n<td>3</td>\n<td><strong>Smaller model</strong>: fewer layers, units or features</td>\n<td>less room to memorise</td>\n<td>the model is large relative to the data</td>\n</tr>\n<tr>\n<td>4</td>\n<td><strong>Better data</strong>: targeted collection, relabelling, valid augmentation</td>\n<td>more diverse examples generalise</td>\n<td>the learning curve says more data helps</td>\n</tr>\n<tr>\n<td>5</td>\n<td><strong>Tune hyperparameters</strong> on validation</td>\n<td>the settings interact</td>\n<td>last, once the bigger levers are in place</td>\n</tr>\n</tbody></table>\n<p>Each run is logged against the same baseline, with real numbers:</p>\n<table>\n<thead>\n<tr>\n<th>Experiment</th>\n<th>Train acc</th>\n<th>Val acc</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Baseline</td>\n<td>99%</td>\n<td>72%</td>\n</tr>\n<tr>\n<td>Early stopping</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>Weight decay or dropout</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>Smaller model</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>More representative data</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> the goal isn't to drag train accuracy down to 72%. It's to raise validation while keeping what the model genuinely learned.</p>"
       },
       {
         "number": 5,
@@ -48,7 +48,7 @@
         "number": 6,
         "name": "Validate once, then monitor",
         "claim": "keep the test set honest",
-        "html": "<p><strong>\"The test set gets looked at once. Otherwise it quietly becomes a second validation set.\"</strong></p>\n<ul>\n<li>Select the model and hyperparameters on <strong>validation</strong> (or cross-validation).</li>\n<li>Retrain on train (+ validation if appropriate) with the chosen configuration.</li>\n<li>Evaluate <strong>once</strong> on the held-out test set, against the baseline and the business metric.</li>\n<li>Check <strong>segments</strong> (region, device, customer tier) and <strong>calibration</strong> if scores drive decisions.</li>\n<li>Deploy with monitoring: input drift (PSI/KS per feature), prediction drift, and delayed-label performance.</li>\n</ul>\n<p><strong>Why this matters:</strong> \"fixed\" means reliable on real traffic, not a nicer number on a test set you've tuned against.</p>"
+        "html": "<p><strong>\"The test set gets looked at once. Otherwise it quietly becomes a second validation set.\"</strong></p>\n<figure><div class=\"mermaid\">%%{init: {\"flowchart\": {\"rankSpacing\": 16, \"nodeSpacing\": 22}}}%%\nflowchart TD\n    A[\"🎚️ Select model and settings&lt;br/&gt;on validation or CV\"]:::step\n    B[\"🔁 Retrain with the&lt;br/&gt;chosen configuration\"]:::step\n    C[\"🧪 Evaluate ONCE on the&lt;br/&gt;held-out test set\"]:::calc\n    D{{\"🤔 Beats the baseline and&lt;br/&gt;the business metric?\"}}:::ask\n    E[\"🔬 Check segments&lt;br/&gt;and calibration\"]:::calc\n    F([\"🚀 Deploy with monitoring:&lt;br/&gt;input, prediction, label drift\"]):::ok\n    X([\"↩️ Back to experiments.&lt;br/&gt;Never tune on test\"]):::bad\n    A --&gt; B --&gt; C --&gt; D\n    D --&gt;|yes| E --&gt; F\n    D --&gt;|no| X\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>\n<p><strong>Why this matters:</strong> \"fixed\" means reliable on real traffic, not a nicer number on a test set you've tuned against.</p>"
       }
     ],
     "followUps": [
@@ -122,7 +122,8 @@
         "label": "Model Comparison Significance — McNemar, Paired t test, 5x2 CV",
         "target": "01-ML/11-Model Selection, Validation & Tuning/08-Model Comparison Significance — McNemar, Paired t-test, 5x2 CV"
       }
-    ]
+    ],
+    "map": "<figure><div class=\"mermaid\">%%{init: {\"flowchart\": {\"rankSpacing\": 14, \"nodeSpacing\": 22}}}%%\nflowchart TD\n    N1([\"1 · Name it: 99% vs 72% is a gap,&lt;br/&gt;hypothesis: overfitting\"]):::step\n    Q2{{\"2 · Is the gap real?&lt;br/&gt;audit the split first\"}}:::ask\n    FX[\"🔧 leak, shift or tiny test set:&lt;br/&gt;fix the pipeline, re-measure\"]:::bad\n    N3[\"3 · Confirm with evidence&lt;br/&gt;curves and the right metric\"]:::calc\n    N4[\"4 · Experiment&lt;br/&gt;one change, cheapest first\"]:::step\n    Q5{{\"5 · Interpret&lt;br/&gt;which cause is it?\"}}:::ask\n    N6([\"6 · Validate once,&lt;br/&gt;then monitor\"]):::ok\n    N1 --&gt; Q2\n    Q2 --&gt;|no| FX\n    FX --&gt; Q2\n    Q2 --&gt;|yes| N3 --&gt; N4 --&gt; Q5\n    Q5 --&gt;|\"try next lever\"| N4\n    Q5 --&gt;|\"validation is good\"| N6\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   },
   "ml-dl-q2": {
     "type": "diagnose",
@@ -251,25 +252,25 @@
     "testing": "whether you know the framework <em>and</em> its limits in the deep-learning era.",
     "trap": "reciting the U-curve as a universal law in 2026, or naming only two terms.",
     "speakTime": "~90 s",
-    "spoken": "<p>\"For squared loss, expected test error splits exactly into three terms: bias squared, variance, and irreducible noise. Bias is systematic error from wrong assumptions, like fitting a line to a curve. Variance is how much the model changes if you retrain it on a different sample. Noise is the floor no model can beat.</p>\n<p>The classical picture says capacity trades the two: more capacity lowers bias and raises variance, so test error is U-shaped and you pick the bottom.</p>\n<p>That still governs most tabular work, but it misleads in two places. First, heavily over-parameterised models show double descent: past the point where the model can fit the training set exactly, test error falls again. So 'more parameters always overfit' is false for modern networks; I reason about effective capacity, which includes regularisation, the optimiser and data size, not parameter count. Second, the clean decomposition only holds for squared loss; for classification with 0–1 loss it's an analogy.</p>\n<p>What survives is the diagnostic value. The train–validation gap reads variance; high error on both reads bias. Each has a different fix, so the framework's real job is telling me which one to attack.\"</p>",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Three terms</strong></td>\n<td>\"For squared loss, expected test error splits exactly into three terms: bias squared, variance, and irreducible noise. Bias is systematic error from wrong assumptions. Variance is how much the model changes if you retrain on a different sample. Noise is the floor no model can beat.\"</td>\n</tr>\n<tr>\n<td><strong>2 · The U-curve</strong></td>\n<td>\"The classical picture says capacity trades the two: more capacity lowers bias and raises variance, so test error is U-shaped and you pick the bottom. That still governs most tabular work.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it misleads</strong></td>\n<td>\"It misleads in two places. Heavily over-parameterised models show double descent: past the point where the model fits the training set exactly, test error falls again. So I reason about effective capacity, not parameter count. And the clean decomposition only holds for squared loss; for 0–1 loss it's an analogy.\"</td>\n</tr>\n<tr>\n<td><strong>4 · What survives</strong></td>\n<td>\"What survives is the diagnostic value. The train–validation gap reads variance; high error on both reads bias.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Fix the dominant term</strong></td>\n<td>\"Each has a different fix: variance wants more data, regularisation or bagging; bias wants more capacity or better features.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"So the framework's real job is telling me which one to attack.\"</td>\n</tr>\n</tbody></table>",
     "stages": [
       {
         "number": 1,
         "name": "Decompose into three terms",
         "claim": "bias², variance, noise",
-        "html": "<p><strong>\"Expected squared error = bias² + variance + irreducible noise.\"</strong></p>\n<ul>\n<li><strong>Bias:</strong> error from the model's assumptions. Averaged over many training sets, how far is the prediction from the truth? Underfitting.</li>\n<li><strong>Variance:</strong> how much the prediction moves when you retrain on a different sample. Overfitting.</li>\n<li><strong>Irreducible noise:</strong> randomness in the target itself. No model removes it.</li>\n</ul>\n<p><strong>Example:</strong> a linear model on a curved relationship has high bias; a depth-30 decision tree on 500 rows has high variance.</p>\n<p><strong>Why this matters:</strong> most candidates stop at two terms. Naming noise tells the interviewer you know where the floor is.</p>"
+        "html": "<p><strong>\"Expected squared error = bias² + variance + irreducible noise.\"</strong></p>\n<pre><code class=\"language-text\">E[(y − f̂(x))²]  =  Bias[f̂(x)]²  +  Var[f̂(x)]  +  σ²\n                    ↑ wrong on average   ↑ changes per sample   ↑ noise in y itself\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Term</th>\n<th>The question it answers</th>\n<th>Looks like</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Bias²</strong></td>\n<td>averaged over many training sets, how far is the prediction from the truth?</td>\n<td>underfitting</td>\n<td>a straight line fitted to a curve</td>\n</tr>\n<tr>\n<td><strong>Variance</strong></td>\n<td>how much does the prediction move if I retrain on another sample?</td>\n<td>overfitting</td>\n<td>a depth-30 tree on 500 rows</td>\n</tr>\n<tr>\n<td><strong>Noise σ²</strong></td>\n<td>how random is the target itself?</td>\n<td>a floor</td>\n<td>two identical customers, different outcomes</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> most candidates stop at two terms. Naming noise tells the interviewer you know where the floor is.</p>"
       },
       {
         "number": 2,
         "name": "The classical U-curve",
         "claim": "capacity trades bias for variance",
-        "html": "<p><strong>\"As capacity rises, bias falls and variance rises, so test error is U-shaped.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Bias-variance decomposition vs model capacity&quot;,&quot;caption&quot;:&quot;Illustrative. Bias² falls and variance rises with capacity; test error is their sum plus the noise floor, so it bottoms out in between.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;model capacity →&quot;,&quot;domain&quot;:[1,10]},&quot;y&quot;:{&quot;label&quot;:&quot;error&quot;,&quot;domain&quot;:[0,10]},&quot;series&quot;:[{&quot;name&quot;:&quot;test error&quot;,&quot;points&quot;:[[1,9.3],[2,6.5],[3,5],[4,4.3],[5,4.2],[6,4.5],[8,5.9],[10,8]]},{&quot;name&quot;:&quot;bias²&quot;,&quot;tone&quot;:&quot;accent&quot;,&quot;labelAt&quot;:3,&quot;points&quot;:[[1,8],[2,5],[3,3.2],[4,2.1],[5,1.5],[6,1.1],[8,0.7],[10,0.5]]},{&quot;name&quot;:&quot;variance&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[1,0.3],[2,0.5],[3,0.8],[4,1.2],[5,1.7],[6,2.4],[8,4.2],[10,6.5]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;hline&quot;,&quot;y&quot;:1,&quot;label&quot;:&quot;irreducible noise&quot;},{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:4.6,&quot;label&quot;:&quot;sweet spot&quot;}]}\"></div><figcaption>Illustrative. Bias² falls and variance rises with capacity; test error is their sum plus the noise floor, so it bottoms out in between.</figcaption></figure>\n<ul>\n<li>Pick the capacity at the bottom, using validation error, not training error.</li>\n<li>This is the right first answer for trees, linear models, k-NN and most tabular problems.</li>\n</ul>"
+        "html": "<p><strong>\"As capacity rises, bias falls and variance rises, so test error is U-shaped.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Bias-variance decomposition vs model capacity&quot;,&quot;caption&quot;:&quot;Illustrative. Bias² falls and variance rises with capacity; test error is their sum plus the noise floor, so it bottoms out in between.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;model capacity →&quot;,&quot;domain&quot;:[1,10]},&quot;y&quot;:{&quot;label&quot;:&quot;error&quot;,&quot;domain&quot;:[0,10]},&quot;series&quot;:[{&quot;name&quot;:&quot;test error&quot;,&quot;points&quot;:[[1,9.3],[2,6.5],[3,5],[4,4.3],[5,4.2],[6,4.5],[8,5.9],[10,8]]},{&quot;name&quot;:&quot;bias²&quot;,&quot;tone&quot;:&quot;accent&quot;,&quot;labelAt&quot;:3,&quot;points&quot;:[[1,8],[2,5],[3,3.2],[4,2.1],[5,1.5],[6,1.1],[8,0.7],[10,0.5]]},{&quot;name&quot;:&quot;variance&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[1,0.3],[2,0.5],[3,0.8],[4,1.2],[5,1.7],[6,2.4],[8,4.2],[10,6.5]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;hline&quot;,&quot;y&quot;:1,&quot;label&quot;:&quot;irreducible noise&quot;},{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:4.6,&quot;label&quot;:&quot;sweet spot&quot;}]}\"></div><figcaption>Illustrative. Bias² falls and variance rises with capacity; test error is their sum plus the noise floor, so it bottoms out in between.</figcaption></figure>\n<ul>\n<li>Pick the capacity at the bottom, using validation error, not training error.</li>\n<li>The right first answer for trees, linear models, k-NN and most tabular problems.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Where it misleads",
         "claim": "double descent, and the wrong loss",
-        "html": "<p><strong>\"Two places the classical picture breaks.\"</strong></p>\n<ul>\n<li><strong>Double descent:</strong> past the <em>interpolation threshold</em> (the model can fit the training data exactly), test error can fall <em>again</em> as capacity keeps growing. Modern networks live in that second descent.</li>\n<li><strong>Parameter count ≠ capacity.</strong> <em>Effective</em> capacity depends on the architecture, regularisation, the optimiser's implicit bias (SGD prefers simpler fits) and data size. So \"a 1B-parameter model must overfit 10M rows\" is not a valid argument.</li>\n<li><strong>Loss matters.</strong> The exact decomposition holds for squared error. For 0–1 classification loss, bias and variance interact, so the three-term split is an analogy.</li>\n</ul>\n<p><strong>Why this matters:</strong> saying this is the difference between a textbook answer and one that has read past the textbook.</p>"
+        "html": "<p><strong>\"Two places the classical picture breaks.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Double descent: test error vs model capacity&quot;,&quot;caption&quot;:&quot;Illustrative shape. Test error follows the classical U, peaks where the model can just fit the training set exactly, then falls again as capacity keeps growing.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;model capacity →&quot;,&quot;domain&quot;:[1,20]},&quot;y&quot;:{&quot;label&quot;:&quot;test error&quot;,&quot;domain&quot;:[0,10]},&quot;series&quot;:[{&quot;name&quot;:&quot;test error&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[1,8.5],[3,5.2],[5,4.3],[7,5.4],[9,8.2],[10,9.2],[11,7.6],[13,5.2],[16,3.8],[20,3.2]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:10,&quot;label&quot;:&quot;interpolation\\nthreshold&quot;},{&quot;kind&quot;:&quot;region&quot;,&quot;from&quot;:1,&quot;to&quot;:10,&quot;label&quot;:&quot;classical regime&quot;},{&quot;kind&quot;:&quot;point&quot;,&quot;x&quot;:20,&quot;y&quot;:3.2,&quot;label&quot;:&quot;modern networks\\nlive here&quot;}]}\"></div><figcaption>Illustrative shape. Test error follows the classical U, peaks where the model can just fit the training set exactly, then falls again as capacity keeps growing.</figcaption></figure>\n<table>\n<thead>\n<tr>\n<th>The classical claim</th>\n<th>Why it fails</th>\n<th>What to say instead</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>\"More parameters always overfit\"</td>\n<td>past the interpolation threshold, test error can fall again</td>\n<td>reason about <strong>effective</strong> capacity: architecture, regularisation, optimiser, data size</td>\n</tr>\n<tr>\n<td>\"Parameter count is capacity\"</td>\n<td>SGD's implicit bias prefers simpler fits</td>\n<td>\"a 1B-parameter model must overfit 10M rows\" is not a valid argument</td>\n</tr>\n<tr>\n<td>\"The split works for any loss\"</td>\n<td>it is exact only for squared error</td>\n<td>for 0–1 loss, bias and variance interact: it's an analogy</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> saying this is the difference between a textbook answer and one that has read past the textbook.</p>"
       },
       {
         "number": 4,
@@ -281,7 +282,7 @@
         "number": 5,
         "name": "Fix the dominant term",
         "claim": "each lever hits one term",
-        "html": "<p><strong>\"Different terms, different fixes, and using the wrong one makes things worse.\"</strong></p>\n<ul>\n<li><strong>High variance:</strong> more data, regularisation (L1/L2, dropout), early stopping, bagging, smaller model.</li>\n<li><strong>High bias:</strong> more capacity, better features, less regularisation, boosting.</li>\n<li><strong>Noise:</strong> better labels or measurement; no model change helps.</li>\n</ul>\n<p><strong>Example:</strong> adding dropout to an underfitting model raises bias further. That's why diagnosis comes first.</p>"
+        "html": "<p><strong>\"Different terms, different fixes, and using the wrong one makes things worse.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Dominant term</th>\n<th>Levers that reduce it</th>\n<th>What makes it worse</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Variance</strong></td>\n<td>more data · L1/L2 · dropout · early stopping · bagging · smaller model</td>\n<td>more capacity, less regularisation</td>\n</tr>\n<tr>\n<td><strong>Bias</strong></td>\n<td>more capacity · better features · less regularisation · boosting</td>\n<td>dropout or a smaller model</td>\n</tr>\n<tr>\n<td><strong>Noise</strong></td>\n<td>better labels or measurement</td>\n<td>nothing a model change can fix</td>\n</tr>\n</tbody></table>\n<p><strong>Example:</strong> adding dropout to an underfitting model raises bias further. That's why diagnosis comes first.</p>"
       }
     ],
     "followUps": [
@@ -339,7 +340,8 @@
         "label": "No Free Lunch Theorem",
         "target": "01-ML/01-Foundations/07-No Free Lunch Theorem"
       }
-    ]
+    ],
+    "map": "<figure><div class=\"mermaid\">%%{init: {\"flowchart\": {\"rankSpacing\": 16, \"nodeSpacing\": 18}}}%%\nflowchart TD\n    N1[\"1 · Three terms&lt;br/&gt;bias², variance, noise\"]:::step\n    N2[\"2 · Classical U-curve&lt;br/&gt;capacity trades the two\"]:::calc\n    Q3{{\"3 · Where does it mislead?\"}}:::ask\n    D1[\"📉 double descent: past exact&lt;br/&gt;fit, error falls again\"]:::bad\n    D2[\"🧮 exact only for squared&lt;br/&gt;loss, not 0–1 loss\"]:::bad\n    N4[\"4 · What survives&lt;br/&gt;the diagnostic reading\"]:::ok\n    Q5{{\"5 · Which term dominates?\"}}:::ask\n    V([\"variance: data, regularise,&lt;br/&gt;bagging\"]):::step\n    B([\"bias: capacity, features,&lt;br/&gt;boosting\"]):::step\n    N1 --&gt; N2 --&gt; Q3\n    Q3 --&gt; D1 --&gt; N4\n    Q3 --&gt; D2 --&gt; N4\n    N4 --&gt; Q5\n    Q5 --&gt;|\"gap is large\"| V\n    Q5 --&gt;|\"both errors high\"| B\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   },
   "ml-dl-q4": {
     "type": "design",
@@ -1854,7 +1856,7 @@
       },
       {
         "label": "Optimizer Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/01-Optimizer Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/08-Optimizer Family"
       }
     ]
   },
@@ -1870,37 +1872,37 @@
     "testing": "whether you can derive the mechanism from the chain rule, not just name it.",
     "trap": "blaming the learning rate.",
     "speakTime": "~90 s",
-    "spoken": "<p>\"That's vanishing gradients, and it falls straight out of backprop.</p>\n<p>The gradient reaching layer 1 is a product of one factor per layer above it: the layer's weights times the activation's derivative. The sigmoid's derivative is at most 0.25, and much smaller when the unit saturates. Multiply twelve of those together and the gradient at the bottom is orders of magnitude smaller than at the top. So the last layers learn and the first barely move. The same product explodes if the weight scales sit above one; vanishing and exploding are two ends of one mechanism.</p>\n<p>I'd confirm it by logging per-layer gradient norms: a clean exponential decay toward the input is the signature.</p>\n<p>Then the fixes, in the order I'd try them. One: switch to ReLU-family activations, whose derivative is 1 in the positive region, so they don't shrink the signal. Two: use variance-preserving initialisation, He for ReLU, so activations and gradients keep their scale across depth. Three: add normalisation layers to keep activations in a healthy range. And for real depth, residual connections, which give the gradient an identity path around each layer.</p>\n<p>Raising the learning rate doesn't fix it; it just destabilises the top layers.\"</p>",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Name it</strong></td>\n<td>\"That's vanishing gradients, and it falls straight out of backprop.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"The gradient reaching layer 1 is a product of one factor per layer above it: the layer's weights times the activation's derivative. The sigmoid's derivative is at most 0.25, and much smaller when the unit saturates. Multiply twelve of those and the gradient at the bottom is orders of magnitude smaller than at the top. The same product explodes if the weight scales sit above one; vanishing and exploding are two ends of one mechanism.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Confirm</strong></td>\n<td>\"I'd confirm it by logging per-layer gradient norms: a clean exponential decay toward the input is the signature.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Fix</strong></td>\n<td>\"Then the fixes, in order. One: ReLU-family activations, whose derivative is 1 in the positive region. Two: variance-preserving initialisation, He for ReLU. Three: normalisation layers to keep activations in a healthy range. And for real depth, residual connections, which give the gradient an identity path around each layer.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Verify</strong></td>\n<td>\"After the fix, the per-layer gradient norms should sit within an order of magnitude of each other.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Raising the learning rate doesn't fix it; it just destabilises the top layers.\"</td>\n</tr>\n</tbody></table>",
     "stages": [
       {
         "number": 1,
         "name": "Name it: vanishing gradients",
         "claim": "top learns, bottom doesn&#39;t",
-        "html": "<p><strong>\"Symptom pattern: last layers' weights change, first layers' weights stay near their initial values.\"</strong></p>\n<ul>\n<li>Loss decreases slowly and plateaus early.</li>\n<li>Early layers act like fixed random features.</li>\n<li>Common with sigmoid or tanh in deep plain stacks.</li>\n</ul>"
+        "html": "<p><strong>\"Symptom pattern: last layers' weights change, first layers' weights stay near their initial values.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>What you see</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Loss decreases slowly and plateaus early</td>\n<td>only the top few layers are actually learning</td>\n</tr>\n<tr>\n<td>Early layers act like fixed random features</td>\n<td>their gradient is too small to move the weights</td>\n</tr>\n<tr>\n<td>Happens with sigmoid or tanh in deep plain stacks</td>\n<td>those activations shrink the signal at every layer</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 2,
         "name": "The multiplicative mechanism",
         "claim": "a product of shrinking factors",
-        "html": "<p><strong>\"The gradient at layer 1 multiplies one Jacobian per layer above it.\"</strong></p>\n<pre><code>∂L/∂h1 = ∂L/∂h12 · Π (k=2..12) [ W_k · σ'(z_k) ]\n\nσ'(z) ≤ 0.25   →   0.25^11 ≈ 2.4 × 10⁻⁷   (before weights)\n</code></pre>\n<ul>\n<li>Saturated sigmoids (|z| large) have σ' ≈ 0, making it worse.</li>\n<li>If ‖W · σ'‖ &gt; 1 per layer, the product explodes instead.</li>\n<li>The underlying quantity is the spectral radius of the layer Jacobians.</li>\n</ul>"
+        "html": "<p><strong>\"The gradient at layer 1 multiplies one Jacobian per layer above it.\"</strong></p>\n<pre><code class=\"language-text\">∂L/∂h₁ = ∂L/∂h₁₂ · Π (k = 2…12) [ W_k · σ'(z_k) ]     ← one factor per layer above\nσ'(z)  ≤ 0.25                                          ← the sigmoid's best case, at z = 0\n0.25¹¹ ≈ 2.4 × 10⁻⁷                                    ← eleven layers, before the weights\n</code></pre>\n<p>What the product does to the gradient on its way down (sigmoid's best case, weights ignored):</p>\n<table>\n<thead>\n<tr>\n<th>Layers passed</th>\n<th>Factor</th>\n<th>Gradient left</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>0.25</td>\n<td>25%</td>\n</tr>\n<tr>\n<td>3</td>\n<td>0.25³</td>\n<td>1.6%</td>\n</tr>\n<tr>\n<td>6</td>\n<td>0.25⁶</td>\n<td>0.024%</td>\n</tr>\n<tr>\n<td><strong>11</strong></td>\n<td><strong>0.25¹¹</strong></td>\n<td><strong>0.000024%</strong></td>\n</tr>\n</tbody></table>\n<ul>\n<li>Saturated units (large |z|) have σ' ≈ 0, which makes it worse.</li>\n<li>If the per-layer factor is <strong>above 1</strong>, the same product <strong>explodes</strong>.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Confirm with per-layer gradient norms",
         "claim": "measure, don&#39;t guess",
-        "html": "<p><strong>\"Log the gradient norm of each layer's weights for a few steps.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Relative gradient norm per layer: sigmoid stack vs ReLU with residuals&quot;,&quot;caption&quot;:&quot;Illustrative. With sigmoid, each layer multiplies the gradient by at most 0.25, so layer 1 gets about a ten-millionth of layer 12. ReLU with residual connections keeps it within one order of magnitude.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;layer (1 = input side)&quot;,&quot;domain&quot;:[1,12]},&quot;y&quot;:{&quot;label&quot;:&quot;relative gradient norm&quot;,&quot;scale&quot;:&quot;log&quot;,&quot;domain&quot;:[1e-7,2]},&quot;series&quot;:[{&quot;name&quot;:&quot;sigmoid&quot;,&quot;tone&quot;:&quot;bad&quot;,&quot;labelAt&quot;:4,&quot;points&quot;:[[1,2.4e-7],[3,0.0000038],[5,0.000061],[7,0.00098],[9,0.0156],[11,0.25],[12,1]]},{&quot;name&quot;:&quot;ReLU + residual&quot;,&quot;tone&quot;:&quot;ok&quot;,&quot;labelAt&quot;:4,&quot;points&quot;:[[1,0.45],[4,0.55],[8,0.75],[12,1]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;point&quot;,&quot;x&quot;:1,&quot;y&quot;:2.4e-7,&quot;tone&quot;:&quot;bad&quot;}]}\"></div><figcaption>Illustrative. With sigmoid, each layer multiplies the gradient by at most 0.25, so layer 1 gets about a ten-millionth of layer 12. ReLU with residual connections keeps it within one order of magnitude.</figcaption></figure>\n<table>\n<thead>\n<tr>\n<th>Pattern</th>\n<th>Diagnosis</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Exponential decay toward input</td>\n<td>vanishing gradients</td>\n</tr>\n<tr>\n<td>Exponential growth, NaNs, loss spikes</td>\n<td>exploding gradients</td>\n</tr>\n<tr>\n<td>Uniform but tiny everywhere</td>\n<td>learning rate or loss scaling issue</td>\n</tr>\n<tr>\n<td>One layer near zero</td>\n<td>dead units or a bug in that layer</td>\n</tr>\n</tbody></table>\n<p>Also check activation statistics: sigmoid outputs pinned near 0 or 1 = saturation.</p>"
+        "html": "<p><strong>\"Log the gradient norm of each layer's weights for a few steps.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Relative gradient norm per layer: sigmoid stack vs ReLU with residuals&quot;,&quot;caption&quot;:&quot;The sigmoid line is computed from 0.25 per layer (its best case); the ReLU line is illustrative. With sigmoid, layer 1 gets about a ten-millionth of layer 12.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;layer (1 = input side)&quot;,&quot;domain&quot;:[1,12]},&quot;y&quot;:{&quot;label&quot;:&quot;relative gradient norm&quot;,&quot;scale&quot;:&quot;log&quot;,&quot;domain&quot;:[1e-7,2]},&quot;series&quot;:[{&quot;name&quot;:&quot;sigmoid&quot;,&quot;tone&quot;:&quot;bad&quot;,&quot;labelAt&quot;:4,&quot;points&quot;:[[1,2.4e-7],[3,0.0000038],[5,0.000061],[7,0.00098],[9,0.0156],[11,0.25],[12,1]]},{&quot;name&quot;:&quot;ReLU + residual&quot;,&quot;tone&quot;:&quot;ok&quot;,&quot;labelAt&quot;:4,&quot;points&quot;:[[1,0.45],[4,0.55],[8,0.75],[12,1]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;point&quot;,&quot;x&quot;:1,&quot;y&quot;:2.4e-7,&quot;tone&quot;:&quot;bad&quot;}]}\"></div><figcaption>The sigmoid line is computed from 0.25 per layer (its best case); the ReLU line is illustrative. With sigmoid, layer 1 gets about a ten-millionth of layer 12.</figcaption></figure>\n<table>\n<thead>\n<tr>\n<th>Pattern</th>\n<th>Diagnosis</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Exponential decay toward input</td>\n<td>vanishing gradients</td>\n</tr>\n<tr>\n<td>Exponential growth, NaNs, loss spikes</td>\n<td>exploding gradients</td>\n</tr>\n<tr>\n<td>Uniform but tiny everywhere</td>\n<td>learning rate or loss scaling issue</td>\n</tr>\n<tr>\n<td>One layer near zero</td>\n<td>dead units or a bug in that layer</td>\n</tr>\n</tbody></table>\n<p>Also check activation statistics: sigmoid outputs pinned near 0 or 1 mean saturation.</p>"
       },
       {
         "number": 4,
         "name": "Fix: activations, init, normalisation, residuals",
         "claim": "in that order",
-        "html": "<p><strong>Fix 1 — ReLU-family activations.</strong> Derivative is 1 for positive inputs, so no per-layer shrink. Leaky ReLU or GELU avoid dead units. <em>Cheapest, try first.</em></p>\n<p><strong>Fix 2 — Variance-preserving initialisation.</strong> He init (variance 2/fan_in) for ReLU, Xavier for tanh. Keeps signal and gradient scale stable at the start. <em>Needed with any activation.</em></p>\n<p><strong>Fix 3 — Normalisation.</strong> BatchNorm or LayerNorm keeps pre-activations centred and scaled, so units don't saturate. <em>Also stabilises and speeds training.</em></p>\n<p><strong>Fix 4 — Residual connections.</strong> <code>h = x + f(x)</code> gives the gradient a direct identity path around every block. <em>What made truly deep networks trainable.</em></p>\n<p>Gradient clipping helps the <em>exploding</em> case, not vanishing.</p>"
+        "html": "<p><strong>\"Four fixes, cheapest first. Each one protects the gradient's scale in a different way.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>#</th>\n<th>Fix</th>\n<th>What it does to the product</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><strong>ReLU-family activation</strong></td>\n<td>derivative is 1 for positive inputs, so no per-layer shrink</td>\n<td>Leaky ReLU or GELU avoid dead units</td>\n</tr>\n<tr>\n<td>2</td>\n<td><strong>Variance-preserving init</strong></td>\n<td>He (variance 2/fan_in) for ReLU, Xavier for tanh: scale is stable at the start</td>\n<td>needed with any activation</td>\n</tr>\n<tr>\n<td>3</td>\n<td><strong>Normalisation</strong></td>\n<td>BatchNorm or LayerNorm keeps pre-activations centred, so units don't saturate</td>\n<td>also speeds training</td>\n</tr>\n<tr>\n<td>4</td>\n<td><strong>Residual connections</strong></td>\n<td><code>h = x + f(x)</code> adds an identity path the gradient takes around each block</td>\n<td>what made very deep networks trainable</td>\n</tr>\n</tbody></table>\n<p>Gradient clipping helps the <em>exploding</em> case, not vanishing.</p>"
       },
       {
         "number": 5,
         "name": "Verify",
         "claim": "the gradient profile should flatten",
-        "html": "<p><strong>\"After the fix, per-layer gradient norms should be within an order of magnitude of each other, and the first layers' weights should move.\"</strong></p>\n<p>Re-run the same logging; compare training curves; check that early-layer weights change meaningfully across epochs.</p>"
+        "html": "<p><strong>\"After the fix, per-layer gradient norms should be within an order of magnitude of each other, and the first layers' weights should move.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Re-check</th>\n<th>Healthy reading</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Per-layer gradient norms</td>\n<td>roughly flat across depth</td>\n</tr>\n<tr>\n<td>Training curve</td>\n<td>loss keeps falling, no early plateau</td>\n</tr>\n<tr>\n<td>Early-layer weights</td>\n<td>change meaningfully across epochs</td>\n</tr>\n</tbody></table>"
       }
     ],
     "followUps": [
@@ -1952,17 +1954,18 @@
       },
       {
         "label": "Activation Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/03-Activation Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/04-Activation Family"
       },
       {
         "label": "He vs Xavier Initialization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/04-He vs Xavier Initialization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/02-He vs Xavier Initialization"
       },
       {
         "label": "Batch Normalization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/15-Batch Normalization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/05-Batch Normalization"
       }
-    ]
+    ],
+    "map": "<figure><div class=\"mermaid\">%%{init: {\"flowchart\": {\"rankSpacing\": 18, \"nodeSpacing\": 20}}}%%\nflowchart TD\n    N1([\"1 · Name it: top learns, bottom&lt;br/&gt;doesn't = vanishing gradients\"]):::step\n    N2[\"2 · Mechanism: a product of&lt;br/&gt;factors ≤ 0.25 per layer\"]:::calc\n    Q3{{\"3 · Confirm: per-layer gradient&lt;br/&gt;norms decay toward the input?\"}}:::ask\n    O[\"🔎 flat-but-tiny or one dead layer:&lt;br/&gt;a different problem\"]:::bad\n    N4[\"4 · Fix in order: ReLU family,&lt;br/&gt;He init, normalisation, residuals\"]:::step\n    N5([\"5 · Verify: gradient&lt;br/&gt;profile flattens\"]):::ok\n    N1 --&gt; N2 --&gt; Q3\n    Q3 --&gt;|no| O\n    Q3 --&gt;|yes| N4 --&gt; N5\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   },
   "ml-dl-q19": {
     "type": "concept",
@@ -2158,15 +2161,15 @@
     "links": [
       {
         "label": "Weight Initialization Techniques",
-        "target": "02-DL/05-Training Mechanics that make transformers work/00-Weight Initialization Techniques"
+        "target": "02-DL/05-Training Mechanics that make transformers work/01-Weight Initialization Techniques"
       },
       {
         "label": "He vs Xavier Initialization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/04-He vs Xavier Initialization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/02-He vs Xavier Initialization"
       },
       {
         "label": "Reproducibility in DL",
-        "target": "02-DL/09-diagnostics & engineering Judgement/02-Reproducibility in DL"
+        "target": "02-DL/09-diagnostics & engineering Judgement/03-Reproducibility in DL"
       },
       {
         "label": "Vanishing & Exploding Gradients",
@@ -2260,11 +2263,11 @@
     "links": [
       {
         "label": "Dropout",
-        "target": "02-DL/05-Training Mechanics that make transformers work/14-Dropout"
+        "target": "02-DL/05-Training Mechanics that make transformers work/06-Dropout"
       },
       {
         "label": "Batch Normalization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/15-Batch Normalization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/05-Batch Normalization"
       },
       {
         "label": "Forward Propagation & Inference Mode",
@@ -2272,7 +2275,7 @@
       },
       {
         "label": "Reproducibility in DL",
-        "target": "02-DL/09-diagnostics & engineering Judgement/02-Reproducibility in DL"
+        "target": "02-DL/09-diagnostics & engineering Judgement/03-Reproducibility in DL"
       }
     ]
   },
@@ -2369,7 +2372,7 @@
     "links": [
       {
         "label": "Diagnosing a Non Converging Model",
-        "target": "02-DL/09-diagnostics & engineering Judgement/00-Diagnosing a Non-Converging Model"
+        "target": "02-DL/09-diagnostics & engineering Judgement/01-Diagnosing a Non-Converging Model"
       },
       {
         "label": "Early Stopping",
@@ -2377,7 +2380,7 @@
       },
       {
         "label": "LR Schedules & the Loss Landscape",
-        "target": "02-DL/05-Training Mechanics that make transformers work/02-LR Schedules & the Loss Landscape"
+        "target": "02-DL/05-Training Mechanics that make transformers work/09-LR Schedules & the Loss Landscape"
       },
       {
         "label": "Overfitting, Underfitting & Generalization",
@@ -2587,11 +2590,11 @@
     "links": [
       {
         "label": "When DL is the Wrong Choice",
-        "target": "02-DL/09-diagnostics & engineering Judgement/04-When DL is the Wrong Choice"
+        "target": "02-DL/09-diagnostics & engineering Judgement/05-When DL is the Wrong Choice"
       },
       {
         "label": "Transfer Learning",
-        "target": "02-DL/09-diagnostics & engineering Judgement/03-Transfer Learning"
+        "target": "02-DL/09-diagnostics & engineering Judgement/04-Transfer Learning"
       },
       {
         "label": "Inductive Bias",
@@ -4107,11 +4110,11 @@
       },
       {
         "label": "Optimizer Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/01-Optimizer Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/08-Optimizer Family"
       },
       {
         "label": "LR Schedules & the Loss Landscape",
-        "target": "02-DL/05-Training Mechanics that make transformers work/02-LR Schedules & the Loss Landscape"
+        "target": "02-DL/05-Training Mechanics that make transformers work/09-LR Schedules & the Loss Landscape"
       }
     ]
   },
@@ -5790,15 +5793,15 @@
     "links": [
       {
         "label": "Activation Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/03-Activation Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/04-Activation Family"
       },
       {
         "label": "Sigmoid Function",
         "target": "02-DL/01-Foundations/03-Sigmoid Function"
       },
       {
-        "label": "**ReLU & Variants** 🟡",
-        "target": "02-DL/05-Training Mechanics that make transformers work/10- **ReLU & Variants** 🟡"
+        "label": "ReLU & Variants",
+        "target": "02-DL/05-Training Mechanics that make transformers work/03-ReLU & Variants"
       }
     ]
   },
@@ -6353,15 +6356,15 @@
     "links": [
       {
         "label": "Optimizer Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/01-Optimizer Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/08-Optimizer Family"
       },
       {
-        "label": "DL   Regularization   L1 L2 Weight Decay in ANN.md",
-        "target": "02-DL/05-Training Mechanics that make transformers work/17-DL - Regularization - L1 L2 Weight Decay in ANN.md"
+        "label": "Regularization — L1, L2 & Weight Decay",
+        "target": "02-DL/05-Training Mechanics that make transformers work/07-Regularization — L1, L2 & Weight Decay"
       },
       {
         "label": "GPU Memory Budget & the Levers",
-        "target": "02-DL/06-Training at scale/00-GPU Memory Budget & the Levers"
+        "target": "02-DL/06-Training at scale/01-GPU Memory Budget & the Levers"
       }
     ]
   },
@@ -6450,11 +6453,11 @@
     "links": [
       {
         "label": "LR Schedules & the Loss Landscape",
-        "target": "02-DL/05-Training Mechanics that make transformers work/02-LR Schedules & the Loss Landscape"
+        "target": "02-DL/05-Training Mechanics that make transformers work/09-LR Schedules & the Loss Landscape"
       },
       {
         "label": "Optimizer Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/01-Optimizer Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/08-Optimizer Family"
       },
       {
         "label": "Normalization in Transformers",
@@ -6547,7 +6550,7 @@
     "links": [
       {
         "label": "Activation Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/03-Activation Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/04-Activation Family"
       },
       {
         "label": "MLPs as Memory (FFN Key Value Stores)",
@@ -6555,7 +6558,7 @@
       },
       {
         "label": "He vs Xavier Initialization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/04-He vs Xavier Initialization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/02-He vs Xavier Initialization"
       }
     ]
   },
@@ -6644,15 +6647,15 @@
     "links": [
       {
         "label": "GPU Memory Budget & the Levers",
-        "target": "02-DL/06-Training at scale/00-GPU Memory Budget & the Levers"
+        "target": "02-DL/06-Training at scale/01-GPU Memory Budget & the Levers"
       },
       {
         "label": "Parallelism Strategies",
-        "target": "02-DL/06-Training at scale/01-Parallelism Strategies"
+        "target": "02-DL/06-Training at scale/02-Parallelism Strategies"
       },
       {
         "label": "Optimizer Family",
-        "target": "02-DL/05-Training Mechanics that make transformers work/01-Optimizer Family"
+        "target": "02-DL/05-Training Mechanics that make transformers work/08-Optimizer Family"
       }
     ]
   },
@@ -6741,11 +6744,11 @@
     "links": [
       {
         "label": "GPU Memory Budget & the Levers",
-        "target": "02-DL/06-Training at scale/00-GPU Memory Budget & the Levers"
+        "target": "02-DL/06-Training at scale/01-GPU Memory Budget & the Levers"
       },
       {
         "label": "Diagnosing a Non Converging Model",
-        "target": "02-DL/09-diagnostics & engineering Judgement/00-Diagnosing a Non-Converging Model"
+        "target": "02-DL/09-diagnostics & engineering Judgement/01-Diagnosing a Non-Converging Model"
       }
     ]
   },
@@ -6827,15 +6830,15 @@
     "links": [
       {
         "label": "GPU Memory Budget & the Levers",
-        "target": "02-DL/06-Training at scale/00-GPU Memory Budget & the Levers"
+        "target": "02-DL/06-Training at scale/01-GPU Memory Budget & the Levers"
       },
       {
         "label": "Diagnosing a Non Converging Model",
-        "target": "02-DL/09-diagnostics & engineering Judgement/00-Diagnosing a Non-Converging Model"
+        "target": "02-DL/09-diagnostics & engineering Judgement/01-Diagnosing a Non-Converging Model"
       },
       {
         "label": "Batch Normalization",
-        "target": "02-DL/05-Training Mechanics that make transformers work/15-Batch Normalization"
+        "target": "02-DL/05-Training Mechanics that make transformers work/05-Batch Normalization"
       }
     ]
   },
@@ -6931,11 +6934,11 @@
     "links": [
       {
         "label": "Parallelism Strategies",
-        "target": "02-DL/06-Training at scale/01-Parallelism Strategies"
+        "target": "02-DL/06-Training at scale/02-Parallelism Strategies"
       },
       {
         "label": "GPU Memory Budget & the Levers",
-        "target": "02-DL/06-Training at scale/00-GPU Memory Budget & the Levers"
+        "target": "02-DL/06-Training at scale/01-GPU Memory Budget & the Levers"
       }
     ]
   },
@@ -7017,11 +7020,11 @@
     "links": [
       {
         "label": "Diagnosing a Non Converging Model",
-        "target": "02-DL/09-diagnostics & engineering Judgement/00-Diagnosing a Non-Converging Model"
+        "target": "02-DL/09-diagnostics & engineering Judgement/01-Diagnosing a Non-Converging Model"
       },
       {
         "label": "Reproducibility in DL",
-        "target": "02-DL/09-diagnostics & engineering Judgement/02-Reproducibility in DL"
+        "target": "02-DL/09-diagnostics & engineering Judgement/03-Reproducibility in DL"
       },
       {
         "label": "Attention Numerics at Long Context",
@@ -7121,7 +7124,7 @@
     "links": [
       {
         "label": "Train Serve Skew in DL",
-        "target": "02-DL/09-diagnostics & engineering Judgement/01-Train-Serve Skew in DL"
+        "target": "02-DL/09-diagnostics & engineering Judgement/02-Train-Serve Skew in DL"
       },
       {
         "label": "Train Serve Skew",
@@ -7207,7 +7210,7 @@
     "links": [
       {
         "label": "CNN Vision Lineage Flashcards",
-        "target": "02-DL/10-Adjacent coverage/01-CNN Vision Lineage Flashcards"
+        "target": "02-DL/10-Adjacent coverage/02-CNN Vision Lineage Flashcards"
       },
       {
         "label": "Inductive Bias",
@@ -7219,7 +7222,7 @@
       },
       {
         "label": "Generative Lineage Flashcards",
-        "target": "02-DL/10-Adjacent coverage/00-Generative Lineage Flashcards"
+        "target": "02-DL/10-Adjacent coverage/01-Generative Lineage Flashcards"
       }
     ]
   },

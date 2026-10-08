@@ -82,8 +82,8 @@
     ],
     "links": [
       {
-        "label": "agentic spectrum",
-        "target": "01-Foundations/02-agentic spectrum"
+        "label": "Agents vs Workflows",
+        "target": "01-Foundations/03-Agents-vs-Workflows"
       },
       {
         "label": "Agents vs Workflows",
@@ -444,8 +444,8 @@
     ],
     "links": [
       {
-        "label": "Comparison of patterns",
-        "target": "02-Reasoning-planning/04-Comparison-of-patterns"
+        "label": "ReAct",
+        "target": "02-Reasoning-planning/02-ReAct"
       },
       {
         "label": "Plan and Execute",
@@ -918,8 +918,8 @@
         "target": "02-Reasoning-planning/08-Reflexion & Self-Critique"
       },
       {
-        "label": "Self Refine Iterative Improvement Loops",
-        "target": "02-Reasoning-planning/09-Self-Refine-Iterative Improvement Loops"
+        "label": "Reflexion & Self Critique",
+        "target": "02-Reasoning-planning/08-Reflexion & Self-Critique"
       }
     ]
   },
@@ -1469,7 +1469,7 @@
       },
       {
         "label": "Human in the Loop (HITL)",
-        "target": "02_Tier_Should_know/05-Human-in-the-Loop (HITL)"
+        "target": "07-Frameworks & Orchestration/28-Human-in-the-Loop (HITL)"
       },
       {
         "label": "Human as a tool",
@@ -3773,15 +3773,15 @@
     "links": [
       {
         "label": "LCEL",
-        "target": "01_Tier_1/01-LCEL"
+        "target": "07-Frameworks & Orchestration/09-LCEL"
       },
       {
         "label": "LangChain — LCEL, create_agent, and the LangGraph Boundary",
         "target": "07-Frameworks & Orchestration/03-LangChain — LCEL, create_agent, and the LangGraph Boundary"
       },
       {
-        "label": "LangGraph `StateGraph` basics",
-        "target": "01_Tier_1/11-LangGraph `StateGraph` basics"
+        "label": "LangGraph StateGraph basics",
+        "target": "07-Frameworks & Orchestration/19-LangGraph StateGraph basics"
       }
     ]
   },
@@ -3867,7 +3867,7 @@
       },
       {
         "label": "Output parsers & structured output",
-        "target": "01_Tier_1/05-Output parsers & structured output"
+        "target": "07-Frameworks & Orchestration/13-Output parsers & structured output"
       }
     ]
   },
@@ -4146,8 +4146,8 @@
         "target": "02-Reasoning-planning/06-TOT"
       },
       {
-        "label": "Graph of Thoughts (GoT)",
-        "target": "02-Reasoning-planning/07-Graph of Thoughts (GoT)"
+        "label": "TOT",
+        "target": "02-Reasoning-planning/06-TOT"
       },
       {
         "label": "Reasoning models as agents",

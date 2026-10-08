@@ -188,6 +188,13 @@ function AnswerBody({ answer: a }: { answer: GameDayModelAnswer }) {
         <b>🪤 The trap:</b> <Html html={a.trap} />
       </Typography>
 
+      {a.map && (
+        <>
+          <SectionHeading>🗺️ Answer map</SectionHeading>
+          <HtmlContent html={a.map} sx={bodySx} />
+        </>
+      )}
+
       <SectionHeading>🎤 The spoken answer{a.speakTime ? ` (${a.speakTime})` : ''}</SectionHeading>
       <Box
         sx={(t) => ({

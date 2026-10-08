@@ -31,7 +31,7 @@
           "links": [
             {
               "label": "LLM Serving System End to End",
-              "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+              "target": "02-DL/08-AI systems &amp; serving Architecture/01-LLM Serving System End-to-End"
             }
           ],
           "badge": "Trending — prefill/decode split + disaggregation recurs in serving blogs and LLM-infra interview loops (2025–26)",
@@ -52,7 +52,7 @@
             "links": [
               {
                 "label": "LLM Serving System End to End",
-                "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+                "target": "02-DL/08-AI systems &amp; serving Architecture/01-LLM Serving System End-to-End"
               }
             ]
           }
@@ -170,7 +170,7 @@
           "links": [
             {
               "label": "Serving Schedulers",
-              "target": "02-DL/07-Inference Optimization/00-Serving Schedulers"
+              "target": "02-DL/07-Inference Optimization/01-Serving Schedulers"
             }
           ],
           "badge": "Trending — vLLM internals are now standard interview fare (2025–26)",
@@ -217,7 +217,7 @@
           "links": [
             {
               "label": "Serving Schedulers",
-              "target": "02-DL/07-Inference Optimization/00-Serving Schedulers"
+              "target": "02-DL/07-Inference Optimization/01-Serving Schedulers"
             },
             {
               "label": "Caching Layers — Embedding, Retrieval &amp; Semantic Answer Cache",
@@ -244,7 +244,7 @@
           "links": [
             {
               "label": "Token Streaming Mechanics",
-              "target": "02-DL/08-AI systems &amp; serving Architecture/01-Token Streaming Mechanics"
+              "target": "02-DL/08-AI systems &amp; serving Architecture/02-Token Streaming Mechanics"
             }
           ],
           "badge": "Evergreen",
@@ -264,7 +264,7 @@
             "links": [
               {
                 "label": "Token Streaming Mechanics",
-                "target": "02-DL/08-AI systems &amp; serving Architecture/01-Token Streaming Mechanics"
+                "target": "02-DL/08-AI systems &amp; serving Architecture/02-Token Streaming Mechanics"
               }
             ]
           }
@@ -294,7 +294,7 @@
           "links": [
             {
               "label": "LLM Serving System End to End",
-              "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+              "target": "02-DL/08-AI systems &amp; serving Architecture/01-LLM Serving System End-to-End"
             }
           ],
           "flow": "SLO per tier → measure goodput → tune batch to the frontier",
@@ -317,7 +317,7 @@
           "links": [
             {
               "label": "Quantization",
-              "target": "02-DL/07-Inference Optimization/01-Quantization"
+              "target": "02-DL/07-Inference Optimization/02-Quantization"
             }
           ],
           "badge": "Trending — recurs across inference-optimization blogs + Devinterview LLM repos + on-device/serving JDs (2025–26)",
@@ -360,7 +360,7 @@
           "links": [
             {
               "label": "Quantization",
-              "target": "02-DL/07-Inference Optimization/01-Quantization"
+              "target": "02-DL/07-Inference Optimization/02-Quantization"
             }
           ],
           "flow": "bandwidth is the bottleneck → shrink weights → activations have outliers",
@@ -384,7 +384,7 @@
           "links": [
             {
               "label": "Speculative Decoding",
-              "target": "02-DL/07-Inference Optimization/03-Speculative Decoding"
+              "target": "02-DL/07-Inference Optimization/04-Speculative Decoding"
             }
           ],
           "badge": "Trending — recurs on LLM interview repos + serving-stack blogs; standard question for inference roles (2025–26)",
@@ -558,7 +558,7 @@
           "links": [
             {
               "label": "Knowledge Distillation",
-              "target": "02-DL/07-Inference Optimization/02-Knowledge Distillation"
+              "target": "02-DL/07-Inference Optimization/03-Knowledge Distillation"
             }
           ],
           "badge": "Evergreen",
@@ -579,7 +579,7 @@
             "links": [
               {
                 "label": "Knowledge Distillation",
-                "target": "02-DL/07-Inference Optimization/02-Knowledge Distillation"
+                "target": "02-DL/07-Inference Optimization/03-Knowledge Distillation"
               }
             ]
           }
@@ -605,7 +605,7 @@
             },
             {
               "label": "Multi Tenant Serving",
-              "target": "02-DL/08-AI systems &amp; serving Architecture/02-Multi-Tenant Serving"
+              "target": "02-DL/08-AI systems &amp; serving Architecture/03-Multi-Tenant Serving"
             }
           ],
           "flow": "one base in VRAM → adapters multiplexed → merge only the hot tenants",
@@ -744,7 +744,7 @@
             "links": [
               {
                 "label": "Multi Tenant Serving",
-                "target": "02-DL/08-AI systems &amp; serving Architecture/02-Multi-Tenant Serving"
+                "target": "02-DL/08-AI systems &amp; serving Architecture/03-Multi-Tenant Serving"
               }
             ]
           }
@@ -819,7 +819,7 @@
           "links": [
             {
               "label": "LLM Serving System End to End",
-              "target": "02-DL/08-AI systems &amp; serving Architecture/00-LLM Serving System End-to-End"
+              "target": "02-DL/08-AI systems &amp; serving Architecture/01-LLM Serving System End-to-End"
             }
           ],
           "flow": "shared pool → priority classes → chat pre-empts → batch absorbs the slack",
@@ -1013,11 +1013,11 @@
           "links": [
             {
               "label": "Serving Schedulers",
-              "target": "02-DL/07-Inference Optimization/00-Serving Schedulers"
+              "target": "02-DL/07-Inference Optimization/01-Serving Schedulers"
             },
             {
               "label": "Inference Ecosystem Flashcards",
-              "target": "02-DL/07-Inference Optimization/04-Inference Ecosystem Flashcards"
+              "target": "02-DL/07-Inference Optimization/05-Inference Ecosystem Flashcards"
             }
           ],
           "badge": "Trending — continuous batching / PagedAttention recurs in serving blogs + LLM-infra JDs (2025–26)",

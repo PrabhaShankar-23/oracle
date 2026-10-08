@@ -238,7 +238,7 @@
     "links": [
       {
         "label": "Token Streaming Mechanics",
-        "target": "08-AI systems & serving Architecture/01-Token Streaming Mechanics"
+        "target": "08-AI systems & serving Architecture/02-Token Streaming Mechanics"
       },
       {
         "label": "latency in agentic systems",
@@ -719,7 +719,7 @@
     "links": [
       {
         "label": "Token Streaming Mechanics",
-        "target": "08-AI systems & serving Architecture/01-Token Streaming Mechanics"
+        "target": "08-AI systems & serving Architecture/02-Token Streaming Mechanics"
       }
     ]
   },
@@ -1857,7 +1857,7 @@
     "links": [
       {
         "label": "Multi Tenant Serving",
-        "target": "08-AI systems & serving Architecture/02-Multi-Tenant Serving"
+        "target": "08-AI systems & serving Architecture/03-Multi-Tenant Serving"
       }
     ]
   },
