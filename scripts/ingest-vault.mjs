@@ -115,8 +115,10 @@ function iconiseHtml(html) {
  */
 const CHAIN_SPLIT = /\s*─([^─▶<]{1,24})─▶\s*|\s*─▶\s*/
 function chainHtml(segment) {
-  const usesBar = (segment.match(/─▶/g) ?? []).length >= 2
   const labelled = /^\s*(<strong>[^<]{1,40}:<\/strong>)\s*/.exec(segment)
+  // two arrows make a chain on their own; a labelled line ("**Fix:** a ─▶ b") is one with a single arrow
+  const bars = (segment.match(/─▶/g) ?? []).length
+  const usesBar = bars >= 2 || (bars === 1 && Boolean(labelled))
   const usesArrow = !usesBar && labelled && (segment.match(/\s→\s/g) ?? []).length >= 3
   if (!usesBar && !usesArrow) return null
   let rest = labelled ? segment.slice(labelled[0].length) : segment
