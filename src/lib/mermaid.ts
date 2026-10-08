@@ -71,14 +71,21 @@ export async function renderMermaidWithin(root: HTMLElement, scheme: SchemeName)
 
 /**
  * Vault diagrams carry a fixed pastel palette in their `classDef` lines. Swap each known colour for the
- * active scheme's tint so nodes follow the theme; unknown colours are left alone.
+ * active scheme's tint so nodes follow the theme; unknown colours are left alone. Also drops label emoji.
  */
 function withThemeColours(source: string, scheme: SchemeName): string {
   let out = source
   for (const t of diagramTones(scheme)) {
     out = out.replace(new RegExp(`fill:${t.fill}`, 'gi'), `fill:${t.toFill}`).replace(new RegExp(`stroke:${t.stroke}`, 'gi'), `stroke:${t.toStroke}`)
   }
-  return out.replace(/color:#000(?:000)?\b/gi, `color:${DIAGRAM_TEXT}`)
+  return (
+    out
+      .replace(/color:#000(?:000)?\b/gi, `color:${DIAGRAM_TEXT}`)
+      // Vault labels lead with an emoji; the site uses Material icons for those everywhere else, and an
+      // icon can't go inside a Mermaid label, so the emoji is dropped and the colour carries the meaning.
+      // Arrows (U+2190–U+25FF, ⬆ ⬇) are kept: they are part of what a label says.
+      .replace(/[\u{1F000}-\u{1FAFF}\u2600-\u27BF]\uFE0F?[ \t]?/gu, '')
+  )
 }
 
 /** The diagram's drawn width, from the SVG's viewBox. */

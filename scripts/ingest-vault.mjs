@@ -5,6 +5,7 @@ import * as cheerio from 'cheerio'
 import { marked } from 'marked'
 import { parse as parseYaml } from 'yaml'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import path from 'node:path'
 
@@ -32,8 +33,133 @@ function slugify(s) {
     .replace(/-+/g, '-')
 }
 
+/*
+ * Emoji → Material icons. The vault marks its sections and callouts with emoji (⚡ TL;DR, 🎯 Recall,
+ * ⚠️ Break it …). On the site those are drawn as Material icons instead: every HTML string in the
+ * generated JSON gets its mapped emoji replaced by an inline SVG whose path comes from
+ * @mui/icons-material, so the icons take the text colour and need no runtime code. Diagram sources,
+ * code and chart specs are left alone; an emoji with no mapping stays as it is. Plain-text fields
+ * (titles, nav labels) are not HTML and are not touched.
+ */
+const EMOJI_ICONS = {
+  '⚡': 'BoltOutlined', '🎯': 'TrackChangesOutlined', '💡': 'LightbulbOutlined', '⚙': 'SettingsOutlined',
+  '🧬': 'TimelineOutlined', '💻': 'CodeOutlined', '📏': 'StraightenOutlined', '🩺': 'MonitorHeartOutlined',
+  '🗣': 'RecordVoiceOverOutlined', '⚖': 'BalanceOutlined', '🔢': 'NumbersOutlined', '🚫': 'BlockOutlined',
+  '🕸': 'HubOutlined', '📚': 'MenuBookOutlined', '🗺': 'MapOutlined', '🏠': 'HomeOutlined',
+  '🌳': 'AccountTreeOutlined', '📋': 'ListAltOutlined', '🛰': 'SatelliteAltOutlined', '📍': 'PlaceOutlined',
+  '🧭': 'ExploreOutlined', '⚠': 'WarningAmberOutlined', '❌': 'CloseOutlined', '✅': 'CheckCircleOutlined',
+  '🔀': 'ShuffleOutlined', '⏳': 'HourglassEmptyOutlined', '🪞': 'FlipOutlined', '✏': 'EditOutlined',
+  '🔗': 'LinkOutlined', '🎤': 'MicNoneOutlined', '🪜': 'StairsOutlined', '🔁': 'ReplayOutlined',
+  '🪤': 'ReportProblemOutlined', '⭐': 'StarRounded', '🔥': 'LocalFireDepartmentOutlined', '📝': 'EditNoteOutlined',
+  '🧱': 'FoundationOutlined', '📘': 'DescriptionOutlined', '📄': 'ArticleOutlined', '🔬': 'ScienceOutlined',
+  '📖': 'AutoStoriesOutlined', '🖼': 'ImageOutlined', '🧪': 'ScienceOutlined', '🛡': 'ShieldOutlined',
+  '🏗': 'ConstructionOutlined', '📣': 'CampaignOutlined', '🔑': 'KeyOutlined', '🏭': 'FactoryOutlined',
+  '🧠': 'PsychologyOutlined', '🔧': 'BuildOutlined', '🧩': 'ExtensionOutlined', '👥': 'GroupsOutlined',
+  '📦': 'Inventory2Outlined', '🚀': 'RocketLaunchOutlined', '🔍': 'SearchOutlined', '🔎': 'SearchOutlined',
+  '⏱': 'TimerOutlined', '🧮': 'CalculateOutlined', '📉': 'TrendingDownOutlined', '📈': 'TrendingUpOutlined',
+  '🔌': 'PowerOutlined', '🙋': 'PanToolOutlined', '✂': 'ContentCutOutlined', '📌': 'PushPinOutlined',
+  '🤔': 'HelpOutlineOutlined', '❓': 'HelpOutlineOutlined', '🌍': 'PublicOutlined', '🗂': 'FolderOutlined',
+  '🧰': 'HandymanOutlined', '🛑': 'DangerousOutlined', '🎚': 'TuneOutlined', '♻': 'RecyclingOutlined',
+  '📎': 'AttachFileOutlined', '📊': 'BarChartOutlined', '📐': 'SquareFootOutlined', '🛠': 'HandymanOutlined',
+  '📅': 'EventOutlined', '🏷': 'LabelOutlined', '🎛': 'TuneOutlined', '🔒': 'LockOutlined', '🏛': 'AccountBalanceOutlined',
+}
+const iconSvgCache = new Map()
+function iconSvg(name) {
+  if (iconSvgCache.has(name)) return iconSvgCache.get(name)
+  let svg = null
+  try {
+    const src = readFileSync(path.join(process.cwd(), 'node_modules/@mui/icons-material', `${name}.js`), 'utf8')
+    const paths = [...src.matchAll(/"path",\s*\{[^}]*?d:\s*"([^"]+)"/g)].map((m) => `<path d="${m[1]}"/>`)
+    const circles = [...src.matchAll(/"circle",\s*\{\s*cx:\s*"([\d.]+)",\s*cy:\s*"([\d.]+)",\s*r:\s*"([\d.]+)"/g)].map(
+      (m) => `<circle cx="${m[1]}" cy="${m[2]}" r="${m[3]}"/>`,
+    )
+    if (paths.length + circles.length) {
+      svg = `<svg class="md-icon" viewBox="0 0 24 24" width="1.15em" height="1.15em" fill="currentColor" aria-hidden="true" style="vertical-align:-0.2em;flex-shrink:0">${paths.join('')}${circles.join('')}</svg>`
+    }
+  } catch {
+    /* icon not in this version of the package: keep the emoji */
+  }
+  iconSvgCache.set(name, svg)
+  return svg
+}
+const EMOJI_RE = new RegExp(`(${Object.keys(EMOJI_ICONS).join('|')})\uFE0F?`, 'gu')
+const ICON_SKIP = new Set(['pre', 'code', 'svg', 'script', 'style', 'title'])
+
+function iconiseHtml(html) {
+  const hasEmoji = EMOJI_RE.test(html)
+  EMOJI_RE.lastIndex = 0
+  if (!hasEmoji && !html.includes('─▶') && !html.includes('→')) return html
+  const $ = cheerio.load(html, null, false)
+  promoteFlowChains($)
+  const walk = (node) => {
+    for (const child of [...(node.children ?? [])]) {
+      if (child.type === 'text') {
+        const before = child.data
+        const after = before.replace(EMOJI_RE, (m, e) => iconSvg(EMOJI_ICONS[e]) ?? m)
+        // text nodes are escaped on output, so swap the node for parsed HTML
+        if (after !== before) $(child).replaceWith(after.replace(/&(?!#?\w+;)/g, '&amp;').replace(/<(?!svg|\/svg|path|circle)/g, '&lt;'))
+      } else if (child.type === 'tag' && !ICON_SKIP.has(child.name) && !$(child).hasClass('mermaid') && !$(child).hasClass('vault-chart')) {
+        walk(child)
+      }
+    }
+  }
+  walk($.root()[0])
+  return $.html()
+}
+
+/*
+ * Flow chains. The vault writes short "how it happens" sequences as one line of text:
+ *   **🧭 Flow:** request ─▶ validate ─label─▶ run ─▶ result        (or a labelled line using →)
+ * The site draws each as a horizontal row of step chips joined by arrows, so a sequence reads as a small
+ * diagram instead of a sentence. A paragraph can hold several chains separated by line breaks.
+ */
+const CHAIN_SPLIT = /\s*─([^─▶<]{1,24})─▶\s*|\s*─▶\s*/
+function chainHtml(segment) {
+  const usesBar = (segment.match(/─▶/g) ?? []).length >= 2
+  const labelled = /^\s*(<strong>[^<]{1,40}:<\/strong>)\s*/.exec(segment)
+  const usesArrow = !usesBar && labelled && (segment.match(/\s→\s/g) ?? []).length >= 3
+  if (!usesBar && !usesArrow) return null
+  let rest = labelled ? segment.slice(labelled[0].length) : segment
+  let tail = ''
+  // a trailing "· offline" / "· every step" suffix is a note on the chain, not a step
+  const suffix = /\s+·\s+([^·<]{1,30})\s*$/.exec(rest)
+  if (suffix) {
+    tail = `<span class="flow-note">${suffix[1]}</span>`
+    rest = rest.slice(0, suffix.index)
+  }
+  const parts = usesBar ? rest.split(CHAIN_SPLIT) : rest.split(/\s+→\s+/).flatMap((x, i) => (i ? [undefined, x] : [x]))
+  let out = labelled ? `<span class="flow-label">${labelled[1]}</span>` : ''
+  for (let i = 0; i < parts.length; i += 2) {
+    const step = (parts[i] ?? '').trim()
+    if (!step) continue
+    if (i > 0) out += parts[i - 1] ? `<span class="flow-arrow" data-label="${parts[i - 1].trim()}"></span>` : '<span class="flow-arrow"></span>'
+    out += `<span class="flow-step">${step}</span>`
+  }
+  return `<div class="flow-chain">${out}${tail}</div>`
+}
+function promoteFlowChains($) {
+  $('p').each((_, node) => {
+    const p = $(node)
+    if (p.parents('pre, code, .mermaid, figure').length) return
+    const html = p.html() ?? ''
+    if (!html.includes('─▶') && !/→/.test(html)) return
+    const segments = html.split(/\\?\s*<br\s*\/?>\s*/)
+    const drawn = segments.map((seg) => chainHtml(seg))
+    if (!drawn.some(Boolean)) return
+    p.replaceWith(segments.map((seg, i) => drawn[i] ?? (seg.trim() ? `<p>${seg}</p>` : '')).join(''))
+  })
+}
+
+/** Apply `iconiseHtml` to every HTML string in a generated JSON value. */
+function iconiseDeep(value) {
+  if (typeof value === 'string') return /<[a-z][^>]*>/i.test(value) ? iconiseHtml(value) : value
+  if (Array.isArray(value)) return value.map(iconiseDeep)
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, iconiseDeep(v)]))
+  return value
+}
+
 async function write(name, data) {
-  await writeFile(path.join(OUT, name), JSON.stringify(data, null, 2) + '\n')
+  await writeFile(path.join(OUT, name), JSON.stringify(iconiseDeep(data), null, 2) + '\n')
   console.log(`  wrote ${name}`)
 }
 

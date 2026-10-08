@@ -486,7 +486,7 @@
         "number": 4,
         "name": "Fix: nested CV or an untouched holdout",
         "claim": "pick by data budget",
-        "html": "<p><strong>\"Two honest options.\"</strong></p>\n<p><strong>Option 1 — Untouched test set.</strong> Split off a test set first. Do all tuning with CV on the rest. Evaluate the final model once on the test set. <em>Best when data is plentiful.</em></p>\n<p><strong>Option 2 — Nested CV.</strong> Outer loop splits data into k folds for estimation. Inside each outer training fold, an inner CV tunes hyperparameters. The outer score estimates the <em>procedure</em> (tune-then-train), not one configuration. <em>Best when data is scarce.</em> Cost: outer × inner × candidates fits.</p>\n<ul>\n<li>Everything chosen on validation data goes inside the inner loop: feature selection, encoders, thresholds.</li>\n<li>After nested CV, you still refit the tuning procedure on all data to get the model you ship.</li>\n</ul>"
+        "html": "<p><strong>\"Two honest options.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Untouched test set</th>\n<th>Nested CV</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How</strong></td>\n<td>split a test set off first; tune with CV on the rest</td>\n<td>outer folds estimate; an inner CV tunes inside each outer training fold</td>\n</tr>\n<tr>\n<td><strong>What the score estimates</strong></td>\n<td>the one final model</td>\n<td>the whole tune-then-train procedure</td>\n</tr>\n<tr>\n<td><strong>Cost</strong></td>\n<td>one extra evaluation</td>\n<td>outer × inner × candidates fits</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>data is plentiful</td>\n<td>data is scarce</td>\n</tr>\n</tbody></table>\n<p><strong>Option 1 — Untouched test set.</strong> Split off a test set first. Do all tuning with CV on the rest. Evaluate the final model once on the test set. <em>Best when data is plentiful.</em></p>\n<p><strong>Option 2 — Nested CV.</strong> Outer loop splits data into k folds for estimation. Inside each outer training fold, an inner CV tunes hyperparameters. The outer score estimates the <em>procedure</em> (tune-then-train), not one configuration. <em>Best when data is scarce.</em> Cost: outer × inner × candidates fits.</p>\n<ul>\n<li>Everything chosen on validation data goes inside the inner loop: feature selection, encoders, thresholds.</li>\n<li>After nested CV, you still refit the tuning procedure on all data to get the model you ship.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -684,7 +684,7 @@
         "number": 1,
         "name": "Both are right",
         "claim": "different questions, different answers",
-        "html": "<p><strong>\"AUC answers 'does the model rank positives above negatives?' The business asks 'is the list I act on worth acting on?'\"</strong></p>\n<ul>\n<li>AUC = probability a random positive scores above a random negative.</li>\n<li>It's <strong>threshold-free</strong>: averaged over all thresholds, most of which the business never uses.</li>\n<li>The business sees <strong>one threshold</strong> and one queue.</li>\n</ul>"
+        "html": "<p><strong>\"AUC answers 'does the model rank positives above negatives?' The business asks 'is the list I act on worth acting on?'\"</strong></p>\n<pre><code class=\"language-text\">AUC = P( score(random positive) &gt; score(random negative) )   ← ranking, averaged over every threshold\nbusiness value = precision and recall at ONE threshold        ← the queue people actually work\n</code></pre>\n<ul>\n<li>AUC = probability a random positive scores above a random negative.</li>\n<li>It's <strong>threshold-free</strong>: averaged over all thresholds, most of which the business never uses.</li>\n<li>The business sees <strong>one threshold</strong> and one queue.</li>\n</ul>"
       },
       {
         "number": 2,
@@ -696,13 +696,13 @@
         "number": 3,
         "name": "Look where the business operates",
         "claim": "precision at the budget",
-        "html": "<p><strong>\"Evaluate at the operating point, not across all of them.\"</strong></p>\n<ul>\n<li><strong>Precision@k</strong>, where k is daily review capacity.</li>\n<li><strong>Recall at that budget:</strong> what share of real cases we catch.</li>\n<li><strong>PR-AUC / average precision</strong> as the threshold-free summary, because precision uses positives in the denominator.</li>\n<li>Slice by segment: the model may be useless for the segment the business cares about most.</li>\n</ul>"
+        "html": "<p><strong>\"Evaluate at the operating point, not across all of them.\"</strong></p>\n<pre><code class=\"language-text\">precision@k = true positives in the top k / k                  ← k = daily review capacity\nrecall@k    = true positives in the top k / all positives      ← share of real cases caught\n</code></pre>\n<ul>\n<li><strong>Precision@k</strong>, where k is daily review capacity.</li>\n<li><strong>Recall at that budget:</strong> what share of real cases we catch.</li>\n<li><strong>PR-AUC / average precision</strong> as the threshold-free summary, because precision uses positives in the denominator.</li>\n<li>Slice by segment: the model may be useless for the segment the business cares about most.</li>\n</ul>"
       },
       {
         "number": 4,
         "name": "Check calibration",
         "claim": "ranking isn&#39;t probability",
-        "html": "<p><strong>\"If anyone acts on the score's value, the score has to mean what it says.\"</strong></p>\n<ul>\n<li><strong>Reliability diagram:</strong> predicted probability vs observed frequency, binned.</li>\n<li><strong>Brier score:</strong> mean squared error of the probabilities.</li>\n<li>Fix on a held-out set: <strong>Platt scaling</strong> (sigmoid, little data) or <strong>isotonic</strong> (flexible, more data).</li>\n</ul>\n<p><strong>Example:</strong> the business rule \"escalate above 0.7\" catches nothing if the model's scores cluster between 0.2 and 0.5.</p>"
+        "html": "<p><strong>\"If anyone acts on the score's value, the score has to mean what it says.\"</strong></p>\n<pre><code class=\"language-text\">Brier score = (1/N) · Σ (pᵢ − yᵢ)²                             ← 0 is perfect; rewards honest probabilities\n</code></pre>\n<ul>\n<li><strong>Reliability diagram:</strong> predicted probability vs observed frequency, binned.</li>\n<li><strong>Brier score:</strong> mean squared error of the probabilities.</li>\n<li>Fix on a held-out set: <strong>Platt scaling</strong> (sigmoid, little data) or <strong>isotonic</strong> (flexible, more data).</li>\n</ul>\n<p><strong>Example:</strong> the business rule \"escalate above 0.7\" catches nothing if the model's scores cluster between 0.2 and 0.5.</p>"
       },
       {
         "number": 5,
@@ -794,7 +794,7 @@
         "number": 1,
         "name": "Ranking ≠ calibration",
         "claim": "two different properties",
-        "html": "<p><strong>\"Ranking asks 'which is more likely?' Calibration asks 'when I say 30%, does it happen 30% of the time?'\"</strong></p>\n<ul>\n<li><strong>AUC</strong> is invariant to any monotone transform of the scores. Squash them all into 0.4–0.6 and AUC doesn't move.</li>\n<li><strong>Expected value</strong> = p × payoff − cost. A 30% that's really 15% doubles the bid.</li>\n</ul>\n<p><strong>Example:</strong> in ad bidding, EV = p(click) × value. Overconfident p means overbidding on every impression.</p>"
+        "html": "<p><strong>\"Ranking asks 'which is more likely?' Calibration asks 'when I say 30%, does it happen 30% of the time?'\"</strong></p>\n<pre><code class=\"language-text\">expected value = p × payoff − cost            ← the decision uses the VALUE of p, not its rank\nmodel says p = 0.30, truth is 0.15            ← AUC unchanged, every bid is twice what it should be\n</code></pre>\n<ul>\n<li><strong>AUC</strong> is invariant to any monotone transform of the scores. Squash them all into 0.4–0.6 and AUC doesn't move.</li>\n<li><strong>Expected value</strong> = p × payoff − cost. A 30% that's really 15% doubles the bid.</li>\n</ul>\n<p><strong>Example:</strong> in ad bidding, EV = p(click) × value. Overconfident p means overbidding on every impression.</p>"
       },
       {
         "number": 2,
@@ -812,7 +812,7 @@
         "number": 4,
         "name": "Calibrate on held-out data",
         "claim": "Platt or isotonic",
-        "html": "<p><strong>\"Fit a mapping from raw score to probability on data the model didn't train on.\"</strong></p>\n<p><strong>Platt scaling.</strong> Fit a sigmoid on the raw scores. Two parameters, stable with little data. <em>Best when distortion is a smooth S-shape.</em></p>\n<p><strong>Isotonic regression.</strong> Fit a monotone step function. Flexible, handles any monotone distortion, needs thousands of positives, can overfit. <em>Best with plenty of calibration data.</em></p>\n<ul>\n<li>In sklearn: <code>CalibratedClassifierCV</code> with cross-validation, or a dedicated calibration split.</li>\n<li>Never fit the calibrator on training data; the model's scores there are overconfident by construction.</li>\n</ul>"
+        "html": "<p><strong>\"Fit a mapping from raw score to probability on data the model didn't train on.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Platt scaling</th>\n<th>Isotonic regression</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Fits</strong></td>\n<td>a sigmoid on the raw scores (2 parameters)</td>\n<td>a monotone step function</td>\n</tr>\n<tr>\n<td><strong>Data needed</strong></td>\n<td>little</td>\n<td>thousands of positives</td>\n</tr>\n<tr>\n<td><strong>Risk</strong></td>\n<td>too rigid for an odd-shaped distortion</td>\n<td>overfits a small calibration set</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>distortion is a smooth S-shape</td>\n<td>plenty of calibration data</td>\n</tr>\n</tbody></table>\n<p><strong>Platt scaling.</strong> Fit a sigmoid on the raw scores. Two parameters, stable with little data. <em>Best when distortion is a smooth S-shape.</em></p>\n<p><strong>Isotonic regression.</strong> Fit a monotone step function. Flexible, handles any monotone distortion, needs thousands of positives, can overfit. <em>Best with plenty of calibration data.</em></p>\n<ul>\n<li>In sklearn: <code>CalibratedClassifierCV</code> with cross-validation, or a dedicated calibration split.</li>\n<li>Never fit the calibrator on training data; the model's scores there are overconfident by construction.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -904,13 +904,13 @@
         "number": 1,
         "name": "Stratify every split",
         "claim": "protect the positives",
-        "html": "<p><strong>\"With 0.3%, a random fold can end up with almost no positives.\"</strong></p>\n<ul>\n<li>100k rows → ~300 positives; 5 folds → ~60 per fold. Unstratified, some folds get 40, some 80.</li>\n<li><strong>Stratified K-fold</strong>, <strong>repeated</strong> with different seeds, to stabilise the estimate.</li>\n<li>If data has time or entity structure, split by that first, then stratify within it.</li>\n</ul>"
+        "html": "<p><strong>\"With 0.3%, a random fold can end up with almost no positives.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>Rows</th>\n<th>Positives (0.3%)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Whole dataset</td>\n<td>100,000</td>\n<td>300</td>\n</tr>\n<tr>\n<td>One of 5 stratified folds</td>\n<td>20,000</td>\n<td>60</td>\n</tr>\n<tr>\n<td><strong>One of 5 random folds</strong></td>\n<td><strong>20,000</strong></td>\n<td><strong>anywhere from about 40 to 80</strong></td>\n</tr>\n</tbody></table>\n<ul>\n<li>100k rows → ~300 positives; 5 folds → ~60 per fold. Unstratified, some folds get 40, some 80.</li>\n<li><strong>Stratified K-fold</strong>, <strong>repeated</strong> with different seeds, to stabilise the estimate.</li>\n<li>If data has time or entity structure, split by that first, then stratify within it.</li>\n</ul>"
       },
       {
         "number": 2,
         "name": "Weight before you resample",
         "claim": "the cheapest honest lever",
-        "html": "<p><strong>\"Class weights change the loss, not the data.\"</strong></p>\n<ul>\n<li><code>class_weight='balanced'</code>, <code>scale_pos_weight = negatives / positives</code>, or a focal-style loss.</li>\n<li>No synthetic rows, no duplicated positives, no invented neighbours.</li>\n<li>Combine with <strong>threshold tuning</strong> on validation; weighting shifts scores, so the default 0.5 is meaningless.</li>\n<li>Weights distort probabilities; calibrate afterwards if scores feed decisions.</li>\n</ul>"
+        "html": "<p><strong>\"Class weights change the loss, not the data.\"</strong></p>\n<pre><code class=\"language-text\">scale_pos_weight = negatives / positives = 99,700 / 300 ≈ 332   ← each positive counts 332× in the loss\n</code></pre>\n<ul>\n<li><code>class_weight='balanced'</code>, <code>scale_pos_weight = negatives / positives</code>, or a focal-style loss.</li>\n<li>No synthetic rows, no duplicated positives, no invented neighbours.</li>\n<li>Combine with <strong>threshold tuning</strong> on validation; weighting shifts scores, so the default 0.5 is meaningless.</li>\n<li>Weights distort probabilities; calibrate afterwards if scores feed decisions.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -1353,7 +1353,7 @@
         "number": 3,
         "name": "Point-in-time correctness",
         "claim": "features as they were at the event",
-        "html": "<p><strong>\"Training joins must use feature values as of each label's timestamp.\"</strong></p>\n<ul>\n<li>A naive join attaches <em>today's</em> value of <code>lifetime_spend</code> to an event from last March. That's future leakage.</li>\n<li>Offline stores do an <strong>as-of join</strong>: for each event, take the latest feature value with timestamp ≤ event time.</li>\n<li>Also account for feature <strong>latency</strong>: if a feature lands in the online store with a 2-hour delay, the offline join should apply the same delay.</li>\n</ul>"
+        "html": "<p><strong>\"Training joins must use feature values as of each label's timestamp.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Training row</th>\n<th>Event time</th>\n<th>Naive join attaches</th>\n<th>As-of join attaches</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>purchase in March</td>\n<td>14 Mar</td>\n<td><code>lifetime_spend</code> as of <strong>today</strong> (future leakage)</td>\n<td><code>lifetime_spend</code> as of 14 Mar</td>\n</tr>\n<tr>\n<td>same, feature lands 2 h late online</td>\n<td>14 Mar 10:00</td>\n<td>value written at 10:30</td>\n<td>latest value written <strong>before 08:00</strong></td>\n</tr>\n</tbody></table>\n<ul>\n<li>A naive join attaches <em>today's</em> value of <code>lifetime_spend</code> to an event from last March. That's future leakage.</li>\n<li>Offline stores do an <strong>as-of join</strong>: for each event, take the latest feature value with timestamp ≤ event time.</li>\n<li>Also account for feature <strong>latency</strong>: if a feature lands in the online store with a 2-hour delay, the offline join should apply the same delay.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -1674,7 +1674,7 @@
         "number": 1,
         "name": "Offline data is biased by the old policy",
         "claim": "you can only grade what was shown",
-        "html": "<p><strong>\"Logged data records the old model's choices, not the world.\"</strong></p>\n<ul>\n<li>Users click only among items the old model displayed.</li>\n<li>Items the new model wants to show but the old model never did have <strong>no labels</strong>, so they count as irrelevant offline.</li>\n<li>Offline evaluation therefore favours rankers that imitate the old one. This is the <strong>off-policy evaluation</strong> problem.</li>\n</ul>\n<p><strong>Example:</strong> a new model that surfaces fresh long-tail content scores poorly offline because the logs contain no clicks on it.</p>"
+        "html": "<p><strong>\"Logged data records the old model's choices, not the world.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Item</th>\n<th>Did the old model show it?</th>\n<th>Clicks in the log</th>\n<th>Offline label</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>popular item</td>\n<td>yes</td>\n<td>some</td>\n<td>relevant</td>\n</tr>\n<tr>\n<td>near-duplicate of a popular item</td>\n<td>yes</td>\n<td>some</td>\n<td>relevant</td>\n</tr>\n<tr>\n<td><strong>fresh long-tail item the new model likes</strong></td>\n<td><strong>no</strong></td>\n<td><strong>none possible</strong></td>\n<td><strong>counted as irrelevant</strong></td>\n</tr>\n</tbody></table>\n<ul>\n<li>Users click only among items the old model displayed.</li>\n<li>Items the new model wants to show but the old model never did have <strong>no labels</strong>, so they count as irrelevant offline.</li>\n<li>Offline evaluation therefore favours rankers that imitate the old one. This is the <strong>off-policy evaluation</strong> problem.</li>\n</ul>\n<p><strong>Example:</strong> a new model that surfaces fresh long-tail content scores poorly offline because the logs contain no clicks on it.</p>"
       },
       {
         "number": 2,
@@ -2109,7 +2109,7 @@
         "number": 1,
         "name": "Symmetry never breaks",
         "claim": "identical neurons get identical updates",
-        "html": "<p><strong>\"Same weights → same outputs → same gradients → same updates, forever.\"</strong></p>\n<ul>\n<li>All hidden units in a layer compute w·x + b with the same w: identical outputs.</li>\n<li>Backprop gives each the same gradient.</li>\n<li>After the update they're still identical. No step can ever separate them.</li>\n<li>With zeros specifically, many gradients are exactly zero too (e.g. through ReLU, or the product of zero weights).</li>\n</ul>"
+        "html": "<p><strong>\"Same weights → same outputs → same gradients → same updates, forever.\"</strong></p>\n<pre><code class=\"language-text\">h₁ = h₂ = σ(w·x + b)              ← same weights, so every unit in the layer outputs the same value\n∂L/∂w₁ = ∂L/∂w₂                   ← same output, so the same gradient\nw₁ − η·∂L/∂w₁ = w₂ − η·∂L/∂w₂     ← still identical after the update: the layer is one neuron\n</code></pre>\n<ul>\n<li>All hidden units in a layer compute w·x + b with the same w: identical outputs.</li>\n<li>Backprop gives each the same gradient.</li>\n<li>After the update they're still identical. No step can ever separate them.</li>\n<li>With zeros specifically, many gradients are exactly zero too (e.g. through ReLU, or the product of zero weights).</li>\n</ul>"
       },
       {
         "number": 2,
@@ -2121,7 +2121,7 @@
         "number": 3,
         "name": "What init is really for",
         "claim": "preserving variance across depth",
-        "html": "<p><strong>\"Randomness breaks symmetry; the scale is what the schemes are about.\"</strong></p>\n<ul>\n<li>Too large → activations and gradients explode through layers.</li>\n<li>Too small → they shrink toward zero: vanishing signal before training starts.</li>\n<li>Target: Var(output of a layer) ≈ Var(input), and similarly for gradients going backwards.</li>\n</ul>"
+        "html": "<p><strong>\"Randomness breaks symmetry; the scale is what the schemes are about.\"</strong></p>\n<pre><code class=\"language-text\">goal:    Var(layer output) ≈ Var(layer input)     ← signal neither explodes nor dies with depth\nXavier:  Var(w) = 2 / (fan_in + fan_out)          ← tanh, sigmoid\nHe:      Var(w) = 2 / fan_in                      ← ReLU, which zeroes half its inputs\n</code></pre>\n<ul>\n<li>Too large → activations and gradients explode through layers.</li>\n<li>Too small → they shrink toward zero: vanishing signal before training starts.</li>\n<li>Target: Var(output of a layer) ≈ Var(input), and similarly for gradients going backwards.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -2218,7 +2218,7 @@
         "number": 2,
         "name": "What eval mode must be",
         "claim": "the identity",
-        "html": "<p><strong>\"Because scaling happened in training, evaluation is just the full network.\"</strong></p>\n<ul>\n<li>No mask, no scaling, deterministic.</li>\n<li>(Original, non-inverted dropout scaled at test time instead; modern frameworks use inverted dropout so inference needs no change.)</li>\n</ul>"
+        "html": "<p><strong>\"Because scaling happened in training, evaluation is just the full network.\"</strong></p>\n<pre><code class=\"language-text\">train:  h̃ = m ⊙ h / (1 − p),   m ~ Bernoulli(1 − p)   ← drop with probability p, rescale the rest\n        E[h̃] = h                                      ← the rescale keeps the expected value\neval:   h̃ = h                                         ← no mask, no scaling, deterministic\n</code></pre>\n<ul>\n<li>No mask, no scaling, deterministic.</li>\n<li>(Original, non-inverted dropout scaled at test time instead; modern frameworks use inverted dropout so inference needs no change.)</li>\n</ul>"
       },
       {
         "number": 3,
@@ -2230,7 +2230,7 @@
         "number": 4,
         "name": "The symptom and its twin",
         "claim": "BatchNorm in train mode",
-        "html": "<p><strong>\"Non-reproducible eval numbers with nothing changed is the fingerprint.\"</strong></p>\n<ul>\n<li><strong>BatchNorm in train mode</strong> uses the batch's mean and variance, not the running averages. Predictions depend on batch composition and batch size; batch size 1 can break outright.</li>\n<li>Both are flipped by <code>model.eval()</code>; both are forgotten by the same mistake.</li>\n</ul>"
+        "html": "<p><strong>\"Non-reproducible eval numbers with nothing changed is the fingerprint.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>In train mode</th>\n<th>In eval mode</th>\n<th>If left in train mode at inference</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Dropout</strong></td>\n<td>random mask, rescaled</td>\n<td>identity</td>\n<td>noisy, non-reproducible predictions</td>\n</tr>\n<tr>\n<td><strong>BatchNorm</strong></td>\n<td>uses this batch's mean and variance</td>\n<td>uses running averages</td>\n<td>output depends on who else is in the batch; batch size 1 can break</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>BatchNorm in train mode</strong> uses the batch's mean and variance, not the running averages. Predictions depend on batch composition and batch size; batch size 1 can break outright.</li>\n<li>Both are flipped by <code>model.eval()</code>; both are forgotten by the same mistake.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -2542,7 +2542,7 @@
         "number": 2,
         "name": "Tabular data",
         "claim": "boosted trees still win",
-        "html": "<p><strong>\"For typical tabular problems, gradient boosting is the default to beat.\"</strong></p>\n<ul>\n<li>Handles mixed types, missing values and irregular feature scales natively.</li>\n<li>Trains fast on CPU, strong with defaults, strong with modest tuning.</li>\n<li>Deep tabular models occasionally match it at large scale; they rarely justify their tuning cost at moderate scale.</li>\n<li>Exception: tables with rich text or image columns, or very high-cardinality IDs where learned embeddings help.</li>\n</ul>"
+        "html": "<p><strong>\"For typical tabular problems, gradient boosting is the default to beat.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>On typical tabular data</th>\n<th>Gradient-boosted trees</th>\n<th>Deep network</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Mixed types, missing values, odd scales</strong></td>\n<td>handled natively</td>\n<td>need encoding, imputation, scaling</td>\n</tr>\n<tr>\n<td><strong>Training</strong></td>\n<td>fast on CPU, strong with defaults</td>\n<td>GPU, careful tuning</td>\n</tr>\n<tr>\n<td><strong>At moderate data size</strong></td>\n<td>the default to beat</td>\n<td>rarely worth the tuning cost</td>\n</tr>\n<tr>\n<td><strong>Wins when</strong></td>\n<td>most tabular problems</td>\n<td>rich text or image columns, very high-cardinality IDs</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Handles mixed types, missing values and irregular feature scales natively.</li>\n<li>Trains fast on CPU, strong with defaults, strong with modest tuning.</li>\n<li>Deep tabular models occasionally match it at large scale; they rarely justify their tuning cost at moderate scale.</li>\n<li>Exception: tables with rich text or image columns, or very high-cardinality IDs where learned embeddings help.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -2860,7 +2860,7 @@
         "number": 3,
         "name": "Recency: retrain cadence",
         "claim": "the boring, correct default",
-        "html": "<p><strong>\"Scheduled retraining keeps every safety property of offline ML.\"</strong></p>\n<ul>\n<li>Train on a recent window, validate on the newest slice, compare to the incumbent, canary, promote.</li>\n<li>Cadence comes from measured decay: how fast does the metric drop over time?</li>\n<li>Trigger-based retraining (on drift) when decay is irregular.</li>\n</ul>"
+        "html": "<p><strong>\"Scheduled retraining keeps every safety property of offline ML.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Scheduled batch retraining</th>\n<th>True online learning</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Update</strong></td>\n<td>daily or weekly, on a recent window</td>\n<td>on every event</td>\n</tr>\n<tr>\n<td><strong>Validation before release</strong></td>\n<td>yes: newest slice, compare to incumbent, canary</td>\n<td>no clean hold-out</td>\n</tr>\n<tr>\n<td><strong>Reproducible</strong></td>\n<td>yes</td>\n<td>hard</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>almost always</td>\n<td>the world shifts faster than you can retrain</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Train on a recent window, validate on the newest slice, compare to the incumbent, canary, promote.</li>\n<li>Cadence comes from measured decay: how fast does the metric drop over time?</li>\n<li>Trigger-based retraining (on drift) when decay is irregular.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -2947,13 +2947,13 @@
         "number": 1,
         "name": "Frame EDA as decisions",
         "claim": "the output isn&#39;t charts",
-        "html": "<p>By end of day I must be able to answer:</p>\n<ul>\n<li>What is the target and its <strong>base rate</strong>?</li>\n<li>Which columns are <strong>unusable</strong> (leaky, constant, broken)?</li>\n<li>What's the <strong>split strategy</strong> (time? groups?)?</li>\n<li>What does each kept feature <strong>need</strong> (encoding, transform, imputation)?</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>By end of day I can answer</th>\n<th>Because it decides</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>What is the target and its <strong>base rate</strong>?</td>\n<td>the metric and the baseline</td>\n</tr>\n<tr>\n<td>Which columns are <strong>unusable</strong>?</td>\n<td>what is dropped before modelling</td>\n</tr>\n<tr>\n<td>What is the <strong>split strategy</strong>?</td>\n<td>whether validation can be trusted</td>\n</tr>\n<tr>\n<td>What does each kept feature <strong>need</strong>?</td>\n<td>the preprocessing pipeline</td>\n</tr>\n</tbody></table>\n<p>By end of day I must be able to answer:</p>\n<ul>\n<li>What is the target and its <strong>base rate</strong>?</li>\n<li>Which columns are <strong>unusable</strong> (leaky, constant, broken)?</li>\n<li>What's the <strong>split strategy</strong> (time? groups?)?</li>\n<li>What does each kept feature <strong>need</strong> (encoding, transform, imputation)?</li>\n</ul>"
       },
       {
         "number": 2,
         "name": "Sample and audit the schema",
         "claim": "make it fast first",
-        "html": "<ul>\n<li><strong>Stratified sample</strong> (e.g. 1–2M rows) to iterate in memory; confirm conclusions on the full data later.</li>\n<li><strong>Types:</strong> numeric IDs, zip codes as ints, dates as strings, booleans as \"Y\"/\"N\"/\"\".</li>\n<li><strong>Sentinels:</strong> −999, 0, <code>1900-01-01</code>, \"unknown\" masquerading as values.</li>\n<li><strong>Constant or near-constant</strong> columns → drop candidates.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Check</th>\n<th>What I look for</th>\n<th>Action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Sample</strong></td>\n<td>a stratified 1–2M rows that fits in memory</td>\n<td>iterate fast; confirm on full data later</td>\n</tr>\n<tr>\n<td><strong>Types</strong></td>\n<td>IDs and zip codes as ints, dates as strings, \"Y\"/\"N\" booleans</td>\n<td>recast</td>\n</tr>\n<tr>\n<td><strong>Sentinels</strong></td>\n<td>−999, 0, <code>1900-01-01</code>, \"unknown\"</td>\n<td>convert to missing</td>\n</tr>\n<tr>\n<td><strong>Constant columns</strong></td>\n<td>one value, or nearly</td>\n<td>drop candidates</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>Stratified sample</strong> (e.g. 1–2M rows) to iterate in memory; confirm conclusions on the full data later.</li>\n<li><strong>Types:</strong> numeric IDs, zip codes as ints, dates as strings, booleans as \"Y\"/\"N\"/\"\".</li>\n<li><strong>Sentinels:</strong> −999, 0, <code>1900-01-01</code>, \"unknown\" masquerading as values.</li>\n<li><strong>Constant or near-constant</strong> columns → drop candidates.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -2965,7 +2965,7 @@
         "number": 4,
         "name": "Hunt leakage and traps",
         "claim": "the part that saves the project",
-        "html": "<ul>\n<li><strong>Too-good features:</strong> anything with near-perfect target correlation or AUC on its own.</li>\n<li><strong>Post-outcome fields:</strong> timestamps or statuses written after the label event.</li>\n<li><strong>Units and scales</strong> changing mid-series.</li>\n<li><strong>Categorical levels</strong> that only exist after a date.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Trap</th>\n<th>How it shows up</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Too-good feature</strong></td>\n<td>near-perfect correlation or AUC by itself</td>\n</tr>\n<tr>\n<td><strong>Post-outcome field</strong></td>\n<td>a timestamp or status written after the label event</td>\n</tr>\n<tr>\n<td><strong>Unit change</strong></td>\n<td>scale shifts mid-series</td>\n</tr>\n<tr>\n<td><strong>Late-appearing category</strong></td>\n<td>levels that only exist after a date</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>Too-good features:</strong> anything with near-perfect target correlation or AUC on its own.</li>\n<li><strong>Post-outcome fields:</strong> timestamps or statuses written after the label event.</li>\n<li><strong>Units and scales</strong> changing mid-series.</li>\n<li><strong>Categorical levels</strong> that only exist after a date.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -3260,13 +3260,13 @@
         "number": 2,
         "name": "MCAR: deletion is safe",
         "claim": "but wasteful",
-        "html": "<ul>\n<li>Complete-case analysis is unbiased; you lose rows and power.</li>\n<li>Simple imputation (mean/median) is fine too, though it shrinks variance.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">MCAR:  P(missing | observed, unobserved) = P(missing)             ← unrelated to anything\nMAR:   P(missing | observed, unobserved) = P(missing | observed)  ← explained by columns you have\nMNAR:  depends on the unobserved value itself                     ← the value hides because of what it is\n</code></pre>\n<ul>\n<li>Complete-case analysis is unbiased; you lose rows and power.</li>\n<li>Simple imputation (mean/median) is fine too, though it shrinks variance.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "MAR: model-based imputation",
         "claim": "observed columns recover the value",
-        "html": "<ul>\n<li><strong>KNN imputer:</strong> borrow values from similar rows.</li>\n<li><strong>MICE / IterativeImputer:</strong> model each column from the others, iterate.</li>\n<li>Mean imputation here is biased: it ignores the relationship the MAR assumption relies on.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Imputer for MAR</th>\n<th>How it fills the gap</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>KNN imputer</strong></td>\n<td>borrows values from similar rows</td>\n<td>needs scaled features</td>\n</tr>\n<tr>\n<td><strong>MICE / IterativeImputer</strong></td>\n<td>models each column from the others, iterates</td>\n<td>slower, most faithful</td>\n</tr>\n<tr>\n<td><strong>Mean or median</strong></td>\n<td>one constant</td>\n<td>biased here: ignores the relationship MAR relies on</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>KNN imputer:</strong> borrow values from similar rows.</li>\n<li><strong>MICE / IterativeImputer:</strong> model each column from the others, iterate.</li>\n<li>Mean imputation here is biased: it ignores the relationship the MAR assumption relies on.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -3365,19 +3365,19 @@
         "number": 2,
         "name": "Suspect availability timing",
         "claim": "the feature used the future",
-        "html": "<ul>\n<li>Training data backfilled from a warehouse: the value is present because it arrived <em>later</em>.</li>\n<li>Serving computes at request time: the value often hasn't arrived.</li>\n<li>Check: compare the feature's write timestamp with the transaction timestamp in training rows.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>Time</th>\n<th>What training (backfilled) sees</th>\n<th>What serving sees</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>transaction scored</td>\n<td>10:00:00</td>\n<td>—</td>\n<td>feature <strong>not yet written → null</strong></td>\n</tr>\n<tr>\n<td>device fingerprint lands</td>\n<td>10:00:07</td>\n<td>—</td>\n<td>too late for this request</td>\n</tr>\n<tr>\n<td><strong>warehouse backfill, later</strong></td>\n<td><strong>overnight</strong></td>\n<td><strong>value present</strong></td>\n<td>—</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Training data backfilled from a warehouse: the value is present because it arrived <em>later</em>.</li>\n<li>Serving computes at request time: the value often hasn't arrived.</li>\n<li>Check: compare the feature's write timestamp with the transaction timestamp in training rows.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Rule out a pipeline break",
         "claim": "timing of the change",
-        "html": "<ul>\n<li>Did the null rate jump on a date? Line it up with deploys and schema changes.</li>\n<li>Is it one client, region or app version?</li>\n<li>A step change is a break; a constant gap since launch is availability skew.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Pattern in the null rate</th>\n<th>Diagnosis</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>a step change on one date</td>\n<td>pipeline break: line it up with deploys and schema changes</td>\n</tr>\n<tr>\n<td>concentrated in one client, region or app version</td>\n<td>a client-side bug</td>\n</tr>\n<tr>\n<td><strong>a constant gap since launch</strong></td>\n<td><strong>availability skew: the feature arrives after scoring</strong></td>\n</tr>\n</tbody></table>\n<ul>\n<li>Did the null rate jump on a date? Line it up with deploys and schema changes.</li>\n<li>Is it one client, region or app version?</li>\n<li>A step change is a break; a constant gap since launch is availability skew.</li>\n</ul>"
       },
       {
         "number": 4,
         "name": "Fix point-in-time correctness",
         "claim": "rebuild the feature as-of prediction",
-        "html": "<ul>\n<li>Recompute training features using only data available at each event's timestamp (the as-of join a feature store enforces).</li>\n<li>Retrain; the model now learns from the missingness rate it will actually see.</li>\n<li>Add a missing indicator: in fraud, \"fingerprint not yet available\" can itself be a signal.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Before</th>\n<th>After</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Training features</strong></td>\n<td>whatever the warehouse holds today</td>\n<td>only what existed at each event's timestamp (as-of join)</td>\n</tr>\n<tr>\n<td><strong>Missing rate in training</strong></td>\n<td>far lower than production</td>\n<td>matches production</td>\n</tr>\n<tr>\n<td><strong>Extra signal</strong></td>\n<td>none</td>\n<td>a missing indicator: \"fingerprint not yet available\" can itself predict fraud</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Recompute training features using only data available at each event's timestamp (the as-of join a feature store enforces).</li>\n<li>Retrain; the model now learns from the missingness rate it will actually see.</li>\n<li>Add a missing indicator: in fraud, \"fingerprint not yet available\" can itself be a signal.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -3772,19 +3772,19 @@
         "number": 1,
         "name": "What t-SNE preserves",
         "claim": "local neighbourhoods only",
-        "html": "<ul>\n<li>It matches the probability that points are neighbours in the original space and in 2-D.</li>\n<li>Neighbours stay neighbours; that's the whole promise.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">high-D:  p(j|i) ∝ exp( −‖xᵢ − xⱼ‖² / 2σᵢ² )      ← how likely j is a neighbour of i\n2-D:     q(i,j) ∝ ( 1 + ‖yᵢ − yⱼ‖² )⁻¹            ← heavy-tailed, so far points can spread out\nminimise KL( P ‖ Q )                              ← only neighbour relations are matched\n</code></pre>\n<ul>\n<li>It matches the probability that points are neighbours in the original space and in 2-D.</li>\n<li>Neighbours stay neighbours; that's the whole promise.</li>\n</ul>"
       },
       {
         "number": 2,
         "name": "What it distorts",
         "claim": "everything they reported",
-        "html": "<table>\n<thead>\n<tr>\n<th>Plot feature</th>\n<th>Meaningful?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Which points sit together</td>\n<td>✅ mostly</td>\n</tr>\n<tr>\n<td>Gap between clusters</td>\n<td>❌</td>\n</tr>\n<tr>\n<td>Cluster size / area</td>\n<td>❌ (densities equalised)</td>\n</tr>\n<tr>\n<td>Cluster count</td>\n<td>⚠️ depends on perplexity, can appear from noise</td>\n</tr>\n<tr>\n<td>Layout, orientation</td>\n<td>❌ changes with seed</td>\n</tr>\n</tbody></table>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Plot feature</th>\n<th>Meaningful?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Which points sit together</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> mostly</td>\n</tr>\n<tr>\n<td>Gap between clusters</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n<tr>\n<td>Cluster size / area</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> (densities equalised)</td>\n</tr>\n<tr>\n<td>Cluster count</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> depends on perplexity, can appear from noise</td>\n</tr>\n<tr>\n<td>Layout, orientation</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> changes with seed</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 3,
         "name": "Use it as a picture, not a ruler",
         "claim": "hypothesis generation",
-        "html": "<ul>\n<li>Good for: spotting structure, outliers, label noise, a sanity look at embeddings.</li>\n<li>Not for: sizes, distances, cluster definitions, or anything reported as a number.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Use the plot for</th>\n<th>Don't use it for</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>spotting structure and outliers</td>\n<td>cluster sizes</td>\n</tr>\n<tr>\n<td>finding label noise</td>\n<td>distances between clusters</td>\n</tr>\n<tr>\n<td>a sanity look at embeddings</td>\n<td>defining the segments, or any reported number</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Good for: spotting structure, outliers, label noise, a sanity look at embeddings.</li>\n<li>Not for: sizes, distances, cluster definitions, or anything reported as a number.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -3873,19 +3873,19 @@
         "number": 1,
         "name": "Ask what the model is for",
         "claim": "prediction or explanation",
-        "html": "<table>\n<thead>\n<tr>\n<th>Assumption</th>\n<th>Breaks</th>\n<th>Matters for prediction?</th>\n<th>For explanation?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Linearity</td>\n<td>predictions (bias)</td>\n<td>✅</td>\n<td>✅</td>\n</tr>\n<tr>\n<td>Independent errors</td>\n<td>standard errors, CV</td>\n<td>✅ (validation)</td>\n<td>✅</td>\n</tr>\n<tr>\n<td>Homoscedasticity</td>\n<td>intervals, SEs</td>\n<td>only for intervals</td>\n<td>✅</td>\n</tr>\n<tr>\n<td>Normal errors</td>\n<td>small-sample inference</td>\n<td>rarely</td>\n<td>✅ (small n)</td>\n</tr>\n<tr>\n<td>No multicollinearity</td>\n<td>coefficient stability</td>\n<td>❌</td>\n<td>✅</td>\n</tr>\n</tbody></table>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Assumption</th>\n<th>Breaks</th>\n<th>Matters for prediction?</th>\n<th>For explanation?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Linearity</td>\n<td>predictions (bias)</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>Independent errors</td>\n<td>standard errors, CV</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> (validation)</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>Homoscedasticity</td>\n<td>intervals, SEs</td>\n<td>only for intervals</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>Normal errors</td>\n<td>small-sample inference</td>\n<td>rarely</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> (small n)</td>\n</tr>\n<tr>\n<td>No multicollinearity</td>\n<td>coefficient stability</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 2,
         "name": "Linearity breaks predictions",
         "claim": "the model is wrong",
-        "html": "<ul>\n<li>Symptom: curved pattern in residuals vs fitted.</li>\n<li>Fix: log/Box-Cox, polynomial or spline terms, interactions, or a non-linear model.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">y = β₀ + β₁x₁ + … + βₚxₚ + ε,    ε ~ N(0, σ²), independent    ← the model every assumption refers to\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Symptom</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>a curved pattern in residuals vs fitted</td>\n<td>log or Box-Cox, polynomial or spline terms, interactions, or a non-linear model</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Symptom: curved pattern in residuals vs fitted.</li>\n<li>Fix: log/Box-Cox, polynomial or spline terms, interactions, or a non-linear model.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Independence breaks validation",
         "claim": "the silent one",
-        "html": "<ul>\n<li>Time series, repeated measures per customer, clustered data.</li>\n<li>Symptoms: autocorrelated residuals (Durbin-Watson, ACF plot), CV scores far above production.</li>\n<li>Fix: time/group-aware splits, lagged terms, mixed models, clustered standard errors.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Where it happens</th>\n<th>Symptom</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>time series, repeated rows per customer, clustered data</td>\n<td>autocorrelated residuals (Durbin-Watson, ACF); CV far above production</td>\n<td>time- or group-aware splits, lagged terms, mixed models, clustered standard errors</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Time series, repeated measures per customer, clustered data.</li>\n<li>Symptoms: autocorrelated residuals (Durbin-Watson, ACF plot), CV scores far above production.</li>\n<li>Fix: time/group-aware splits, lagged terms, mixed models, clustered standard errors.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -4179,7 +4179,7 @@
         "number": 2,
         "name": "Why MSE and MAE fail",
         "claim": "each misses at least one",
-        "html": "<table>\n<thead>\n<tr>\n<th>Loss</th>\n<th>Tail-robust</th>\n<th>Asymmetric</th>\n<th>Predicts</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>MSE</td>\n<td>❌</td>\n<td>❌</td>\n<td>mean</td>\n</tr>\n<tr>\n<td>MAE</td>\n<td>✅</td>\n<td>❌</td>\n<td>median</td>\n</tr>\n<tr>\n<td>Huber</td>\n<td>✅</td>\n<td>❌</td>\n<td>between mean and median</td>\n</tr>\n<tr>\n<td>Quantile (τ)</td>\n<td>✅</td>\n<td>✅</td>\n<td>τ-quantile</td>\n</tr>\n</tbody></table>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Loss</th>\n<th>Tail-robust</th>\n<th>Asymmetric</th>\n<th>Predicts</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>MSE</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td>mean</td>\n</tr>\n<tr>\n<td>MAE</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td>median</td>\n</tr>\n<tr>\n<td>Huber</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td>between mean and median</td>\n</tr>\n<tr>\n<td>Quantile (τ)</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>τ-quantile</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 3,
@@ -4784,13 +4784,13 @@
         "number": 2,
         "name": "What eps and minPts control",
         "claim": "radius and density bar",
-        "html": "<ul>\n<li><strong>eps:</strong> how far a neighbourhood reaches. Too small → everything is noise; too large → clusters merge.</li>\n<li><strong>minPts:</strong> how many neighbours make a region dense. Rule of thumb ≥ dimensions + 1, often 2× dimensions.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Parameter</th>\n<th>Controls</th>\n<th>Too small</th>\n<th>Too large</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>eps</strong></td>\n<td>how far a neighbourhood reaches</td>\n<td>everything is noise</td>\n<td>clusters merge</td>\n</tr>\n<tr>\n<td><strong>minPts</strong></td>\n<td>how many neighbours make a region dense (≥ dimensions + 1, often 2×)</td>\n<td>noise points form tiny clusters</td>\n<td>sparse clusters become noise</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>eps:</strong> how far a neighbourhood reaches. Too small → everything is noise; too large → clusters merge.</li>\n<li><strong>minPts:</strong> how many neighbours make a region dense. Rule of thumb ≥ dimensions + 1, often 2× dimensions.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Check scaling and eps",
         "claim": "the likely culprits",
-        "html": "<p><strong>Step 1 — Scale features.</strong> Unscaled units make eps meaningless in some dimensions.</p>\n<p><strong>Step 2 — k-distance plot.</strong> Sort each point's distance to its k-th neighbour (k = minPts); choose eps at the knee.</p>\n<p><strong>Step 3 — Reduce dimensions.</strong> In high dimensions distances concentrate; PCA or UMAP first can help.</p>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>What I do</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><strong>scale the features</strong></td>\n<td>unscaled units make one eps meaningless across dimensions</td>\n</tr>\n<tr>\n<td>2</td>\n<td><strong>k-distance plot</strong>, k = minPts: sort each point's distance to its k-th neighbour, take eps at the knee</td>\n<td>picks eps from the data</td>\n</tr>\n<tr>\n<td>3</td>\n<td><strong>reduce dimensions</strong> (PCA or UMAP) first</td>\n<td>distances concentrate in high dimensions</td>\n</tr>\n</tbody></table>\n<p><strong>Step 1 — Scale features.</strong> Unscaled units make eps meaningless in some dimensions.</p>\n<p><strong>Step 2 — k-distance plot.</strong> Sort each point's distance to its k-th neighbour (k = minPts); choose eps at the knee.</p>\n<p><strong>Step 3 — Reduce dimensions.</strong> In high dimensions distances concentrate; PCA or UMAP first can help.</p>"
       },
       {
         "number": 4,
@@ -4888,13 +4888,13 @@
         "number": 2,
         "name": "Stability under resampling",
         "claim": "does it replicate?",
-        "html": "<ul>\n<li>Bootstrap samples, different seeds, small feature noise.</li>\n<li>Agreement: adjusted Rand index or Jaccard per cluster between runs.</li>\n<li>Report per-cluster stability: some clusters may be solid, others not.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Perturb</th>\n<th>Measure agreement with</th>\n<th>Reading</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>bootstrap samples</td>\n<td>adjusted Rand index between runs</td>\n<td>high and steady: structure is real</td>\n</tr>\n<tr>\n<td>different seeds</td>\n<td>Jaccard per cluster</td>\n<td>some clusters solid, others not: report per cluster</td>\n</tr>\n<tr>\n<td>small feature noise</td>\n<td>adjusted Rand index</td>\n<td>collapses: the clusters were an artefact</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Bootstrap samples, different seeds, small feature noise.</li>\n<li>Agreement: adjusted Rand index or Jaccard per cluster between runs.</li>\n<li>Report per-cluster stability: some clusters may be solid, others not.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "External validation on unseen variables",
         "claim": "the convincing layer",
-        "html": "<ul>\n<li>Hold out business variables from the clustering features.</li>\n<li>Test differences between clusters (ANOVA / Kruskal-Wallis, effect sizes).</li>\n<li>Check persistence: re-cluster next month; do the segments reappear?</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Test</th>\n<th>How</th>\n<th>Convincing when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Held-out variables</strong></td>\n<td>keep business variables out of the clustering features</td>\n<td>clusters differ on them anyway</td>\n</tr>\n<tr>\n<td><strong>Significance and size</strong></td>\n<td>ANOVA or Kruskal-Wallis, with effect sizes</td>\n<td>differences are large, not just significant</td>\n</tr>\n<tr>\n<td><strong>Persistence</strong></td>\n<td>re-cluster next month</td>\n<td>the same segments reappear</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Hold out business variables from the clustering features.</li>\n<li>Test differences between clusters (ANOVA / Kruskal-Wallis, effect sizes).</li>\n<li>Check persistence: re-cluster next month; do the segments reappear?</li>\n</ul>"
       },
       {
         "number": 4,
@@ -4987,13 +4987,13 @@
         "number": 2,
         "name": "Grid",
         "claim": "exhaustive, rarely efficient",
-        "html": "<ul>\n<li>Cost = product of values per parameter.</li>\n<li>Fine for 1–2 params or a required audit sweep.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">grid cost = Π (values per parameter)\n5 parameters × 4 values each = 4⁵ = 1,024 configurations   ← × 5 folds = 5,120 fits\n</code></pre>\n<ul>\n<li>Cost = product of values per parameter.</li>\n<li>Fine for 1–2 params or a required audit sweep.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Random",
         "claim": "the cheap-trial default",
-        "html": "<ul>\n<li>With 60 random trials, there's a 95% chance of hitting the top 5% of a single important dimension.</li>\n<li>Each trial explores new values on every dimension.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">P(at least one of n random trials lands in the top 5%) = 1 − 0.95ⁿ\nn = 60  →  1 − 0.95⁶⁰ ≈ 0.954                              ← 60 trials, about a 95% chance\n</code></pre>\n<ul>\n<li>With 60 random trials, there's a 95% chance of hitting the top 5% of a single important dimension.</li>\n<li>Each trial explores new values on every dimension.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -5085,13 +5085,13 @@
         "number": 1,
         "name": "Is 0.004 inside the noise?",
         "claim": "measure the uncertainty",
-        "html": "<ul>\n<li><strong>Bootstrap</strong> the test set 1,000+ times; CI of (B − A).</li>\n<li><strong>Paired tests:</strong> McNemar's on per-example correctness; for AUC, DeLong's test.</li>\n<li>If the CI includes 0, it's a tie.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Method</th>\n<th>Use for</th>\n<th>Reading</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Bootstrap</strong> the test set 1,000+ times</td>\n<td>a confidence interval of (B − A)</td>\n<td>interval includes 0: a tie</td>\n</tr>\n<tr>\n<td><strong>McNemar's test</strong></td>\n<td>paired per-example correctness</td>\n<td>are the disagreements one-sided?</td>\n</tr>\n<tr>\n<td><strong>DeLong's test</strong></td>\n<td>a difference in AUC</td>\n<td>significance of the AUC gap</td>\n</tr>\n</tbody></table>\n<ul>\n<li><strong>Bootstrap</strong> the test set 1,000+ times; CI of (B − A).</li>\n<li><strong>Paired tests:</strong> McNemar's on per-example correctness; for AUC, DeLong's test.</li>\n<li>If the CI includes 0, it's a tie.</li>\n</ul>"
       },
       {
         "number": 2,
         "name": "Selection bias",
         "claim": "the winner&#39;s curse",
-        "html": "<ul>\n<li>Many candidates compared on one test set → the best one's score is inflated.</li>\n<li>The test set is now partly a validation set; refresh it or hold back a final one.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>What happened</th>\n<th>Why the score is inflated</th>\n<th>Remedy</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>many candidates were compared on one test set</td>\n<td>the best of many noisy scores is partly luck</td>\n<td>refresh the test set, or keep a final one nobody selects on</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Many candidates compared on one test set → the best one's score is inflated.</li>\n<li>The test set is now partly a validation set; refresh it or hold back a final one.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -5189,7 +5189,7 @@
         "number": 2,
         "name": "Choose the definition that matches the harm",
         "claim": "domain-specific",
-        "html": "<ul>\n<li>Lending: equal opportunity (qualified applicants approved equally) is common; regulation may prohibit disparate impact.</li>\n<li>Risk scoring used by humans: calibration within groups often matters most.</li>\n<li>The choice is ethical and legal first, statistical second.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Setting</th>\n<th>Definition usually chosen</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Lending</strong></td>\n<td>equal opportunity: qualified applicants approved at equal rates</td>\n<td>the harm is denying someone who would repay; regulation may also bar disparate impact</td>\n</tr>\n<tr>\n<td><strong>Risk scores read by people</strong></td>\n<td>calibration within groups</td>\n<td>a score must mean the same thing for everyone</td>\n</tr>\n<tr>\n<td><strong>Any setting</strong></td>\n<td>an ethical and legal choice first</td>\n<td>statistics only shows the trade-off</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Lending: equal opportunity (qualified applicants approved equally) is common; regulation may prohibit disparate impact.</li>\n<li>Risk scoring used by humans: calibration within groups often matters most.</li>\n<li>The choice is ethical and legal first, statistical second.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -5289,7 +5289,7 @@
         "number": 3,
         "name": "Honest scheme: walk-forward with a gap",
         "claim": "mimic deployment",
-        "html": "<ul>\n<li>Expanding window: more data each step; rolling window: fixed length, forgets old regimes.</li>\n<li>Gap ≥ forecast horizon and feature lookback.</li>\n<li><code>TimeSeriesSplit(gap=…)</code> in sklearn, or a custom backtest loop.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">fold 1:  [ train ████████         ] gap [ test ██ ]\nfold 2:  [ train ████████████     ] gap [ test ██ ]\nfold 3:  [ train ████████████████ ] gap [ test ██ ]        ← expanding window; time runs left to right\ngap ≥ forecast horizon and feature lookback                 ← nothing from the test period leaks back\n</code></pre>\n<ul>\n<li>Expanding window: more data each step; rolling window: fixed length, forgets old regimes.</li>\n<li>Gap ≥ forecast horizon and feature lookback.</li>\n<li><code>TimeSeriesSplit(gap=…)</code> in sklearn, or a custom backtest loop.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -5382,13 +5382,13 @@
         "number": 2,
         "name": "ARIMA",
         "claim": "explicit structure, one series at a time",
-        "html": "<ul>\n<li>Make stationary (differencing, ADF test), choose p, d, q from ACF/PACF or auto-ARIMA.</li>\n<li>SARIMA adds seasonal terms; ARIMAX adds regressors (awkwardly).</li>\n<li>Strengths: interpretable, calibrated intervals. Weakness: scale to thousands of series, non-linear drivers.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">ARIMA(p, d, q):   (1 − φ₁L − … − φₚLᵖ)(1 − L)ᵈ yₜ = (1 + θ₁L + … + θ_qL^q) εₜ\n                   ↑ autoregressive    ↑ differencing        ↑ moving average of past errors\n</code></pre>\n<ul>\n<li>Make stationary (differencing, ADF test), choose p, d, q from ACF/PACF or auto-ARIMA.</li>\n<li>SARIMA adds seasonal terms; ARIMAX adds regressors (awkwardly).</li>\n<li>Strengths: interpretable, calibrated intervals. Weakness: scale to thousands of series, non-linear drivers.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Prophet",
         "claim": "decomposable, analyst-friendly",
-        "html": "<ul>\n<li>y = trend + seasonality + holidays + error, fitted as a curve.</li>\n<li>Handles gaps, outliers, changepoints.</li>\n<li>Weakness: fixed form; doesn't use autoregressive dynamics well; often matched by simple baselines.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">Prophet:   y(t) = g(t) + s(t) + h(t) + εₜ\n                  ↑ trend   ↑ seasonality  ↑ holidays      ← a curve fitted to time, no autoregression\n</code></pre>\n<ul>\n<li>y = trend + seasonality + holidays + error, fitted as a curve.</li>\n<li>Handles gaps, outliers, changepoints.</li>\n<li>Weakness: fixed form; doesn't use autoregressive dynamics well; often matched by simple baselines.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -5484,19 +5484,19 @@
         "number": 1,
         "name": "Content-based",
         "claim": "item features and my history",
-        "html": "<ul>\n<li>Represent items by features (genre, text embeddings, attributes); build a user profile from items they engaged with.</li>\n<li>✅ new items; ❌ new users; ⚠️ filter bubble, limited serendipity.</li>\n</ul>"
+        "html": "<ul>\n<li>Represent items by features (genre, text embeddings, attributes); build a user profile from items they engaged with.</li>\n<li><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> new items; <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> new users; <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> filter bubble, limited serendipity.</li>\n</ul>"
       },
       {
         "number": 2,
         "name": "Collaborative filtering",
         "claim": "the interaction matrix only",
-        "html": "<ul>\n<li>User-based: similar users' items. Item-based: items similar by co-interaction.</li>\n<li>✅ captures taste beyond features; ❌ new users and new items; ⚠️ sparsity, popularity bias.</li>\n</ul>"
+        "html": "<ul>\n<li>User-based: similar users' items. Item-based: items similar by co-interaction.</li>\n<li><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> captures taste beyond features; <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> new users and new items; <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> sparsity, popularity bias.</li>\n</ul>"
       },
       {
         "number": 3,
         "name": "Matrix factorisation",
         "claim": "latent factors",
-        "html": "<pre><code>R (users × items) ≈ U · Vᵀ     each user and item gets a k-dim vector\n</code></pre>\n<ul>\n<li>SVD / SGD for explicit ratings; ALS with confidence weights for implicit feedback.</li>\n<li>✅ best classic quality on sparse data; ❌ same cold start as CF.</li>\n</ul>"
+        "html": "<pre><code>R (users × items) ≈ U · Vᵀ     each user and item gets a k-dim vector\n</code></pre>\n<ul>\n<li>SVD / SGD for explicit ratings; ALS with confidence weights for implicit feedback.</li>\n<li><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> best classic quality on sparse data; <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> same cold start as CF.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -5592,7 +5592,7 @@
         "number": 2,
         "name": "When to buy",
         "claim": "network effects and speed",
-        "html": "<ul>\n<li>Consortium data across merchants (device, email, card signals) you can't collect alone.</li>\n<li>Faster time to value; vendor handles model upkeep.</li>\n<li>Evaluate: backtest on your labelled history, at your threshold, with cost per decision.</li>\n<li>Watch: per-transaction fees, latency, data-sharing terms, explainability for disputes.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Buy a vendor</th>\n<th>Build in-house</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Data advantage</strong></td>\n<td>consortium signals across merchants you can't collect alone</td>\n<td>patterns specific to your product (promo abuse, account takeover)</td>\n</tr>\n<tr>\n<td><strong>Time to value</strong></td>\n<td>fast; the vendor maintains the model</td>\n<td>slow; you own the lifecycle</td>\n</tr>\n<tr>\n<td><strong>Cost shape</strong></td>\n<td>per-transaction fees</td>\n<td>engineers, pipelines, real-time serving, monitoring, compliance</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>fraud is generic and volume is modest</td>\n<td>fraud is yours alone and volume makes fees exceed a team</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Consortium data across merchants (device, email, card signals) you can't collect alone.</li>\n<li>Faster time to value; vendor handles model upkeep.</li>\n<li>Evaluate: backtest on your labelled history, at your threshold, with cost per decision.</li>\n<li>Watch: per-transaction fees, latency, data-sharing terms, explainability for disputes.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -5970,13 +5970,13 @@
         "number": 1,
         "name": "What UAT actually says",
         "claim": "existence",
-        "html": "<p>For continuous f on a compact set and any ε &gt; 0, there exists a one-hidden-layer network with enough units such that |network(x) − f(x)| &lt; ε everywhere.</p>"
+        "html": "<pre><code class=\"language-text\">for any continuous f on a compact set and any ε &gt; 0, there exist N, aᵢ, wᵢ, bᵢ with\nsup over x of | Σᵢ₌₁ᴺ aᵢ·σ(wᵢ·x + bᵢ) − f(x) | &lt; ε          ← one hidden layer, N units\nit says such a network EXISTS                               ← not how big N is, nor how to find it\n</code></pre>\n<p>For continuous f on a compact set and any ε &gt; 0, there exists a one-hidden-layer network with enough units such that |network(x) − f(x)| &lt; ε everywhere.</p>"
       },
       {
         "number": 2,
         "name": "What it doesn't: size",
         "claim": "width can explode",
-        "html": "<ul>\n<li>Some functions need exponentially many units in one layer but polynomially many across several layers (depth-separation results).</li>\n<li>Composition reuses intermediate features instead of re-deriving them.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>One wide layer</th>\n<th>Several layers</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Units needed for some functions</strong></td>\n<td>exponential in input dimension</td>\n<td>polynomial</td>\n</tr>\n<tr>\n<td><strong>Why</strong></td>\n<td>every feature is built from scratch</td>\n<td>composition reuses intermediate features</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Some functions need exponentially many units in one layer but polynomially many across several layers (depth-separation results).</li>\n<li>Composition reuses intermediate features instead of re-deriving them.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -6445,7 +6445,7 @@
         "number": 1,
         "name": "Culprit 1: Adam's noisy second moment",
         "claim": "unreliable scaling",
-        "html": "<ul>\n<li>v̂ estimated from very few gradients early; bias correction fixes its mean but not its noise.</li>\n<li>Parameters with small early v̂ get step ≈ η·m̂/√v̂ that's far too large.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">Adam step:  Δθ = − η · m̂ / ( √v̂ + ε )\nearly on, v̂ comes from only a few gradients     ← bias correction fixes its mean, not its noise\na parameter with a small early v̂ gets a huge step ← warmup keeps η tiny until v̂ settles\n</code></pre>\n<ul>\n<li>v̂ estimated from very few gradients early; bias correction fixes its mean but not its noise.</li>\n<li>Parameters with small early v̂ get step ≈ η·m̂/√v̂ that's far too large.</li>\n</ul>"
       },
       {
         "number": 2,
@@ -6463,7 +6463,7 @@
         "number": 4,
         "name": "Then decay",
         "claim": "cover ground, then converge",
-        "html": "<ul>\n<li>Cosine or linear decay to ~10% of peak (or lower).</li>\n<li>Alternatives: inverse square root (original transformer), warmup-stable-decay schedules for continued training.</li>\n</ul>"
+        "html": "<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Learning-rate schedule: linear warmup, then cosine decay&quot;,&quot;caption&quot;:&quot;Computed from the schedule formula with a 1,000-step warmup, 10,000 steps in total and a floor at 10% of peak.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;training step&quot;,&quot;domain&quot;:[0,10000]},&quot;y&quot;:{&quot;label&quot;:&quot;learning rate (fraction of peak)&quot;,&quot;domain&quot;:[0,1.1]},&quot;series&quot;:[{&quot;name&quot;:&quot;learning rate&quot;,&quot;points&quot;:[[0,0],[500,0.5],[1000,1],[2000,0.973],[4000,0.775],[5500,0.55],[7000,0.325],[8500,0.16],[10000,0.1]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;region&quot;,&quot;from&quot;:0,&quot;to&quot;:1000,&quot;label&quot;:&quot;warmup&quot;},{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:1000,&quot;label&quot;:&quot;peak&quot;}]}\"></div><figcaption>Computed from the schedule formula with a 1,000-step warmup, 10,000 steps in total and a floor at 10% of peak.</figcaption></figure>\n<ul>\n<li>Cosine or linear decay to ~10% of peak (or lower).</li>\n<li>Alternatives: inverse square root (original transformer), warmup-stable-decay schedules for continued training.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -6659,7 +6659,7 @@
         "number": 4,
         "name": "Contrast with inference",
         "claim": "an order of magnitude less",
-        "html": "<ul>\n<li>bf16 inference: ~14 GB weights; int8 ~7 GB; int4 ~3.5 GB.</li>\n<li>Plus KV cache, growing with batch × context length.</li>\n</ul>"
+        "html": "<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;bar&quot;,&quot;title&quot;:&quot;Memory for a 7-billion-parameter model: training state vs inference weights&quot;,&quot;caption&quot;:&quot;Computed from bytes per parameter (16 for mixed-precision AdamW training, 2 for bf16, 1 for int8, 0.5 for int4). Activations and the KV cache come on top.&quot;,&quot;y&quot;:{&quot;label&quot;:&quot;memory&quot;,&quot;unit&quot;:&quot; GB&quot;,&quot;domain&quot;:[0,120]},&quot;bars&quot;:[{&quot;label&quot;:&quot;training state&quot;,&quot;value&quot;:112,&quot;tone&quot;:&quot;warn&quot;},{&quot;label&quot;:&quot;bf16 inference&quot;,&quot;value&quot;:14},{&quot;label&quot;:&quot;int8&quot;,&quot;value&quot;:7,&quot;tone&quot;:&quot;ok&quot;},{&quot;label&quot;:&quot;int4&quot;,&quot;value&quot;:3.5,&quot;tone&quot;:&quot;ok&quot;}]}\"></div><figcaption>Computed from bytes per parameter (16 for mixed-precision AdamW training, 2 for bf16, 1 for int8, 0.5 for int4). Activations and the KV cache come on top.</figcaption></figure>\n<ul>\n<li>bf16 inference: ~14 GB weights; int8 ~7 GB; int4 ~3.5 GB.</li>\n<li>Plus KV cache, growing with batch × context length.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -6745,7 +6745,7 @@
         "number": 2,
         "name": "fp16's narrow range",
         "claim": "underflow and overflow",
-        "html": "<ul>\n<li>Gradients smaller than ~6e−5 (subnormals down to ~6e−8) become zero: silent loss of learning signal.</li>\n<li>Activations or logits above 65,504 → inf → NaN downstream.</li>\n<li>\"Mid-training\" failures often come from gradually growing activations or logits.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Format</th>\n<th>Exponent bits</th>\n<th>Mantissa bits</th>\n<th>Largest value</th>\n<th>Smallest normal value</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>fp16</strong></td>\n<td>5</td>\n<td>10</td>\n<td>65,504</td>\n<td>about 6 × 10⁻⁵</td>\n</tr>\n<tr>\n<td><strong>bf16</strong></td>\n<td>8</td>\n<td>7</td>\n<td>about 3 × 10³⁸</td>\n<td>about 1 × 10⁻³⁸</td>\n</tr>\n<tr>\n<td><strong>fp32</strong></td>\n<td>8</td>\n<td>23</td>\n<td>about 3 × 10³⁸</td>\n<td>about 1 × 10⁻³⁸</td>\n</tr>\n</tbody></table>\n<p>fp16 trades range for precision; bf16 keeps fp32's range and gives up precision.</p>\n<ul>\n<li>Gradients smaller than ~6e−5 (subnormals down to ~6e−8) become zero: silent loss of learning signal.</li>\n<li>Activations or logits above 65,504 → inf → NaN downstream.</li>\n<li>\"Mid-training\" failures often come from gradually growing activations or logits.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -6931,7 +6931,7 @@
         "number": 2,
         "name": "Data parallel",
         "claim": "replicate, split the batch",
-        "html": "<ul>\n<li>All-reduce gradients each step; scales well with good interconnect.</li>\n<li>Memory per GPU: full model + full optimizer state.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Data parallel</th>\n<th></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What is split</strong></td>\n<td>the batch; every GPU holds a full replica</td>\n</tr>\n<tr>\n<td><strong>Communication</strong></td>\n<td>all-reduce of gradients once per step</td>\n</tr>\n<tr>\n<td><strong>Memory per GPU</strong></td>\n<td>full model + full optimizer state</td>\n</tr>\n<tr>\n<td><strong>Stops working when</strong></td>\n<td>one replica no longer fits on one GPU</td>\n</tr>\n</tbody></table>\n<ul>\n<li>All-reduce gradients each step; scales well with good interconnect.</li>\n<li>Memory per GPU: full model + full optimizer state.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -7123,7 +7123,7 @@
         "number": 2,
         "name": "Tokeniser and template",
         "claim": "the top suspect",
-        "html": "<ul>\n<li>Chat template mismatch (roles, system prompt, BOS/EOS tokens).</li>\n<li>Different tokeniser version or normalisation.</li>\n<li>Truncation from the left vs right; max context differences cutting instructions.</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Check</th>\n<th>Mismatch to look for</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Chat template</strong></td>\n<td>roles, system prompt, BOS and EOS tokens</td>\n</tr>\n<tr>\n<td><strong>Tokeniser</strong></td>\n<td>a different version or normalisation</td>\n</tr>\n<tr>\n<td><strong>Truncation</strong></td>\n<td>left vs right; a shorter max context cutting the instructions</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Chat template mismatch (roles, system prompt, BOS/EOS tokens).</li>\n<li>Different tokeniser version or normalisation.</li>\n<li>Truncation from the left vs right; max context differences cutting instructions.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -7135,7 +7135,7 @@
         "number": 4,
         "name": "Decoding settings",
         "claim": "a different policy",
-        "html": "<ul>\n<li>Temperature, top-p/top-k, repetition penalties, max tokens, stop sequences.</li>\n<li>Batch-dependent effects in some serving engines (padding, speculative decoding settings).</li>\n</ul>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Setting</th>\n<th>Training-time evaluation</th>\n<th>Serving</th>\n<th>Effect of a mismatch</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>temperature, top-p, top-k</strong></td>\n<td>often greedy</td>\n<td>product defaults</td>\n<td>different outputs from the same weights</td>\n</tr>\n<tr>\n<td><strong>repetition penalty, max tokens, stop sequences</strong></td>\n<td>unset</td>\n<td>set</td>\n<td>truncated or altered answers</td>\n</tr>\n<tr>\n<td><strong>batching and padding</strong></td>\n<td>fixed</td>\n<td>engine-dependent</td>\n<td>small numerical differences</td>\n</tr>\n</tbody></table>\n<ul>\n<li>Temperature, top-p/top-k, repetition penalties, max tokens, stop sequences.</li>\n<li>Batch-dependent effects in some serving engines (padding, speculative decoding settings).</li>\n</ul>"
       },
       {
         "number": 5,
@@ -7228,7 +7228,7 @@
         "number": 3,
         "name": "The general law",
         "claim": "bias vs data",
-        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Strong bias (CNN)</th>\n<th>Weak bias (ViT)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Small data</td>\n<td>✅ better</td>\n<td>❌ worse</td>\n</tr>\n<tr>\n<td>Huge data</td>\n<td>good</td>\n<td>✅ often better, higher ceiling</td>\n</tr>\n<tr>\n<td>Long-range relations</td>\n<td>limited by receptive field</td>\n<td>native</td>\n</tr>\n</tbody></table>"
+        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Strong bias (CNN)</th>\n<th>Weak bias (ViT)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Small data</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> better</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> worse</td>\n</tr>\n<tr>\n<td>Huge data</td>\n<td>good</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> often better, higher ceiling</td>\n</tr>\n<tr>\n<td>Long-range relations</td>\n<td>limited by receptive field</td>\n<td>native</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 4,
@@ -7313,13 +7313,13 @@
         "number": 1,
         "name": "Localise in depth: logit lens",
         "claim": "where the answer appears",
-        "html": "<ul>\n<li>At each layer, apply the final unembedding (after norm) to the residual stream.</li>\n<li>Track the probability of the false token vs the true one by layer.</li>\n<li>A sharp rise over a few layers suggests where the association is retrieved.</li>\n</ul>"
+        "html": "<pre><code class=\"language-text\">logitsₗ = W_U · LayerNorm( hₗ )        ← decode the residual stream at layer ℓ as if it were the last\ntrack P(false token) vs P(true token) across ℓ   ← the layers where it jumps are where the fact is retrieved\n</code></pre>\n<ul>\n<li>At each layer, apply the final unembedding (after norm) to the residual stream.</li>\n<li>Track the probability of the false token vs the true one by layer.</li>\n<li>A sharp rise over a few layers suggests where the association is retrieved.</li>\n</ul>"
       },
       {
         "number": 2,
         "name": "Localise causally: activation patching",
         "claim": "which component matters",
-        "html": "<ol>\n<li>Clean prompt (\"The Eiffel Tower is in\") → model's answer.</li>\n<li>Corrupted prompt (subject noised) → answer lost.</li>\n<li>Restore one component's clean activation at a time (layer × position × MLP/attention).</li>\n<li>Components whose restoration recovers the answer are causally involved.</li>\n</ol>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>Run</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>clean prompt: \"The Eiffel Tower is in\"</td>\n<td>the model's answer</td>\n</tr>\n<tr>\n<td>2</td>\n<td>corrupted prompt: subject tokens noised</td>\n<td>answer lost</td>\n</tr>\n<tr>\n<td><strong>3</strong></td>\n<td><strong>restore one clean activation at a time</strong> (layer × position × MLP or attention)</td>\n<td><strong>answer returns only for some components</strong></td>\n</tr>\n<tr>\n<td>4</td>\n<td>read off those components</td>\n<td>they are causally involved</td>\n</tr>\n</tbody></table>\n<ol>\n<li>Clean prompt (\"The Eiffel Tower is in\") → model's answer.</li>\n<li>Corrupted prompt (subject noised) → answer lost.</li>\n<li>Restore one component's clean activation at a time (layer × position × MLP/attention).</li>\n<li>Components whose restoration recovers the answer are causally involved.</li>\n</ol>"
       },
       {
         "number": 3,

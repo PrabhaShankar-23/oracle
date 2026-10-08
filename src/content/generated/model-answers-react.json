@@ -23,7 +23,7 @@
         "number": 2,
         "name": "Mechanism",
         "claim": "declarative description plus reconciliation",
-        "html": "<p><strong>💻 Prove it — the same feature, imperative vs declarative:</strong></p>\n<pre><code class=\"language-jsx\">// Imperative: every transition by hand; easy to forget one\nbutton.onclick = () =&gt; { count++; label.textContent = count; if (count &gt; 9) badge.classList.add('hot') }\n\n// Declarative: describe the result; React applies the diff\nfunction Counter() {\n  const [count, setCount] = useState(0)\n  return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}{count &gt; 9 &amp;&amp; &lt;b&gt;hot&lt;/b&gt;}&lt;/button&gt;\n}\n</code></pre>\n<ul>\n<li>Imperative: reset, undo or a second button changing <code>count</code> each need matching DOM code. Declarative: every path goes through state.</li>\n</ul>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the same feature, imperative vs declarative:</strong></p>\n<pre><code class=\"language-jsx\">// Imperative: every transition by hand; easy to forget one\nbutton.onclick = () =&gt; { count++; label.textContent = count; if (count &gt; 9) badge.classList.add('hot') }\n\n// Declarative: describe the result; React applies the diff\nfunction Counter() {\n  const [count, setCount] = useState(0)\n  return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}{count &gt; 9 &amp;&amp; &lt;b&gt;hot&lt;/b&gt;}&lt;/button&gt;\n}\n</code></pre>\n<ul>\n<li>Imperative: reset, undo or a second button changing <code>count</code> each need matching DOM code. Declarative: every path goes through state.</li>\n</ul>"
       },
       {
         "number": 3,
@@ -116,7 +116,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "three writes of the same value",
-        "html": "<table>\n<thead>\n<tr>\n<th>Call</th>\n<th><code>count</code> read</th>\n<th>Queued update</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>0</td>\n<td>set to 1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>0</td>\n<td>set to 1</td>\n</tr>\n<tr>\n<td>3</td>\n<td>0</td>\n<td>set to 1</td>\n</tr>\n<tr>\n<td>re-render</td>\n<td>—</td>\n<td><code>count = 1</code></td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// click once, then read the button\n// → \"1\"   (React 19.3, jsdom harness)\n// with setCount(c =&gt; c + 1) ×3\n// → \"3\"\n</code></pre>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Call</th>\n<th><code>count</code> read</th>\n<th>Queued update</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>0</td>\n<td>set to 1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>0</td>\n<td>set to 1</td>\n</tr>\n<tr>\n<td>3</td>\n<td>0</td>\n<td>set to 1</td>\n</tr>\n<tr>\n<td>re-render</td>\n<td>—</td>\n<td><code>count = 1</code></td>\n</tr>\n</tbody></table>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// click once, then read the button\n// → \"1\"   (React 19.3, jsdom harness)\n// with setCount(c =&gt; c + 1) ×3\n// → \"3\"\n</code></pre>"
       },
       {
         "number": 3,
@@ -140,7 +140,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>setCount(count + 1); setCount(c =&gt; c + 1)</code> — what renders?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>setCount(count + 1); setCount(c =&gt; c + 1)</code> — what renders?",
         "tag": "edge",
         "html": "<ol start=\"2\">\n<li>The first queues \"set to 1\"; the updater then receives 1 and returns 2.</li>\n</ol>"
       },
@@ -237,7 +237,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 You call <code>setN(1)</code> and then <code>console.log(ref.current.textContent)</code> in the same handler. What does it log?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> You call <code>setN(1)</code> and then <code>console.log(ref.current.textContent)</code> in the same handler. What does it log?",
         "tag": "edge",
         "html": "<p>The old value: the DOM hasn't been committed yet. Read it in an effect after commit, or use <code>flushSync</code> to force a synchronous commit (rarely justified).</p>"
       },
@@ -334,7 +334,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>{isAdmin ? &lt;Panel /&gt; : &lt;Panel /&gt;}</code> — does toggling <code>isAdmin</code> reset <code>Panel</code>&#39;s state?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>{isAdmin ? &lt;Panel /&gt; : &lt;Panel /&gt;}</code> — does toggling <code>isAdmin</code> reset <code>Panel</code>'s state?",
         "tag": "edge",
         "html": "<p>No: same type at the same position, so React keeps the instance. Add <code>key={isAdmin ? 'admin' : 'user'}</code> to force a reset.</p>"
       },
@@ -416,7 +416,7 @@
         "number": 4,
         "name": "Confirm",
         "claim": "the minimal reproduction",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">function Row({ label }) { return &lt;li&gt;&lt;span&gt;{label}&lt;/span&gt;&lt;input defaultValue={label + '-note'} /&gt;&lt;/li&gt; }\nfunction List({ items, byIndex }) { return &lt;ul&gt;{items.map((it, i) =&gt; &lt;Row key={byIndex ? i : it} label={it} /&gt;)}&lt;/ul&gt; }\n// render ['a','b','c'], then ['b','c']\n// → key=index  b:a-note c:b-note\n// → key=id     b:b-note c:c-note     (React 19.3, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">function Row({ label }) { return &lt;li&gt;&lt;span&gt;{label}&lt;/span&gt;&lt;input defaultValue={label + '-note'} /&gt;&lt;/li&gt; }\nfunction List({ items, byIndex }) { return &lt;ul&gt;{items.map((it, i) =&gt; &lt;Row key={byIndex ? i : it} label={it} /&gt;)}&lt;/ul&gt; }\n// render ['a','b','c'], then ['b','c']\n// → key=index  b:a-note c:b-note\n// → key=id     b:b-note c:c-note     (React 19.3, jsdom harness)\n</code></pre>"
       },
       {
         "number": 5,
@@ -509,7 +509,7 @@
         "number": 3,
         "name": "Where React's model wins",
         "claim": "correctness and batching",
-        "html": "<p><strong>💻 Prove it — the work per update (conceptual):</strong></p>\n<pre><code>Direct:  compute change → 1 DOM write\nReact:   call component(s) → build elements → diff → same DOM write(s)\n         + automatic batching of many state changes into one commit\n</code></pre>\n<ul>\n<li>Across a large app, batching and avoiding stale DOM state usually matter more than per-update overhead.</li>\n</ul>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the work per update (conceptual):</strong></p>\n<pre><code>Direct:  compute change → 1 DOM write\nReact:   call component(s) → build elements → diff → same DOM write(s)\n         + automatic batching of many state changes into one commit\n</code></pre>\n<ul>\n<li>Across a large app, batching and avoiding stale DOM state usually matter more than per-update overhead.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -620,7 +620,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>items.map(item =&gt; useState(item))</code> in a component — safe?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>items.map(item =&gt; useState(item))</code> in a component — safe?",
         "tag": "edge",
         "html": "<p>Only while <code>items.length</code> never changes. The moment it does, the hook count changes and React throws or misassigns state. Move per-item state into a child component per item.</p>"
       },
@@ -689,7 +689,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "every tick writes 1",
-        "html": "<table>\n<thead>\n<tr>\n<th>Tick</th>\n<th><code>count</code> in closure</th>\n<th>Update</th>\n<th>Screen</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>0</td>\n<td>set 1</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>0</td>\n<td>set 1 (bail out)</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3…</td>\n<td>0</td>\n<td>set 1</td>\n<td>1</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// interval shortened to 20 ms, read after ~130 ms\n// → \"1\"                        (React 19.3, jsdom harness)\n// with setCount(c =&gt; c + 1)\n// → keeps counting\n</code></pre>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Tick</th>\n<th><code>count</code> in closure</th>\n<th>Update</th>\n<th>Screen</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>0</td>\n<td>set 1</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>0</td>\n<td>set 1 (bail out)</td>\n<td>1</td>\n</tr>\n<tr>\n<td>3…</td>\n<td>0</td>\n<td>set 1</td>\n<td>1</td>\n</tr>\n</tbody></table>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// interval shortened to 20 ms, read after ~130 ms\n// → \"1\"                        (React 19.3, jsdom harness)\n// with setCount(c =&gt; c + 1)\n// → keeps counting\n</code></pre>"
       },
       {
         "number": 3,
@@ -713,7 +713,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Change the callback to <code>setCount(c =&gt; c + 1)</code> and keep <code>[]</code>. What does StrictMode dev show on mount?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Change the callback to <code>setCount(c =&gt; c + 1)</code> and keep <code>[]</code>. What does StrictMode dev show on mount?",
         "tag": "edge",
         "html": "<p>It counts normally. StrictMode mounts, runs cleanup (clearing the first interval), and mounts again, so exactly one interval survives.</p>"
       },
@@ -787,7 +787,7 @@
         "number": 2,
         "name": "Measure before guessing",
         "claim": "is the reference changing?",
-        "html": "<p><strong>💻 Prove it — an inline object vs a memoized one:</strong></p>\n<pre><code class=\"language-jsx\">function Search({ q }) { const filters = { q }; useEffect(() =&gt; { runs++ }, [filters]); return null }\n// 4 renders with the same q\n// → effect runs: 4\nfunction Search2({ q }) { const filters = useMemo(() =&gt; ({ q }), [q]); useEffect(() =&gt; { runs2++ }, [filters]); return null }\n// → effect runs: 1        (React 19.3, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — an inline object vs a memoized one:</strong></p>\n<pre><code class=\"language-jsx\">function Search({ q }) { const filters = { q }; useEffect(() =&gt; { runs++ }, [filters]); return null }\n// 4 renders with the same q\n// → effect runs: 4\nfunction Search2({ q }) { const filters = useMemo(() =&gt; ({ q }), [q]); useEffect(() =&gt; { runs2++ }, [filters]); return null }\n// → effect runs: 1        (React 19.3, jsdom harness)\n</code></pre>"
       },
       {
         "number": 3,
@@ -817,7 +817,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>useEffect(fn, [ [a, b] ])</code> — how often does it run?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>useEffect(fn, [ [a, b] ])</code> — how often does it run?",
         "tag": "edge",
         "html": "<p>Every render: <code>[a, b]</code> is a new array each time. Use <code>[a, b]</code> as the dependency list itself, not an array inside it.</p>"
       },
@@ -890,7 +890,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "where the updates run",
-        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>React 17</th>\n<th>React 18+</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>inside the click handler</td>\n<td>batched</td>\n<td>batched</td>\n</tr>\n<tr>\n<td>inside setTimeout / promise</td>\n<td><strong>not batched</strong> → 2 renders</td>\n<td>batched → 1 render</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// count renders after one click, once the timeout fires\n// → re-renders: 1, button shows \"11\"     (React 19.3, createRoot, jsdom harness)\n</code></pre>\n<p>React 17's two renders come from its documented behaviour; not re-measured here.</p>"
+        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>React 17</th>\n<th>React 18+</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>inside the click handler</td>\n<td>batched</td>\n<td>batched</td>\n</tr>\n<tr>\n<td>inside setTimeout / promise</td>\n<td><strong>not batched</strong> → 2 renders</td>\n<td>batched → 1 render</td>\n</tr>\n</tbody></table>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// count renders after one click, once the timeout fires\n// → re-renders: 1, button shows \"11\"     (React 19.3, createRoot, jsdom harness)\n</code></pre>\n<p>React 17's two renders come from its documented behaviour; not re-measured here.</p>"
       },
       {
         "number": 3,
@@ -914,7 +914,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 In React 18, <code>await fetch(...)</code> in a handler, then <code>setA(1); setB(1)</code>. How many renders?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> In React 18, <code>await fetch(...)</code> in a handler, then <code>setA(1); setB(1)</code>. How many renders?",
         "tag": "edge",
         "html": "<p>One: updates after an <code>await</code> in the same task are batched automatically.</p>"
       },
@@ -989,7 +989,7 @@
         "number": 3,
         "name": "Where useLayoutEffect wins",
         "claim": "measure then correct",
-        "html": "<p><strong>💻 Prove it — the tooltip pattern:</strong></p>\n<pre><code class=\"language-jsx\">function Tooltip({ anchorRect, children }) {\n  const ref = useRef(null)\n  const [top, setTop] = useState(anchorRect.bottom)\n  useLayoutEffect(() =&gt; {\n    const h = ref.current.getBoundingClientRect().height\n    if (anchorRect.bottom + h &gt; window.innerHeight) setTop(anchorRect.top - h)   // flip above\n  }, [anchorRect])\n  return &lt;div ref={ref} style={{ position: 'fixed', top }}&gt;{children}&lt;/div&gt;\n}\n// with useEffect: one painted frame at the wrong position (flicker); with useLayoutEffect: none\n</code></pre>\n<p>The re-render triggered inside <code>useLayoutEffect</code> is committed before paint, so the user only sees the corrected position.</p>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the tooltip pattern:</strong></p>\n<pre><code class=\"language-jsx\">function Tooltip({ anchorRect, children }) {\n  const ref = useRef(null)\n  const [top, setTop] = useState(anchorRect.bottom)\n  useLayoutEffect(() =&gt; {\n    const h = ref.current.getBoundingClientRect().height\n    if (anchorRect.bottom + h &gt; window.innerHeight) setTop(anchorRect.top - h)   // flip above\n  }, [anchorRect])\n  return &lt;div ref={ref} style={{ position: 'fixed', top }}&gt;{children}&lt;/div&gt;\n}\n// with useEffect: one painted frame at the wrong position (flicker); with useLayoutEffect: none\n</code></pre>\n<p>The re-render triggered inside <code>useLayoutEffect</code> is committed before paint, so the user only sees the corrected position.</p>"
       },
       {
         "number": 4,
@@ -1007,7 +1007,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 In a layout effect you call <code>setState</code>. When does the user see it?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> In a layout effect you call <code>setState</code>. When does the user see it?",
         "tag": "edge",
         "html": "<p>In the same paint: React processes that update synchronously before the browser paints, so no intermediate frame appears.</p>"
       },
@@ -1080,7 +1080,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "mount, simulated unmount, remount",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// &lt;StrictMode&gt;&lt;Child /&gt;&lt;/StrictMode&gt;, development build\n// → effect, cleanup, effect     (React 19.3, jsdom harness)\n// production build or no StrictMode\n// → effect\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// &lt;StrictMode&gt;&lt;Child /&gt;&lt;/StrictMode&gt;, development build\n// → effect, cleanup, effect     (React 19.3, jsdom harness)\n// production build or no StrictMode\n// → effect\n</code></pre>"
       },
       {
         "number": 3,
@@ -1104,7 +1104,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 An effect does <code>ws = new WebSocket(url)</code> with no cleanup. What happens in dev StrictMode?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> An effect does <code>ws = new WebSocket(url)</code> with no cleanup. What happens in dev StrictMode?",
         "tag": "edge",
         "html": "<p>Two sockets open; both deliver messages, so handlers fire twice. Add <code>return () =&gt; ws.close()</code>.</p>"
       },
@@ -1186,7 +1186,7 @@
         "number": 4,
         "name": "Confirm",
         "claim": "the minimal reproduction",
-        "html": "<p><strong>💻 Prove it — 'a' takes 60 ms, 'ab' takes 10 ms:</strong></p>\n<pre><code class=\"language-jsx\">function Results({ query, guard }) {\n  const [data, setData] = useState('')\n  useEffect(() =&gt; {\n    let ignore = false\n    delay(query === 'a' ? 60 : 10, 'results for ' + query).then(d =&gt; { if (!guard || !ignore) setData(d) })\n    return () =&gt; { ignore = true }\n  }, [query])\n  return &lt;p&gt;{data}&lt;/p&gt;\n}\n// render query=\"a\", then \"ab\"; wait 100 ms\n// → guard=false  \"results for a\"    (stale wins)\n// → guard=true   \"results for ab\"   (React 19.3, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — 'a' takes 60 ms, 'ab' takes 10 ms:</strong></p>\n<pre><code class=\"language-jsx\">function Results({ query, guard }) {\n  const [data, setData] = useState('')\n  useEffect(() =&gt; {\n    let ignore = false\n    delay(query === 'a' ? 60 : 10, 'results for ' + query).then(d =&gt; { if (!guard || !ignore) setData(d) })\n    return () =&gt; { ignore = true }\n  }, [query])\n  return &lt;p&gt;{data}&lt;/p&gt;\n}\n// render query=\"a\", then \"ab\"; wait 100 ms\n// → guard=false  \"results for a\"    (stale wins)\n// → guard=true   \"results for ab\"   (React 19.3, jsdom harness)\n</code></pre>"
       },
       {
         "number": 5,
@@ -1204,7 +1204,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 With the <code>ignore</code> flag but no abort, how many network requests complete when typing &#39;a&#39;,&#39;b&#39;,&#39;c&#39; quickly?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> With the <code>ignore</code> flag but no abort, how many network requests complete when typing 'a','b','c' quickly?",
         "tag": "edge",
         "html": "<p>All three complete on the network; only the last one's result is applied. <code>AbortController</code> also cancels the earlier requests, saving bandwidth and server work.</p>"
       },
@@ -1277,7 +1277,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "the call happens before useState sees it",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// mount + 4 clicks = 5 renders\n// → buildGrid called 5 times              (React 19.3, jsdom harness, no StrictMode)\n// with useState(buildGrid)\n// → 1\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// mount + 4 clicks = 5 renders\n// → buildGrid called 5 times              (React 19.3, jsdom harness, no StrictMode)\n// with useState(buildGrid)\n// → 1\n</code></pre>"
       },
       {
         "number": 3,
@@ -1301,7 +1301,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>useState(() =&gt; buildGrid())</code> in StrictMode development — how many calls on mount?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>useState(() =&gt; buildGrid())</code> in StrictMode development — how many calls on mount?",
         "tag": "edge",
         "html": "<p>Two: StrictMode double-invokes render (and initialisers) in development to surface impurity. Production: one.</p>"
       },
@@ -1370,7 +1370,7 @@
         "number": 2,
         "name": "Trace the commit",
         "claim": "render down, effects up",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// → child effect, parent effect     (React 19.3, jsdom harness)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Phase</th>\n<th>Order</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>render</td>\n<td>Parent → Child</td>\n</tr>\n<tr>\n<td>commit DOM</td>\n<td>Child's DOM inside Parent's</td>\n</tr>\n<tr>\n<td>effects (layout and passive)</td>\n<td>Child → Parent</td>\n</tr>\n<tr>\n<td>cleanups on unmount</td>\n<td>Parent → Child</td>\n</tr>\n</tbody></table>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// → child effect, parent effect     (React 19.3, jsdom harness)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Phase</th>\n<th>Order</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>render</td>\n<td>Parent → Child</td>\n</tr>\n<tr>\n<td>commit DOM</td>\n<td>Child's DOM inside Parent's</td>\n</tr>\n<tr>\n<td>effects (layout and passive)</td>\n<td>Child → Parent</td>\n</tr>\n<tr>\n<td>cleanups on unmount</td>\n<td>Parent → Child</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 3,
@@ -1394,7 +1394,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Parent uses <code>useLayoutEffect</code>, child uses <code>useEffect</code>. Order?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Parent uses <code>useLayoutEffect</code>, child uses <code>useEffect</code>. Order?",
         "tag": "edge",
         "html": "<p><code>parent layout</code> first (layout effects run during commit, before paint), then <code>child effect</code> (passive effects after paint).</p>"
       },
@@ -1491,7 +1491,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 After <code>bump()</code> ×3, the parent re-renders for another reason. What&#39;s shown?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> After <code>bump()</code> ×3, the parent re-renders for another reason. What's shown?",
         "tag": "edge",
         "html": "<p>\"3\": the next render reads the latest <code>ref.current</code>. The value was never lost, just not displayed until something else rendered — the classic stale-UI bug.</p>"
       },
@@ -1564,7 +1564,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "new references each time",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// mount + 2 clicks = 3 parent renders\n// → child renders: 3                    (React 19.3, jsdom harness)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Prop</th>\n<th>Render 1</th>\n<th>Render 2</th>\n<th><code>Object.is</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>style</code></td>\n<td><code>{color:'red'}</code> #1</td>\n<td><code>{color:'red'}</code> #2</td>\n<td>false</td>\n</tr>\n<tr>\n<td><code>onSelect</code></td>\n<td>fn #1</td>\n<td>fn #2</td>\n<td>false</td>\n</tr>\n</tbody></table>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// mount + 2 clicks = 3 parent renders\n// → child renders: 3                    (React 19.3, jsdom harness)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Prop</th>\n<th>Render 1</th>\n<th>Render 2</th>\n<th><code>Object.is</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>style</code></td>\n<td><code>{color:'red'}</code> #1</td>\n<td><code>{color:'red'}</code> #2</td>\n<td>false</td>\n</tr>\n<tr>\n<td><code>onSelect</code></td>\n<td>fn #1</td>\n<td>fn #2</td>\n<td>false</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 3,
@@ -1588,7 +1588,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 You hoist <code>style</code> but pass <code>onSelect={handleSelect}</code> where <code>handleSelect</code> is a plain function inside <code>Parent</code>. Renders?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> You hoist <code>style</code> but pass <code>onSelect={handleSelect}</code> where <code>handleSelect</code> is a plain function inside <code>Parent</code>. Renders?",
         "tag": "edge",
         "html": "<p>Still every time: <code>handleSelect</code> is recreated each render. Wrap it in <code>useCallback</code> (with correct deps) or move it outside if it doesn't use props/state.</p>"
       },
@@ -1673,7 +1673,7 @@
         "number": 4,
         "name": "The deciding question",
         "claim": "did the profiler show this component as a cost?",
-        "html": "<p><strong>💻 Prove it — the cheaper structural fix (children pattern):</strong></p>\n<pre><code class=\"language-jsx\">function Page() {\n  return &lt;ScrollTracker&gt;&lt;ExpensiveTree /&gt;&lt;/ScrollTracker&gt;   // ExpensiveTree created by Page\n}\nfunction ScrollTracker({ children }) {\n  const [y, setY] = useState(0)                            // updates often\n  useEffect(() =&gt; { const f = () =&gt; setY(scrollY); addEventListener('scroll', f); return () =&gt; removeEventListener('scroll', f) }, [])\n  return &lt;div data-y={y}&gt;{children}&lt;/div&gt;                  // children element is the same object → not re-rendered\n}\n</code></pre>\n<p><code>ScrollTracker</code> re-renders on every scroll; <code>ExpensiveTree</code> doesn't, with no memo at all, because its element was created by <code>Page</code>, which didn't re-render.</p>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the cheaper structural fix (children pattern):</strong></p>\n<pre><code class=\"language-jsx\">function Page() {\n  return &lt;ScrollTracker&gt;&lt;ExpensiveTree /&gt;&lt;/ScrollTracker&gt;   // ExpensiveTree created by Page\n}\nfunction ScrollTracker({ children }) {\n  const [y, setY] = useState(0)                            // updates often\n  useEffect(() =&gt; { const f = () =&gt; setY(scrollY); addEventListener('scroll', f); return () =&gt; removeEventListener('scroll', f) }, [])\n  return &lt;div data-y={y}&gt;{children}&lt;/div&gt;                  // children element is the same object → not re-rendered\n}\n</code></pre>\n<p><code>ScrollTracker</code> re-renders on every scroll; <code>ExpensiveTree</code> doesn't, with no memo at all, because its element was created by <code>Page</code>, which didn't re-render.</p>"
       },
       {
         "number": 5,
@@ -1685,7 +1685,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A memoized component receives <code>items={data.filter(x =&gt; x.active)}</code> from its parent. Does memo help?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A memoized component receives <code>items={data.filter(x =&gt; x.active)}</code> from its parent. Does memo help?",
         "tag": "edge",
         "html": "<p>No: <code>filter</code> returns a new array every render. Memoize the filtered array with <code>useMemo</code> in the parent, or pass <code>data</code> and filter inside the child.</p>"
       },
@@ -1758,7 +1758,7 @@
         "number": 2,
         "name": "Trace the equivalence",
         "claim": "both return the cached value",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">function Same({ n }) {\n  const a = useCallback(() =&gt; n, [n])\n  const b = useMemo(() =&gt; () =&gt; n, [n])\n  pair.push([a, b])\n  return null\n}\n// render twice with n = 1; compare render 1 vs render 2\n// → stable across renders: true true        (React 19.3, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">function Same({ n }) {\n  const a = useCallback(() =&gt; n, [n])\n  const b = useMemo(() =&gt; () =&gt; n, [n])\n  pair.push([a, b])\n  return null\n}\n// render twice with n = 1; compare render 1 vs render 2\n// → stable across renders: true true        (React 19.3, jsdom harness)\n</code></pre>"
       },
       {
         "number": 3,
@@ -1782,7 +1782,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>const onSave = useCallback(() =&gt; save(form), [])</code>. What does it save after the user edits the form?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>const onSave = useCallback(() =&gt; save(form), [])</code>. What does it save after the user edits the form?",
         "tag": "edge",
         "html": "<p>The original <code>form</code> from the first render: the empty dependency list froze a stale closure. Add <code>form</code> to the deps (or read it from a ref/updater).</p>"
       },
@@ -1854,7 +1854,7 @@
         "number": 3,
         "name": "Baseline design",
         "claim": "URL as source, subscribe to it",
-        "html": "<p><strong>💻 Prove it — the core, framework-agnostic:</strong></p>\n<pre><code class=\"language-jsx\">function subscribe(cb) { addEventListener('popstate', cb); addEventListener('urlchange', cb); return () =&gt; { removeEventListener('popstate', cb); removeEventListener('urlchange', cb) } }\nfunction useQueryParam(key, { parse = String, serialize = String, fallback, history: mode = 'replace' } = {}) {\n  const raw = useSyncExternalStore(subscribe, () =&gt; new URLSearchParams(location.search).get(key), () =&gt; null)\n  const value = raw == null ? fallback : parse(raw)\n  const setValue = useCallback(next =&gt; {\n    const p = new URLSearchParams(location.search); p.set(key, serialize(next))\n    window.history[mode === 'push' ? 'pushState' : 'replaceState'](null, '', `?${p}`)\n    dispatchEvent(new Event('urlchange'))\n  }, [key, serialize, mode])\n  return [value, setValue]\n}\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the core, framework-agnostic:</strong></p>\n<pre><code class=\"language-jsx\">function subscribe(cb) { addEventListener('popstate', cb); addEventListener('urlchange', cb); return () =&gt; { removeEventListener('popstate', cb); removeEventListener('urlchange', cb) } }\nfunction useQueryParam(key, { parse = String, serialize = String, fallback, history: mode = 'replace' } = {}) {\n  const raw = useSyncExternalStore(subscribe, () =&gt; new URLSearchParams(location.search).get(key), () =&gt; null)\n  const value = raw == null ? fallback : parse(raw)\n  const setValue = useCallback(next =&gt; {\n    const p = new URLSearchParams(location.search); p.set(key, serialize(next))\n    window.history[mode === 'push' ? 'pushState' : 'replaceState'](null, '', `?${p}`)\n    dispatchEvent(new Event('urlchange'))\n  }, [key, serialize, mode])\n  return [value, setValue]\n}\n</code></pre>"
       },
       {
         "number": 4,
@@ -1878,7 +1878,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A search box writes every keystroke to the URL with <code>pushState</code>. User types &quot;react&quot; then presses Back. What happens?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A search box writes every keystroke to the URL with <code>pushState</code>. User types \"react\" then presses Back. What happens?",
         "tag": "edge",
         "html": "<p>The URL goes to \"reac\" — one history entry per keystroke. Use replace (or debounce and push once) for typing.</p>"
       },
@@ -1975,7 +1975,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>getSnapshot = () =&gt; ({ online: navigator.onLine })</code>. What happens?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>getSnapshot = () =&gt; ({ online: navigator.onLine })</code>. What happens?",
         "tag": "edge",
         "html": "<p>React sees a new object on every call, assumes the store changed, and re-renders repeatedly — React warns about an uncached snapshot. Return the primitive <code>navigator.onLine</code>.</p>"
       },
@@ -2048,7 +2048,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "measured",
-        "html": "<p><strong>💻 Prove it — renders of the tree over mount + one theme change:</strong></p>\n<table>\n<thead>\n<tr>\n<th>Setup</th>\n<th>Tree renders</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>as written (inline value, no memo)</td>\n<td>2</td>\n</tr>\n<tr>\n<td><code>memo(ExpensiveTree)</code>, inline value</td>\n<td>2 (context identity changed)</td>\n</tr>\n<tr>\n<td><code>memo(ExpensiveTree)</code> + <code>useMemo</code> value</td>\n<td><strong>1</strong></td>\n</tr>\n<tr>\n<td>no memo, <code>useMemo</code> value</td>\n<td>2 (parent re-render)</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-jsx\">// (React 19.3, jsdom harness; one theme click after mount)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — renders of the tree over mount + one theme change:</strong></p>\n<table>\n<thead>\n<tr>\n<th>Setup</th>\n<th>Tree renders</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>as written (inline value, no memo)</td>\n<td>2</td>\n</tr>\n<tr>\n<td><code>memo(ExpensiveTree)</code>, inline value</td>\n<td>2 (context identity changed)</td>\n</tr>\n<tr>\n<td><code>memo(ExpensiveTree)</code> + <code>useMemo</code> value</td>\n<td><strong>1</strong></td>\n</tr>\n<tr>\n<td>no memo, <code>useMemo</code> value</td>\n<td>2 (parent re-render)</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-jsx\">// (React 19.3, jsdom harness; one theme click after mount)\n</code></pre>"
       },
       {
         "number": 3,
@@ -2072,7 +2072,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 You memoize the value with <code>useMemo(..., [user])</code> but don&#39;t memo <code>ExpensiveTree</code>. Theme change: does it re-render?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> You memoize the value with <code>useMemo(..., [user])</code> but don't memo <code>ExpensiveTree</code>. Theme change: does it re-render?",
         "tag": "edge",
         "html": "<p>Yes — measured: its parent <code>App</code> re-rendered, and a non-memoized child re-renders with it. The memoized value only helps components that would otherwise bail out.</p>"
       },
@@ -2157,7 +2157,7 @@
         "number": 4,
         "name": "The deciding question",
         "claim": "how often does it change and how many read it?",
-        "html": "<p><strong>💻 Prove it — every consumer re-renders, even for fields it ignores:</strong></p>\n<pre><code class=\"language-jsx\">const Ctx = createContext(null)\nfunction Name() { const { user } = useContext(Ctx); renders.name++; return user }\nfunction Cursor() { const { pos } = useContext(Ctx); renders.cursor++; return pos.x }\n// value = { user, pos } updated 60×/s for mouse moves → Name re-renders 60×/s too\n</code></pre>\n<p>The pattern is the drill's point; measure with the Profiler on your own tree before and after splitting.</p>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — every consumer re-renders, even for fields it ignores:</strong></p>\n<pre><code class=\"language-jsx\">const Ctx = createContext(null)\nfunction Name() { const { user } = useContext(Ctx); renders.name++; return user }\nfunction Cursor() { const { pos } = useContext(Ctx); renders.cursor++; return pos.x }\n// value = { user, pos } updated 60×/s for mouse moves → Name re-renders 60×/s too\n</code></pre>\n<p>The pattern is the drill's point; measure with the Profiler on your own tree before and after splitting.</p>"
       },
       {
         "number": 5,
@@ -2169,7 +2169,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A provider&#39;s value is a memoized object that changes only when <code>user</code> changes. A consumer reads only <code>setUser</code>. Does it re-render when <code>user</code> changes?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A provider's value is a memoized object that changes only when <code>user</code> changes. A consumer reads only <code>setUser</code>. Does it re-render when <code>user</code> changes?",
         "tag": "edge",
         "html": "<p>Yes: the whole value changed identity. Split <code>setUser</code> into its own context to avoid it.</p>"
       },
@@ -2248,7 +2248,7 @@
         "number": 3,
         "name": "Shared client state",
         "claim": "selectors matter",
-        "html": "<p><strong>💻 Prove it — a Zustand slice with selector-based subscriptions:</strong></p>\n<pre><code class=\"language-jsx\">const useComposer = create(set =&gt; ({\n  draft: '', streamingRunId: null,\n  setDraft: draft =&gt; set({ draft }),\n  startRun: id =&gt; set({ streamingRunId: id }),\n}))\nfunction SendButton() { const running = useComposer(s =&gt; s.streamingRunId !== null); return &lt;button disabled={running}&gt;Send&lt;/button&gt; }\n// 3 draft updates → SendButton renders stay at 1; startRun → 2   (React 19.3, zustand 5.0.15, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — a Zustand slice with selector-based subscriptions:</strong></p>\n<pre><code class=\"language-jsx\">const useComposer = create(set =&gt; ({\n  draft: '', streamingRunId: null,\n  setDraft: draft =&gt; set({ draft }),\n  startRun: id =&gt; set({ streamingRunId: id }),\n}))\nfunction SendButton() { const running = useComposer(s =&gt; s.streamingRunId !== null); return &lt;button disabled={running}&gt;Send&lt;/button&gt; }\n// 3 draft updates → SendButton renders stay at 1; startRun → 2   (React 19.3, zustand 5.0.15, jsdom harness)\n</code></pre>"
       },
       {
         "number": 4,
@@ -2266,7 +2266,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Your Redux store holds <code>users</code> fetched from the API and you add a user via a form. What code do you write in Redux vs TanStack Query?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Your Redux store holds <code>users</code> fetched from the API and you add a user via a form. What code do you write in Redux vs TanStack Query?",
         "tag": "edge",
         "html": "<p>Redux: a thunk, pending/fulfilled/rejected reducers, manual cache update or refetch, stale handling. TanStack Query: a <code>useMutation</code> whose <code>onSuccess</code> calls <code>invalidateQueries(['users'])</code>; the list refetches automatically.</p>"
       },
@@ -2349,7 +2349,7 @@
         "number": 3,
         "name": "Where it breaks",
         "claim": "inconsistent keys and mirrored copies",
-        "html": "<p><strong>💻 Prove it — the whole data layer for a list and a mutation:</strong></p>\n<pre><code class=\"language-jsx\">function Users() {\n  const { data, isPending, error } = useQuery({ queryKey: ['users'], queryFn: fetchUsers, staleTime: 30_000 })\n  const qc = useQueryClient()\n  const add = useMutation({ mutationFn: createUser, onSuccess: () =&gt; qc.invalidateQueries({ queryKey: ['users'] }) })\n  if (isPending) return &lt;Spinner /&gt;\n  if (error) return &lt;ErrorView error={error} /&gt;\n  return &lt;List users={data} onAdd={add.mutate} /&gt;\n}\n</code></pre>\n<ul>\n<li>Breaks when keys are inconsistent (the same data under two keys), <code>staleTime</code> is wrong for the data, or you mirror query data into another store.</li>\n</ul>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the whole data layer for a list and a mutation:</strong></p>\n<pre><code class=\"language-jsx\">function Users() {\n  const { data, isPending, error } = useQuery({ queryKey: ['users'], queryFn: fetchUsers, staleTime: 30_000 })\n  const qc = useQueryClient()\n  const add = useMutation({ mutationFn: createUser, onSuccess: () =&gt; qc.invalidateQueries({ queryKey: ['users'] }) })\n  if (isPending) return &lt;Spinner /&gt;\n  if (error) return &lt;ErrorView error={error} /&gt;\n  return &lt;List users={data} onAdd={add.mutate} /&gt;\n}\n</code></pre>\n<ul>\n<li>Breaks when keys are inconsistent (the same data under two keys), <code>staleTime</code> is wrong for the data, or you mirror query data into another store.</li>\n</ul>"
       },
       {
         "number": 4,
@@ -2367,7 +2367,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Three components call <code>useQuery([&#39;user&#39;, 42])</code> at the same time. How many network requests?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Three components call <code>useQuery(['user', 42])</code> at the same time. How many network requests?",
         "tag": "edge",
         "html": "<p>One: identical keys are deduplicated; all three subscribe to the same cache entry.</p>"
       },
@@ -2543,7 +2543,7 @@
         "number": 3,
         "name": "Where useReducer wins",
         "claim": "coupled fields and lifecycles",
-        "html": "<p><strong>💻 Prove it — a pure, testable transition function:</strong></p>\n<pre><code class=\"language-jsx\">function submitReducer(state, action) {\n  switch (action.type) {\n    case 'start':   return { status: 'submitting', error: null }\n    case 'success': return { status: 'done', error: null }\n    case 'fail':    return { status: 'idle', error: action.error }\n    default:        return state\n  }\n}\nconsole.log(submitReducer({ status: 'submitting', error: 'x' }, { type: 'success' }))\n// → { status: 'done', error: null }    (plain JS, no React needed)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — a pure, testable transition function:</strong></p>\n<pre><code class=\"language-jsx\">function submitReducer(state, action) {\n  switch (action.type) {\n    case 'start':   return { status: 'submitting', error: null }\n    case 'success': return { status: 'done', error: null }\n    case 'fail':    return { status: 'idle', error: action.error }\n    default:        return state\n  }\n}\nconsole.log(submitReducer({ status: 'submitting', error: 'x' }, { type: 'success' }))\n// → { status: 'done', error: null }    (plain JS, no React needed)\n</code></pre>"
       },
       {
         "number": 4,
@@ -2561,7 +2561,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Is <code>dispatch</code> a new function on each render?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Is <code>dispatch</code> a new function on each render?",
         "tag": "edge",
         "html": "<p>No: React guarantees <code>dispatch</code> (like <code>setState</code>) is stable for the component's lifetime, so it's safe in dependency arrays.</p>"
       },
@@ -2643,7 +2643,7 @@
         "number": 4,
         "name": "Deep-dive",
         "claim": "enforcement",
-        "html": "<p><strong>💻 Prove it — an ESLint guard on deprecated state paths:</strong></p>\n<pre><code class=\"language-js\">// .eslintrc — block new imports of legacy slices outside allow-listed files\nrules: {\n  'no-restricted-imports': ['error', { paths: [\n    { name: '@/store/ordersSlice', message: 'Use useOrdersQuery() — see docs/state-rules.md' },\n  ] }],\n}\n</code></pre>\n<ul>\n<li>Plus: codemods for mechanical moves, CODEOWNERS on the state layer, a dashboard counting remaining usages.</li>\n</ul>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — an ESLint guard on deprecated state paths:</strong></p>\n<pre><code class=\"language-js\">// .eslintrc — block new imports of legacy slices outside allow-listed files\nrules: {\n  'no-restricted-imports': ['error', { paths: [\n    { name: '@/store/ordersSlice', message: 'Use useOrdersQuery() — see docs/state-rules.md' },\n  ] }],\n}\n</code></pre>\n<ul>\n<li>Plus: codemods for mechanical moves, CODEOWNERS on the state layer, a dashboard counting remaining usages.</li>\n</ul>"
       },
       {
         "number": 5,
@@ -2661,7 +2661,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 After migrating orders to TanStack Query, an old component still reads <code>state.orders</code> from Redux. What happens after a user creates an order?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> After migrating orders to TanStack Query, an old component still reads <code>state.orders</code> from Redux. What happens after a user creates an order?",
         "tag": "edge",
         "html": "<p>The query cache is invalidated and refetched, but the Redux copy is stale, so that component shows old data — the duplicate-source bug. Migrate or bridge that component and delete the slice.</p>"
       },
@@ -2747,7 +2747,7 @@
         "number": 4,
         "name": "Confirm",
         "claim": "the structural fix",
-        "html": "<p><strong>💻 Prove it — state moved down, results deferred:</strong></p>\n<pre><code class=\"language-jsx\">function SearchPage() {                      // no longer holds keystroke state\n  const [query, setQuery] = useState('')\n  const deferred = useDeferredValue(query)\n  return &lt;&gt;&lt;SearchBox onChange={setQuery} /&gt;&lt;Results query={deferred} /&gt;&lt;Sidebar /&gt;&lt;Feed /&gt;&lt;/&gt;\n}\nconst Results = memo(function Results({ query }) { /* expensive filtering + list */ })\n</code></pre>\n<ul>\n<li>Typing updates <code>query</code> urgently; <code>Results</code> re-renders with the deferred value in a lower-priority pass that yields to new keystrokes. <code>Sidebar</code> and <code>Feed</code> still re-render with <code>SearchPage</code> unless the input state moves into <code>SearchBox</code> itself.</li>\n</ul>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;bar&quot;,&quot;title&quot;:&quot;Components rendered per keystroke&quot;,&quot;caption&quot;:&quot;Illustrative before/after for this diagnosis; measure yours with the Profiler.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;step&quot;},&quot;y&quot;:{&quot;label&quot;:&quot;components&quot;},&quot;bars&quot;:[{&quot;label&quot;:&quot;before&quot;,&quot;value&quot;:60,&quot;tone&quot;:&quot;bad&quot;},{&quot;label&quot;:&quot;state moved down&quot;,&quot;value&quot;:12},{&quot;label&quot;:&quot;+ deferred results&quot;,&quot;value&quot;:2,&quot;tone&quot;:&quot;ok&quot;}]}\"></div><figcaption>Illustrative before/after for this diagnosis; measure yours with the Profiler.</figcaption></figure>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — state moved down, results deferred:</strong></p>\n<pre><code class=\"language-jsx\">function SearchPage() {                      // no longer holds keystroke state\n  const [query, setQuery] = useState('')\n  const deferred = useDeferredValue(query)\n  return &lt;&gt;&lt;SearchBox onChange={setQuery} /&gt;&lt;Results query={deferred} /&gt;&lt;Sidebar /&gt;&lt;Feed /&gt;&lt;/&gt;\n}\nconst Results = memo(function Results({ query }) { /* expensive filtering + list */ })\n</code></pre>\n<ul>\n<li>Typing updates <code>query</code> urgently; <code>Results</code> re-renders with the deferred value in a lower-priority pass that yields to new keystrokes. <code>Sidebar</code> and <code>Feed</code> still re-render with <code>SearchPage</code> unless the input state moves into <code>SearchBox</code> itself.</li>\n</ul>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;bar&quot;,&quot;title&quot;:&quot;Components rendered per keystroke&quot;,&quot;caption&quot;:&quot;Illustrative before/after for this diagnosis; measure yours with the Profiler.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;step&quot;},&quot;y&quot;:{&quot;label&quot;:&quot;components&quot;},&quot;bars&quot;:[{&quot;label&quot;:&quot;before&quot;,&quot;value&quot;:60,&quot;tone&quot;:&quot;bad&quot;},{&quot;label&quot;:&quot;state moved down&quot;,&quot;value&quot;:12},{&quot;label&quot;:&quot;+ deferred results&quot;,&quot;value&quot;:2,&quot;tone&quot;:&quot;ok&quot;}]}\"></div><figcaption>Illustrative before/after for this diagnosis; measure yours with the Profiler.</figcaption></figure>"
       },
       {
         "number": 5,
@@ -2765,7 +2765,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 The input&#39;s value lives in a Context read by 60 components. You wrap all 60 in <code>memo</code>. Does it help?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> The input's value lives in a Context read by 60 components. You wrap all 60 in <code>memo</code>. Does it help?",
         "tag": "edge",
         "html": "<p>No: context consumers re-render when the context value changes, regardless of memo. Move the input value out of the context.</p>"
       },
@@ -2842,7 +2842,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "same slot, same instance",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// type \"draft for a\" in doc a, then switch to doc b\n// → without key: \"draft for a\"\n// → key={docId}: \"\"                 (React 19.3, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// type \"draft for a\" in doc a, then switch to doc b\n// → without key: \"draft for a\"\n// → key={docId}: \"\"                 (React 19.3, jsdom harness)\n</code></pre>"
       },
       {
         "number": 3,
@@ -2866,7 +2866,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 With <code>key={docId}</code>, the Editor also has an expensive <code>useMemo</code>. What happens on switch?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> With <code>key={docId}</code>, the Editor also has an expensive <code>useMemo</code>. What happens on switch?",
         "tag": "edge",
         "html": "<p>It recomputes: the new instance has no cached memo. Usually fine; if not, cache per doc outside the component.</p>"
       },
@@ -2935,7 +2935,7 @@
         "number": 2,
         "name": "Virtualisation",
         "claim": "only the visible rows",
-        "html": "<p><strong>💻 Prove it — the node arithmetic (illustrative):</strong></p>\n<pre><code>10,000 rows × 8 cells = 80,000 cells (+ wrappers) in the DOM\nViewport 800 px / 36 px rows ≈ 23 visible + 10 overscan ≈ 33 rows × 8 = 264 cells\n→ ~300× fewer nodes to lay out and style\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Mitigation</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>variable heights</td>\n<td>measure rows (dynamic virtualisers)</td>\n</tr>\n<tr>\n<td>Ctrl+F / print</td>\n<td>provide search in-app; print view</td>\n</tr>\n<tr>\n<td>accessibility</td>\n<td><code>role=\"grid\"</code>, <code>aria-rowcount</code>, keyboard navigation</td>\n</tr>\n</tbody></table>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the node arithmetic (illustrative):</strong></p>\n<pre><code>10,000 rows × 8 cells = 80,000 cells (+ wrappers) in the DOM\nViewport 800 px / 36 px rows ≈ 23 visible + 10 overscan ≈ 33 rows × 8 = 264 cells\n→ ~300× fewer nodes to lay out and style\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Mitigation</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>variable heights</td>\n<td>measure rows (dynamic virtualisers)</td>\n</tr>\n<tr>\n<td>Ctrl+F / print</td>\n<td>provide search in-app; print view</td>\n</tr>\n<tr>\n<td>accessibility</td>\n<td><code>role=\"grid\"</code>, <code>aria-rowcount</code>, keyboard navigation</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 3,
@@ -3039,7 +3039,7 @@
         "number": 3,
         "name": "Baseline boundaries",
         "claim": "lazy, prefetch on intent, transition",
-        "html": "<p><strong>💻 Prove it — lazy + prefetch on intent + transition:</strong></p>\n<pre><code class=\"language-jsx\">const loadEditor = () =&gt; import('./RichEditor')\nconst RichEditor = lazy(loadEditor)\nfunction EditButton() {\n  const [open, setOpen] = useState(false)\n  const [isPending, startTransition] = useTransition()\n  return &lt;&gt;\n    &lt;button onMouseEnter={loadEditor} onFocus={loadEditor} onClick={() =&gt; startTransition(() =&gt; setOpen(true))}&gt;\n      {isPending ? 'Opening…' : 'Edit'}\n    &lt;/button&gt;\n    {open &amp;&amp; &lt;Suspense fallback={&lt;EditorSkeleton /&gt;}&gt;&lt;RichEditor /&gt;&lt;/Suspense&gt;}\n  &lt;/&gt;\n}\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — lazy + prefetch on intent + transition:</strong></p>\n<pre><code class=\"language-jsx\">const loadEditor = () =&gt; import('./RichEditor')\nconst RichEditor = lazy(loadEditor)\nfunction EditButton() {\n  const [open, setOpen] = useState(false)\n  const [isPending, startTransition] = useTransition()\n  return &lt;&gt;\n    &lt;button onMouseEnter={loadEditor} onFocus={loadEditor} onClick={() =&gt; startTransition(() =&gt; setOpen(true))}&gt;\n      {isPending ? 'Opening…' : 'Edit'}\n    &lt;/button&gt;\n    {open &amp;&amp; &lt;Suspense fallback={&lt;EditorSkeleton /&gt;}&gt;&lt;RichEditor /&gt;&lt;/Suspense&gt;}\n  &lt;/&gt;\n}\n</code></pre>"
       },
       {
         "number": 4,
@@ -3063,7 +3063,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A lazy modal is opened with plain <code>setOpen(true)</code> (no transition) inside an existing Suspense boundary high up the tree. What does the user see?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A lazy modal is opened with plain <code>setOpen(true)</code> (no transition) inside an existing Suspense boundary high up the tree. What does the user see?",
         "tag": "edge",
         "html": "<p>The nearest Suspense fallback shows — possibly replacing a large part of the page with a spinner — until the chunk loads. A transition keeps the current UI visible; a Suspense boundary close to the modal limits what's replaced.</p>"
       },
@@ -3140,7 +3140,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "measured",
-        "html": "<p><strong>💻 Prove it — four variants on React 19.3 (jsdom harness):</strong></p>\n<table>\n<thead>\n<tr>\n<th>Variant</th>\n<th>Sequence</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>this snippet</strong> (no hook before return)</td>\n<td>\"42\" → null</td>\n<td>no error; renders login</td>\n</tr>\n<tr>\n<td>this snippet</td>\n<td>null → \"42\"</td>\n<td>no error; renders input</td>\n</tr>\n<tr>\n<td>this snippet, typed \"typed\"</td>\n<td>\"42\" → null → \"42\"</td>\n<td>input comes back <strong>empty</strong> (state discarded)</td>\n</tr>\n<tr>\n<td>hook before the return</td>\n<td>\"42\" → null</td>\n<td>throws <em>Rendered fewer hooks than expected…</em></td>\n</tr>\n<tr>\n<td>hook before the return</td>\n<td>null → \"42\"</td>\n<td>throws <em>Rendered more hooks than during the previous render.</em></td>\n</tr>\n</tbody></table>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — four variants on React 19.3 (jsdom harness):</strong></p>\n<table>\n<thead>\n<tr>\n<th>Variant</th>\n<th>Sequence</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>this snippet</strong> (no hook before return)</td>\n<td>\"42\" → null</td>\n<td>no error; renders login</td>\n</tr>\n<tr>\n<td>this snippet</td>\n<td>null → \"42\"</td>\n<td>no error; renders input</td>\n</tr>\n<tr>\n<td>this snippet, typed \"typed\"</td>\n<td>\"42\" → null → \"42\"</td>\n<td>input comes back <strong>empty</strong> (state discarded)</td>\n</tr>\n<tr>\n<td>hook before the return</td>\n<td>\"42\" → null</td>\n<td>throws <em>Rendered fewer hooks than expected…</em></td>\n</tr>\n<tr>\n<td>hook before the return</td>\n<td>null → \"42\"</td>\n<td>throws <em>Rendered more hooks than during the previous render.</em></td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 3,
@@ -3164,7 +3164,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Add <code>const theme = useContext(ThemeCtx)</code> as the first line. Now what happens on &quot;42&quot; → null?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Add <code>const theme = useContext(ThemeCtx)</code> as the first line. Now what happens on \"42\" → null?",
         "tag": "edge",
         "html": "<p>It throws: \"Rendered fewer hooks than expected. This may be caused by an accidental early return statement.\" — one hook ran, then the render stopped short of the previous count.</p>"
       },
@@ -3240,7 +3240,7 @@
         "number": 3,
         "name": "Baseline setup",
         "claim": "RUM with web-vitals",
-        "html": "<p><strong>💻 Prove it — reporting INP with attribution:</strong></p>\n<pre><code class=\"language-jsx\">import { onINP, onLCP, onCLS } from 'web-vitals/attribution'\nfunction send(metric) {\n  navigator.sendBeacon('/rum', JSON.stringify({\n    name: metric.name, value: metric.value, route: location.pathname,\n    target: metric.attribution?.interactionTarget, device: navigator.hardwareConcurrency,\n  }))\n}\nonINP(send); onLCP(send); onCLS(send)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — reporting INP with attribution:</strong></p>\n<pre><code class=\"language-jsx\">import { onINP, onLCP, onCLS } from 'web-vitals/attribution'\nfunction send(metric) {\n  navigator.sendBeacon('/rum', JSON.stringify({\n    name: metric.name, value: metric.value, route: location.pathname,\n    target: metric.attribution?.interactionTarget, device: navigator.hardwareConcurrency,\n  }))\n}\nonINP(send); onLCP(send); onCLS(send)\n</code></pre>"
       },
       {
         "number": 4,
@@ -3343,7 +3343,7 @@
         "number": 3,
         "name": "Where it doesn't help",
         "claim": "single heavy renders and slow effects",
-        "html": "<table>\n<thead>\n<tr>\n<th>Doesn't help</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>one huge synchronous computation in render</td>\n<td>can't be split mid-function</td>\n</tr>\n<tr>\n<td>slow effects</td>\n<td>run outside the render phase</td>\n</tr>\n<tr>\n<td>network latency</td>\n<td>still waiting</td>\n</tr>\n<tr>\n<td>urgent updates that are heavy themselves</td>\n<td>they aren't deferred</td>\n</tr>\n</tbody></table>\n<p><strong>💻 Prove it — the opt-in:</strong></p>\n<pre><code class=\"language-jsx\">const [query, setQuery] = useState('')\nconst deferred = useDeferredValue(query)       // urgent: input; background: results\nreturn &lt;&gt;&lt;input value={query} onChange={e =&gt; setQuery(e.target.value)} /&gt;&lt;Results q={deferred} /&gt;&lt;/&gt;\n</code></pre>"
+        "html": "<table>\n<thead>\n<tr>\n<th>Doesn't help</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>one huge synchronous computation in render</td>\n<td>can't be split mid-function</td>\n</tr>\n<tr>\n<td>slow effects</td>\n<td>run outside the render phase</td>\n</tr>\n<tr>\n<td>network latency</td>\n<td>still waiting</td>\n</tr>\n<tr>\n<td>urgent updates that are heavy themselves</td>\n<td>they aren't deferred</td>\n</tr>\n</tbody></table>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the opt-in:</strong></p>\n<pre><code class=\"language-jsx\">const [query, setQuery] = useState('')\nconst deferred = useDeferredValue(query)       // urgent: input; background: results\nreturn &lt;&gt;&lt;input value={query} onChange={e =&gt; setQuery(e.target.value)} /&gt;&lt;Results q={deferred} /&gt;&lt;/&gt;\n</code></pre>"
       },
       {
         "number": 4,
@@ -3361,7 +3361,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A <code>Results</code> component takes 300 ms to render and isn&#39;t split into smaller components. Does <code>useDeferredValue</code> keep typing smooth?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A <code>Results</code> component takes 300 ms to render and isn't split into smaller components. Does <code>useDeferredValue</code> keep typing smooth?",
         "tag": "edge",
         "html": "<p>Partly at best: React yields between components, not inside one function. A single 300 ms component still blocks; split the work or reduce it (virtualise, memoize calculations).</p>"
       },
@@ -3430,7 +3430,7 @@
         "number": 2,
         "name": "Where useTransition wins",
         "claim": "you own the update",
-        "html": "<p><strong>💻 Prove it — keep the old tab visible:</strong></p>\n<pre><code class=\"language-jsx\">const [tab, setTab] = useState('about')\nconst [isPending, startTransition] = useTransition()\n&lt;button onClick={() =&gt; startTransition(() =&gt; setTab('posts'))}&gt;Posts{isPending &amp;&amp; ' …'}&lt;/button&gt;\n&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;&lt;TabPanel tab={tab} /&gt;&lt;/Suspense&gt;\n// if Posts suspends, the About panel stays visible instead of the Spinner\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — keep the old tab visible:</strong></p>\n<pre><code class=\"language-jsx\">const [tab, setTab] = useState('about')\nconst [isPending, startTransition] = useTransition()\n&lt;button onClick={() =&gt; startTransition(() =&gt; setTab('posts'))}&gt;Posts{isPending &amp;&amp; ' …'}&lt;/button&gt;\n&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;&lt;TabPanel tab={tab} /&gt;&lt;/Suspense&gt;\n// if Posts suspends, the About panel stays visible instead of the Spinner\n</code></pre>"
       },
       {
         "number": 3,
@@ -3454,7 +3454,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 You wrap <code>setQuery</code> for a controlled input in <code>startTransition</code>. What happens when typing?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> You wrap <code>setQuery</code> for a controlled input in <code>startTransition</code>. What happens when typing?",
         "tag": "edge",
         "html": "<p>The input itself becomes non-urgent and can lag or feel sticky, because its displayed value updates at low priority. Keep the input state urgent and defer the expensive consumer.</p>"
       },
@@ -3551,7 +3551,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 You put <code>&#39;use client&#39;</code> at the top of the root layout. What happens to the app?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> You put <code>'use client'</code> at the top of the root layout. What happens to the app?",
         "tag": "edge",
         "html": "<p>Everything imported below becomes client code: the RSC benefits (no server-only code in the bundle, server data access in components) are lost for the whole tree. Push the directive down to interactive leaves.</p>"
       },
@@ -3624,7 +3624,7 @@
         "number": 2,
         "name": "Trace the render",
         "claim": "measured",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// &lt;Suspense fallback={&lt;p&gt;loading&lt;/p&gt;}&gt;&lt;Message promise={null} /&gt;&lt;/Suspense&gt;\n// → \"empty\"\n// same with promise = Promise.resolve('hello')\n// → \"hello\"                   (React 19.3, jsdom harness)\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">// &lt;Suspense fallback={&lt;p&gt;loading&lt;/p&gt;}&gt;&lt;Message promise={null} /&gt;&lt;/Suspense&gt;\n// → \"empty\"\n// same with promise = Promise.resolve('hello')\n// → \"hello\"                   (React 19.3, jsdom harness)\n</code></pre>"
       },
       {
         "number": 3,
@@ -3648,7 +3648,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 <code>const text = use(fetch(&#39;/api/msg&#39;).then(r =&gt; r.text()))</code> inside the component. What happens?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>const text = use(fetch('/api/msg').then(r =&gt; r.text()))</code> inside the component. What happens?",
         "tag": "edge",
         "html": "<p>Each render creates a new promise, so the component suspends, retries with another new pending promise, and never shows the result — in the jsdom harness it was still on the fallback after 80 ms. Create the promise outside render (cache, parent, Server Component).</p>"
       },
@@ -3734,7 +3734,7 @@
         "number": 4,
         "name": "Confirm",
         "claim": "the minimal cause",
-        "html": "<p><strong>💻 Prove it — the classic timezone mismatch and its fix:</strong></p>\n<pre><code class=\"language-jsx\">// server (TZ=UTC) and browser (Asia/Kolkata) produce different text\nfunction Posted({ iso }) { return &lt;time&gt;{new Date(iso).toLocaleString()}&lt;/time&gt; }   // ❌ mismatch\n\nfunction PostedFixed({ iso }) {\n  const [text, setText] = useState(iso)                     // server and first client render agree\n  useEffect(() =&gt; setText(new Date(iso).toLocaleString()), [iso])   // local format after hydration\n  return &lt;time dateTime={iso}&gt;{text}&lt;/time&gt;\n}\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the classic timezone mismatch and its fix:</strong></p>\n<pre><code class=\"language-jsx\">// server (TZ=UTC) and browser (Asia/Kolkata) produce different text\nfunction Posted({ iso }) { return &lt;time&gt;{new Date(iso).toLocaleString()}&lt;/time&gt; }   // ❌ mismatch\n\nfunction PostedFixed({ iso }) {\n  const [text, setText] = useState(iso)                     // server and first client render agree\n  useEffect(() =&gt; setText(new Date(iso).toLocaleString()), [iso])   // local format after hydration\n  return &lt;time dateTime={iso}&gt;{text}&lt;/time&gt;\n}\n</code></pre>"
       },
       {
         "number": 5,
@@ -3752,7 +3752,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A component renders <code>{typeof window === &#39;undefined&#39; ? &#39;server&#39; : &#39;client&#39;}</code>. What happens on hydration?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A component renders <code>{typeof window === 'undefined' ? 'server' : 'client'}</code>. What happens on hydration?",
         "tag": "edge",
         "html": "<p>Mismatch: the server HTML says \"server\", the client's first render says \"client\". Render the same thing first and switch in an effect.</p>"
       },
@@ -3837,7 +3837,7 @@
         "number": 4,
         "name": "The deciding question",
         "claim": "can the compiler prove this component pure?",
-        "html": "<p><strong>💻 Prove it — a pattern the compiler must skip:</strong></p>\n<pre><code class=\"language-jsx\">function Cart({ items }) {\n  items.sort((a, b) =&gt; a.price - b.price)       // ❌ mutates a prop during render\n  return items.map(i =&gt; &lt;Row key={i.id} item={i} /&gt;)\n}\nfunction CartFixed({ items }) {\n  const sorted = [...items].sort((a, b) =&gt; a.price - b.price)   // ✅ pure; compiler can memoize\n  return sorted.map(i =&gt; &lt;Row key={i.id} item={i} /&gt;)\n}\n</code></pre>\n<p>The first also has a real bug (mutating the parent's array); the compiler's lint flags this class of code.</p>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — a pattern the compiler must skip:</strong></p>\n<pre><code class=\"language-jsx\">function Cart({ items }) {\n  items.sort((a, b) =&gt; a.price - b.price)       // ❌ mutates a prop during render\n  return items.map(i =&gt; &lt;Row key={i.id} item={i} /&gt;)\n}\nfunction CartFixed({ items }) {\n  const sorted = [...items].sort((a, b) =&gt; a.price - b.price)   // ✅ pure; compiler can memoize\n  return sorted.map(i =&gt; &lt;Row key={i.id} item={i} /&gt;)\n}\n</code></pre>\n<p>The first also has a real bug (mutating the parent's array); the compiler's lint flags this class of code.</p>"
       },
       {
         "number": 5,
@@ -3849,7 +3849,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 With the compiler on, a component passes <code>style={{ color: &#39;red&#39; }}</code> to a child. Does the child re-render on every parent render?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> With the compiler on, a component passes <code>style={{ color: 'red' }}</code> to a child. Does the child re-render on every parent render?",
         "tag": "edge",
         "html": "<p>Typically no: the compiler memoizes the object literal and the JSX, so the child receives the same props and can skip. Without the compiler it would re-render (Q17).</p>"
       },
@@ -3928,7 +3928,7 @@
         "number": 3,
         "name": "The category page",
         "claim": "ISR (+ client/streamed personalisation)",
-        "html": "<p><strong>💻 Prove it — App Router ISR:</strong></p>\n<pre><code class=\"language-jsx\">// app/c/[slug]/page.jsx\nexport const revalidate = 300                       // regenerate at most every 5 minutes\nexport default async function Category({ params }) {\n  const { slug } = await params\n  const products = await getProducts(slug)          // cached with the page\n  return &lt;ProductGrid products={products} /&gt;        // cart badge is a client component\n}\n// on catalogue change: revalidatePath(`/c/${slug}`) from a webhook for immediate refresh\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — App Router ISR:</strong></p>\n<pre><code class=\"language-jsx\">// app/c/[slug]/page.jsx\nexport const revalidate = 300                       // regenerate at most every 5 minutes\nexport default async function Category({ params }) {\n  const { slug } = await params\n  const products = await getProducts(slug)          // cached with the page\n  return &lt;ProductGrid products={products} /&gt;        // cart badge is a client component\n}\n// on catalogue change: revalidatePath(`/c/${slug}`) from a webhook for immediate refresh\n</code></pre>"
       },
       {
         "number": 4,
@@ -3946,7 +3946,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 With ISR <code>revalidate = 300</code>, a price changes at 10:00:10. The page was generated at 10:00:00. When does a visitor see the new price?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> With ISR <code>revalidate = 300</code>, a price changes at 10:00:10. The page was generated at 10:00:00. When does a visitor see the new price?",
         "tag": "edge",
         "html": "<p>After the window passes (10:05:00): the first request after that gets the stale page and triggers regeneration; the next request sees the new price — unless you call <code>revalidatePath</code> on change for immediate refresh. For exact checkout prices, re-check on the server at add-to-cart.</p>"
       },
@@ -4025,7 +4025,7 @@
         "number": 3,
         "name": "Where a modular monolith wins",
         "claim": "boundaries without a runtime split",
-        "html": "<p><strong>💻 Prove it — boundaries without separate runtimes:</strong></p>\n<pre><code class=\"language-js\">// eslint: packages may only import each other's public entry points\n'no-restricted-imports': ['error', { patterns: ['@app/checkout/src/*', '@app/search/src/*'] }]\n// CODEOWNERS: /packages/checkout/ @team-checkout\n</code></pre>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Micro-frontends</th>\n<th>Modular monorepo</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>independent deploys</td>\n<td>yes</td>\n<td>per app, shared release</td>\n</tr>\n<tr>\n<td>runtime duplication risk</td>\n<td>high</td>\n<td>none</td>\n</tr>\n<tr>\n<td>shared state/routing</td>\n<td>hard</td>\n<td>normal</td>\n</tr>\n<tr>\n<td>performance ownership</td>\n<td>fragmented</td>\n<td>single</td>\n</tr>\n</tbody></table>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — boundaries without separate runtimes:</strong></p>\n<pre><code class=\"language-js\">// eslint: packages may only import each other's public entry points\n'no-restricted-imports': ['error', { patterns: ['@app/checkout/src/*', '@app/search/src/*'] }]\n// CODEOWNERS: /packages/checkout/ @team-checkout\n</code></pre>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Micro-frontends</th>\n<th>Modular monorepo</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>independent deploys</td>\n<td>yes</td>\n<td>per app, shared release</td>\n</tr>\n<tr>\n<td>runtime duplication risk</td>\n<td>high</td>\n<td>none</td>\n</tr>\n<tr>\n<td>shared state/routing</td>\n<td>hard</td>\n<td>normal</td>\n</tr>\n<tr>\n<td>performance ownership</td>\n<td>fragmented</td>\n<td>single</td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 4,
@@ -4129,7 +4129,7 @@
         "number": 4,
         "name": "Deep-dive",
         "claim": "an integration test",
-        "html": "<p><strong>💻 Prove it:</strong></p>\n<pre><code class=\"language-jsx\">server.use(http.get('/api/search', () =&gt; HttpResponse.json([{ id: 1, title: 'React hooks' }])))\ntest('shows results for a query', async () =&gt; {\n  render(&lt;SearchPage /&gt;, { wrapper: QueryProvider })\n  await userEvent.type(screen.getByRole('searchbox', { name: /search/i }), 'hooks')\n  expect(await screen.findByRole('link', { name: 'React hooks' })).toBeInTheDocument()\n})\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it:</strong></p>\n<pre><code class=\"language-jsx\">server.use(http.get('/api/search', () =&gt; HttpResponse.json([{ id: 1, title: 'React hooks' }])))\ntest('shows results for a query', async () =&gt; {\n  render(&lt;SearchPage /&gt;, { wrapper: QueryProvider })\n  await userEvent.type(screen.getByRole('searchbox', { name: /search/i }), 'hooks')\n  expect(await screen.findByRole('link', { name: 'React hooks' })).toBeInTheDocument()\n})\n</code></pre>"
       },
       {
         "number": 5,
@@ -4147,7 +4147,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 A test finds a button with <code>container.querySelector(&#39;.btn-primary&#39;)</code>. You rename the CSS class. What happens?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> A test finds a button with <code>container.querySelector('.btn-primary')</code>. You rename the CSS class. What happens?",
         "tag": "edge",
         "html": "<p>The test breaks though behaviour didn't change. <code>getByRole('button', { name: 'Save' })</code> survives refactors and checks accessibility at the same time.</p>"
       },
@@ -4233,7 +4233,7 @@
         "number": 4,
         "name": "Deep-dive",
         "claim": "the evaluation criteria",
-        "html": "<p><strong>💻 Prove it — the spike scorecard (cells to fill):</strong></p>\n<table>\n<thead>\n<tr>\n<th>Criterion</th>\n<th>Existing option</th>\n<th>Proposed library</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>solves the stated problem (demo)</td>\n<td><code>measure</code></td>\n<td><code>measure</code></td>\n</tr>\n<tr>\n<td>bundle size (gzipped)</td>\n<td><code>measure</code></td>\n<td><code>measure</code></td>\n</tr>\n<tr>\n<td>re-renders for the key interaction</td>\n<td><code>measure</code></td>\n<td><code>measure</code></td>\n</tr>\n<tr>\n<td>test ergonomics / devtools</td>\n<td><code>assess</code></td>\n<td><code>assess</code></td>\n</tr>\n<tr>\n<td>maintenance and community</td>\n<td><code>assess</code></td>\n<td><code>assess</code></td>\n</tr>\n<tr>\n<td>migration cost</td>\n<td>—</td>\n<td><code>estimate</code></td>\n</tr>\n</tbody></table>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the spike scorecard (cells to fill):</strong></p>\n<table>\n<thead>\n<tr>\n<th>Criterion</th>\n<th>Existing option</th>\n<th>Proposed library</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>solves the stated problem (demo)</td>\n<td><code>measure</code></td>\n<td><code>measure</code></td>\n</tr>\n<tr>\n<td>bundle size (gzipped)</td>\n<td><code>measure</code></td>\n<td><code>measure</code></td>\n</tr>\n<tr>\n<td>re-renders for the key interaction</td>\n<td><code>measure</code></td>\n<td><code>measure</code></td>\n</tr>\n<tr>\n<td>test ergonomics / devtools</td>\n<td><code>assess</code></td>\n<td><code>assess</code></td>\n</tr>\n<tr>\n<td>maintenance and community</td>\n<td><code>assess</code></td>\n<td><code>assess</code></td>\n</tr>\n<tr>\n<td>migration cost</td>\n<td>—</td>\n<td><code>estimate</code></td>\n</tr>\n</tbody></table>"
       },
       {
         "number": 5,
@@ -4337,7 +4337,7 @@
         "number": 4,
         "name": "Deep-dive",
         "claim": "the streaming leaf",
-        "html": "<p><strong>💻 Prove it — buffer tokens, flush once per frame:</strong></p>\n<pre><code class=\"language-jsx\">function useTokenStream(runId) {\n  const [text, setText] = useState('')\n  const buf = useRef('')\n  useEffect(() =&gt; {\n    const es = new EventSource(`/api/runs/${runId}/events`)\n    let raf = 0\n    es.onmessage = e =&gt; {\n      buf.current += JSON.parse(e.data).t\n      raf ||= requestAnimationFrame(() =&gt; { const chunk = buf.current; buf.current = ''; raf = 0; setText(t =&gt; t + chunk) })\n    }\n    return () =&gt; { es.close(); cancelAnimationFrame(raf) }\n  }, [runId])\n  return text\n}\n// read the buffer before clearing it: `setText(t =&gt; t + buf.current)` runs later and would see ''\n// simulated 100 tokens over 10 frames (React 19.3, jsdom harness):\n// → lazy read:  50 of 100 chars shown (tokens lost)\n// → read first: 100 of 100 chars, 10 flushes for 10 frames\n</code></pre>"
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — buffer tokens, flush once per frame:</strong></p>\n<pre><code class=\"language-jsx\">function useTokenStream(runId) {\n  const [text, setText] = useState('')\n  const buf = useRef('')\n  useEffect(() =&gt; {\n    const es = new EventSource(`/api/runs/${runId}/events`)\n    let raf = 0\n    es.onmessage = e =&gt; {\n      buf.current += JSON.parse(e.data).t\n      raf ||= requestAnimationFrame(() =&gt; { const chunk = buf.current; buf.current = ''; raf = 0; setText(t =&gt; t + chunk) })\n    }\n    return () =&gt; { es.close(); cancelAnimationFrame(raf) }\n  }, [runId])\n  return text\n}\n// read the buffer before clearing it: `setText(t =&gt; t + buf.current)` runs later and would see ''\n// simulated 100 tokens over 10 frames (React 19.3, jsdom harness):\n// → lazy read:  50 of 100 chars shown (tokens lost)\n// → read first: 100 of 100 chars, 10 flushes for 10 frames\n</code></pre>"
       },
       {
         "number": 5,
@@ -4355,7 +4355,7 @@
     "followUps": [
       {
         "number": 1,
-        "question": "🧪 Tokens arrive at 200/s and each calls <code>setMessages</code> in a global store read by 30 components. What happens?",
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> Tokens arrive at 200/s and each calls <code>setMessages</code> in a global store read by 30 components. What happens?",
         "tag": "edge",
         "html": "<p>Up to 200 store updates per second, each re-rendering every subscriber and re-parsing markdown: dropped frames and laggy input. Buffer per frame and confine updates to the streaming leaf.</p>"
       },
