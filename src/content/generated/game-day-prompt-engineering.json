@@ -36,7 +36,17 @@
             }
           ],
           "flow": "prefix → attention → next-token distribution → steer, then measure",
-          "trap": "\"I tell the model what to do\""
+          "trap": "\"I tell the model what to do\"",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q2",
@@ -151,7 +161,17 @@
             }
           ],
           "flow": "collect real inputs → define correct → metric → then edit prompts",
-          "trap": "\"I iterated until the outputs looked good\""
+          "trap": "\"I iterated until the outputs looked good\"",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I use it",
+              "Adjacent concept"
+            ]
+          }
         }
       ]
     },
@@ -185,7 +205,17 @@
             }
           ],
           "flow": "more tokens = more compute + external state → helps multi-step → costs latency",
-          "trap": "\"it makes the model think harder\" / reading the chain as the explanation"
+          "trap": "\"it makes the model think harder\" / reading the chain as the explanation",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q8",
@@ -391,7 +421,17 @@
             }
           ],
           "flow": "name the gap → behaviour / knowledge / action → cheapest lever first",
-          "trap": "fine-tuning to add knowledge"
+          "trap": "fine-tuning to add knowledge",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where prompting wins",
+              "Where RAG or a tool wins",
+              "Where fine-tuning wins",
+              "What I'd pick, and in what order"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q17",
@@ -422,7 +462,17 @@
             }
           ],
           "flow": "constrain shape → validate meaning → bounded repair → fallback → measure",
-          "trap": "\"structured output means it's correct\""
+          "trap": "\"structured output means it's correct\"",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where JSON mode is enough",
+              "Where schema-constrained wins",
+              "Where repair loops earn their place",
+              "What I'd ship"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q18",
@@ -690,7 +740,18 @@
             }
           ],
           "flow": "pin → golden set on old + new → diff by slice → tune → canary → switch",
-          "trap": "\"same prompt, newer model, must be better\""
+          "trap": "\"same prompt, newer model, must be better\"",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix one change at a time",
+              "Interpret the result",
+              "Validate and prevent"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q29",
@@ -717,7 +778,17 @@
             }
           ],
           "flow": "build eval from incidents → rewrite → layer → delete what the eval doesn't need",
-          "trap": "adding rule 41 in capitals"
+          "trap": "adding rule 41 in capitals",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by design",
+              "Validate"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q30",
@@ -790,7 +861,17 @@
             }
           ],
           "flow": "mark data → least privilege → sandbox actions → approve irreversible → monitor",
-          "trap": "\"we told the model to ignore instructions in documents\""
+          "trap": "\"we told the model to ignore instructions in documents\"",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "The asset and the attacker",
+              "The attack path",
+              "Why the model can't be the control",
+              "Layered controls",
+              "Residual risk and what I monitor"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q33",
@@ -870,7 +951,18 @@
             }
           ],
           "flow": "store → render + stamp → gateway → call → parse → validate → trace",
-          "trap": "prompt strings inline in business logic"
+          "trap": "prompt strings inline in business logic",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q36",
@@ -897,7 +989,18 @@
             }
           ],
           "flow": "real inputs → eval → prompt → CI gate → canary → A/B → failures back to eval",
-          "trap": "prompt first, eval \"later\""
+          "trap": "prompt first, eval \"later\"",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline loop",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q37",
