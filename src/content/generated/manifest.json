@@ -2930,6 +2930,51 @@
           "count": 5
         }
       ]
+    },
+    {
+      "slug": "prompt-engineering",
+      "number": 19,
+      "icon": "✍️",
+      "title": "Prompt Engineering",
+      "count": 40,
+      "bands": [
+        {
+          "id": "prompt-engineering-foundations-anatomy",
+          "letter": null,
+          "name": "Foundations & anatomy",
+          "count": 6
+        },
+        {
+          "id": "prompt-engineering-mechanisms",
+          "letter": null,
+          "name": "Mechanisms",
+          "count": 9
+        },
+        {
+          "id": "prompt-engineering-trade-offs",
+          "letter": null,
+          "name": "Trade-offs",
+          "count": 12
+        },
+        {
+          "id": "prompt-engineering-scaling-failure",
+          "letter": null,
+          "name": "Scaling & failure",
+          "count": 7
+        },
+        {
+          "id": "prompt-engineering-architect",
+          "letter": null,
+          "name": "Architect",
+          "count": 5
+        },
+        {
+          "id": "prompt-engineering-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        }
+      ]
     }
   ],
   "agenticDecisions": [
@@ -6044,8 +6089,8 @@
           "level": 2
         },
         {
-          "id": "the-18-files",
-          "text": "The 18 files",
+          "id": "the-19-files",
+          "text": "The 19 files",
           "level": 2
         },
         {

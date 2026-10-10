@@ -642,6 +642,7 @@ const GAME_DAY_FILES = [
   '15-REAL-TIME-SYSTEMS.md',
   '17-NLP-CLASSICAL.md',
   '18-REACT.md',
+  '19-PROMPT-ENGINEERING.md',
 ]
 
 const GAME_DAY_MARKS = { '⭐': 'decides', '🔥': 'trending', '📍': 'asked' }

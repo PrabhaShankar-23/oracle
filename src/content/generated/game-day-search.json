@@ -3813,5 +3813,285 @@
     "topic": "react",
     "topicTitle": "React",
     "band": "Architecture, testing & scale"
+  },
+  {
+    "id": "prompt-engineering-q1",
+    "text": "What is a prompt actually doing to the model?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Foundations & anatomy"
+  },
+  {
+    "id": "prompt-engineering-q2",
+    "text": "Walk me through the anatomy of a production prompt.",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Foundations & anatomy"
+  },
+  {
+    "id": "prompt-engineering-q3",
+    "text": "System prompt, user turn, assistant prefill — what goes where?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Foundations & anatomy"
+  },
+  {
+    "id": "prompt-engineering-q4",
+    "text": "Zero-shot, few-shot, or many examples — how do you decide?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Foundations & anatomy"
+  },
+  {
+    "id": "prompt-engineering-q5",
+    "text": "Prompts as code, or prompts as config?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Foundations & anatomy"
+  },
+  {
+    "id": "prompt-engineering-q6",
+    "text": "Why do people say evaluation is the whole of prompt engineering?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Foundations & anatomy"
+  },
+  {
+    "id": "prompt-engineering-q7",
+    "text": "Why does chain-of-thought work — and when does it hurt?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q8",
+    "text": "How do you choose few-shot examples? Static block or retrieved per query?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q9",
+    "text": "Why are prompts brittle? What does prompt sensitivity look like?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q10",
+    "text": "How does provider prompt caching work, and how do you order a prompt for it?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q11",
+    "text": "What is DSPy actually optimising?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q12",
+    "text": "Self-consistency — what's the mechanism and what does it cost?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q13",
+    "text": "Tool descriptions are prompts.\" What makes a good one?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q14",
+    "text": "What does role or persona prompting actually change?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q15",
+    "text": "Temperature 0 with a seed — is that deterministic prompting?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Mechanisms"
+  },
+  {
+    "id": "prompt-engineering-q16",
+    "text": "Prompt, RAG, fine-tune or tool — which lever for which gap?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q17",
+    "text": "JSON mode, schema-constrained decoding, or parse-and-repair?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q18",
+    "text": "One big prompt, or a chain of small ones?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q19",
+    "text": "Reasoning model with a short prompt, or a standard model with prompted CoT?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q20",
+    "text": "Hand-tune prompts or auto-optimise them?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q21",
+    "text": "Long context: instruction at the top or the bottom?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q22",
+    "text": "Assertions or an LLM judge for testing prompts?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q23",
+    "text": "Big model with a simple prompt, or a small model with a heavily engineered one?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q24",
+    "text": "Offline regression suite or online A/B test for a prompt change?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q25",
+    "text": "Should prompt releases be decoupled from code releases?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q26",
+    "text": "More instructions, or more examples?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q27",
+    "text": "Delimiters, XML tags, Markdown — does prompt structure matter?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "prompt-engineering-q28",
+    "text": "The provider upgraded the model and your prompts regressed. What now?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q29",
+    "text": "Your system prompt is 4,000 tokens of accumulated patches. What's wrong, and how do you fix it?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q30",
+    "text": "A prompt works in English and fails in other languages. Why, and what do you do?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q31",
+    "text": "Users extracted your system prompt. How bad is that?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q32",
+    "text": "A retrieved document tells the model to ignore its instructions. Defend the system.",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q33",
+    "text": "By turn 30 the assistant has drifted from its instructions. What's happening?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q34",
+    "text": "Output length keeps blowing the latency and cost budget. Levers?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "prompt-engineering-q35",
+    "text": "Design the prompt layer for a product with 50 prompts across 5 teams.",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Architect"
+  },
+  {
+    "id": "prompt-engineering-q36",
+    "text": "Design eval-driven prompt development, from an idea to production.",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Architect"
+  },
+  {
+    "id": "prompt-engineering-q37",
+    "text": "Four hundred tenants each want their own tone and rules. Design the prompts.",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Architect"
+  },
+  {
+    "id": "prompt-engineering-q38",
+    "text": "Cost-model a prompt at a million calls a day. What are the levers?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Architect"
+  },
+  {
+    "id": "prompt-engineering-q39",
+    "text": "Who can change a production prompt, and what's the audit trail?",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Architect"
+  },
+  {
+    "id": "prompt-engineering-q40",
+    "text": "Tell me about a prompt that failed in production and how you debugged it.",
+    "topic": "prompt-engineering",
+    "topicTitle": "Prompt Engineering",
+    "band": "Your story"
   }
 ]

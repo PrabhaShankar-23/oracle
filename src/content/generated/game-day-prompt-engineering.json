@@ -1,0 +1,1004 @@
+{
+  "slug": "prompt-engineering",
+  "number": 19,
+  "icon": "✍️",
+  "title": "Prompt Engineering",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m12 17.27 4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08z\"></path></svg> = decides the round. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg> = trending 2026. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2\"></path></svg> = <em>you</em> were asked this. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M3 10h11v2H3zm0-2h11V6H3zm0 8h7v-2H3zm15.01-3.13.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71zm-.71.71-5.3 5.3V21h2.12l5.3-5.3z\"></path></svg> = no vault note yet.",
+    "<strong>Created:</strong> 10 Oct 2026 · <strong>Depth:</strong> <code>05-AI-ML/08-Prompt-engineering/</code> (121 notes, 12 sections) · <strong>Generator:</strong> [[meta_prompts/interview_day_prompt_v2]]",
+    "<strong>Not trend-scanned yet:</strong> no question carries <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg>, because the tag needs the scan's evidence. No <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2\"></path></svg> either; add them from real loops."
+  ],
+  "bands": [
+    {
+      "id": "prompt-engineering-foundations-anatomy",
+      "letter": null,
+      "name": "Foundations & anatomy",
+      "questions": [
+        {
+          "id": "prompt-engineering-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "What is a prompt actually doing to the model?",
+          "points": [
+            "A prompt = the <strong>conditioning prefix</strong> of an autoregressive model",
+            "System, instructions, examples, context → all just <strong>tokens it attends to</strong>",
+            "You <strong>steer a distribution</strong>, you don't instruct an agent",
+            "That's why it's engineerable: <strong>versionable, cacheable, testable</strong>",
+            "Mapping prefix → behaviour is learned, not specified → <strong>measure, don't assume</strong>"
+          ],
+          "links": [
+            {
+              "label": "What prompting actually is",
+              "target": "08-Prompt-engineering/01-Foundations &amp; Mental Model/01-What prompting actually is"
+            }
+          ],
+          "flow": "prefix → attention → next-token distribution → steer, then measure",
+          "trap": "\"I tell the model what to do\""
+        },
+        {
+          "id": "prompt-engineering-q2",
+          "number": 2,
+          "marks": [],
+          "text": "Walk me through the anatomy of a production prompt.",
+          "points": [
+            "Six parts, in order: <strong>role · task · context · constraints · examples · output contract</strong>",
+            "Order is not style: <strong>stable content first</strong> (cacheable), volatile last",
+            "Each part answers <strong>one question</strong>: who, what, with what, what's forbidden, what shape",
+            "Most under-built part: the <strong>output contract</strong> — it also lives in your parser",
+            "Past ~3k tokens shared by features → split it"
+          ],
+          "links": [
+            {
+              "label": "Anatomy of a production prompt",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/10-Anatomy of a production prompt"
+            }
+          ],
+          "flow": "role → task → context → constraints → examples → output contract",
+          "trap": "one paragraph of instructions with the format tacked on"
+        },
+        {
+          "id": "prompt-engineering-q3",
+          "number": 3,
+          "marks": [],
+          "text": "System prompt, user turn, assistant prefill — what goes where?",
+          "points": [
+            "Roles are <strong>one token stream with markers</strong>; weight comes from training",
+            "<strong>System:</strong> identity, task, constraints you'd hate to see overridden",
+            "<strong>User:</strong> untrusted input, <strong>delimited as data</strong>",
+            "<strong>Prefill:</strong> seed the assistant turn to force a format or skip preamble",
+            "Role markers are a <strong>contract, not a security boundary</strong>"
+          ],
+          "links": [
+            {
+              "label": "System prompt vs user prompt vs assistant prefill",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/18-System prompt vs user prompt vs assistant prefill"
+            },
+            {
+              "label": "Prefill &amp; assistant turn priming",
+              "target": "08-Prompt-engineering/04-Structured Output &amp; Control/41-Prefill &amp; assistant-turn priming"
+            }
+          ],
+          "flow": "system = policy → user = data → prefill = shape",
+          "trap": "treating the system prompt as access control"
+        },
+        {
+          "id": "prompt-engineering-q4",
+          "number": 4,
+          "marks": [],
+          "text": "Zero-shot, few-shot, or many examples — how do you decide?",
+          "points": [
+            "Start <strong>zero-shot</strong> with a precise instruction; add examples only on evidence",
+            "0 → 1 is the big jump: <strong>one example pins the output shape</strong>",
+            "Plateau around <strong>4–8 examples</strong> on most tasks",
+            "Costs grow linearly: tokens, <strong>order sensitivity, label bias</strong>",
+            "Example count = a <strong>hyperparameter tuned against an eval</strong>"
+          ],
+          "links": [
+            {
+              "label": "Zero shot prompting",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/11-Zero-shot prompting"
+            },
+            {
+              "label": "One shot &amp; few shot prompting",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/12-One-shot &amp; few-shot prompting"
+            }
+          ],
+          "flow": "zero-shot → one for shape → few for edge cases → stop at plateau",
+          "trap": "more examples is always better"
+        },
+        {
+          "id": "prompt-engineering-q5",
+          "number": 5,
+          "marks": [],
+          "text": "Prompts as code, or prompts as config?",
+          "points": [
+            "<strong>As code:</strong> in the repo, PR-reviewed, ships with the parser that reads its output",
+            "<strong>As config:</strong> in a registry, changes without a deploy, non-engineers can edit",
+            "Deciding axis: does <strong>prompt change velocity exceed deploy cadence</strong>? Who holds the pen?",
+            "Output-contract changes stay <strong>coupled to code</strong> either way",
+            "Config needs its own review, eval gate and rollback"
+          ],
+          "links": [
+            {
+              "label": "Prompts as code vs prompts as config",
+              "target": "08-Prompt-engineering/09-Prompt Ops/83-Prompts as code vs prompts as config"
+            }
+          ],
+          "flow": "who edits + how often → code or registry → contract stays with code",
+          "trap": "\"registry, so anyone can hot-fix prod\" with no gate"
+        },
+        {
+          "id": "prompt-engineering-q6",
+          "number": 6,
+          "marks": [
+            "decides"
+          ],
+          "text": "Why do people say evaluation is the whole of prompt engineering?",
+          "points": [
+            "Results move on <strong>spurious features</strong>: formatting, example order",
+            "Reading 20 outputs can't separate a real gain from <strong>sampling noise</strong>",
+            "Everything downstream needs a <strong>metric</strong>: optimisation, CI gates, model upgrades",
+            "The <strong>eval set outlives the prompt</strong> — the durable asset",
+            "No eval → every edit is an untested change"
+          ],
+          "links": [
+            {
+              "label": "Why prompt eval is the whole discipline",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/73-Why prompt eval is the whole discipline"
+            }
+          ],
+          "flow": "collect real inputs → define correct → metric → then edit prompts",
+          "trap": "\"I iterated until the outputs looked good\""
+        }
+      ]
+    },
+    {
+      "id": "prompt-engineering-mechanisms",
+      "letter": null,
+      "name": "Mechanisms",
+      "questions": [
+        {
+          "id": "prompt-engineering-q7",
+          "number": 7,
+          "marks": [
+            "decides"
+          ],
+          "text": "Why does chain-of-thought work — and when does it hurt?",
+          "points": [
+            "<strong>Compute:</strong> fixed work per token → a derivation buys more forward passes",
+            "<strong>State:</strong> written steps re-enter context → step 4 reads step 2",
+            "Gains are narrow: <strong>maths and symbolic reasoning</strong>, not classification or extraction",
+            "Cost: reasoning tokens are <strong>output tokens</strong> — priced high, generated serially",
+            "The chain is <strong>not an execution trace</strong>; it can be unfaithful"
+          ],
+          "links": [
+            {
+              "label": "Why CoT works",
+              "target": "08-Prompt-engineering/03-Reasoning &amp; Decomposition Prompting/24-Why CoT works"
+            },
+            {
+              "label": "When CoT hurts",
+              "target": "08-Prompt-engineering/03-Reasoning &amp; Decomposition Prompting/33-When CoT hurts"
+            }
+          ],
+          "flow": "more tokens = more compute + external state → helps multi-step → costs latency",
+          "trap": "\"it makes the model think harder\" / reading the chain as the explanation"
+        },
+        {
+          "id": "prompt-engineering-q8",
+          "number": 8,
+          "marks": [],
+          "text": "How do you choose few-shot examples? Static block or retrieved per query?",
+          "points": [
+            "Four axes: <strong>similarity, diversity, difficulty, label balance</strong>",
+            "<strong>Order</strong> matters too — same examples permuted can swing accuracy",
+            "<strong>kNN retrieval</strong> per query beats a fixed block: demonstrations fit the input",
+            "Same index and retriever as RAG; payload is demonstrations, not documents",
+            "Catch: a changing block <strong>kills prefix caching</strong>"
+          ],
+          "links": [
+            {
+              "label": "Few shot example selection",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/13-Few-shot example selection"
+            },
+            {
+              "label": "Dynamic retrieved few shot (kNN example selection)",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/14-Dynamic retrieved few-shot (kNN example selection)"
+            }
+          ],
+          "flow": "labelled store → retrieve similar → balance labels → order → measure",
+          "trap": "hand-picking three easy examples and never revisiting"
+        },
+        {
+          "id": "prompt-engineering-q9",
+          "number": 9,
+          "marks": [],
+          "text": "Why are prompts brittle? What does prompt sensitivity look like?",
+          "points": [
+            "Performance is a <strong>distribution, not a point</strong>",
+            "Same meaning, different separator or example order → different accuracy",
+            "Cause: the model conditions on <strong>token sequences, not meanings</strong>",
+            "Few-shot adds priors from <strong>recency and label frequency</strong>",
+            "Discipline: <strong>evaluate over variants</strong>, then pin the exact rendered prompt"
+          ],
+          "links": [
+            {
+              "label": "Prompt sensitivity &amp; brittleness",
+              "target": "08-Prompt-engineering/01-Foundations &amp; Mental Model/05-Prompt sensitivity &amp; brittleness"
+            }
+          ],
+          "flow": "paraphrase the prompt → measure spread → pick robust variant → pin it",
+          "trap": "quoting one prompt's score as \"the\" accuracy"
+        },
+        {
+          "id": "prompt-engineering-q10",
+          "number": 10,
+          "marks": [],
+          "text": "How does provider prompt caching work, and how do you order a prompt for it?",
+          "points": [
+            "Caches the <strong>KV state of a prefix</strong> → skips its prefill",
+            "It's a <strong>prefix cache</strong>: first differing token invalidates everything after",
+            "Order: <strong>tool schemas → system → examples → retrieved chunks → history → turn</strong>",
+            "Reads are a fraction of input price; <strong>writes cost more; entries expire in minutes</strong>",
+            "Per-request text in the system prompt = cache miss every call"
+          ],
+          "links": [
+            {
+              "label": "Context ordering for prompt cache hit rate",
+              "target": "08-Prompt-engineering/05-Context Engineering/48-Context ordering for prompt-cache hit rate"
+            },
+            {
+              "label": "Provider prompt caching",
+              "target": "08-Prompt-engineering/05-Context Engineering/49-Provider prompt caching"
+            }
+          ],
+          "flow": "stable first → volatile last → mark breakpoints → watch hit rate",
+          "trap": "interpolating the timestamp or user name at the top"
+        },
+        {
+          "id": "prompt-engineering-q11",
+          "number": 11,
+          "marks": [],
+          "text": "What is DSPy actually optimising?",
+          "points": [
+            "Idea: <strong>program the pipeline, compile the prompts</strong>",
+            "<strong>Signature</strong> (inputs → outputs) + <strong>module</strong> (CoT, ReAct) + <strong>optimiser</strong>",
+            "Optimiser writes instructions and picks few-shot demos against <strong>your trainset and metric</strong>",
+            "MIPROv2: <strong>bootstraps demos</strong> from passing traces, proposes instructions, searches combinations",
+            "Needs a metric you trust — otherwise it optimises noise"
+          ],
+          "links": [
+            {
+              "label": "DSPy",
+              "target": "08-Prompt-engineering/07-Automatic Prompt Optimization/66-DSPy"
+            }
+          ],
+          "flow": "signature → module → metric + trainset → compile → re-compile on model change",
+          "trap": "\"DSPy writes better prompts\" with no metric"
+        },
+        {
+          "id": "prompt-engineering-q12",
+          "number": 12,
+          "marks": [],
+          "text": "Self-consistency — what's the mechanism and what does it cost?",
+          "points": [
+            "<strong>Sample N chains</strong> at temperature &gt; 0, extract answers, <strong>majority vote</strong>",
+            "Wrong reasoning disagrees with itself; correct reasoning converges",
+            "Cost: a strict <strong>N× token multiplier</strong>",
+            "Only works when answers are <strong>comparable enough to vote on</strong>",
+            "Bonus: <strong>vote share = a confidence signal</strong>"
+          ],
+          "links": [
+            {
+              "label": "Self consistency",
+              "target": "08-Prompt-engineering/03-Reasoning &amp; Decomposition Prompting/25-Self-consistency"
+            }
+          ],
+          "flow": "sample N → extract answers → vote → use agreement as confidence",
+          "trap": "using it for free-text answers that can't be voted"
+        },
+        {
+          "id": "prompt-engineering-q13",
+          "number": 13,
+          "marks": [],
+          "text": "Tool descriptions are prompts.\" What makes a good one?",
+          "points": [
+            "It's read at the <strong>moment of the call decision</strong>",
+            "Say: what it does, <strong>when NOT to use it</strong>, each parameter, what it doesn't return",
+            "Several sentences, not a one-line label",
+            "<strong>Schema is prompt too:</strong> parameter names and enums constrain harder than prose",
+            "Overlapping tools → wrong-tool calls; fix descriptions before the model"
+          ],
+          "links": [
+            {
+              "label": "Tool descriptions as prompts",
+              "target": "08-Prompt-engineering/06-System Prompts &amp; Agent Instructions/58-Tool descriptions as prompts"
+            }
+          ],
+          "flow": "purpose → when not → parameters → returns → test tool-selection accuracy",
+          "trap": "one-line descriptions, then blaming the model for wrong calls"
+        },
+        {
+          "id": "prompt-engineering-q14",
+          "number": 14,
+          "marks": [],
+          "text": "What does role or persona prompting actually change?",
+          "points": [
+            "It shifts <strong>register, tone and vocabulary</strong> reliably",
+            "It does <strong>not add knowledge</strong> the model lacks",
+            "Accuracy effect of \"you are an expert\" is small and inconsistent → <strong>measure</strong>",
+            "Useful part of a role: <strong>audience and task framing</strong>, not flattery",
+            "Persona text is not a guardrail"
+          ],
+          "links": [
+            {
+              "label": "Role &amp; persona prompting",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/17-Role &amp; persona prompting"
+            }
+          ],
+          "flow": "role sets register → task + constraints do the work → test with and without",
+          "trap": "\"you are a world-class expert\" as a quality lever"
+        },
+        {
+          "id": "prompt-engineering-q15",
+          "number": 15,
+          "marks": [],
+          "text": "Temperature 0 with a seed — is that deterministic prompting?",
+          "points": [
+            "Temp 0 = <strong>argmax</strong>: removes sampling randomness only",
+            "<strong>Batching + non-associative floating point</strong> → logits can differ run to run",
+            "A near-tie flips one token → the rest of the output diverges",
+            "Batch-invariant serving exists, at a <strong>throughput cost</strong>",
+            "Design for it: <strong>compare fields with tolerance</strong>, cache approved outputs"
+          ],
+          "links": [
+            {
+              "label": "Deterministic prompting",
+              "target": "08-Prompt-engineering/04-Structured Output &amp; Control/43-Deterministic prompting"
+            }
+          ],
+          "flow": "temp 0 → still batch-dependent → near-tie flips → test on structure, not strings",
+          "trap": "promising byte-identical output"
+        }
+      ]
+    },
+    {
+      "id": "prompt-engineering-trade-offs",
+      "letter": null,
+      "name": "Trade-offs",
+      "questions": [
+        {
+          "id": "prompt-engineering-q16",
+          "number": 16,
+          "marks": [
+            "decides"
+          ],
+          "text": "Prompt, RAG, fine-tune or tool — which lever for which gap?",
+          "points": [
+            "Four levers fix <strong>four different gaps</strong> — diagnose first",
+            "<strong>Prompt:</strong> behaviour within a request; free to iterate",
+            "<strong>RAG:</strong> facts that change, need attribution",
+            "<strong>Fine-tune:</strong> stable, high-volume behaviour, format, tone",
+            "<strong>Tool:</strong> anything it shouldn't guess — live data, maths, writes"
+          ],
+          "links": [
+            {
+              "label": "Prompting vs Fine tuning vs RAG vs Tool use",
+              "target": "08-Prompt-engineering/01-Foundations &amp; Mental Model/03-Prompting vs Fine-tuning vs RAG vs Tool-use"
+            }
+          ],
+          "flow": "name the gap → behaviour / knowledge / action → cheapest lever first",
+          "trap": "fine-tuning to add knowledge"
+        },
+        {
+          "id": "prompt-engineering-q17",
+          "number": 17,
+          "marks": [
+            "decides"
+          ],
+          "text": "JSON mode, schema-constrained decoding, or parse-and-repair?",
+          "points": [
+            "<strong>JSON mode:</strong> parses; says nothing about your keys or types",
+            "<strong>Schema-constrained:</strong> grammar masks illegal tokens → shape by construction",
+            "Guarantee covers <strong>shape, not meaning</strong>; void on refusal or truncation",
+            "<strong>Repair loop:</strong> feed the validation error back — new information, not a resample",
+            "Never repair silently: <strong>count repairs as a metric</strong>"
+          ],
+          "links": [
+            {
+              "label": "JSON mode &amp; schema constrained prompting",
+              "target": "08-Prompt-engineering/04-Structured Output &amp; Control/36-JSON-mode &amp; schema-constrained prompting"
+            },
+            {
+              "label": "Constrained decoding &amp; grammar based generation",
+              "target": "08-Prompt-engineering/04-Structured Output &amp; Control/37-Constrained decoding &amp; grammar-based generation"
+            },
+            {
+              "label": "Parsing &amp; repair loops",
+              "target": "08-Prompt-engineering/04-Structured Output &amp; Control/39-Parsing &amp; repair loops"
+            }
+          ],
+          "flow": "constrain shape → validate meaning → bounded repair → fallback → measure",
+          "trap": "\"structured output means it's correct\""
+        },
+        {
+          "id": "prompt-engineering-q18",
+          "number": 18,
+          "marks": [],
+          "text": "One big prompt, or a chain of small ones?",
+          "points": [
+            "Chain when one prompt holds <strong>too many jobs</strong> (extract → judge → draft)",
+            "Each stage gets focused context, <strong>its own eval, retry policy, cheaper model</strong>",
+            "Costs: <strong>latency adds, errors compound</strong>, an orchestration layer to run",
+            "Chain = a <strong>fixed DAG you designed</strong>; agent = model picks the next step",
+            "Split where you can write a test for the intermediate output"
+          ],
+          "links": [
+            {
+              "label": "Prompt chaining",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/20-Prompt chaining"
+            }
+          ],
+          "flow": "one job per call → test each stage → watch compounding error + latency",
+          "trap": "chaining by default, or calling a chain an agent"
+        },
+        {
+          "id": "prompt-engineering-q19",
+          "number": 19,
+          "marks": [],
+          "text": "Reasoning model with a short prompt, or a standard model with prompted CoT?",
+          "points": [
+            "Reasoning models run their own <strong>thinking phase</strong>; budget is a dial",
+            "Prompted scaffolds (\"think step by step\", decomposition) become <strong>redundant or harmful</strong>",
+            "Give them the <strong>goal, constraints and success criteria</strong>, not the steps",
+            "Pay in <strong>latency and thinking tokens</strong> → route only hard requests",
+            "Standard model + CoT still wins on cheap, well-understood tasks"
+          ],
+          "links": [
+            {
+              "label": "Reasoning models &amp; test time compute",
+              "target": "08-Prompt-engineering/03-Reasoning &amp; Decomposition Prompting/32-Reasoning models &amp; test-time compute"
+            },
+            {
+              "label": "Extended thinking &amp; thinking budgets",
+              "target": "08-Prompt-engineering/03-Reasoning &amp; Decomposition Prompting/34-Extended thinking &amp; thinking budgets"
+            }
+          ],
+          "flow": "task difficulty → route → reasoning model: goal only · standard: scaffold",
+          "trap": "porting a CoT prompt unchanged to a reasoning model"
+        },
+        {
+          "id": "prompt-engineering-q20",
+          "number": 20,
+          "marks": [],
+          "text": "Hand-tune prompts or auto-optimise them?",
+          "points": [
+            "Hand-tuning breaks: <strong>combinatorial space, noisy eyeballing, non-local edits</strong>",
+            "An optimisation run is an <strong>inference workload</strong>: candidates × trials × trainset",
+            "Benefit: a few metric points, <strong>decays on model change</strong>",
+            "Rule: optimise <strong>high-traffic, stable</strong> prompts; hand-tune low-traffic or changing ones",
+            "The eval harness pays off even if you never optimise"
+          ],
+          "links": [
+            {
+              "label": "Why hand tuning doesn't scale",
+              "target": "08-Prompt-engineering/07-Automatic Prompt Optimization/63-Why hand-tuning doesn't scale"
+            },
+            {
+              "label": "Cost benefit of auto optimization",
+              "target": "08-Prompt-engineering/07-Automatic Prompt Optimization/71-Cost-benefit of auto-optimization"
+            }
+          ],
+          "flow": "build the eval → hand-tune → optimise only stable high-volume prompts",
+          "trap": "auto-optimising before an eval exists"
+        },
+        {
+          "id": "prompt-engineering-q21",
+          "number": 21,
+          "marks": [],
+          "text": "Long context: instruction at the top or the bottom?",
+          "points": [
+            "Short prompts: placement is noise",
+            "Long: attention favours <strong>start and end</strong> → bulk data first, <strong>instruction last</strong>",
+            "Cheap hedge: <strong>state it at both ends</strong>",
+            "Tension: caching wants the stable instruction <strong>first</strong>",
+            "Resolve: stable policy up top (cached), the specific question at the bottom"
+          ],
+          "links": [
+            {
+              "label": "Instruction placement",
+              "target": "08-Prompt-engineering/05-Context Engineering/47-Instruction placement"
+            }
+          ],
+          "flow": "stable policy first → documents → question + key instruction last",
+          "trap": "burying the question above 20k tokens of documents"
+        },
+        {
+          "id": "prompt-engineering-q22",
+          "number": 22,
+          "marks": [],
+          "text": "Assertions or an LLM judge for testing prompts?",
+          "points": [
+            "<strong>Assertions first:</strong> schema valid, citation present, figures in source, length",
+            "Free, exact, unbiased, no calibration",
+            "Assert on the <strong>contract, not the prose</strong> — exact-match on free text = flaky",
+            "<strong>Judge</strong> only where the property needs judgement; <strong>pairwise &gt; pointwise</strong>",
+            "A judge is a prompt too → validate against human labels"
+          ],
+          "links": [
+            {
+              "label": "Assertion based testing",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/75-Assertion-based testing"
+            },
+            {
+              "label": "LLM as judge for prompt quality",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/76-LLM-as-judge for prompt quality"
+            }
+          ],
+          "flow": "code checks → judge for the rest → calibrate judge → gate",
+          "trap": "judging everything with an uncalibrated LLM"
+        },
+        {
+          "id": "prompt-engineering-q23",
+          "number": 23,
+          "marks": [],
+          "text": "Big model with a simple prompt, or a small model with a heavily engineered one?",
+          "points": [
+            "Prototype on the <strong>strong model</strong> to prove the task is possible",
+            "Small models need <strong>more structure</strong>: explicit format, examples, shorter steps",
+            "<strong>Route by difficulty:</strong> cheap model for easy requests, frontier where it changes the answer",
+            "Costly failure = <strong>under-routing</strong>: hard query, confident wrong answer",
+            "Each prompt is tuned to one model — it isn't portable"
+          ],
+          "links": [
+            {
+              "label": "Small model prompting",
+              "target": "08-Prompt-engineering/11-Modality &amp; Model-Specific Prompting/103-Small-model prompting"
+            },
+            {
+              "label": "Model routing by difficulty",
+              "target": "08-Prompt-engineering/12-Production Prompt Systems/115-Model routing by difficulty"
+            }
+          ],
+          "flow": "prove on big → distil the prompt down → route → eval per model",
+          "trap": "one prompt assumed to work across model sizes"
+        },
+        {
+          "id": "prompt-engineering-q24",
+          "number": 24,
+          "marks": [],
+          "text": "Offline regression suite or online A/B test for a prompt change?",
+          "points": [
+            "<strong>Both, in order:</strong> offline gates the release, online checks user value",
+            "Offline CI is <strong>stochastic and non-local</strong> → thresholds must absorb run-to-run variance",
+            "Tier it: assertions per commit → judge checks → full suite on release candidates",
+            "A/B: split by <strong>user or session</strong>, never by request",
+            "Measure <strong>behaviour</strong>: completion, escalation, thumbs-down — with clustered errors"
+          ],
+          "links": [
+            {
+              "label": "Regression suites &amp; CI for prompts",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/78-Regression suites &amp; CI for prompts"
+            },
+            {
+              "label": "A B testing prompts in production",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/79-A-B testing prompts in production"
+            }
+          ],
+          "flow": "assertions → judge → full suite → canary → A/B on behaviour",
+          "trap": "shipping on an A/B split per request with naive statistics"
+        },
+        {
+          "id": "prompt-engineering-q25",
+          "number": 25,
+          "marks": [],
+          "text": "Should prompt releases be decoupled from code releases?",
+          "points": [
+            "Service resolves a <strong>label</strong> (<code>production</code>), never a version",
+            "Ship = move the label; <strong>rollback = move it back</strong>",
+            "MTTR for a bad prompt: deploy time → <strong>cache TTL</strong>",
+            "Cost: <strong>version skew</strong> — two versions live for one TTL",
+            "Fine for tone; <strong>fatal for output-contract changes</strong> → those ship with code"
+          ],
+          "links": [
+            {
+              "label": "Decoupling prompt release from code release",
+              "target": "08-Prompt-engineering/09-Prompt Ops/86-Decoupling prompt release from code release"
+            },
+            {
+              "label": "Prompt versioning",
+              "target": "08-Prompt-engineering/09-Prompt Ops/84-Prompt versioning"
+            }
+          ],
+          "flow": "label → resolve at runtime → move label to release → contract changes with code",
+          "trap": "hot-swapping a prompt that changes the output schema"
+        },
+        {
+          "id": "prompt-engineering-q26",
+          "number": 26,
+          "marks": [],
+          "text": "More instructions, or more examples?",
+          "points": [
+            "Instructions state the <strong>rule</strong>; examples show the <strong>shape and edge cases</strong>",
+            "Instruction rules: <strong>specific thresholds, positive framing, no overlaps</strong>",
+            "Conflicting instructions are resolved <strong>silently</strong> — one is dropped",
+            "Examples over-anchor: the model copies their <strong>length, topic and labels</strong>",
+            "Use both: rule first, then 2–3 diverse examples that span it"
+          ],
+          "links": [
+            {
+              "label": "Instruction writing",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/15-Instruction writing"
+            },
+            {
+              "label": "One shot &amp; few shot prompting",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/12-One-shot &amp; few-shot prompting"
+            }
+          ],
+          "flow": "write the rule precisely → add diverse examples → check for anchoring",
+          "trap": "patching every failure with another sentence"
+        },
+        {
+          "id": "prompt-engineering-q27",
+          "number": 27,
+          "marks": [],
+          "text": "Delimiters, XML tags, Markdown — does prompt structure matter?",
+          "points": [
+            "Structure separates <strong>instructions from data</strong> → fewer mix-ups",
+            "Tags let you <strong>refer to a block by name</strong> (\"use only <context>\")</context>",
+            "Pick one scheme and stay consistent; match the model family's guidance",
+            "Delimiters reduce accidental confusion; they <strong>don't stop injection</strong>",
+            "Structured input makes <strong>structured output</strong> easier to request"
+          ],
+          "links": [
+            {
+              "label": "Delimiters &amp; structure",
+              "target": "08-Prompt-engineering/02-Core Prompt Anatomy &amp; Techniques/16-Delimiters &amp; structure"
+            }
+          ],
+          "flow": "label each block → reference by name → same scheme everywhere",
+          "trap": "relying on delimiters as a security boundary"
+        }
+      ]
+    },
+    {
+      "id": "prompt-engineering-scaling-failure",
+      "letter": null,
+      "name": "Scaling & failure",
+      "questions": [
+        {
+          "id": "prompt-engineering-q28",
+          "number": 28,
+          "marks": [
+            "decides"
+          ],
+          "text": "The provider upgraded the model and your prompts regressed. What now?",
+          "points": [
+            "A prompt is <strong>co-tuned with one model</strong> — not portable",
+            "Old scaffolds (few-shot counts, \"think step by step\") can <strong>hurt the successor</strong>",
+            "Migration = an <strong>eval exercise</strong>: freeze prompt, run golden set on both models",
+            "Then tune; often the fix is <strong>deleting</strong> instructions",
+            "<strong>Pin versions</strong>; providers deprecate on a clock → plan the window"
+          ],
+          "links": [
+            {
+              "label": "Model upgrade migration",
+              "target": "08-Prompt-engineering/09-Prompt Ops/87-Model-upgrade migration"
+            }
+          ],
+          "flow": "pin → golden set on old + new → diff by slice → tune → canary → switch",
+          "trap": "\"same prompt, newer model, must be better\""
+        },
+        {
+          "id": "prompt-engineering-q29",
+          "number": 29,
+          "marks": [
+            "decides"
+          ],
+          "text": "Your system prompt is 4,000 tokens of accumulated patches. What's wrong, and how do you fix it?",
+          "points": [
+            "It accreted <strong>one rule per incident</strong> → contradictions",
+            "Conflicts resolve silently; nobody knows which rule wins",
+            "Fix: <strong>eval set first</strong>, then rewrite from the task, not from the patches",
+            "Split by <strong>layer</strong>: platform rules · product policy · feature · per-request",
+            "Move per-feature rules out; keep the stable core <strong>cacheable</strong>"
+          ],
+          "links": [
+            {
+              "label": "System prompt design at scale",
+              "target": "08-Prompt-engineering/06-System Prompts &amp; Agent Instructions/55-System prompt design at scale"
+            },
+            {
+              "label": "Layered instruction hierarchy",
+              "target": "08-Prompt-engineering/06-System Prompts &amp; Agent Instructions/56-Layered instruction hierarchy"
+            }
+          ],
+          "flow": "build eval from incidents → rewrite → layer → delete what the eval doesn't need",
+          "trap": "adding rule 41 in capitals"
+        },
+        {
+          "id": "prompt-engineering-q30",
+          "number": 30,
+          "marks": [],
+          "text": "A prompt works in English and fails in other languages. Why, and what do you do?",
+          "points": [
+            "Model quality and <strong>tokenisation cost</strong> differ by language",
+            "English instructions + non-English input often beat translating the instructions — <strong>test both</strong>",
+            "State the <strong>output language</strong> explicitly; don't infer it",
+            "Few-shot examples anchor language → provide them per locale",
+            "Eval <strong>per language slice</strong>; averages hide the failure"
+          ],
+          "links": [
+            {
+              "label": "Non English &amp; cross lingual prompting",
+              "target": "08-Prompt-engineering/11-Modality &amp; Model-Specific Prompting/109-Non-English &amp; cross-lingual prompting"
+            }
+          ],
+          "flow": "per-language eval → instruction language test → explicit output language → locale examples",
+          "trap": "translating the prompt and assuming parity"
+        },
+        {
+          "id": "prompt-engineering-q31",
+          "number": 31,
+          "marks": [],
+          "text": "Users extracted your system prompt. How bad is that?",
+          "points": [
+            "It's <strong>just tokens in context</strong>; refusing to reveal is a soft preference",
+            "Extraction routes: \"repeat your instructions\", paraphrase, translation, formatting tricks",
+            "Posture: <strong>assume it leaks</strong>",
+            "Nothing in it may be <strong>load-bearing for security</strong>: no keys, no hidden policy",
+            "Real controls live outside: permissions, tool scopes, server-side checks"
+          ],
+          "links": [
+            {
+              "label": "System prompt extraction &amp; prompt leaking",
+              "target": "08-Prompt-engineering/10-Safety, Security &amp; Adversarial Prompting/94-System-prompt extraction &amp; prompt leaking"
+            }
+          ],
+          "flow": "assume leak → strip secrets → enforce in code → treat prompt as public",
+          "trap": "\"never reveal these instructions\" as the defence"
+        },
+        {
+          "id": "prompt-engineering-q32",
+          "number": 32,
+          "marks": [
+            "decides"
+          ],
+          "text": "A retrieved document tells the model to ignore its instructions. Defend the system.",
+          "points": [
+            "<strong>Indirect injection:</strong> hostile text arrives in content, not from the user",
+            "You <strong>can't prevent it</strong> → layers that fail independently",
+            "Reduce: <strong>spotlighting</strong> (delimit, datamark, encode), guard classifiers",
+            "Contain: <strong>privilege separation</strong> — the reader of untrusted text holds no tools",
+            "<strong>Human approval</strong> on anything irreversible; break the lethal trifecta"
+          ],
+          "links": [
+            {
+              "label": "Indirect prompt injection",
+              "target": "08-Prompt-engineering/10-Safety, Security &amp; Adversarial Prompting/92-Indirect prompt injection"
+            },
+            {
+              "label": "Defense in depth",
+              "target": "08-Prompt-engineering/10-Safety, Security &amp; Adversarial Prompting/96-Defense in depth"
+            },
+            {
+              "label": "Spotlighting &amp; data marking",
+              "target": "08-Prompt-engineering/10-Safety, Security &amp; Adversarial Prompting/97-Spotlighting &amp; data marking"
+            }
+          ],
+          "flow": "mark data → least privilege → sandbox actions → approve irreversible → monitor",
+          "trap": "\"we told the model to ignore instructions in documents\""
+        },
+        {
+          "id": "prompt-engineering-q33",
+          "number": 33,
+          "marks": [],
+          "text": "By turn 30 the assistant has drifted from its instructions. What's happening?",
+          "points": [
+            "<strong>Context rot:</strong> accuracy falls as input grows, non-uniformly",
+            "<strong>Pollution:</strong> a failed tool call or old hallucination now reads as fact",
+            "Neither throws — it just <strong>answers worse</strong>",
+            "History policy: <strong>last turns verbatim · middle summarised · objective pinned</strong>",
+            "Rewriting history = a <strong>cache write</strong> → batch compaction, don't do it every turn"
+          ],
+          "links": [
+            {
+              "label": "Context rot &amp; context pollution",
+              "target": "08-Prompt-engineering/05-Context Engineering/52-Context rot &amp; context pollution"
+            },
+            {
+              "label": "Conversation history management",
+              "target": "08-Prompt-engineering/05-Context Engineering/51-Conversation history management"
+            }
+          ],
+          "flow": "pin objective → trim + summarise → drop failed tool output → eval long sessions",
+          "trap": "evaluating only on short conversations"
+        },
+        {
+          "id": "prompt-engineering-q34",
+          "number": 34,
+          "marks": [],
+          "text": "Output length keeps blowing the latency and cost budget. Levers?",
+          "points": [
+            "Output tokens are the <strong>expensive, serial</strong> side",
+            "Replace adjectives with <strong>countable limits</strong>: \"at most 3 sentences\"",
+            "<strong>Structured output</strong> with bounded fields beats \"be concise\"",
+            "<code>max_tokens</code> is a <strong>guillotine</strong>, not a style control → check for truncation",
+            "Examples set length more than instructions do"
+          ],
+          "links": [
+            {
+              "label": "Output length &amp; verbosity control",
+              "target": "08-Prompt-engineering/04-Structured Output &amp; Control/40-Output length &amp; verbosity control"
+            }
+          ],
+          "flow": "countable limit → bounded schema → short examples → max_tokens as backstop",
+          "trap": "\"be concise\" plus a hard max_tokens cut"
+        }
+      ]
+    },
+    {
+      "id": "prompt-engineering-architect",
+      "letter": null,
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "prompt-engineering-q35",
+          "number": 35,
+          "marks": [
+            "decides"
+          ],
+          "text": "Design the prompt layer for a product with 50 prompts across 5 teams.",
+          "points": [
+            "Six stages: <strong>template store → renderer → gateway → model → parser → validator</strong>",
+            "Store holds <strong>versioned</strong> prompts; renderer fills typed slots and <strong>stamps the version</strong>",
+            "Gateway: model choice, retries, fallbacks, budgets",
+            "Parser + validator own the <strong>output contract</strong>",
+            "Every trace carries <strong>prompt version + model version</strong>"
+          ],
+          "links": [
+            {
+              "label": "Prompt layer reference architecture",
+              "target": "08-Prompt-engineering/12-Production Prompt Systems/110-Prompt layer reference architecture"
+            },
+            {
+              "label": "Prompt registries and tooling",
+              "target": "08-Prompt-engineering/09-Prompt Ops/85-Prompt registries and tooling"
+            }
+          ],
+          "flow": "store → render + stamp → gateway → call → parse → validate → trace",
+          "trap": "prompt strings inline in business logic"
+        },
+        {
+          "id": "prompt-engineering-q36",
+          "number": 36,
+          "marks": [
+            "decides"
+          ],
+          "text": "Design eval-driven prompt development, from an idea to production.",
+          "points": [
+            "<strong>Write the eval before the prompt</strong> — the eval is the spec",
+            "Golden set from <strong>real inputs</strong>, with what a correct answer must contain",
+            "Tiered CI: assertions per commit → judge → full suite on release candidates",
+            "Release by label; <strong>canary</strong>, then A/B on behaviour",
+            "Production failures flow back into the golden set"
+          ],
+          "links": [
+            {
+              "label": "Eval driven prompt development",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/82-Eval-driven prompt development"
+            },
+            {
+              "label": "Regression suites &amp; CI for prompts",
+              "target": "08-Prompt-engineering/08-Evaluation &amp; Testing Prompts/78-Regression suites &amp; CI for prompts"
+            }
+          ],
+          "flow": "real inputs → eval → prompt → CI gate → canary → A/B → failures back to eval",
+          "trap": "prompt first, eval \"later\""
+        },
+        {
+          "id": "prompt-engineering-q37",
+          "number": 37,
+          "marks": [],
+          "text": "Four hundred tenants each want their own tone and rules. Design the prompts.",
+          "points": [
+            "<strong>One versioned template with typed slots</strong>, not 400 prompts",
+            "Slots: tone, forbidden topics, glossary, schema name, <strong>locale</strong>",
+            "Per-tenant <strong>config rows</strong> you can validate and diff",
+            "Roll out by <strong>tenant tier</strong> via labels",
+            "Tenant text is untrusted input → sanitise slot values"
+          ],
+          "links": [
+            {
+              "label": "Multi tenant and localized prompts",
+              "target": "08-Prompt-engineering/09-Prompt Ops/88-Multi-tenant and localized prompts"
+            }
+          ],
+          "flow": "one template → typed slots → tenant config → validate → staged rollout",
+          "trap": "forking the prompt per tenant"
+        },
+        {
+          "id": "prompt-engineering-q38",
+          "number": 38,
+          "marks": [],
+          "text": "Cost-model a prompt at a million calls a day. What are the levers?",
+          "points": [
+            "Four terms: <strong>input, output, cache reads, cache writes</strong> — different prices",
+            "<strong>Output is the expensive side</strong> → verbosity control beats context trimming",
+            "Large <strong>stable prefix</strong> becomes cheap once cached",
+            "Three caches: provider prefix · <strong>exact-result</strong> · <strong>semantic</strong> (can answer the wrong question)",
+            "<strong>Route by difficulty</strong>; batch what isn't interactive"
+          ],
+          "links": [
+            {
+              "label": "Cost modeling",
+              "target": "08-Prompt-engineering/12-Production Prompt Systems/112-Cost modeling"
+            },
+            {
+              "label": "Caching strategy",
+              "target": "08-Prompt-engineering/12-Production Prompt Systems/114-Caching strategy"
+            }
+          ],
+          "flow": "tokens × price per term → cut output → cache prefix → route → batch",
+          "trap": "trimming the system prompt while outputs run long"
+        },
+        {
+          "id": "prompt-engineering-q39",
+          "number": 39,
+          "marks": [],
+          "text": "Who can change a production prompt, and what's the audit trail?",
+          "points": [
+            "Prompt change = <strong>behaviour change</strong> → same rigour as code",
+            "Roles: author, reviewer, approver; <strong>domain experts can propose</strong>",
+            "Gate: <strong>eval pass</strong> before the label moves",
+            "Audit: who, what diff, which eval run, when the label moved",
+            "Every response traceable to <strong>prompt + model version</strong>"
+          ],
+          "links": [
+            {
+              "label": "Governance",
+              "target": "08-Prompt-engineering/09-Prompt Ops/90-Governance"
+            },
+            {
+              "label": "Compliance &amp; auditability",
+              "target": "08-Prompt-engineering/12-Production Prompt Systems/119-Compliance &amp; auditability"
+            }
+          ],
+          "flow": "propose → review → eval gate → label move → trace per response",
+          "trap": "anyone with registry access editing production"
+        }
+      ]
+    },
+    {
+      "id": "prompt-engineering-your-story",
+      "letter": null,
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "prompt-engineering-q40",
+          "number": 40,
+          "marks": [],
+          "text": "Tell me about a prompt that failed in production and how you debugged it.",
+          "points": [
+            "Open with the <strong>decision the prompt served</strong> and the symptom",
+            "Show the <strong>rendered prompt</strong> that actually ran — not the template",
+            "Classify: instruction conflict · missing context · format · model change",
+            "The fix <strong>and the eval case</strong> you added so it can't return",
+            "<code>&lt;fill: the system, the symptom, the number before → after&gt;</code>"
+          ],
+          "links": [
+            {
+              "label": "Prompt engineering failure taxonomy",
+              "target": "08-Prompt-engineering/01-Foundations &amp; Mental Model/08-Prompt engineering failure taxonomy"
+            }
+          ],
+          "flow": "symptom → rendered prompt → classify failure → fix → eval case → number",
+          "trap": "\"I rewrote it until it worked\""
+        }
+      ]
+    }
+  ]
+}

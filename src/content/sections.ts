@@ -52,7 +52,7 @@ export type Section = {
  */
 const RECALL_ORDER = [
   // AI / ML
-  'llm-foundations', 'rag', 'agentic-ai', 'mcp-context-engineering', 'llm-serving-inference',
+  'llm-foundations', 'rag', 'agentic-ai', 'mcp-context-engineering', 'prompt-engineering', 'llm-serving-inference',
   'ml-dl', 'nlp-classical', 'real-time-systems',
   // Backend
   'python', 'fastapi', 'java-spring',
