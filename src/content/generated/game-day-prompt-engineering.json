@@ -67,7 +67,17 @@
             }
           ],
           "flow": "role → task → context → constraints → examples → output contract",
-          "trap": "one paragraph of instructions with the format tacked on"
+          "trap": "one paragraph of instructions with the format tacked on",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "The six parts",
+              "Why the order",
+              "Prove it on one prompt",
+              "Where it breaks",
+              "What I enforce outside the prompt"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q3",
@@ -92,7 +102,17 @@
             }
           ],
           "flow": "system = policy → user = data → prefill = shape",
-          "trap": "treating the system prompt as access control"
+          "trap": "treating the system prompt as access control",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "One stream, three roles",
+              "What goes in system",
+              "What goes in user",
+              "What prefill is for",
+              "Where the roles break"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q4",
@@ -117,7 +137,18 @@
             }
           ],
           "flow": "zero-shot → one for shape → few for edge cases → stop at plateau",
-          "trap": "more examples is always better"
+          "trap": "more examples is always better",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where zero-shot wins",
+              "Where one example wins",
+              "Where a few win",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q5",
@@ -138,7 +169,17 @@
             }
           ],
           "flow": "who edits + how often → code or registry → contract stays with code",
-          "trap": "\"registry, so anyone can hot-fix prod\" with no gate"
+          "trap": "\"registry, so anyone can hot-fix prod\" with no gate",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where code wins",
+              "Where config wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q6",
@@ -240,7 +281,17 @@
             }
           ],
           "flow": "labelled store → retrieve similar → balance labels → order → measure",
-          "trap": "hand-picking three easy examples and never revisiting"
+          "trap": "hand-picking three easy examples and never revisiting",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where a static block wins",
+              "Where retrieval wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q9",
@@ -261,7 +312,17 @@
             }
           ],
           "flow": "paraphrase the prompt → measure spread → pick robust variant → pin it",
-          "trap": "quoting one prompt's score as \"the\" accuracy"
+          "trap": "quoting one prompt's score as \"the\" accuracy",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q10",
@@ -286,7 +347,17 @@
             }
           ],
           "flow": "stable first → volatile last → mark breakpoints → watch hit rate",
-          "trap": "interpolating the timestamp or user name at the top"
+          "trap": "interpolating the timestamp or user name at the top",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q11",
@@ -307,7 +378,17 @@
             }
           ],
           "flow": "signature → module → metric + trainset → compile → re-compile on model change",
-          "trap": "\"DSPy writes better prompts\" with no metric"
+          "trap": "\"DSPy writes better prompts\" with no metric",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q12",
@@ -328,7 +409,17 @@
             }
           ],
           "flow": "sample N → extract answers → vote → use agreement as confidence",
-          "trap": "using it for free-text answers that can't be voted"
+          "trap": "using it for free-text answers that can't be voted",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q13",
@@ -349,7 +440,17 @@
             }
           ],
           "flow": "purpose → when not → parameters → returns → test tool-selection accuracy",
-          "trap": "one-line descriptions, then blaming the model for wrong calls"
+          "trap": "one-line descriptions, then blaming the model for wrong calls",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Why it's a prompt",
+              "What a good one says",
+              "Prove it on one tool",
+              "Where it breaks",
+              "How I test it"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q14",
@@ -370,7 +471,17 @@
             }
           ],
           "flow": "role sets register → task + constraints do the work → test with and without",
-          "trap": "\"you are a world-class expert\" as a quality lever"
+          "trap": "\"you are a world-class expert\" as a quality lever",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q15",
@@ -391,7 +502,17 @@
             }
           ],
           "flow": "temp 0 → still batch-dependent → near-tie flips → test on structure, not strings",
-          "trap": "promising byte-identical output"
+          "trap": "promising byte-identical output",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the mechanism",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
         }
       ]
     },
@@ -493,7 +614,17 @@
             }
           ],
           "flow": "one job per call → test each stage → watch compounding error + latency",
-          "trap": "chaining by default, or calling a chain an agent"
+          "trap": "chaining by default, or calling a chain an agent",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where one prompt wins",
+              "Where a chain wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q19",
@@ -518,7 +649,17 @@
             }
           ],
           "flow": "task difficulty → route → reasoning model: goal only · standard: scaffold",
-          "trap": "porting a CoT prompt unchanged to a reasoning model"
+          "trap": "porting a CoT prompt unchanged to a reasoning model",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where the reasoning model wins",
+              "Where the standard model wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q20",
@@ -543,7 +684,17 @@
             }
           ],
           "flow": "build the eval → hand-tune → optimise only stable high-volume prompts",
-          "trap": "auto-optimising before an eval exists"
+          "trap": "auto-optimising before an eval exists",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where hand-tuning wins",
+              "Where auto-optimisation wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q21",
@@ -564,7 +715,17 @@
             }
           ],
           "flow": "stable policy first → documents → question + key instruction last",
-          "trap": "burying the question above 20k tokens of documents"
+          "trap": "burying the question above 20k tokens of documents",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where the top wins",
+              "Where the bottom wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q22",
@@ -589,7 +750,17 @@
             }
           ],
           "flow": "code checks → judge for the rest → calibrate judge → gate",
-          "trap": "judging everything with an uncalibrated LLM"
+          "trap": "judging everything with an uncalibrated LLM",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where assertions win",
+              "Where a judge wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q23",
@@ -614,7 +785,17 @@
             }
           ],
           "flow": "prove on big → distil the prompt down → route → eval per model",
-          "trap": "one prompt assumed to work across model sizes"
+          "trap": "one prompt assumed to work across model sizes",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where the big model wins",
+              "Where the small model wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q24",
@@ -639,7 +820,17 @@
             }
           ],
           "flow": "assertions → judge → full suite → canary → A/B on behaviour",
-          "trap": "shipping on an A/B split per request with naive statistics"
+          "trap": "shipping on an A/B split per request with naive statistics",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where offline wins",
+              "Where online wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q25",
@@ -664,7 +855,17 @@
             }
           ],
           "flow": "label → resolve at runtime → move label to release → contract changes with code",
-          "trap": "hot-swapping a prompt that changes the output schema"
+          "trap": "hot-swapping a prompt that changes the output schema",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where decoupling wins",
+              "Where coupling wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q26",
@@ -689,7 +890,17 @@
             }
           ],
           "flow": "write the rule precisely → add diverse examples → check for anchoring",
-          "trap": "patching every failure with another sentence"
+          "trap": "patching every failure with another sentence",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where instructions win",
+              "Where examples win",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q27",
@@ -710,7 +921,17 @@
             }
           ],
           "flow": "label each block → reference by name → same scheme everywhere",
-          "trap": "relying on delimiters as a security boundary"
+          "trap": "relying on delimiters as a security boundary",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "What structure does",
+              "How to choose a scheme",
+              "Prove it on one input",
+              "Where it breaks",
+              "What I enforce outside the prompt"
+            ]
+          }
         }
       ]
     },
@@ -809,7 +1030,18 @@
             }
           ],
           "flow": "per-language eval → instruction language test → explicit output language → locale examples",
-          "trap": "translating the prompt and assuming parity"
+          "trap": "translating the prompt and assuming parity",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q31",
@@ -830,7 +1062,17 @@
             }
           ],
           "flow": "assume leak → strip secrets → enforce in code → treat prompt as public",
-          "trap": "\"never reveal these instructions\" as the defence"
+          "trap": "\"never reveal these instructions\" as the defence",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "The asset and the attacker",
+              "The attack path",
+              "Why the model can't be the control",
+              "Layered controls",
+              "Residual risk and what I monitor"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q32",
@@ -896,7 +1138,18 @@
             }
           ],
           "flow": "pin objective → trim + summarise → drop failed tool output → eval long sessions",
-          "trap": "evaluating only on short conversations"
+          "trap": "evaluating only on short conversations",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q34",
@@ -917,7 +1170,18 @@
             }
           ],
           "flow": "countable limit → bounded schema → short examples → max_tokens as backstop",
-          "trap": "\"be concise\" plus a hard max_tokens cut"
+          "trap": "\"be concise\" plus a hard max_tokens cut",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         }
       ]
     },
@@ -1021,7 +1285,18 @@
             }
           ],
           "flow": "one template → typed slots → tenant config → validate → staged rollout",
-          "trap": "forking the prompt per tenant"
+          "trap": "forking the prompt per tenant",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q38",
@@ -1046,7 +1321,18 @@
             }
           ],
           "flow": "tokens × price per term → cut output → cache prefix → route → batch",
-          "trap": "trimming the system prompt while outputs run long"
+          "trap": "trimming the system prompt while outputs run long",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline model",
+              "Deep-dive the levers",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "prompt-engineering-q39",
@@ -1071,7 +1357,18 @@
             }
           ],
           "flow": "propose → review → eval gate → label move → trace per response",
-          "trap": "anyone with registry access editing production"
+          "trap": "anyone with registry access editing production",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         }
       ]
     },
@@ -1099,7 +1396,18 @@
             }
           ],
           "flow": "symptom → rendered prompt → classify failure → fix → eval case → number",
-          "trap": "\"I rewrote it until it worked\""
+          "trap": "\"I rewrote it until it worked\"",
+          "modelAnswer": {
+            "type": "story",
+            "spine": [
+              "The decision it served",
+              "The symptom",
+              "The rendered prompt",
+              "The failure class",
+              "The fix and the eval case",
+              "The number"
+            ]
+          }
         }
       ]
     }
