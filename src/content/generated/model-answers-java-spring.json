@@ -4021,5 +4021,809 @@
     ],
     "warning": "The story bank (<span class=\"vault-ref\" title=\"16-PROJECT-STORIES\">PROJECT-STORIES</span>) maps one memory incident to this file: S4, the cv-parser service that was repeatedly OOM-killed in production, diagnosed as algorithmic (a Cartesian product in the matching path, fixed with deduplication) and not a leak. The bank does not record which runtime that service ran on, which tool found the cause, or any numbers. If S4 wasn&#39;t a JVM service, choose a JVM incident of your own and keep this structure. Every <code>&lt;fill&gt;</code> below is yours.",
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision it&lt;br/&gt;served&lt;br/&gt;the symptom in business&lt;br/&gt;terms\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;why it was hard\"]:::calc\n        N3[\"3 · Options weighed&lt;br/&gt;and the hypothesis that&lt;br/&gt;was wrong\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What I built&lt;br/&gt;the tool, the cause, the&lt;br/&gt;fix\"]:::step\n        N5[\"5 · What broke&lt;br/&gt;the scar and the guard\"]:::step\n        N6([\"6 · The number&lt;br/&gt;before and after\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q41": {
+    "type": "diagnose",
+    "spine": [
+      "Name it",
+      "Rule out the fakes",
+      "Confirm with evidence",
+      "Fix by experiment",
+      "Validate",
+      "Productionise"
+    ],
+    "testing": "whether you know delivery is at-least-once, that the fix is an idempotent consumer, and how offset commits and rebalances create duplicates.",
+    "trap": "&quot;enable exactly-once&quot; as if a broker setting covered a database write or an external call.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Name it</strong></td>\n<td>\"The message is delivered again. The offset is the consumer group's bookmark; it wasn't moved, so after a restart or a rebalance the next consumer starts from the last committed offset and reprocesses that message. That is at-least-once delivery.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Rule out the fakes</strong></td>\n<td>\"The alternative ordering, commit first and then process, gives at-most-once: a crash after the commit loses the message. And auto-commit is neither: it commits on a timer, so it can do either.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Confirm with evidence</strong></td>\n<td>\"I'd confirm by finding the same message key or ID processed twice in the logs, around a restart or a rebalance.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Fix by experiment</strong></td>\n<td>\"Since duplicates can't be prevented, I make processing idempotent. Each message carries a unique ID. In the same database transaction as the business change, I insert that ID into a processed table with a unique constraint; a duplicate fails the insert and is skipped. Or the operation itself is naturally idempotent, like an upsert by key.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Validate</strong></td>\n<td>\"I validate by killing the consumer between processing and commit in a test, and asserting the effect happened once.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Productionise</strong></td>\n<td>\"In production: manual commits after processing, short processing times so the consumer isn't kicked out of the group, a dead-letter topic for poison messages, and consumer lag as the main metric.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Process, then commit, and make the processing safe to repeat.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Name it",
+        "claim": "at-least-once delivery",
+        "html": "<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant K as Kafka\n    participant C as Consumer\n    participant D as Database\n    K-&gt;&gt;C: message at offset 41\n    C-&gt;&gt;D: apply the change\n    Note over C: crash before commit\n    K-&gt;&gt;C: after restart: offset 41 again\n    C-&gt;&gt;D: apply the change again\n    C-&gt;&gt;K: commit offset 42\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Order of work</th>\n<th>Guarantee</th>\n<th>Failure it risks</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>process, then commit</strong></td>\n<td>at-least-once</td>\n<td>duplicates</td>\n</tr>\n<tr>\n<td><strong>commit, then process</strong></td>\n<td>at-most-once</td>\n<td>lost messages</td>\n</tr>\n<tr>\n<td><strong>auto-commit on a timer</strong></td>\n<td>either, by timing</td>\n<td>both</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Rule out the fakes",
+        "claim": "other sources of &quot;twice&quot;",
+        "html": "<table>\n<thead>\n<tr>\n<th>Cause of a duplicate</th>\n<th>How it differs</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>crash between process and commit</strong></td>\n<td>one message, around a restart</td>\n</tr>\n<tr>\n<td><strong>rebalance during slow processing</strong></td>\n<td>the partition moved to another consumer before the commit</td>\n</tr>\n<tr>\n<td><strong>producer retry without idempotence</strong></td>\n<td>two records in the log, with different offsets</td>\n</tr>\n<tr>\n<td><strong>an upstream service sent the event twice</strong></td>\n<td>two different message IDs for one business fact</td>\n</tr>\n<tr>\n<td><strong><code>max.poll.interval.ms</code> exceeded</strong></td>\n<td>the consumer was considered dead mid-batch; the whole batch is redelivered</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Confirm with evidence",
+        "claim": "the same ID, twice",
+        "html": "<table>\n<thead>\n<tr>\n<th>Observation</th>\n<th>Likely cause</th>\n<th>Next action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>same offset processed twice, by one or two consumers</strong></td>\n<td>no commit before a crash or rebalance</td>\n<td>idempotent processing</td>\n</tr>\n<tr>\n<td>duplicates cluster at deploy time</td>\n<td>restarts without a graceful shutdown</td>\n<td>commit and close on shutdown</td>\n</tr>\n<tr>\n<td>duplicates during load peaks</td>\n<td>rebalances from slow polls</td>\n<td>smaller batches, faster processing</td>\n</tr>\n<tr>\n<td>same business event at two offsets</td>\n<td>the producer or the upstream</td>\n<td>producer idempotence; dedupe on a business key</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Fix by experiment",
+        "claim": "make reprocessing harmless",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — a consumer that crashes after <code>pay-2</code> and restarts (JDK 25):</strong></p>\n<pre><code class=\"language-java\">import java.util.*;\nclass Demo {\n    static List&lt;String&gt; log = List.of(\"pay-1\", \"pay-2\", \"pay-3\");\n    static int committed = 0;                                  // offset stored by the broker\n    static List&lt;String&gt; effects = new ArrayList&lt;&gt;();           // what the database saw\n    static Set&lt;String&gt; processedIds = new HashSet&lt;&gt;();         // idempotency table\n    static void consume(boolean crashBeforeCommit, boolean idempotent) {\n        for (int offset = committed; offset &lt; log.size(); offset++) {\n            String msg = log.get(offset);\n            if (!idempotent || processedIds.add(msg)) effects.add(msg);        // the side effect\n            if (crashBeforeCommit &amp;&amp; offset == 1) return;      // crash: processed pay-2, offset not committed\n            committed = offset + 1;\n        }\n    }\n    public static void main(String[] args) {\n        consume(true, false); consume(false, false);           // crash, restart from the committed offset\n        System.out.println(\"plain consumer:      \" + effects);\n        committed = 0; effects.clear();\n        consume(true, true); consume(false, true);\n        System.out.println(\"idempotent consumer: \" + effects);\n    }\n}\n// → plain consumer:      [pay-1, pay-2, pay-2, pay-3]\n// → idempotent consumer: [pay-1, pay-2, pay-3]\n</code></pre>\n<div class=\"exp-list\"><section class=\"exp\"><span class=\"exp-tag\">Experiment 1</span><h4 class=\"exp-title\">A processed-message table</h4><p>I'd insert the message ID into a table with a unique constraint, in the same transaction as the business change.</p><pre><code class=\"language-java\">@Transactional\nvoid handle(PaymentEvent e) {\n    if (processed.insertIfAbsent(e.id()) == 0) return;      // already handled: skip\n    accounts.debit(e.accountId(), e.amount());              // same transaction as the insert\n}\n</code></pre><p><strong>Why?</strong> Either both the marker and the change commit, or neither. A redelivery finds the marker and does nothing.</p><p class=\"exp-best\">Best suited when the effect is a database write.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 2</span><h4 class=\"exp-title\">A naturally idempotent operation</h4><p>I'd express the change as \"set status to PAID for order 7\" or an upsert by key.</p><p><strong>Why?</strong> Applying it twice gives the same state, so no marker is needed.</p><p class=\"exp-best\">Best suited when the event carries the final state, not a delta.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 3</span><h4 class=\"exp-title\">An idempotency key on the external call</h4><p>I'd pass the message ID as the idempotency key to the payment or email provider.</p><p><strong>Why?</strong> A database transaction can't cover a remote call; the provider has to deduplicate.</p><p class=\"exp-best\">Best suited when the side effect is outside my database.</p></section></div>"
+      },
+      {
+        "number": 5,
+        "name": "Validate",
+        "claim": "crash it on purpose",
+        "html": "<table>\n<thead>\n<tr>\n<th>Test</th>\n<th>Asserts</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>kill the consumer after processing, before commit</strong> (Testcontainers Kafka)</td>\n<td>the effect exists exactly once</td>\n</tr>\n<tr>\n<td><strong>deliver the same message twice</strong></td>\n<td>the second is skipped</td>\n</tr>\n<tr>\n<td><strong>trigger a rebalance mid-batch</strong></td>\n<td>no duplicates, no loss</td>\n</tr>\n<tr>\n<td><strong>a poison message</strong></td>\n<td>it lands on the dead-letter topic; the partition keeps moving</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Productionise",
+        "claim": "commits, rebalances, poison messages",
+        "html": "<table>\n<thead>\n<tr>\n<th>Setting or practice</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>enable.auto.commit=false</code>, commit after processing</strong> (Spring Kafka: the listener container's ack mode)</td>\n<td>at-least-once, deliberately</td>\n</tr>\n<tr>\n<td><strong>bounded <code>max.poll.records</code> and fast handlers</strong></td>\n<td>stay inside <code>max.poll.interval.ms</code>; avoid rebalances</td>\n</tr>\n<tr>\n<td><strong>retry with backoff, then a dead-letter topic</strong></td>\n<td>one bad message doesn't block the partition</td>\n</tr>\n<tr>\n<td><strong>graceful shutdown</strong></td>\n<td>commit and leave the group cleanly on deploy</td>\n</tr>\n<tr>\n<td><strong>key by entity</strong></td>\n<td>per-entity ordering within a partition</td>\n</tr>\n<tr>\n<td><strong>consumer lag and rebalance count as metrics</strong></td>\n<td>the two early warnings</td>\n</tr>\n</tbody></table>\n<p><strong>Thread-safety:</strong> a <code>KafkaConsumer</code> isn't thread-safe. One thread polls; work handed to other threads must be tracked before its offset is committed.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "What does Kafka&#39;s &quot;exactly-once&quot; actually cover?",
+        "tag": "probe",
+        "html": "<p><strong>Read-process-write within Kafka.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Scope</th>\n<th>Exactly-once semantics</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>consume from a topic, produce to a topic, commit offsets</strong></td>\n<td>yes, with transactions</td>\n</tr>\n<tr>\n<td><strong>a database write or an HTTP call</strong></td>\n<td>no: that still needs idempotency</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;Turn on exactly-once and the problem is gone.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Not for side effects outside Kafka.</strong></p>\n<ul>\n<li><strong>The broker can't roll back</strong> a row you wrote or an email you sent.</li>\n<li><strong>Effectively-once</strong> is at-least-once delivery plus idempotent processing.</li>\n</ul>"
+      },
+      {
+        "number": 3,
+        "question": "The handler takes six minutes for one message.",
+        "tag": "edge",
+        "html": "<p><strong>The consumer is considered dead and the partition is reassigned mid-work.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\">slow handler</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">no <code>poll()</code> within <code>max.poll.interval.ms</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">rebalance</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">another consumer gets the same message</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">duplicate work</span></div>\n<p>Shorten the work, pause the partition while working, or raise the interval deliberately.</p>"
+      },
+      {
+        "number": 4,
+        "question": "Why not commit the offset in the same database transaction?",
+        "tag": "probe",
+        "html": "<p><strong>You can, by storing offsets in your database instead of in Kafka.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Offsets stored in</th>\n<th>Atomic with the business write</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Kafka</strong></td>\n<td>no</td>\n</tr>\n<tr>\n<td><strong>your database</strong> (and <code>seek</code> to them on start)</td>\n<td>yes</td>\n</tr>\n</tbody></table>\n<p>It works, and it costs you the standard tooling for lag.</p>"
+      },
+      {
+        "number": 5,
+        "question": "How do you bound the processed-ID table?",
+        "tag": "senior",
+        "html": "<p><strong>By the window in which a redelivery can happen.</strong></p>\n<ul>\n<li><strong>Keep IDs</strong> for longer than the topic's retention or the maximum replay window.</li>\n<li><strong>Partition or expire</strong> the table by time.</li>\n<li><strong>Or dedupe on a business key</strong> that already exists in the domain table.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Kafka guarantees exactly-once.&quot;",
+      "&quot;Use auto-commit.&quot;",
+      "&quot;Commit first so there are no duplicates&quot; — then a crash loses the message."
+    ],
+    "links": [
+      {
+        "label": "Resilience Patterns on the JVM",
+        "target": "08-java/12-Frameworks/59-Resilience-Patterns-on-the-JVM"
+      },
+      {
+        "label": "transaction across three services",
+        "target": "model-answers/03-JAVA-SPRING/35-transaction-across-three-services"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Name it&lt;br/&gt;at-least-once delivery\"]):::step\n        N2(\"2 · Rule out the fakes&lt;br/&gt;other sources of 'twice'\"):::ask\n        N3(\"3 · Confirm with&lt;br/&gt;evidence&lt;br/&gt;the same ID, twice\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Fix by experiment&lt;br/&gt;make reprocessing&lt;br/&gt;harmless\"]:::step\n        N5(\"5 · Validate&lt;br/&gt;crash it on purpose\"):::ask\n        N6([\"6 · Productionise&lt;br/&gt;commits, rebalances,&lt;br/&gt;poison messages\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q42": {
+    "type": "mechanism",
+    "spine": [
+      "The one-line claim",
+      "How it works",
+      "Prove it",
+      "What it costs or breaks",
+      "So what for the system"
+    ],
+    "testing": "whether you connect immutability to the pool, hashing, thread-safety and security, and can predict <code>==</code> results.",
+    "trap": "&quot;<code>==</code> compares strings&quot; or &quot;strings are immutable for performance&quot; with nothing else.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · The one-line claim</strong></td>\n<td>\"A String can't change after it is created. Every method that looks like a change returns a new String. Several other features depend on that.\"</td>\n</tr>\n<tr>\n<td><strong>2 · How it works</strong></td>\n<td>\"Because strings never change, the JVM can share them. String literals are interned: identical literals refer to one object in the string pool. Double-equals compares references, so two literals are the same object, but a string built at run time is a different object with the same characters. Equals compares the characters.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Prove it</strong></td>\n<td>\"In a small program, two literals are reference-equal; new String of the same text is not, though equals is true; and calling intern returns the pooled instance.\"</td>\n</tr>\n<tr>\n<td><strong>4 · What it costs or breaks</strong></td>\n<td>\"The cost is garbage: concatenating in a loop creates a new string each time, which is what StringBuilder is for. And comparing with double-equals works by accident for literals and fails for strings from input.\"</td>\n</tr>\n<tr>\n<td><strong>5 · So what for the system</strong></td>\n<td>\"Immutability is why a String is a safe map key, with its hash cached, why it can be shared between threads with no locking, and why a file path or class name can't be altered after a security check. So I always compare with equals, and keep secrets in a char array, not a String.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Immutable, therefore shareable, hashable and safe; and equals, never double-equals.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The one-line claim",
+        "claim": "a String never changes",
+        "html": "<table>\n<thead>\n<tr>\n<th>What immutability enables</th>\n<th>Because</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>the string pool</strong></td>\n<td>one shared instance can't be altered by another holder</td>\n</tr>\n<tr>\n<td><strong>a cached hash code</strong></td>\n<td>the content, and so the hash, never changes</td>\n</tr>\n<tr>\n<td><strong>thread-safety without locks</strong></td>\n<td>there is nothing to race on</td>\n</tr>\n<tr>\n<td><strong>security</strong></td>\n<td>a path, host or class name can't be changed after it was validated</td>\n</tr>\n<tr>\n<td><strong>safe map keys</strong></td>\n<td>the bucket chosen at insert stays right</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "How it works",
+        "claim": "the pool, references and content",
+        "html": "<pre><code class=\"language-text\">String a = \"java\";              ← literal: interned, lives in the pool\nString b = \"java\";              ← the same pooled object\nString c = new String(\"java\");  ← a new object on the heap, same characters\nString d = c.intern();          ← returns the pooled object\n\na == b   compares references    a.equals(c)   compares characters\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Expression</th>\n<th>Compares</th>\n<th>Use for strings</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>==</code></strong></td>\n<td>whether two references point at the same object</td>\n<td>never, except deliberate identity checks</td>\n</tr>\n<tr>\n<td><strong><code>equals</code></strong></td>\n<td>the characters</td>\n<td>always</td>\n</tr>\n<tr>\n<td><strong><code>equalsIgnoreCase</code>, <code>compareTo</code></strong></td>\n<td>characters, with rules</td>\n<td>when needed</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Prove it",
+        "claim": "literals, <code>new</code>, <code>intern</code> and concatenation",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — JDK 25:</strong></p>\n<pre><code class=\"language-java\">class Demo {\n    public static void main(String[] args) {\n        String a = \"java\", b = \"java\";                 // both literals: one object in the string pool\n        String c = new String(\"java\");                 // a new object on the heap\n        String d = c.intern();                         // the pooled instance\n        System.out.println((a == b) + \" \" + (a == c) + \" \" + a.equals(c) + \" \" + (a == d));\n        String s = \"ja\";\n        String e = s + \"va\";                           // built at run time: not the pooled object\n        System.out.println((a == e) + \" \" + a.equals(e));\n        String up = a.toUpperCase();                   // every \"change\" returns a new String\n        System.out.println(a + \" \" + up + \" hash cached: \" + (a.hashCode() == \"java\".hashCode()));\n    }\n}\n// → true false true true\n// → false true\n// → java JAVA hash cached: true\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Comparison</th>\n<th>Result</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>a == b</code></td>\n<td>true</td>\n<td>two literals, one pooled object</td>\n</tr>\n<tr>\n<td><strong><code>a == c</code></strong></td>\n<td><strong>false</strong></td>\n<td><strong><code>new String</code> made a separate object</strong></td>\n</tr>\n<tr>\n<td><code>a.equals(c)</code></td>\n<td>true</td>\n<td>same characters</td>\n</tr>\n<tr>\n<td><code>a == d</code></td>\n<td>true</td>\n<td><code>intern()</code> returned the pooled one</td>\n</tr>\n<tr>\n<td><code>a == e</code> (built at run time)</td>\n<td>false</td>\n<td>run-time concatenation creates a new object</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "What it costs or breaks",
+        "claim": "garbage and accidental <code>==</code>",
+        "html": "<table>\n<thead>\n<tr>\n<th>Problem</th>\n<th>Symptom</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>concatenation in a loop</strong></td>\n<td>a new String (and a copy) per iteration: quadratic work, garbage</td>\n<td><code>StringBuilder</code>, or <code>String.join</code>, or a collector</td>\n</tr>\n<tr>\n<td><strong><code>==</code> on strings from input, JSON or the database</strong></td>\n<td>\"works in my test, fails in production\"</td>\n<td><code>equals</code>; <code>Objects.equals</code> when either may be null</td>\n</tr>\n<tr>\n<td><strong><code>\"x\".equals(s)</code> against <code>s.equals(\"x\")</code></strong></td>\n<td>the second throws on null</td>\n<td>constant first, or <code>Objects.equals</code></td>\n</tr>\n<tr>\n<td><strong>calling <code>intern()</code> on many dynamic strings</strong></td>\n<td>a large, long-lived pool</td>\n<td>let the collector deduplicate; avoid manual interning</td>\n</tr>\n<tr>\n<td><strong>a password held in a String</strong></td>\n<td>stays in memory until collected; may appear in a heap dump</td>\n<td><code>char[]</code>, cleared after use</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "So what for the system",
+        "claim": "rules that follow",
+        "html": "<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>Reason</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>compare with <code>equals</code></strong></td>\n<td>references are an implementation detail</td>\n</tr>\n<tr>\n<td><strong><code>StringBuilder</code> for building in loops</strong></td>\n<td>one buffer, not many strings</td>\n</tr>\n<tr>\n<td><strong>Strings are fine as map keys and across threads</strong></td>\n<td>immutable, hash cached</td>\n</tr>\n<tr>\n<td><strong><code>switch</code> on strings is fine</strong></td>\n<td>it uses <code>hashCode</code> and <code>equals</code></td>\n</tr>\n<tr>\n<td><strong>secrets in <code>char[]</code></strong></td>\n<td>can be overwritten</td>\n</tr>\n</tbody></table>\n<p><strong>Thread-safety:</strong> <code>String</code> is immutable and safe to share. <code>StringBuilder</code> is not thread-safe; <code>StringBuffer</code> is, and is rarely needed.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "How many objects does <code>new String(&quot;java&quot;)</code> create?",
+        "tag": "probe",
+        "html": "<p><strong>One at that line, plus the pooled literal if it wasn't already there.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Object</th>\n<th>Created when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>the pooled <code>\"java\"</code></strong></td>\n<td>the class's literal is first resolved</td>\n</tr>\n<tr>\n<td><strong>the new heap <code>String</code></strong></td>\n<td>each time the line runs</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;<code>==</code> works for strings, I&#39;ve tested it.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>It worked because your test used literals.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Source of the string</th>\n<th><code>==</code> with a literal</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>another literal, or a compile-time constant</strong></td>\n<td>true</td>\n</tr>\n<tr>\n<td><strong>user input, a file, JSON, concatenation at run time</strong></td>\n<td>false</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "question": "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M13 11.33 18 18H6l5-6.67V6h2m2.96-2H8.04c-.42 0-.65.48-.39.81L9 6.5v4.17L3.2 18.4c-.49.66-.02 1.6.8 1.6h16c.82 0 1.29-.94.8-1.6L15 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81\"></path></svg> <code>final String s = \"ja\"; String e = s + \"va\";</code> — is <code>e == \"java\"</code>?",
+        "tag": "edge",
+        "html": "<p><strong>True: with <code>final</code>, <code>s</code> is a compile-time constant, so the compiler folds the concatenation.</strong></p>\n<table>\n<thead>\n<tr>\n<th><code>s</code> declared as</th>\n<th><code>s + \"va\" == \"java\"</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>final String s = \"ja\"</code></strong></td>\n<td>true: folded at compile time</td>\n</tr>\n<tr>\n<td><strong><code>String s = \"ja\"</code></strong></td>\n<td>false: built at run time</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "<code>StringBuilder</code> or <code>StringBuffer</code>?",
+        "tag": "probe",
+        "html": "<p><strong><code>StringBuilder</code> almost always.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>StringBuilder</th>\n<th>StringBuffer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Synchronised</strong></td>\n<td>no</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong>Use</strong></td>\n<td>local building</td>\n<td>shared mutable buffer: rare</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Where does string handling show up in a memory investigation?",
+        "tag": "senior",
+        "html": "<p><strong>As duplicate strings and as concatenation in hot paths.</strong></p>\n<ul>\n<li><strong>Heap dumps</strong> often show a large share of memory in strings, many of them duplicates.</li>\n<li><strong>The G1 collector can deduplicate</strong> their backing arrays (<code>-XX:+UseStringDeduplication</code>).</li>\n<li><strong>Allocation profiles</strong> point at loops building strings.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;<code>==</code> compares the text.&quot;",
+      "&quot;Strings are immutable for performance&quot; — and nothing about safety or hashing.",
+      "&quot;<code>new String(\\&quot;x\\&quot;)</code> puts it in the pool.&quot;"
+    ],
+    "links": [
+      {
+        "label": "String Internals",
+        "target": "08-java/01-Core-language & Object Model/04-String-Internals"
+      },
+      {
+        "label": "StringBuilder vs StringBuffer and String Performance",
+        "target": "08-java/10-Performance-and-Profiling/47-StringBuilder-vs-StringBuffer-and-String-Performance"
+      },
+      {
+        "label": "equals hashCode compareTo Contracts",
+        "target": "08-java/01-Core-language & Object Model/01-equals-hashCode-compareTo-Contracts"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The one-line claim&lt;br/&gt;a String never changes\"]):::step\n        N2[\"2 · How it works&lt;br/&gt;the pool, references and&lt;br/&gt;content\"]:::calc\n        N3[\"3 · Prove it&lt;br/&gt;literals, new, intern&lt;br/&gt;and concatenation\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it costs or&lt;br/&gt;breaks&lt;br/&gt;garbage and accidental&lt;br/&gt;==\"]:::bad\n        N5([\"5 · So what for the&lt;br/&gt;system&lt;br/&gt;rules that follow\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q43": {
+    "type": "diagnose",
+    "spine": [
+      "Name it",
+      "Rule out the fakes",
+      "Confirm with evidence",
+      "Fix by experiment",
+      "Validate",
+      "Productionise"
+    ],
+    "testing": "whether you reach for a thread dump, can read it, and know that a consistent lock order is the real prevention.",
+    "trap": "&quot;restart the service&quot;, or &quot;add more synchronisation&quot;.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Name it</strong></td>\n<td>\"A deadlock is a cycle of waiting: thread one holds lock A and wants B, while thread two holds B and wants A. Neither can proceed, and neither will ever release.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Rule out the fakes</strong></td>\n<td>\"I'd separate it from threads that are merely slow, a pool that is exhausted, or a livelock, where threads are busy but making no progress.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Confirm with evidence</strong></td>\n<td>\"The proof is a thread dump: jstack or jcmd Thread.print. The JVM detects monitor deadlocks itself and prints 'Found one Java-level deadlock', naming each thread, the lock it waits for and who holds it. Two dumps a few seconds apart, with the same threads blocked in the same place, confirm it isn't just slowness.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Fix by experiment</strong></td>\n<td>\"The prevention is a global lock order: every code path acquires locks in the same order, for example by account ID. Other options are tryLock with a timeout so a thread backs off, or holding one lock at a time by narrowing the critical section.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Validate</strong></td>\n<td>\"I'd validate with a stress test that runs the two operations concurrently in both directions.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Productionise</strong></td>\n<td>\"And in production, a deadlock detector on a timer that alerts, plus thread dumps captured automatically when requests stall.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Prove it with a thread dump; prevent it with one lock order everywhere.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Name it",
+        "claim": "a cycle of waiting",
+        "html": "<figure><div class=\"mermaid\">flowchart TB\n    T1[\"🧵 transfer-1&lt;br/&gt;holds lock A\"]:::bad --&gt;|wants| B([\"🔒 lock B\"]):::calc\n    T2[\"🧵 transfer-2&lt;br/&gt;holds lock B\"]:::bad --&gt;|wants| A([\"🔒 lock A\"]):::calc\n    B --&gt;|held by| T2\n    A --&gt;|held by| T1\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Four conditions, all needed</th>\n<th>Break one to prevent it</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>mutual exclusion</strong></td>\n<td>use lock-free structures</td>\n</tr>\n<tr>\n<td><strong>hold and wait</strong></td>\n<td>take all locks at once, or one at a time</td>\n</tr>\n<tr>\n<td><strong>no pre-emption</strong></td>\n<td><code>tryLock</code> with a timeout, then release and retry</td>\n</tr>\n<tr>\n<td><strong>circular wait</strong></td>\n<td><strong>a global lock order</strong></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Rule out the fakes",
+        "claim": "stuck is not always deadlocked",
+        "html": "<table>\n<thead>\n<tr>\n<th>Looks stuck because</th>\n<th>Thread dump shows</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>deadlock</strong></td>\n<td>threads <code>BLOCKED</code> on monitors held by each other, in every dump</td>\n</tr>\n<tr>\n<td><strong>slow dependency</strong></td>\n<td>threads <code>RUNNABLE</code> or <code>WAITING</code> in socket reads</td>\n</tr>\n<tr>\n<td><strong>pool exhaustion</strong></td>\n<td>all workers busy, tasks queued, no cycle</td>\n</tr>\n<tr>\n<td><strong>livelock</strong></td>\n<td>threads <code>RUNNABLE</code>, stack changing, no progress</td>\n</tr>\n<tr>\n<td><strong>starvation deadlock</strong></td>\n<td>pool threads waiting on tasks queued to the same pool</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Confirm with evidence",
+        "claim": "the JVM names the cycle",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — create a deadlock, then ask the JVM (JDK 25):</strong></p>\n<pre><code class=\"language-java\">import java.lang.management.*;\nimport java.util.concurrent.CountDownLatch;\nclass Demo {\n    public static void main(String[] args) throws Exception {\n        Object a = new Object(), b = new Object();\n        CountDownLatch bothHold = new CountDownLatch(2);\n        Thread t1 = new Thread(() -&gt; { synchronized (a) { bothHold.countDown(); await(bothHold); synchronized (b) { } } }, \"transfer-1\");\n        Thread t2 = new Thread(() -&gt; { synchronized (b) { bothHold.countDown(); await(bothHold); synchronized (a) { } } }, \"transfer-2\");\n        t1.setDaemon(true); t2.setDaemon(true); t1.start(); t2.start();\n        Thread.sleep(300);\n        ThreadMXBean mx = ManagementFactory.getThreadMXBean();\n        long[] ids = mx.findDeadlockedThreads();\n        System.out.println(\"deadlocked threads: \" + (ids == null ? 0 : ids.length));\n        java.util.Arrays.stream(mx.getThreadInfo(ids))\n            .map(i -&gt; i.getThreadName() + \" is \" + i.getThreadState() + \", waiting for a lock held by \" + i.getLockOwnerName())\n            .sorted().forEach(System.out::println);\n    }\n    static void await(CountDownLatch l) { try { l.await(); } catch (InterruptedException e) { } }\n}\n// → deadlocked threads: 2\n// → transfer-1 is BLOCKED, waiting for a lock held by transfer-2\n// → transfer-2 is BLOCKED, waiting for a lock held by transfer-1\n</code></pre>\n<pre><code class=\"language-bash\">jcmd &lt;pid&gt; Thread.print        # or: jstack &lt;pid&gt;   (output abbreviated)\n# Found one Java-level deadlock:\n# \"transfer-1\": waiting to lock monitor … (object A), which is held by \"transfer-2\"\n# \"transfer-2\": waiting to lock monitor … (object B), which is held by \"transfer-1\"\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Observation</th>\n<th>Likely cause</th>\n<th>Next action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"Found one Java-level deadlock\"</strong></td>\n<td>a lock-order inversion</td>\n<td>find the two code paths in the stacks</td>\n</tr>\n<tr>\n<td>the same threads <code>BLOCKED</code> at the same frames in two dumps</td>\n<td>a real deadlock, not slowness</td>\n<td>same</td>\n</tr>\n<tr>\n<td>threads waiting on a <code>Lock</code> or a future, no monitor cycle reported</td>\n<td>a deadlock through <code>java.util.concurrent</code> or pool starvation</td>\n<td>read \"waiting on\" and owner lines; check pool sizes</td>\n</tr>\n<tr>\n<td>a database deadlock error in the logs</td>\n<td>row locks taken in different orders</td>\n<td>order the SQL statements; retry the victim</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Fix by experiment",
+        "claim": "order, timeout or less locking",
+        "html": "<div class=\"exp-list\"><section class=\"exp\"><span class=\"exp-tag\">Experiment 1</span><h4 class=\"exp-title\">A global lock order</h4><p>I'd always lock the account with the smaller ID first.</p><pre><code class=\"language-java\">Account first = a.id() &lt; b.id() ? a : b, second = first == a ? b : a;\nsynchronized (first) { synchronized (second) { move(a, b, amount); } }\n</code></pre><p><strong>Why?</strong> With one order everywhere a cycle can't form.</p><p class=\"exp-best\">Best suited when the locks belong to comparable entities.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 2</span><h4 class=\"exp-title\">tryLock with a timeout</h4><p>I'd take the second lock with a timeout, and on failure release the first and retry with jitter.</p><p><strong>Why?</strong> A thread that can't proceed gives up what it holds, so the wait can't last for ever.</p><p class=\"exp-best\">Best suited when no natural order exists.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 3</span><h4 class=\"exp-title\">Hold one lock at a time</h4><p>I'd copy what I need out of the first object, release it, then lock the second, or replace both with one coarser lock or a concurrent data structure.</p><p><strong>Why?</strong> No thread ever holds one lock while waiting for another.</p><p class=\"exp-best\">Best suited when the two updates don't have to be atomic together.</p></section></div>"
+      },
+      {
+        "number": 5,
+        "name": "Validate",
+        "claim": "stress both directions",
+        "html": "<table>\n<thead>\n<tr>\n<th>Test</th>\n<th>Passes when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>many threads doing A→B and B→A transfers at once</strong></td>\n<td>it finishes; totals are conserved</td>\n</tr>\n<tr>\n<td><strong><code>ThreadMXBean.findDeadlockedThreads()</code> polled during the test</strong></td>\n<td>it returns nothing</td>\n</tr>\n<tr>\n<td><strong>a tool such as jcstress for the critical section</strong></td>\n<td>no forbidden interleavings</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Productionise",
+        "claim": "detect and capture",
+        "html": "<table>\n<thead>\n<tr>\n<th>Guard</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>a scheduled deadlock check that alerts</strong></td>\n<td>found in a minute instead of by a customer</td>\n</tr>\n<tr>\n<td><strong>automatic thread dumps when requests stall</strong></td>\n<td>evidence survives the restart</td>\n</tr>\n<tr>\n<td><strong>timeouts on every lock acquisition and remote call</strong></td>\n<td>a stuck thread fails instead of waiting for ever</td>\n</tr>\n<tr>\n<td><strong>no calls to foreign code while holding a lock</strong> (callbacks, listeners, remote calls)</td>\n<td>removes hidden lock nesting</td>\n</tr>\n<tr>\n<td><strong>named threads</strong></td>\n<td>the dump is readable</td>\n</tr>\n</tbody></table>\n<p><strong>Database deadlocks</strong> are the same pattern with row locks: the database picks a victim and rolls it back, so the application must retry that transaction.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "What thread states will you see?",
+        "tag": "probe",
+        "html": "<p><strong><code>BLOCKED</code> for monitors, <code>WAITING</code> or <code>TIMED_WAITING</code> for explicit locks.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Waiting for</th>\n<th>State</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>a <code>synchronized</code> monitor</strong></td>\n<td><code>BLOCKED</code></td>\n</tr>\n<tr>\n<td><strong>a <code>ReentrantLock</code>, a condition, a future</strong></td>\n<td><code>WAITING</code> (parked)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;Restart it; it rarely happens.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>A restart clears the symptom and destroys the evidence.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Do first</th>\n<th>Then</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>capture two thread dumps</td>\n<td>restart to restore service</td>\n</tr>\n</tbody></table>\n<p>A deadlock that happened once will happen again under the same interleaving.</p>"
+      },
+      {
+        "number": 3,
+        "question": "The dump shows no deadlock, yet a pool&#39;s threads are all waiting.",
+        "tag": "edge",
+        "html": "<p><strong>Thread-starvation deadlock: tasks wait for sub-tasks queued behind them.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\">pool of N</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">N tasks each submit a sub-task to the same pool and <code>get()</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">no thread free to run the sub-tasks</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">everyone waits</span></div>\n<p>Use a separate pool for the sub-tasks, or don't block on them.</p>"
+      },
+      {
+        "number": 4,
+        "question": "Does <code>ReentrantLock</code> avoid deadlocks?",
+        "tag": "probe",
+        "html": "<p><strong>No, but it gives you the tools to back off.</strong></p>\n<ul>\n<li><strong><code>tryLock(timeout)</code></strong> bounds the wait.</li>\n<li><strong><code>lockInterruptibly()</code></strong> lets a waiting thread be cancelled.</li>\n<li><strong>The JVM also detects</strong> cycles through ownable synchronisers.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "How do you reduce the chance across a codebase?",
+        "tag": "senior",
+        "html": "<p><strong>Hold fewer locks, for less time, in a documented order.</strong></p>\n<ul>\n<li><strong>Prefer immutable data and concurrent collections</strong> over manual locks.</li>\n<li><strong>Document the lock order</strong> where nesting is unavoidable.</li>\n<li><strong>Never call unknown code</strong> while holding a lock.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Restart it.&quot;",
+      "&quot;Add synchronized to more methods.&quot;",
+      "&quot;Deadlocks only happen with two threads.&quot;"
+    ],
+    "links": [
+      {
+        "label": "Concurrency Hazards",
+        "target": "08-java/06-Concurrency/31-Concurrency-Hazards"
+      },
+      {
+        "label": "Diagnosing a Live JVM",
+        "target": "08-java/10-Performance-and-Profiling/51-Diagnosing-a-Live-JVM"
+      },
+      {
+        "label": "ReentrantLock and AQS",
+        "target": "08-java/06-Concurrency/26-ReentrantLock-and-AQS"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Name it&lt;br/&gt;a cycle of waiting\"]):::step\n        N2(\"2 · Rule out the fakes&lt;br/&gt;stuck is not always&lt;br/&gt;deadlocked\"):::ask\n        N3(\"3 · Confirm with&lt;br/&gt;evidence&lt;br/&gt;the JVM names the cycle\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Fix by experiment&lt;br/&gt;order, timeout or less&lt;br/&gt;locking\"]:::step\n        N5(\"5 · Validate&lt;br/&gt;stress both directions\"):::ask\n        N6([\"6 · Productionise&lt;br/&gt;detect and capture\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q44": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where optimistic wins",
+      "Where pessimistic wins",
+      "The deciding question",
+      "What I'd pick here"
+    ],
+    "testing": "whether you can name the lost-update problem, explain <code>@Version</code>, and choose by how often conflicts happen and what a retry costs.",
+    "trap": "&quot;the transaction handles it&quot; — two transactions that each read then write can still overwrite each other.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Frame the axis</strong></td>\n<td>\"The problem is the lost update: both users read the row, both change it, and the second save silently overwrites the first. Optimistic locking detects the conflict when saving. Pessimistic locking prevents it by locking the row when reading.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Where optimistic wins</strong></td>\n<td>\"Optimistic uses a version column. The update says: set the new values and increment the version, where the ID matches and the version is the one I read. If someone else saved first, zero rows match and JPA throws an optimistic-lock exception. No database lock is held while the user thinks. It fits web applications, where conflicts are rare and a transaction can't stay open across requests.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where pessimistic wins</strong></td>\n<td>\"Pessimistic issues select-for-update, so other writers wait. It fits short, contended operations inside one transaction where a retry would be expensive: decrementing stock, allocating a seat, moving money.\"</td>\n</tr>\n<tr>\n<td><strong>4 · The deciding question</strong></td>\n<td>\"So I ask how often two writers collide, and what a failed attempt costs.\"</td>\n</tr>\n<tr>\n<td><strong>5 · What I'd pick here</strong></td>\n<td>\"For two users editing a record through a UI: optimistic, with the version sent to the client and back, and a clear message or merge on conflict. For a hot counter inside one transaction: pessimistic, or an atomic update statement, with a lock timeout.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Detect when conflicts are rare, prevent when they are common and costly.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "detect the conflict or prevent it",
+        "html": "<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant A as Alice\n    participant D as Database\n    participant B as Bob\n    A-&gt;&gt;D: read stock = 10\n    B-&gt;&gt;D: read stock = 10\n    A-&gt;&gt;D: write stock = 7\n    B-&gt;&gt;D: write stock = 5\n    Note over D: Alice's change is lost\n</div></figure>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Optimistic</th>\n<th>Pessimistic</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Idea</strong></td>\n<td>let both proceed, detect at write</td>\n<td>make the second wait at read</td>\n</tr>\n<tr>\n<td><strong>Mechanism</strong></td>\n<td>a version column in the <code>WHERE</code> clause</td>\n<td><code>SELECT … FOR UPDATE</code></td>\n</tr>\n<tr>\n<td><strong>Database lock held</strong></td>\n<td>only during the update statement</td>\n<td>from read to commit</td>\n</tr>\n<tr>\n<td><strong>On conflict</strong></td>\n<td>an exception: retry or tell the user</td>\n<td>the other transaction waits</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>conflicts are rare; user think-time is involved</td>\n<td>conflicts are frequent; retries are costly</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where optimistic wins",
+        "claim": "a version check at write time",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the version check as plain Java (JDK 25):</strong></p>\n<pre><code class=\"language-java\">class Demo {\n    static int version = 1, stock = 10;                         // one row: stock with a version column\n    static boolean update(int readVersion, int newStock) {      // UPDATE ... WHERE id = ? AND version = ?\n        if (version != readVersion) return false;               // 0 rows updated\n        stock = newStock; version++;\n        return true;\n    }\n    public static void main(String[] args) {\n        int aliceSaw = version, aliceStock = stock;             // both read version 1, stock 10\n        int bobSaw = version, bobStock = stock;\n        System.out.println(\"alice: \" + update(aliceSaw, aliceStock - 3));\n        System.out.println(\"bob:   \" + update(bobSaw, bobStock - 5) + \"  (OptimisticLockException in JPA)\");\n        System.out.println(\"stock=\" + stock + \" version=\" + version);\n        System.out.println(\"bob retries on fresh data: \" + update(version, stock - 5) + \", stock=\" + stock);\n    }\n}\n// → alice: true\n// → bob:   false  (OptimisticLockException in JPA)\n// → stock=7 version=2\n// → bob retries on fresh data: true, stock=2\n</code></pre>\n<pre><code class=\"language-java\">@Entity\nclass Product {\n    @Id Long id;\n    int stock;\n    @Version long version;            // JPA adds \"AND version = ?\" and increments it on every update\n}\n</code></pre>\n<pre><code class=\"language-text\">UPDATE product SET stock = ?, version = version + 1 WHERE id = ? AND version = ?\nrows updated = 0   →   OptimisticLockException (Spring: ObjectOptimisticLockingFailureException)\n</code></pre>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Across requests:</strong></span><span class=\"flow-step\">the page loads with version 1</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the form posts back version 1</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the update checks it</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">a conflict becomes \"this record was changed by someone else\"</span></div>"
+      },
+      {
+        "number": 3,
+        "name": "Where pessimistic wins",
+        "claim": "short, contended, costly to retry",
+        "html": "<pre><code class=\"language-java\">@Lock(LockModeType.PESSIMISTIC_WRITE)                      // SELECT … FOR UPDATE\n@QueryHints(@QueryHint(name = \"jakarta.persistence.lock.timeout\", value = \"3000\"))\nOptional&lt;Seat&gt; findById(long id);\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Good fit</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>seat or inventory allocation at peak</strong></td>\n<td>many writers on few rows: optimistic retries would thrash</td>\n</tr>\n<tr>\n<td><strong>a balance check followed by a debit</strong></td>\n<td>the check must still be true at the write</td>\n</tr>\n<tr>\n<td><strong>a job queue claimed by workers</strong></td>\n<td><code>FOR UPDATE SKIP LOCKED</code> hands each row to one worker</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>waiting writers, lower throughput</strong></td>\n<td>keep the transaction very short</td>\n</tr>\n<tr>\n<td><strong>deadlocks when rows are locked in different orders</strong></td>\n<td>lock in a fixed order</td>\n</tr>\n<tr>\n<td><strong>a connection held while locked</strong></td>\n<td>never across a remote call or user think-time</td>\n</tr>\n<tr>\n<td><strong>waiting for ever</strong></td>\n<td>a lock timeout</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "collision rate and retry cost",
+        "html": "<table>\n<thead>\n<tr>\n<th>Collisions</th>\n<th>A retry costs</th>\n<th>Choose</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>rare</strong></td>\n<td>little</td>\n<td>optimistic</td>\n</tr>\n<tr>\n<td><strong>rare</strong></td>\n<td>a lot (a long form)</td>\n<td>optimistic, with a merge UI or field-level detection</td>\n</tr>\n<tr>\n<td><strong>frequent</strong></td>\n<td>little</td>\n<td>optimistic with automatic retry, or an atomic update</td>\n</tr>\n<tr>\n<td><strong>frequent</strong></td>\n<td>a lot</td>\n<td>pessimistic</td>\n</tr>\n<tr>\n<td><strong>the change is a simple increment</strong></td>\n<td>—</td>\n<td>one atomic statement: <code>UPDATE … SET stock = stock - ? WHERE id = ? AND stock &gt;= ?</code></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick here",
+        "claim": "by use case",
+        "html": "<table>\n<thead>\n<tr>\n<th>Use case</th>\n<th>Pick</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>two users editing a profile or document through a UI</strong></td>\n<td>optimistic: version round-trips through the form or an <code>ETag</code> / <code>If-Match</code> header</td>\n</tr>\n<tr>\n<td><strong>stock decrement at checkout</strong></td>\n<td>an atomic conditional update, or pessimistic inside a short transaction</td>\n</tr>\n<tr>\n<td><strong>workers claiming tasks</strong></td>\n<td>pessimistic with <code>SKIP LOCKED</code></td>\n</tr>\n<tr>\n<td><strong>default for entities</strong></td>\n<td>add <code>@Version</code>: it is nearly free</td>\n</tr>\n</tbody></table>\n<p><strong>Thread-safety:</strong> neither replaces the other inside one JVM; these protect rows across transactions and across application instances.</p>\n<p><strong>Evaluation hook:</strong> a concurrent test with two transactions that read the same row, asserting that exactly one succeeds or that the result reflects both.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Doesn&#39;t the transaction&#39;s isolation level already prevent this?",
+        "tag": "probe",
+        "html": "<p><strong>Not at the default levels.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Isolation</th>\n<th>Lost update on read-then-write</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>read committed</strong> (the usual default)</td>\n<td>possible</td>\n</tr>\n<tr>\n<td><strong>repeatable read</strong></td>\n<td>prevented in some databases, not all</td>\n</tr>\n<tr>\n<td><strong>serializable</strong></td>\n<td>prevented, at a throughput cost and with retries</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;It&#39;s inside <code>@Transactional</code>, so it&#39;s safe.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>A transaction makes your writes atomic; it doesn't stop another transaction's writes.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Two transactions:</strong></span><span class=\"flow-step\">both read 10</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">both compute</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">both commit</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the last write wins</span></div>\n<p>Locking, a version check, or an atomic statement is what prevents it.</p>"
+      },
+      {
+        "number": 3,
+        "question": "How do you handle the optimistic-lock exception?",
+        "tag": "edge",
+        "html": "<p><strong>Retry if the operation can be recomputed; otherwise tell the user.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Operation</th>\n<th>Response</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>a machine-computed update</strong></td>\n<td>reload and retry, a bounded number of times, in a new transaction</td>\n</tr>\n<tr>\n<td><strong>a user's edit</strong></td>\n<td>409 Conflict; show the current values and let them merge</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "Does a bulk JPQL update check the version?",
+        "tag": "probe",
+        "html": "<p><strong>No: bulk statements bypass the persistence context and the version check.</strong></p>\n<ul>\n<li><strong>Add the version condition yourself</strong>, or increment the version in the statement.</li>\n<li><strong>Entities already loaded</strong> are stale after a bulk update: clear or refresh them.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "How does this map to a REST API?",
+        "tag": "senior",
+        "html": "<p><strong>As conditional requests.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\"><code>GET</code> returns an <code>ETag</code> (the version)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the client sends <code>If-Match</code> on <code>PUT</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">a mismatch returns 412 or 409</span></div>\n<p>The same mechanism, expressed in HTTP, so any client can participate.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The transaction takes care of it.&quot;",
+      "&quot;Always use pessimistic locks to be safe.&quot;",
+      "&quot;Catch the optimistic-lock exception and ignore it.&quot;"
+    ],
+    "links": [
+      {
+        "label": "optimistic vs pessimistic locking",
+        "target": "09-spring/09-hibernate/44-optimistic-vs-pessimistic-locking"
+      },
+      {
+        "label": "transaction boundary session boundary",
+        "target": "09-spring/05-data/26-transaction-boundary-session-boundary"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Frame the axis&lt;br/&gt;detect the conflict or&lt;br/&gt;prevent it\"]):::step\n        N2(\"2 · Where optimistic&lt;br/&gt;wins&lt;br/&gt;a version check at write&lt;br/&gt;time\"):::ask\n        N3(\"3 · Where pessimistic&lt;br/&gt;wins&lt;br/&gt;short, contended, costly&lt;br/&gt;to retry\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · The deciding&lt;br/&gt;question&lt;br/&gt;collision rate and retry&lt;br/&gt;cost\"):::ask\n        N5([\"5 · What I'd pick here&lt;br/&gt;by use case\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q45": {
+    "type": "mechanism",
+    "spine": [
+      "The one-line claim",
+      "How it works",
+      "Prove it",
+      "What it costs or breaks",
+      "So what for the system"
+    ],
+    "testing": "whether you know generics are a compile-time check, can list the consequences, and can use wildcards correctly.",
+    "trap": "&quot;generics exist at run time&quot;, or not knowing why <code>List&lt;Integer&gt;</code> isn&#39;t a <code>List&lt;Number&gt;</code>.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · The one-line claim</strong></td>\n<td>\"Java generics are checked by the compiler and then erased. At run time a List of String and a List of Integer are the same class, ArrayList.\"</td>\n</tr>\n<tr>\n<td><strong>2 · How it works</strong></td>\n<td>\"The compiler verifies the types, replaces each type parameter with its bound, usually Object, and inserts casts where values are read. That design kept old, pre-generics bytecode compatible.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Prove it</strong></td>\n<td>\"A program shows it: the two lists have the same class object. And if I sneak a String into a list of Integer through a raw type, the add succeeds; the ClassCastException comes later, at the read, where the compiler inserted the cast.\"</td>\n</tr>\n<tr>\n<td><strong>4 · What it costs or breaks</strong></td>\n<td>\"So anything needing the type at run time is impossible: new T, instanceof List of String, an array of T, overloading two methods that differ only in the type argument, or a generic exception class. Primitives can't be type arguments either.\"</td>\n</tr>\n<tr>\n<td><strong>5 · So what for the system</strong></td>\n<td>\"In practice: I pass a Class or a type token where a library needs the type, which is what Jackson's TypeReference and Spring's ParameterizedTypeReference do. I never use raw types. And for flexible APIs I use wildcards by the producer-extends, consumer-super rule.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Generics are a compile-time contract; at run time the type arguments are gone.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The one-line claim",
+        "claim": "checked at compile time, gone at run time",
+        "html": "<table>\n<thead>\n<tr>\n<th></th>\n<th>Compile time</th>\n<th>Run time</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>List&lt;String&gt;</code> and <code>List&lt;Integer&gt;</code></strong></td>\n<td>different, incompatible types</td>\n<td>the same class</td>\n</tr>\n<tr>\n<td><strong>Type safety</strong></td>\n<td>enforced</td>\n<td>relies on the compiler having checked</td>\n</tr>\n<tr>\n<td><strong>Type argument available</strong></td>\n<td>yes</td>\n<td>no (with narrow exceptions in signatures)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "How it works",
+        "claim": "erase to the bound, insert casts",
+        "html": "<pre><code class=\"language-text\">source:      List&lt;String&gt; names = new ArrayList&lt;&gt;();   String s = names.get(0);\nafter erasure:   List names = new ArrayList();         String s = (String) names.get(0);   ← cast inserted by the compiler\n\n&lt;T&gt; T first(List&lt;T&gt; xs)                      →   Object first(List xs)\n&lt;T extends Comparable&lt;T&gt;&gt; T max(List&lt;T&gt; xs)  →   Comparable max(List xs)      ← erased to the first bound\n</code></pre>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Why it was designed this way:</strong></span><span class=\"flow-step\">generics arrived in Java 5</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">existing libraries and bytecode had to keep working</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">so the run-time representation didn't change</span></div>"
+      },
+      {
+        "number": 3,
+        "name": "Prove it",
+        "claim": "one class, and a failure at the read",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — JDK 25 (compiles with an \"unchecked\" warning, which is the point):</strong></p>\n<pre><code class=\"language-java\">import java.util.*;\nclass Demo {\n    static double sum(List&lt;? extends Number&gt; src) { double t = 0; for (Number n : src) t += n.doubleValue(); return t; }  // producer: extends\n    static void fill(List&lt;? super Integer&gt; dst) { dst.add(1); dst.add(2); }                                            // consumer: super\n    public static void main(String[] args) {\n        List&lt;String&gt; strings = new ArrayList&lt;&gt;(); List&lt;Integer&gt; ints = new ArrayList&lt;&gt;();\n        System.out.println(strings.getClass() == ints.getClass());         // one class at run time\n        System.out.println(strings.getClass().getSimpleName());\n        List&lt;Number&gt; numbers = new ArrayList&lt;&gt;();\n        fill(numbers); fill(ints);\n        System.out.println(sum(ints) + \" \" + sum(List.of(1.5, 2.5)) + \" \" + numbers);\n        List raw = ints; raw.add(\"oops\");                                  // compiles with a warning: heap pollution\n        try { Integer x = ints.get(2); } catch (ClassCastException e) { System.out.println(\"ClassCastException at the read, not at the add\"); }\n    }\n}\n// → true\n// → ArrayList\n// → 3.0 4.0 [1, 2]\n// → ClassCastException at the read, not at the add\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Line of output</th>\n<th>Shows</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>true</code>, <code>ArrayList</code></td>\n<td>both lists share one run-time class</td>\n</tr>\n<tr>\n<td><code>3.0 4.0 [1, 2]</code></td>\n<td><code>? extends Number</code> reads from any numeric list; <code>? super Integer</code> writes into a list of <code>Number</code> or <code>Integer</code></td>\n</tr>\n<tr>\n<td><strong>the <code>ClassCastException</code> message</strong></td>\n<td><strong>the bad element went in silently; the failure is at the read, far from the cause</strong></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "What it costs or breaks",
+        "claim": "what you can&#39;t write",
+        "html": "<table>\n<thead>\n<tr>\n<th>Can't do</th>\n<th>Because</th>\n<th>Instead</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>new T()</code></strong></td>\n<td>no class to instantiate</td>\n<td>pass a <code>Supplier&lt;T&gt;</code> or <code>Class&lt;T&gt;</code></td>\n</tr>\n<tr>\n<td><strong><code>x instanceof List&lt;String&gt;</code></strong></td>\n<td>the argument isn't there to check</td>\n<td><code>instanceof List&lt;?&gt;</code>, then check elements</td>\n</tr>\n<tr>\n<td><strong><code>new T[n]</code></strong>, <code>new List&lt;String&gt;[n]</code></td>\n<td>arrays check their element type at run time; generics can't</td>\n<td>a <code>List&lt;T&gt;</code>, or <code>Array.newInstance(clazz, n)</code></td>\n</tr>\n<tr>\n<td><strong><code>void f(List&lt;String&gt;)</code> and <code>void f(List&lt;Integer&gt;)</code></strong></td>\n<td>the same erased signature</td>\n<td>different method names</td>\n</tr>\n<tr>\n<td><strong><code>class MyEx&lt;T&gt; extends Exception</code></strong></td>\n<td><code>catch</code> can't distinguish type arguments</td>\n<td>a non-generic exception</td>\n</tr>\n<tr>\n<td><strong><code>List&lt;int&gt;</code></strong></td>\n<td>type arguments must be reference types</td>\n<td><code>List&lt;Integer&gt;</code>, or <code>IntStream</code>, or a primitive collection</td>\n</tr>\n<tr>\n<td><strong><code>T.class</code></strong></td>\n<td>no such thing</td>\n<td>a <code>Class&lt;T&gt;</code> parameter</td>\n</tr>\n</tbody></table>\n<p><strong>Heap pollution:</strong> a raw type or an unchecked cast lets a wrong element into a collection. The error then appears at an unrelated line.</p>"
+      },
+      {
+        "number": 5,
+        "name": "So what for the system",
+        "claim": "tokens, no raw types, PECS",
+        "html": "<table>\n<thead>\n<tr>\n<th>Need</th>\n<th>Tool</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>deserialise JSON into <code>List&lt;Order&gt;</code></strong></td>\n<td>a type token: <code>new TypeReference&lt;List&lt;Order&gt;&gt;() {}</code> (Jackson), <code>ParameterizedTypeReference</code> (Spring)</td>\n</tr>\n<tr>\n<td><strong>create instances generically</strong></td>\n<td><code>Class&lt;T&gt;</code> or <code>Supplier&lt;T&gt;</code></td>\n</tr>\n<tr>\n<td><strong>a flexible method parameter</strong></td>\n<td>wildcards</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">PECS: Producer Extends, Consumer Super\nList&lt;? extends Number&gt; src    ← I only READ Numbers from it     (a List&lt;Integer&gt; is accepted)\nList&lt;? super Integer&gt; dst     ← I only WRITE Integers into it   (a List&lt;Number&gt; is accepted)\n</code></pre>\n<p><strong>Why <code>List&lt;Integer&gt;</code> isn't a <code>List&lt;Number&gt;</code>:</strong> if it were, you could add a <code>Double</code> through the <code>List&lt;Number&gt;</code> reference. Generics are invariant; wildcards add the variance you ask for.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "How does a type token recover the type if it&#39;s erased?",
+        "tag": "probe",
+        "html": "<p><strong>Type arguments in class declarations are kept in the class file's metadata.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\"><code>new TypeReference&lt;List&lt;Order&gt;&gt;() {}</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">an anonymous subclass</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">its generic superclass is recorded</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">read by reflection (<code>getGenericSuperclass</code>)</span></div>\n<p>Erasure removes types from objects and bytecode instructions, not from declarations.</p>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;<code>List&lt;Integer&gt;</code> is a subtype of <code>List&lt;Number&gt;</code>, since Integer extends Number.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>No. Generics are invariant.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Type</th>\n<th>Accepts a <code>List&lt;Integer&gt;</code>?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>List&lt;Number&gt;</code></td>\n<td>no</td>\n</tr>\n<tr>\n<td><code>List&lt;? extends Number&gt;</code></td>\n<td>yes, read-only for elements</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "question": "Arrays are covariant. Why is that a problem?",
+        "tag": "edge",
+        "html": "<p><strong>It moves the error to run time.</strong></p>\n<pre><code class=\"language-java\">Object[] objs = new String[1];\nobjs[0] = 42;                    // compiles; throws ArrayStoreException at run time\n</code></pre>\n<p>Generics chose invariance so the same mistake is a compile error.</p>"
+      },
+      {
+        "number": 4,
+        "question": "When is an unchecked warning acceptable?",
+        "tag": "probe",
+        "html": "<p><strong>When you can prove the cast is safe, and you scope the suppression tightly.</strong></p>\n<ul>\n<li><strong><code>@SuppressWarnings(\"unchecked\")</code></strong> on the smallest declaration, with a comment saying why it is safe.</li>\n<li><strong><code>@SafeVarargs</code></strong> for generic varargs methods that don't store or expose the array.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "Where does erasure bite in a Spring service?",
+        "tag": "senior",
+        "html": "<p><strong>Wherever a framework must know an element type.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Place</th>\n<th>Symptom</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>REST client returning <code>List&lt;Order&gt;</code></strong></td>\n<td>a list of <code>LinkedHashMap</code></td>\n<td><code>ParameterizedTypeReference</code></td>\n</tr>\n<tr>\n<td><strong>a generic event or message handler</strong></td>\n<td>every handler receives every event</td>\n<td>resolvable-type support, or one class per event</td>\n</tr>\n<tr>\n<td><strong>caches and serialisers</strong></td>\n<td>values come back as the wrong type</td>\n<td>store with explicit type information</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Generics are available at run time.&quot;",
+      "&quot;Use raw types to make it compile.&quot;",
+      "&quot;List of Integer is a List of Number.&quot;"
+    ],
+    "links": [
+      {
+        "label": "Type Erasure",
+        "target": "08-java/02-Generics/09-Type-Erasure"
+      },
+      {
+        "label": "Bounded Types Wildcards PECS",
+        "target": "08-java/02-Generics/10-Bounded-Types-Wildcards-PECS"
+      },
+      {
+        "label": "Generic Inference and var",
+        "target": "08-java/02-Generics/11-Generic-Inference-and-var"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The one-line claim&lt;br/&gt;checked at compile time,&lt;br/&gt;gone at run time\"]):::step\n        N2[\"2 · How it works&lt;br/&gt;erase to the bound,&lt;br/&gt;insert casts\"]:::calc\n        N3[\"3 · Prove it&lt;br/&gt;one class, and a failure&lt;br/&gt;at the read\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it costs or&lt;br/&gt;breaks&lt;br/&gt;what you can't write\"]:::bad\n        N5([\"5 · So what for the&lt;br/&gt;system&lt;br/&gt;tokens, no raw types,&lt;br/&gt;PECS\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q46": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "The recipe",
+      "Where it breaks",
+      "Where I use it",
+      "Adjacent concept"
+    ],
+    "testing": "whether you go past &quot;make the fields final&quot; to defensive copies and escaping references.",
+    "trap": "a <code>final</code> field that points at a mutable list the caller still holds.",
+    "speakTime": "~60 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"An immutable object's state can't change after construction. Not through setters, and not through anything it holds or hands out.\"</td>\n</tr>\n<tr>\n<td><strong>2 · The recipe</strong></td>\n<td>\"The recipe has five parts. Make the class final, so a subclass can't add mutability. Make every field private and final. Provide no setters. Copy any mutable input in the constructor. And never return a mutable internal object: return an unmodifiable view or a copy.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It breaks at the last two. Final only fixes the reference, not the object behind it. If the constructor keeps the caller's list, the caller can still change it. A small test shows it: the leaky class changes when the caller adds to its own list; the one that copied doesn't. Dates, arrays and collections are the usual leaks, along with letting 'this' escape from the constructor.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Where I use it</strong></td>\n<td>\"I use immutable types for value objects, DTOs, events, map keys and configuration: anything shared between threads or used as a key. Records do most of the recipe for me.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"The related guarantee is safe publication: final fields are visible, fully initialised, to every thread once the constructor finishes.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Final class, final fields, no setters, copy in, copy out.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "state fixed at construction",
+        "html": "<table>\n<thead>\n<tr>\n<th>Benefit</th>\n<th>Because</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>thread-safe with no locking</strong></td>\n<td>nothing can change, so nothing can race</td>\n</tr>\n<tr>\n<td><strong>safe as a map key or set element</strong></td>\n<td>the hash never changes</td>\n</tr>\n<tr>\n<td><strong>safe to share and cache</strong></td>\n<td>no holder can affect another</td>\n</tr>\n<tr>\n<td><strong>simpler reasoning</strong></td>\n<td>an object is valid for ever once constructed</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "The recipe",
+        "claim": "five rules",
+        "html": "<pre><code class=\"language-java\">public final class Order {                                   // 1 · final class\n    private final String id;                                 // 2 · private final fields\n    private final List&lt;String&gt; tags;\n    private final Instant placedAt;                          //     Instant is itself immutable\n    public Order(String id, List&lt;String&gt; tags, Instant placedAt) {\n        this.id = Objects.requireNonNull(id);\n        this.tags = List.copyOf(tags);                       // 4 · defensive copy of mutable input\n        this.placedAt = placedAt;\n    }\n    public List&lt;String&gt; tags() { return tags; }              // 5 · unmodifiable, so safe to return\n    public Order withTag(String t) {                         // 3 · no setters: \"change\" returns a new object\n        var next = new ArrayList&lt;&gt;(tags); next.add(t); return new Order(id, next, placedAt);\n    }\n}\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>#</th>\n<th>Rule</th>\n<th>Stops</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><strong><code>final</code> class</strong> (or private constructors with factories)</td>\n<td>a mutable subclass</td>\n</tr>\n<tr>\n<td>2</td>\n<td><strong><code>private final</code> fields</strong></td>\n<td>reassignment and outside access</td>\n</tr>\n<tr>\n<td>3</td>\n<td><strong>no setters; \"withers\" return new instances</strong></td>\n<td>in-place change</td>\n</tr>\n<tr>\n<td>4</td>\n<td><strong>copy mutable inputs</strong></td>\n<td>the caller keeping a handle</td>\n</tr>\n<tr>\n<td>5</td>\n<td><strong>return copies or unmodifiable views</strong></td>\n<td>callers mutating internals</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "<code>final</code> fixes the reference only",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the same input list, with and without a defensive copy (JDK 25):</strong></p>\n<pre><code class=\"language-java\">import java.util.*;\nclass Demo {\n    static final class Leaky { private final List&lt;String&gt; tags; Leaky(List&lt;String&gt; t) { tags = t; } List&lt;String&gt; tags() { return tags; } }\n    static final class Order {\n        private final List&lt;String&gt; tags;\n        Order(List&lt;String&gt; t) { tags = List.copyOf(t); }           // defensive copy in, unmodifiable\n        List&lt;String&gt; tags() { return tags; }                       // safe to hand out\n    }\n    public static void main(String[] args) {\n        List&lt;String&gt; input = new ArrayList&lt;&gt;(List.of(\"gift\"));\n        Leaky leaky = new Leaky(input); Order order = new Order(input);\n        input.add(\"fragile\");                                      // the caller mutates its own list\n        System.out.println(\"leaky: \" + leaky.tags() + \"  immutable: \" + order.tags());\n        try { order.tags().add(\"x\"); } catch (UnsupportedOperationException e) { System.out.println(\"getter result can't be mutated\"); }\n    }\n}\n// → leaky: [gift, fragile]  immutable: [gift]\n// → getter result can't be mutated\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Leak</th>\n<th>Example</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>mutable input kept</strong></td>\n<td><code>this.tags = tags;</code></td>\n<td><code>List.copyOf(tags)</code></td>\n</tr>\n<tr>\n<td><strong>mutable internals returned</strong></td>\n<td><code>return items;</code> for an <code>ArrayList</code></td>\n<td>an unmodifiable copy</td>\n</tr>\n<tr>\n<td><strong>arrays</strong></td>\n<td><code>final byte[] data</code> returned directly</td>\n<td><code>data.clone()</code> in and out</td>\n</tr>\n<tr>\n<td><strong>legacy mutable types</strong></td>\n<td><code>java.util.Date</code>, <code>Calendar</code></td>\n<td><code>Instant</code>, <code>LocalDate</code>, or copy</td>\n</tr>\n<tr>\n<td><strong><code>this</code> escapes the constructor</strong></td>\n<td>registering a listener inside it</td>\n<td>a factory method that publishes after construction</td>\n</tr>\n<tr>\n<td><strong>a non-final class</strong></td>\n<td>a subclass adds a setter or overrides a getter</td>\n<td>make it <code>final</code></td>\n</tr>\n<tr>\n<td><strong>mutable elements inside an immutable list</strong></td>\n<td><code>List.copyOf(orders)</code> where <code>Order</code> is mutable</td>\n<td>make the elements immutable too</td>\n</tr>\n</tbody></table>\n<p><code>Collections.unmodifiableList(tags)</code> alone is a view: it still changes when the original list changes. <code>List.copyOf</code> copies.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Where I use it",
+        "claim": "values, keys, messages",
+        "html": "<table>\n<thead>\n<tr>\n<th>Use</th>\n<th>Why immutable</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>value objects</strong> (<code>Money</code>, <code>EmailAddress</code>)</td>\n<td>equality by value, invariants checked once</td>\n</tr>\n<tr>\n<td><strong>DTOs and events</strong></td>\n<td>passed across layers and threads</td>\n</tr>\n<tr>\n<td><strong>map keys, set elements</strong></td>\n<td>the hash must never change</td>\n</tr>\n<tr>\n<td><strong>configuration</strong></td>\n<td>read by every thread</td>\n</tr>\n<tr>\n<td><strong>snapshots swapped atomically</strong> (a <code>volatile</code> reference to an immutable map)</td>\n<td>readers never see a half-updated state</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-java\">record Order(String id, List&lt;String&gt; tags, Instant placedAt) {\n    Order { tags = List.copyOf(tags); }            // a record plus one line covers the whole recipe\n}\n</code></pre>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "safe publication through final fields",
+        "html": "<table>\n<thead>\n<tr>\n<th>Field</th>\n<th>Seen by other threads after construction</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>final</code>, set in the constructor</strong></td>\n<td>guaranteed fully initialised</td>\n</tr>\n<tr>\n<td><strong>non-final</strong></td>\n<td>needs <code>volatile</code>, a lock, or another safe-publication mechanism</td>\n</tr>\n</tbody></table>\n<p><strong>Cost to weigh:</strong> every \"change\" allocates a new object. For large structures changed often, use a builder for construction or a persistent collection; for most domain objects the cost is negligible.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "<code>Collections.unmodifiableList</code> or <code>List.copyOf</code>?",
+        "tag": "probe",
+        "html": "<p><strong><code>List.copyOf</code> for immutability; the wrapper is only a read-only view.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Changes if the source list changes</th>\n<th>Allows nulls</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>Collections.unmodifiableList(src)</code></strong></td>\n<td>yes</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong><code>List.copyOf(src)</code></strong></td>\n<td>no</td>\n<td>no</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;All the fields are final, so the class is immutable.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Only shallowly.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Field</th>\n<th>Immutable?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>final int</code>, <code>final String</code></td>\n<td>yes</td>\n</tr>\n<tr>\n<td><code>final List&lt;String&gt;</code> pointing at an <code>ArrayList</code></td>\n<td>no: the list can still change</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "question": "The class has ten fields. How do you construct it?",
+        "tag": "edge",
+        "html": "<p><strong>A builder that produces the immutable object at the end.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\">mutable builder collects values</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>build()</code> validates</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">calls the private constructor</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">an immutable instance</span></div>\n<p>Or split the class: ten fields often means two concepts.</p>"
+      },
+      {
+        "number": 4,
+        "question": "How do frameworks deserialise into an immutable class?",
+        "tag": "probe",
+        "html": "<p><strong>Through the constructor.</strong></p>\n<ul>\n<li><strong>Jackson</strong> binds JSON to constructor parameters, and to a record's canonical constructor.</li>\n<li><strong><code>@ConfigurationProperties</code></strong> supports constructor binding.</li>\n<li><strong>JPA entities are the exception:</strong> they need a no-arg constructor and mutable fields.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "Is immutability worth the allocations?",
+        "tag": "senior",
+        "html": "<p><strong>Almost always for domain data.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Concern</th>\n<th>Reality</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>allocation cost</strong></td>\n<td>short-lived objects are cheap for a generational collector</td>\n</tr>\n<tr>\n<td><strong>what you avoid</strong></td>\n<td>defensive copying at every boundary, locks, and aliasing bugs</td>\n</tr>\n<tr>\n<td><strong>where to measure</strong></td>\n<td>hot loops over large structures: use a builder or mutable local state there</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Make the fields final.&quot;",
+      "&quot;Return the list; the field is final.&quot;",
+      "&quot;Use Collections.unmodifiableList on the caller&#39;s list.&quot;"
+    ],
+    "links": [
+      {
+        "label": "Designing an Immutable Class",
+        "target": "08-java/01-Core-language & Object Model/05-Designing-an-Immutable-Class"
+      },
+      {
+        "label": "final field safe publication",
+        "target": "08-java/05-jmm/23-final-field-safe-publication"
+      },
+      {
+        "label": "Records",
+        "target": "08-java/09-Modern-Java/43-Records"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;state fixed at&lt;br/&gt;construction\"]):::step\n        N2[\"2 · The recipe&lt;br/&gt;five rules\"]:::step\n        N3[\"3 · Where it breaks&lt;br/&gt;final fixes the&lt;br/&gt;reference only\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · Where I use it&lt;br/&gt;values, keys, messages\"):::ask\n        N5([\"5 · Adjacent concept&lt;br/&gt;safe publication through&lt;br/&gt;final fields\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q47": {
+    "type": "diagnose",
+    "spine": [
+      "Name it",
+      "Rule out the fakes",
+      "Confirm with evidence",
+      "Fix by experiment",
+      "Validate",
+      "Productionise"
+    ],
+    "testing": "whether you know a timeout says nothing about whether the request succeeded, and can design an idempotency key with a race-free store.",
+    "trap": "&quot;check if the order exists first&quot; — two concurrent retries both pass the check.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Name it</strong></td>\n<td>\"A timeout means the client doesn't know the outcome. The first request may well have succeeded with the response lost. So the client is right to retry, and the server has to make the retry safe: the POST must be idempotent.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Rule out the fakes</strong></td>\n<td>\"I'd rule out a double click, a gateway that retries by itself, and a consumer reprocessing a message.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Confirm with evidence</strong></td>\n<td>\"The logs show two requests with the same payload seconds apart, the first one completing after the client's timeout.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Fix by experiment</strong></td>\n<td>\"The fix is an idempotency key. The client generates a unique key per logical operation and sends it in a header on every attempt. The server stores the key with a unique constraint, in the same transaction that creates the order. The first request inserts the key and creates the order. A retry hits the constraint, and the server returns the stored result of the first attempt instead of creating another.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Validate</strong></td>\n<td>\"I'd test it by sending the same request eight times concurrently and asserting one order and eight identical responses.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Productionise</strong></td>\n<td>\"The details that matter: the uniqueness check is a database constraint, not a read-then-write; keys are scoped per client and expire; and the same key with a different body is rejected.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"The client names the operation with a key; the server does it once and replays the answer.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Name it",
+        "claim": "a timeout is not a failure",
+        "html": "<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant C as Client\n    participant S as Order service\n    participant D as Database\n    C-&gt;&gt;S: POST /orders\n    S-&gt;&gt;D: insert order 1\n    Note over C: timeout, response lost\n    C-&gt;&gt;S: POST /orders (retry)\n    S-&gt;&gt;D: insert order 2\n    S--&gt;&gt;C: 201 Created\n    Note over D: two orders for one intent\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>HTTP method</th>\n<th>Idempotent by definition?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>GET</code>, <code>PUT</code>, <code>DELETE</code></td>\n<td>yes: repeating gives the same state</td>\n</tr>\n<tr>\n<td><strong><code>POST</code></strong></td>\n<td><strong>no: each call creates</strong></td>\n</tr>\n<tr>\n<td><code>PATCH</code></td>\n<td>depends on the operation</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Rule out the fakes",
+        "claim": "who sent it twice",
+        "html": "<table>\n<thead>\n<tr>\n<th>Source of the duplicate</th>\n<th>Tell</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>client retry after a timeout</strong></td>\n<td>second request just after the timeout value</td>\n</tr>\n<tr>\n<td><strong>double click or double submit</strong></td>\n<td>two requests milliseconds apart, different connection</td>\n</tr>\n<tr>\n<td><strong>a gateway, proxy or SDK retrying automatically</strong></td>\n<td>the retry comes from infrastructure; check its policy for non-idempotent methods</td>\n</tr>\n<tr>\n<td><strong>a message consumer reprocessing</strong></td>\n<td>no second HTTP request at all</td>\n</tr>\n<tr>\n<td><strong>two tabs, a real second order</strong></td>\n<td>the user meant it: different idempotency keys</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Confirm with evidence",
+        "claim": "one intent, two requests",
+        "html": "<table>\n<thead>\n<tr>\n<th>Observation</th>\n<th>Likely cause</th>\n<th>Next action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>two requests, same body, first finished after the client's timeout</strong></td>\n<td>retry of a request that had succeeded</td>\n<td>idempotency key</td>\n</tr>\n<tr>\n<td>the duplicates come from a load balancer's retry</td>\n<td>infrastructure retrying a <code>POST</code></td>\n<td>disable retries for non-idempotent methods, and add the key</td>\n</tr>\n<tr>\n<td>duplicates only under load</td>\n<td>slow responses pushing past client timeouts</td>\n<td>the key; then fix the latency</td>\n</tr>\n<tr>\n<td>two rows milliseconds apart</td>\n<td>double submit, or concurrent retries</td>\n<td>an atomic uniqueness check</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Fix by experiment",
+        "claim": "an idempotency key, stored atomically",
+        "html": "<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — eight concurrent attempts with one key (plain-Java analogue of the unique constraint, JDK 25):</strong></p>\n<pre><code class=\"language-java\">import java.util.concurrent.*;\nimport java.util.concurrent.atomic.AtomicInteger;\nclass Demo {\n    static final ConcurrentHashMap&lt;String, String&gt; byKey = new ConcurrentHashMap&lt;&gt;();    // idempotency key -&gt; order id\n    static final AtomicInteger created = new AtomicInteger();\n    static String createOrder(String idempotencyKey) {\n        return byKey.computeIfAbsent(idempotencyKey, k -&gt; \"order-\" + created.incrementAndGet());   // create once per key\n    }\n    public static void main(String[] args) throws Exception {\n        ExecutorService pool = Executors.newFixedThreadPool(8);\n        var calls = new java.util.ArrayList&lt;Future&lt;String&gt;&gt;();\n        for (int i = 0; i &lt; 8; i++) calls.add(pool.submit(() -&gt; createOrder(\"key-abc\")));     // the same request, retried\n        var ids = new java.util.HashSet&lt;String&gt;();\n        for (Future&lt;String&gt; f : calls) ids.add(f.get());\n        System.out.println(\"responses: \" + ids + \", orders created: \" + created.get());\n        System.out.println(\"a different key: \" + createOrder(\"key-xyz\"));\n        pool.shutdown();\n    }\n}\n// → responses: [order-1], orders created: 1\n// → a different key: order-2\n</code></pre>\n<div class=\"exp-list\"><section class=\"exp\"><span class=\"exp-tag\">Experiment 1</span><h4 class=\"exp-title\">An idempotency key with a unique constraint</h4><p>I'd require an <code>Idempotency-Key</code> header and store it in the same transaction as the order.</p><pre><code class=\"language-java\">@Transactional\nOrderResponse create(String clientId, String key, CreateOrder cmd) {\n    var prior = keys.find(clientId, key);\n    if (prior.isPresent()) return prior.get().replay(cmd);          // same key: return the first result\n    Order order = orders.save(Order.from(cmd));\n    keys.insert(clientId, key, hash(cmd), order.id());              // UNIQUE (client_id, key): a race loses here\n    return OrderResponse.of(order);\n}\n</code></pre><p><strong>Why?</strong> The database constraint makes \"first one wins\" atomic. A concurrent duplicate fails the insert, its transaction rolls back, and it then reads and returns the winner's result.</p><p class=\"exp-best\">Best suited as the general solution for create operations.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 2</span><h4 class=\"exp-title\">A natural key</h4><p>I'd put a unique constraint on something the domain already has, such as the cart ID or the client's own order reference.</p><p><strong>Why?</strong> No extra table; a second insert for the same cart simply fails.</p><p class=\"exp-best\">Best suited when one business object can only ever produce one order.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 3</span><h4 class=\"exp-title\">Make it a PUT</h4><p>I'd let the client choose the resource ID: <code>PUT /orders/{clientGeneratedId}</code>.</p><p><strong>Why?</strong> <code>PUT</code> to a known ID is idempotent by construction.</p><p class=\"exp-best\">Best suited when clients can generate UUIDs.</p></section></div>"
+      },
+      {
+        "number": 5,
+        "name": "Validate",
+        "claim": "concurrent duplicates",
+        "html": "<table>\n<thead>\n<tr>\n<th>Test</th>\n<th>Asserts</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>N concurrent requests, same key</strong></td>\n<td>one order; N responses with the same order ID</td>\n</tr>\n<tr>\n<td><strong>same key, different body</strong></td>\n<td>rejected (422), not silently replayed</td>\n</tr>\n<tr>\n<td><strong>retry after the first completed</strong></td>\n<td>the stored response, same status</td>\n</tr>\n<tr>\n<td><strong>retry while the first is still running</strong></td>\n<td>409 or a wait, never a second order</td>\n</tr>\n<tr>\n<td><strong>a different key</strong></td>\n<td>a second order, as intended</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Productionise",
+        "claim": "the details that decide it",
+        "html": "<table>\n<thead>\n<tr>\n<th>Detail</th>\n<th>Rule</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>atomicity</strong></td>\n<td>a unique constraint, never \"select then insert\"</td>\n</tr>\n<tr>\n<td><strong>scope</strong></td>\n<td>key unique per client or tenant, not globally</td>\n</tr>\n<tr>\n<td><strong>payload hash</strong></td>\n<td>stored with the key; a mismatch is a client bug and is rejected</td>\n</tr>\n<tr>\n<td><strong>what is replayed</strong></td>\n<td>the original status and body, including a deterministic failure</td>\n</tr>\n<tr>\n<td><strong>expiry</strong></td>\n<td>keep keys longer than any client's retry window, then purge</td>\n</tr>\n<tr>\n<td><strong>downstream calls</strong></td>\n<td>pass the same key on to the payment provider, so the retry is safe end to end</td>\n</tr>\n<tr>\n<td><strong>infrastructure</strong></td>\n<td>gateways and SDKs must not auto-retry <code>POST</code> unless the key is present</td>\n</tr>\n</tbody></table>\n<p><strong>Thread-safety:</strong> the guarantee lives in the database, so it holds across threads and across application instances. An in-memory map only protects one instance.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Who generates the key, and when?",
+        "tag": "probe",
+        "html": "<p><strong>The client, once per logical operation, reused on every retry.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\">user clicks \"Place order\"</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">client creates a UUID</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">sends it on attempt 1, 2, 3</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">a new click creates a new key</span></div>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;Check whether the order exists before inserting.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Two concurrent retries both see \"no\" and both insert.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Approach</th>\n<th>Under concurrency</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>select, then insert</strong></td>\n<td>a race: duplicates</td>\n</tr>\n<tr>\n<td><strong>insert with a unique constraint, handle the violation</strong></td>\n<td>exactly one wins</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "question": "The first request is still running when the retry arrives.",
+        "tag": "edge",
+        "html": "<p><strong>The retry must not start a second execution.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Behaviour</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>insert the key first, in \"in progress\" state</strong></td>\n<td>the retry sees it and gets 409, with a hint to retry later</td>\n</tr>\n<tr>\n<td><strong>block on the row lock</strong></td>\n<td>the retry waits, then returns the first result</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "Is this the same as an idempotent Kafka consumer?",
+        "tag": "probe",
+        "html": "<p><strong>The same pattern at a different boundary.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>HTTP</th>\n<th>Messaging</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Key</strong></td>\n<td><code>Idempotency-Key</code> header</td>\n<td>message ID</td>\n</tr>\n<tr>\n<td><strong>Store</strong></td>\n<td>key table with a unique constraint</td>\n<td>processed-message table</td>\n</tr>\n<tr>\n<td><strong>Duplicate</strong></td>\n<td>replay the response</td>\n<td>skip</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "What does the API contract say?",
+        "tag": "senior",
+        "html": "<p><strong>It documents the key as part of the endpoint.</strong></p>\n<ul>\n<li><strong>Which endpoints</strong> accept or require the header.</li>\n<li><strong>How long</strong> keys are remembered.</li>\n<li><strong>What a replay returns</strong>, and the error for a key reused with a different body.</li>\n<li><strong>Client guidance:</strong> retry with backoff and the same key on timeouts and 5xx.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Tell the client not to retry.&quot;",
+      "&quot;Check if it exists first.&quot;",
+      "&quot;Disable the button after one click&quot; as the server-side fix."
+    ],
+    "links": [
+      {
+        "label": "rest controller toolkit",
+        "target": "09-spring/03-mvc/14-rest-controller-toolkit"
+      },
+      {
+        "label": "Resilience Patterns on the JVM",
+        "target": "08-java/12-Frameworks/59-Resilience-Patterns-on-the-JVM"
+      },
+      {
+        "label": "kafka consumer crash before commit",
+        "target": "model-answers/03-JAVA-SPRING/41-kafka-consumer-crash-before-commit"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Name it&lt;br/&gt;a timeout is not a&lt;br/&gt;failure\"]):::step\n        N2(\"2 · Rule out the fakes&lt;br/&gt;who sent it twice\"):::ask\n        N3(\"3 · Confirm with&lt;br/&gt;evidence&lt;br/&gt;one intent, two requests\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Fix by experiment&lt;br/&gt;an idempotency key,&lt;br/&gt;stored atomically\"]:::step\n        N5(\"5 · Validate&lt;br/&gt;concurrent duplicates\"):::ask\n        N6([\"6 · Productionise&lt;br/&gt;the details that decide&lt;br/&gt;it\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "java-spring-q48": {
+    "type": "design",
+    "spine": [
+      "Clarify",
+      "Constraints and numbers",
+      "Baseline design",
+      "Deep-dive the hard part",
+      "Failure modes",
+      "Evolve"
+    ],
+    "testing": "whether you match each kind of bug to the cheapest test that catches it, and know what Spring&#39;s test slices load.",
+    "trap": "<code>@SpringBootTest</code> for everything, with every collaborator mocked.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Clarify</strong></td>\n<td>\"I'd ask what kinds of failure this service has had: logic errors, wrong queries, broken JSON contracts, wiring mistakes. Each kind is caught best at a different level.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Constraints and numbers</strong></td>\n<td>\"The constraint is feedback time. A plain unit test runs in milliseconds; a test that starts the full application context takes seconds. So most tests must not start Spring at all.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Baseline design</strong></td>\n<td>\"Business logic: plain unit tests, constructed with new and fakes. Web layer: WebMvcTest, which loads only controllers, validation and JSON mapping, with the service mocked. Persistence: DataJpaTest against the real database engine in a container, because query behaviour differs from an in-memory substitute. Then a few full SpringBootTest tests for wiring, transactions and security end to end.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Deep-dive the hard part</strong></td>\n<td>\"The hard part is the persistence and integration boundary. Testcontainers gives me the same PostgreSQL and Kafka versions as production, and outbound HTTP is stubbed at the network level, so the real client code and error handling run.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Failure modes</strong></td>\n<td>\"What goes wrong: mocking everything, so tests pass while the query is wrong; many different context configurations, so the context cache misses and the suite crawls; and tests that never check a rollback.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Evolve</strong></td>\n<td>\"Then contract tests between services, and architecture tests for layering.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Most logic without Spring, slices for web and data, a few full-context tests for the wiring.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify",
+        "claim": "which bug, which test",
+        "html": "<table>\n<thead>\n<tr>\n<th>Kind of bug</th>\n<th>Cheapest test that catches it</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>wrong business rule</strong></td>\n<td>unit test</td>\n</tr>\n<tr>\n<td><strong>wrong status code, validation, JSON shape</strong></td>\n<td>web slice</td>\n</tr>\n<tr>\n<td><strong>wrong query, mapping, constraint</strong></td>\n<td>data slice on the real database</td>\n</tr>\n<tr>\n<td><strong>bean wiring, transaction or security configuration</strong></td>\n<td>full context</td>\n</tr>\n<tr>\n<td><strong>a broken contract with another service</strong></td>\n<td>contract test</td>\n</tr>\n<tr>\n<td><strong>layering violations</strong></td>\n<td>architecture test</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Constraints and numbers",
+        "claim": "feedback time decides the shape",
+        "html": "<table>\n<thead>\n<tr>\n<th>Kind of test</th>\n<th>Typical time each (illustrative)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>unit</strong></td>\n<td>milliseconds</td>\n</tr>\n<tr>\n<td><strong>web slice</strong></td>\n<td>about 0.1–0.2 s, after the context is cached</td>\n</tr>\n<tr>\n<td><strong>data slice with a container</strong></td>\n<td>a few tenths of a second</td>\n</tr>\n<tr>\n<td><strong>full context</strong></td>\n<td>about a second</td>\n</tr>\n<tr>\n<td><strong>starting a context (once per distinct configuration)</strong></td>\n<td>several seconds</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>most tests don't start Spring</strong></td>\n<td>milliseconds each: constructor injection makes this possible</td>\n</tr>\n<tr>\n<td><strong>few distinct context configurations</strong></td>\n<td>each one starts once and is cached; each variation starts another</td>\n</tr>\n<tr>\n<td><strong>containers shared across the suite</strong></td>\n<td>starting a database per class is slow</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Baseline design",
+        "claim": "four levels",
+        "html": "<table>\n<thead>\n<tr>\n<th>Level</th>\n<th>Annotation</th>\n<th>Loads</th>\n<th>Tests</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>unit</strong></td>\n<td>none</td>\n<td>nothing: <code>new Service(fake)</code></td>\n<td>rules, calculations, state transitions</td>\n</tr>\n<tr>\n<td><strong>web slice</strong></td>\n<td><code>@WebMvcTest(OrderController.class)</code></td>\n<td>MVC infrastructure, the controller, validation, JSON, advice; services replaced by test doubles</td>\n<td>mapping, status codes, validation, error bodies, security rules on endpoints</td>\n</tr>\n<tr>\n<td><strong>data slice</strong></td>\n<td><code>@DataJpaTest</code></td>\n<td>JPA, repositories, a transaction that rolls back per test</td>\n<td>queries, mappings, constraints, N+1 counts</td>\n</tr>\n<tr>\n<td><strong>full</strong></td>\n<td><code>@SpringBootTest</code></td>\n<td>the whole context</td>\n<td>wiring, transactions across beans, security end to end</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-java\">@WebMvcTest(OrderController.class)                      // Spring Boot 3.4+ style: a fragment, not run here\nclass OrderControllerTest {\n    @Autowired MockMvc mvc;\n    @MockitoBean OrderService service;\n    @Test void rejectsEmptyCart() throws Exception {\n        mvc.perform(post(\"/orders\").contentType(APPLICATION_JSON).content(\"{\\\"items\\\":[]}\"))\n           .andExpect(status().isBadRequest());\n    }\n}\n</code></pre>"
+      },
+      {
+        "number": 4,
+        "name": "Deep-dive the hard part",
+        "claim": "real infrastructure at the boundaries",
+        "html": "<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Persistence test:</strong></span><span class=\"flow-step\">Testcontainers starts PostgreSQL</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">migrations run</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">repository under test</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">assert rows and statement count</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">rollback</span></div>\n<table>\n<thead>\n<tr>\n<th>Boundary</th>\n<th>Test double</th>\n<th>Why not a simpler one</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>database</strong></td>\n<td>the real engine in a container</td>\n<td>an in-memory database accepts SQL and types that production rejects, and has different locking</td>\n</tr>\n<tr>\n<td><strong>Kafka, Redis</strong></td>\n<td>containers</td>\n<td>client and serialisation behaviour is the thing under test</td>\n</tr>\n<tr>\n<td><strong>outbound HTTP</strong></td>\n<td>a stub server (WireMock, MockWebServer)</td>\n<td>the real client, timeouts, retries and error mapping run</td>\n</tr>\n<tr>\n<td><strong>time</strong></td>\n<td>an injected <code>Clock</code></td>\n<td>deterministic tests</td>\n</tr>\n<tr>\n<td><strong>another team's service</strong></td>\n<td>a contract test</td>\n<td>their change breaks your build, not production</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "Failure modes",
+        "claim": "tests that pass and prove little",
+        "html": "<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Symptom</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>everything mocked</strong></td>\n<td>green tests, wrong SQL in production</td>\n<td>data slice on the real database</td>\n</tr>\n<tr>\n<td><strong><code>@SpringBootTest</code> for every class</strong></td>\n<td>a suite that takes many minutes</td>\n<td>push logic to unit tests; use slices</td>\n</tr>\n<tr>\n<td><strong>many context variations</strong> (different mocks or properties per class)</td>\n<td>the cache misses; the context starts again and again</td>\n<td>shared base configuration</td>\n</tr>\n<tr>\n<td><strong><code>@Transactional</code> on every integration test</strong></td>\n<td>lazy loading and rollback bugs hidden by the test's own transaction</td>\n<td>some tests without it, asserting committed state</td>\n</tr>\n<tr>\n<td><strong>no rollback or failure-path tests</strong></td>\n<td>silent non-transactional code ships</td>\n<td>force an exception, assert the database</td>\n</tr>\n<tr>\n<td><strong>shared mutable data between tests</strong></td>\n<td>order-dependent failures</td>\n<td>each test creates its own data</td>\n</tr>\n<tr>\n<td><strong>sleeping for async work</strong></td>\n<td>flaky tests</td>\n<td>poll with a timeout (Awaitility)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Evolve",
+        "claim": "contracts, architecture, pipelines",
+        "html": "<table>\n<thead>\n<tr>\n<th>Addition</th>\n<th>Catches</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>consumer-driven contract tests</strong></td>\n<td>a provider change that breaks a consumer</td>\n</tr>\n<tr>\n<td><strong>architecture tests</strong> (ArchUnit)</td>\n<td>controllers reaching repositories, package cycles</td>\n</tr>\n<tr>\n<td><strong>mutation testing on core logic</strong></td>\n<td>tests that execute code without asserting on it</td>\n</tr>\n<tr>\n<td><strong>a context-load smoke test per profile</strong></td>\n<td>a deploy that fails to start</td>\n</tr>\n<tr>\n<td><strong>pipeline split:</strong> unit on every push, slices and containers on merge</td>\n<td>fast feedback with full coverage before release</td>\n</tr>\n</tbody></table>\n<p><strong>Evaluation hook:</strong> track suite duration, flaky-test rate, and defects that escaped to production by the level that should have caught them.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "What does the context cache do?",
+        "tag": "probe",
+        "html": "<p><strong>It keeps a started context and reuses it for every test class with the same configuration.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Changes the cache key</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>different mocked beans, properties or active profiles</strong></td>\n<td>a new context is started</td>\n</tr>\n<tr>\n<td><strong><code>@DirtiesContext</code></strong></td>\n<td>the context is discarded</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "&quot;Use H2 for repository tests; it&#39;s faster.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>It tests a different database.</strong></p>\n<ul>\n<li><strong>Dialect differences:</strong> functions, JSON columns, upserts, locking.</li>\n<li><strong>A query can pass on the substitute</strong> and fail, or behave differently, in production.</li>\n<li><strong>Containers with reuse</strong> are fast enough.</li>\n</ul>"
+      },
+      {
+        "number": 3,
+        "question": "A test passes alone and fails in the suite.",
+        "tag": "edge",
+        "html": "<p><strong>Shared state.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Suspect</th>\n<th>Check</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>data left by another test</strong></td>\n<td>committed rows; missing cleanup</td>\n</tr>\n<tr>\n<td><strong>a cached context with a mutated singleton</strong></td>\n<td>static or bean state changed by a test</td>\n</tr>\n<tr>\n<td><strong>test order</strong></td>\n<td>run in random order to expose it</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "How do you test that <code>@Transactional</code> really rolls back?",
+        "tag": "probe",
+        "html": "<p><strong>Without a test-managed transaction, forcing the failure.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-step\">call the service so the second write throws</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">catch the exception</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">query the database in a new transaction</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">assert the first write is absent</span></div>"
+      },
+      {
+        "number": 5,
+        "question": "How much coverage is enough?",
+        "tag": "senior",
+        "html": "<p><strong>Coverage of risks, not of lines.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Measure</th>\n<th>Use</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>line coverage</strong></td>\n<td>a floor to spot untested areas</td>\n</tr>\n<tr>\n<td><strong>critical flows covered at the right level</strong></td>\n<td>the real target</td>\n</tr>\n<tr>\n<td><strong>escaped defects by level</strong></td>\n<td>where to add tests next</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;SpringBootTest for everything.&quot;",
+      "&quot;We mock the repository, so the database is covered.&quot;",
+      "&quot;H2 is the same as PostgreSQL.&quot;"
+    ],
+    "links": [
+      {
+        "label": "boot testing strategy",
+        "target": "09-spring/04-boot/22-boot-testing-strategy"
+      },
+      {
+        "label": "spring data jpa",
+        "target": "09-spring/05-data/25-spring-data-jpa"
+      },
+      {
+        "label": "rest controller toolkit",
+        "target": "09-spring/03-mvc/14-rest-controller-toolkit"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;which bug, which test\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;feedback time decides&lt;br/&gt;the shape\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;four levels\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive the hard&lt;br/&gt;part&lt;br/&gt;real infrastructure at&lt;br/&gt;the boundaries\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;tests that pass and&lt;br/&gt;prove little\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;contracts, architecture,&lt;br/&gt;pipelines\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   }
 }

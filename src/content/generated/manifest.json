@@ -2420,7 +2420,7 @@
       "number": 3,
       "icon": "☕",
       "title": "Java & Spring",
-      "count": 40,
+      "count": 48,
       "bands": [
         {
           "id": "java-spring-a",
@@ -2457,6 +2457,12 @@
           "letter": "F",
           "name": "Your story",
           "count": 1
+        },
+        {
+          "id": "java-spring-g-added-12-oct-2026-gaps-found-while-writing-the-model-answers",
+          "letter": null,
+          "name": "G — Added 12 Oct 2026 (gaps found while writing the model answers)",
+          "count": 8
         }
       ]
     },

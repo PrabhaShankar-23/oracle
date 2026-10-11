@@ -1348,6 +1348,279 @@
           }
         }
       ]
+    },
+    {
+      "id": "java-spring-g-added-12-oct-2026-gaps-found-while-writing-the-model-answers",
+      "letter": null,
+      "name": "G — Added 12 Oct 2026 (gaps found while writing the model answers)",
+      "questions": [
+        {
+          "id": "java-spring-q41",
+          "number": 41,
+          "marks": [
+            "decides"
+          ],
+          "text": "🏢 \"A Kafka consumer crashes after processing a message but before committing the offset. What happens, and how do you make it safe?",
+          "points": [
+            "Offset not committed → message <strong>redelivered</strong> after restart or rebalance: <strong>at-least-once</strong>",
+            "Commit-then-process is at-most-once (loss); auto-commit can do either",
+            "Fix is an <strong>idempotent consumer</strong>: message ID in a processed table, <strong>same transaction</strong> as the change",
+            "Kafka's exactly-once covers consume-process-produce <strong>inside Kafka</strong>, not your database or an HTTP call",
+            "Slow handlers exceed <code>max.poll.interval.ms</code> → rebalance → duplicates; dead-letter topic for poison messages"
+          ],
+          "links": [
+            {
+              "label": "Resilience Patterns on the JVM",
+              "target": "08-java/12-Frameworks/59-Resilience-Patterns-on-the-JVM"
+            }
+          ],
+          "flow": "process → crash → redelivery → idempotent handler skips → commit after processing",
+          "trap": "\"turn on exactly-once\" for a database write",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q42",
+          "number": 42,
+          "marks": [],
+          "text": "Why is String immutable, and what do ==, equals and the string pool have to do with each other?",
+          "points": [
+            "Immutable → shareable (<strong>string pool</strong>), hash cached, thread-safe, safe after security checks",
+            "Literals are interned: <code>\"a\" == \"a\"</code> true · <code>new String(\"a\") == \"a\"</code> false · <code>equals</code> true",
+            "<code>==</code> compares references; <strong>always <code>equals</code></strong> for content",
+            "Concatenation in a loop → a new String each time → <code>StringBuilder</code>",
+            "Secrets in <code>char[]</code>, not <code>String</code>"
+          ],
+          "links": [
+            {
+              "label": "String Internals",
+              "target": "08-java/01-Core-language &amp; Object Model/04-String-Internals"
+            }
+          ],
+          "flow": "immutable → pooled and hashable → <code>==</code> is identity → <code>equals</code> for content → builder for loops",
+          "trap": "\"<code>==</code> worked in my test\" — it used literals",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q43",
+          "number": 43,
+          "marks": [],
+          "text": "Two threads are deadlocked in production. How do you prove it, and how do you prevent it?",
+          "points": [
+            "Cycle of waiting: T1 holds A wants B, T2 holds B wants A",
+            "Prove: <strong>thread dump</strong> (<code>jcmd Thread.print</code> / <code>jstack</code>) → \"Found one Java-level deadlock\"; two dumps, same frames",
+            "Prevent: <strong>global lock order</strong> · <code>tryLock</code> with timeout · hold one lock at a time",
+            "Not the same as pool exhaustion, a slow dependency, or thread-starvation deadlock",
+            "Never call foreign code (callbacks, remote calls) while holding a lock"
+          ],
+          "links": [
+            {
+              "label": "Concurrency Hazards",
+              "target": "08-java/06-Concurrency/31-Concurrency-Hazards"
+            }
+          ],
+          "flow": "thread dump → cycle named → find the two paths → one lock order everywhere",
+          "trap": "restarting before capturing the dump",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q44",
+          "number": 44,
+          "marks": [
+            "decides"
+          ],
+          "text": "Two users edit the same record at the same time. Optimistic or pessimistic locking in JPA?",
+          "points": [
+            "Problem: <strong>lost update</strong> — read, read, write, write; <code>@Transactional</code> alone doesn't stop it",
+            "<strong>Optimistic</strong>: <code>@Version</code> → <code>UPDATE … WHERE version = ?</code> → 0 rows → exception; no lock during think-time",
+            "<strong>Pessimistic</strong>: <code>SELECT … FOR UPDATE</code> → others wait; short contended transactions; set a lock timeout",
+            "Simple decrement → one atomic conditional <code>UPDATE</code>",
+            "Across requests: version round-trips (form field or <code>ETag</code> / <code>If-Match</code>); conflict → 409"
+          ],
+          "links": [
+            {
+              "label": "optimistic vs pessimistic locking",
+              "target": "09-spring/09-hibernate/44-optimistic-vs-pessimistic-locking"
+            }
+          ],
+          "flow": "conflicts rare → optimistic · frequent and costly to retry → pessimistic · counter → atomic update",
+          "trap": "\"it's in a transaction, so it's safe\"",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where optimistic wins",
+              "Where pessimistic wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q45",
+          "number": 45,
+          "marks": [],
+          "text": "What is type erasure, and what can't you do because of it?",
+          "points": [
+            "Generics are checked at compile time, then <strong>erased</strong>: <code>List&lt;String&gt;</code> and <code>List&lt;Integer&gt;</code> are one class",
+            "Compiler inserts casts; a raw type lets a wrong element in → <code>ClassCastException</code> later, at the read",
+            "Can't: <code>new T()</code>, <code>instanceof List&lt;String&gt;</code>, <code>new T[]</code>, overload on type argument, <code>List&lt;int&gt;</code>",
+            "Need the type at run time → <code>Class&lt;T&gt;</code> or a type token (<code>TypeReference</code>, <code>ParameterizedTypeReference</code>)",
+            "<strong>PECS</strong>: producer <code>? extends</code>, consumer <code>? super</code>; generics are invariant"
+          ],
+          "links": [
+            {
+              "label": "Type Erasure",
+              "target": "08-java/02-Generics/09-Type-Erasure"
+            },
+            {
+              "label": "Bounded Types Wildcards PECS",
+              "target": "08-java/02-Generics/10-Bounded-Types-Wildcards-PECS"
+            }
+          ],
+          "flow": "compile-time check → erased to bound → casts inserted → pass a token when the type is needed",
+          "trap": "\"<code>List&lt;Integer&gt;</code> is a <code>List&lt;Number&gt;</code>\"",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q46",
+          "number": 46,
+          "marks": [],
+          "text": "How do you design an immutable class — and what breaks it?",
+          "points": [
+            "<code>final</code> class · <code>private final</code> fields · no setters · <strong>copy mutable inputs</strong> · <strong>never return mutable internals</strong>",
+            "<code>final</code> fixes the reference, not the object — a kept <code>ArrayList</code> still changes",
+            "<code>List.copyOf</code> copies; <code>Collections.unmodifiableList</code> is only a view",
+            "Leaks: arrays, <code>Date</code>, <code>this</code> escaping the constructor, mutable elements",
+            "Records + a compact constructor do most of it; final fields give safe publication"
+          ],
+          "links": [
+            {
+              "label": "Designing an Immutable Class",
+              "target": "08-java/01-Core-language &amp; Object Model/05-Designing-an-Immutable-Class"
+            }
+          ],
+          "flow": "final class → final fields → copy in → copy out → \"withers\" instead of setters",
+          "trap": "\"all fields are final, so it's immutable\"",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "The recipe",
+              "Where it breaks",
+              "Where I use it",
+              "Adjacent concept"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q47",
+          "number": 47,
+          "marks": [
+            "decides"
+          ],
+          "text": "A client retries a POST after a timeout and you create two orders. Fix it.",
+          "points": [
+            "A timeout ≠ failure — the first request may have succeeded; retries are legitimate",
+            "<strong>Idempotency key</strong> from the client, same key on every attempt",
+            "Server stores the key with a <strong>unique constraint</strong>, in the <strong>same transaction</strong> as the create",
+            "Duplicate → return the stored result; same key + different body → reject; in-progress → 409",
+            "\"Select then insert\" is a race; gateways must not auto-retry <code>POST</code> without the key"
+          ],
+          "links": [
+            {
+              "label": "rest controller toolkit",
+              "target": "09-spring/03-mvc/14-rest-controller-toolkit"
+            },
+            {
+              "label": "Resilience Patterns on the JVM",
+              "target": "08-java/12-Frameworks/59-Resilience-Patterns-on-the-JVM"
+            }
+          ],
+          "flow": "client key → unique insert with the order → duplicate replays the first response",
+          "trap": "\"check if it exists first\"",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
+        },
+        {
+          "id": "java-spring-q48",
+          "number": 48,
+          "marks": [],
+          "text": "How do you test a Spring Boot service — what goes in which kind of test?",
+          "points": [
+            "Logic → plain <strong>unit</strong> tests, no Spring (<code>new Service(fake)</code>)",
+            "Web → <code>@WebMvcTest</code>: mapping, validation, JSON, error bodies; service mocked",
+            "Data → <code>@DataJpaTest</code> on the <strong>real engine</strong> (Testcontainers), not an in-memory substitute",
+            "A few <code>@SpringBootTest</code> for wiring, transactions, security end to end",
+            "Context cache: few distinct configurations; stub outbound HTTP at the network level; test a real rollback"
+          ],
+          "links": [
+            {
+              "label": "boot testing strategy",
+              "target": "09-spring/04-boot/22-boot-testing-strategy"
+            }
+          ],
+          "flow": "unit for rules → slices for web and data → few full-context → contracts between services",
+          "trap": "<code>@SpringBootTest</code> everywhere with everything mocked",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

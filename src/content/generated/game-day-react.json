@@ -496,7 +496,7 @@
               "Server state",
               "Shared client state",
               "Local and URL state",
-              "What I'd pick for a real app"
+              "What I'd pick here"
             ]
           }
         },
@@ -571,7 +571,7 @@
               "Baseline plan",
               "Deep-dive",
               "Failure modes",
-              "What I'd measure"
+              "Evolve"
             ]
           }
         }
@@ -636,7 +636,7 @@
             "spine": [
               "Frame the axis",
               "Virtualisation",
-              "Server-side pagination and filtering",
+              "Server-side paging",
               "Cheaper rows",
               "What I'd pick"
             ]
@@ -658,7 +658,7 @@
               "Baseline boundaries",
               "Deep-dive",
               "Failure modes",
-              "What I'd measure"
+              "Evolve"
             ]
           }
         },
@@ -697,7 +697,7 @@
               "Baseline setup",
               "Deep-dive",
               "Failure modes",
-              "What I'd alert on"
+              "Evolve"
             ]
           }
         }
@@ -885,7 +885,7 @@
               "Baseline strategy",
               "Deep-dive",
               "Failure modes",
-              "What I'd measure"
+              "Evolve"
             ]
           }
         },
@@ -904,7 +904,7 @@
               "Baseline process",
               "Deep-dive",
               "Failure modes",
-              "What I'd measure"
+              "Evolve"
             ]
           }
         },
@@ -926,7 +926,7 @@
               "Baseline design",
               "Deep-dive",
               "Failure modes",
-              "What I'd monitor"
+              "Evolve"
             ]
           }
         }

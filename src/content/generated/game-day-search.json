@@ -868,6 +868,62 @@
     "band": "F"
   },
   {
+    "id": "java-spring-q41",
+    "text": "🏢 \"A Kafka consumer crashes after processing a message but before committing the offset. What happens, and how do you make it safe?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q42",
+    "text": "Why is String immutable, and what do ==, equals and the string pool have to do with each other?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q43",
+    "text": "Two threads are deadlocked in production. How do you prove it, and how do you prevent it?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q44",
+    "text": "Two users edit the same record at the same time. Optimistic or pessimistic locking in JPA?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q45",
+    "text": "What is type erasure, and what can't you do because of it?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q46",
+    "text": "How do you design an immutable class — and what breaks it?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q47",
+    "text": "A client retries a POST after a timeout and you create two orders. Fix it.",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
+    "id": "java-spring-q48",
+    "text": "How do you test a Spring Boot service — what goes in which kind of test?",
+    "topic": "java-spring",
+    "topicTitle": "Java & Spring",
+    "band": "G — Added 12 Oct 2026 (gaps found while writing the model answers)"
+  },
+  {
     "id": "llm-foundations-q1",
     "text": "Explain self-attention. Why Q, K and V?",
     "topic": "llm-foundations",
