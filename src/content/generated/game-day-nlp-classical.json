@@ -41,7 +41,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Stemming chops fast for search indexes where recall wins, lemmatization maps to real lemmas where humans see the output — and in the neural path both mostly retired, because subwords and context handle morphology better than destructive normalization."
+          "oneLiner": "Stemming chops fast for search indexes where recall wins, lemmatization maps to real lemmas where humans see the output — and in the neural path both mostly retired, because subwords and context handle morphology better than destructive normalization.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where stemming wins",
+              "Where lemmatization wins",
+              "The deciding question",
+              "What I'd pick in 2026"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q2",
@@ -62,7 +72,17 @@
             }
           ],
           "badge": "Trending — subword mechanics recur on LeetCode Discuss + every LLM-adjacent screen (2025–26)",
-          "oneLiner": "Subwords beat words on OOV and characters on sequence length — BPE merges by frequency, WordPiece by likelihood gain, Unigram prunes a big vocab probabilistically — and since the vocab freezes with the model, domain-term fragmentation becomes a cost and quality tax you should check on your own corpus."
+          "oneLiner": "Subwords beat words on OOV and characters on sequence length — BPE merges by frequency, WordPiece by likelihood gain, Unigram prunes a big vocab probabilistically — and since the vocab freezes with the model, domain-term fragmentation becomes a cost and quality tax you should check on your own corpus.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How each one builds",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q3",
@@ -87,7 +107,18 @@
             }
           ],
           "badge": "Trending — the \"legacy preprocessing habits\" trap recurs on interview roundups (2025–26)",
-          "oneLiner": "That's sparse-era preprocessing applied to a model pretrained on raw text — lowercasing kills case signal, stopword removal deletes negation, stemming feeds the tokenizer junk — so keep transformer input minimal and save the aggressive analyzers for the BM25 arm where they belong."
+          "oneLiner": "That's sparse-era preprocessing applied to a model pretrained on raw text — lowercasing kills case signal, stopword removal deletes negation, stemming feeds the tokenizer junk — so keep transformer input minimal and save the aggressive analyzers for the BM25 arm where they belong.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "What each step destroys",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         }
       ]
     },
@@ -119,7 +150,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "TF says important-in-this-document, IDF says informative-across-the-corpus — and it survives because it's free, interpretable, and exact-match-faithful on the rare tokens embeddings blur, which is precisely the half of hybrid retrieval that dense vectors can't do."
+          "oneLiner": "TF says important-in-this-document, IDF says informative-across-the-corpus — and it survives because it's free, interpretable, and exact-match-faithful on the rare tokens embeddings blur, which is precisely the half of hybrid retrieval that dense vectors can't do.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q5",
@@ -144,7 +185,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Cosine compares direction and forgives length, Euclidean punishes magnitude unless you've normalized — at which point they rank identically — and Jaccard is set overlap for dedup; in production the embedding model's training metric decides, and the ANN index must match it."
+          "oneLiner": "Cosine compares direction and forgives length, Euclidean punishes magnitude unless you've normalized — at which point they rank identically — and Jaccard is set overlap for dedup; in production the embedding model's training metric decides, and the ANN index must match it.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where cosine wins",
+              "Where Jaccard wins",
+              "Where Euclidean fits",
+              "The deciding question"
+            ]
+          }
         }
       ]
     },
@@ -180,7 +231,17 @@
             }
           ],
           "badge": "Evergreen — still the canonical \"do you understand embeddings\" question.",
-          "oneLiner": "Word2Vec turns the distributional hypothesis into predict-your-context, made tractable by negative sampling — contrastive learning that today's embedding models still descend from — with its one-vector-per-word limit being exactly what contextual models fixed."
+          "oneLiner": "Word2Vec turns the distributional hypothesis into predict-your-context, made tractable by negative sampling — contrastive learning that today's embedding models still descend from — with its one-vector-per-word limit being exactly what contextual models fixed.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q7",
@@ -205,7 +266,17 @@
             }
           ],
           "badge": "Trending — the bi-encoder training story recurs in retrieval-heavy screens (2025–26)",
-          "oneLiner": "Raw BERT averaging fails because nothing in pretraining made sentence vectors comparable — contrastive bi-encoder fine-tuning with hard negatives builds the similarity geometry, which is why embedding models are chosen by retrieval evals and used with the exact query-passage conventions they were trained on."
+          "oneLiner": "Raw BERT averaging fails because nothing in pretraining made sentence vectors comparable — contrastive bi-encoder fine-tuning with hard negatives builds the similarity geometry, which is why embedding models are chosen by retrieval evals and used with the exact query-passage conventions they were trained on.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "Why averaging fails",
+              "Prove it",
+              "What fixed it",
+              "So what for the system"
+            ]
+          }
         }
       ]
     },
@@ -237,7 +308,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Without smoothing an unseen n-gram zeroes the whole sentence, so mass gets redistributed — and Kneser-Ney's insight is to back off by how many distinct contexts a word appears in, not raw frequency, which is why 'Francisco' gets almost none."
+          "oneLiner": "Without smoothing an unseen n-gram zeroes the whole sentence, so mass gets redistributed — and Kneser-Ney's insight is to back off by how many distinct contexts a word appears in, not raw frequency, which is why 'Francisco' gets almost none.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q9",
@@ -262,7 +343,17 @@
             }
           ],
           "badge": "Evergreen — the lineage question that tests whether you understand why transformers exist.",
-          "oneLiner": "Attention fixed the fixed-vector bottleneck by giving the decoder weighted random access to all encoder states — and the transformer is just that repair promoted to the whole architecture, with the RNN deleted."
+          "oneLiner": "Attention fixed the fixed-vector bottleneck by giving the decoder weighted random access to all encoder states — and the transformer is just that repair promoted to the whole architecture, with the RNN deleted.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         }
       ]
     },
@@ -294,7 +385,17 @@
             }
           ],
           "badge": "Trending — CRF-vs-softmax recurs on LeetCode Discuss NLP threads + extraction-heavy JDs (2025–26)",
-          "oneLiner": "Per-token softmax can emit I-PER after B-ORG because each decision is independent — a CRF scores whole label paths with learned transitions and Viterbi-decodes the best valid one; today it earns its place where schema validity and small data matter, and it's the same structured-prediction idea as constrained LLM decoding."
+          "oneLiner": "Per-token softmax can emit I-PER after B-ORG because each decision is independent — a CRF scores whole label paths with learned transitions and Viterbi-decodes the best valid one; today it earns its place where schema validity and small data matter, and it's the same structured-prediction idea as constrained LLM decoding.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where the CRF wins",
+              "Where softmax is enough",
+              "The deciding question",
+              "What I'd pick in 2026"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q11",
@@ -319,7 +420,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Viterbi finds the most probable tag path by dynamic programming — the Markov property means the best path to each state at time t needs only the best paths at t−1, collapsing K-to-the-T enumeration into T-by-K-squared with backpointers."
+          "oneLiner": "Viterbi finds the most probable tag path by dynamic programming — the Markov property means the best path to each state at time t needs only the best paths at t−1, collapsing K-to-the-T enumeration into T-by-K-squared with backpointers.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         }
       ]
     },
@@ -351,7 +462,18 @@
             }
           ],
           "badge": "Trending — KB-population questions recur with the KG-RAG wave (2025–26)",
-          "oneLiner": "Linking decides which real-world entity a mention is, relation extraction decides how two entities connect — the pipeline cascades NER, coref, linking and RE into a validated KB write, with cheap models for the bulk and LLMs for the hard residual, because this supply chain is what KG-RAG runs on."
+          "oneLiner": "Linking decides which real-world entity a mention is, relation extraction decides how two entities connect — the pipeline cascades NER, coref, linking and RE into a validated KB write, with cheap models for the bulk and LLMs for the hard residual, because this supply chain is what KG-RAG runs on.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q13",
@@ -376,7 +498,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Extractive is faithful by construction but clunky, abstractive is fluent but can invent — so legal gets extract-then-rewrite with per-claim faithfulness checks and linked citations, and ROUGE never decides, because overlap can't see hallucination."
+          "oneLiner": "Extractive is faithful by construction but clunky, abstractive is fluent but can invent — so legal gets extract-then-rewrite with per-claim faithfulness checks and linked citations, and ROUGE never decides, because overlap can't see hallucination.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where extractive wins",
+              "Where abstractive wins",
+              "The deciding question",
+              "What I'd ship for legal"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q14",
@@ -401,7 +533,17 @@
             }
           ],
           "badge": "Trending — the cost-ladder framing recurs in applied-NLP JDs (2025–26)",
-          "oneLiner": "It's a cost ladder — VADER for free at firehose scale, a domain-tuned small classifier for the daily millions, LLMs for the nuanced low-volume band or as adjudicator in a cascade — and aspect-based extraction is what turns 'neutral overall' into 'food great, service awful', which is the signal anyone actually acts on."
+          "oneLiner": "It's a cost ladder — VADER for free at firehose scale, a domain-tuned small classifier for the daily millions, LLMs for the nuanced low-volume band or as adjudicator in a cascade — and aspect-based extraction is what turns 'neutral overall' into 'food great, service awful', which is the signal anyone actually acts on.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where a lexicon wins",
+              "Where a small classifier wins",
+              "Where the LLM earns it",
+              "What aspect-based adds"
+            ]
+          }
         }
       ]
     },
@@ -433,7 +575,17 @@
             }
           ],
           "badge": "Evergreen (with a modern second half interviewers now expect)",
-          "oneLiner": "LDA reverses a generative story — documents as Dirichlet mixtures over word distributions — while BERTopic-style pipelines cluster contextual embeddings and name the clusters; embeddings win the practical default on semantics and short text, LDA keeps soft mixtures and auditability, and both are hypothesis generators judged by stability and use."
+          "oneLiner": "LDA reverses a generative story — documents as Dirichlet mixtures over word distributions — while BERTopic-style pipelines cluster contextual embeddings and name the clusters; embeddings win the practical default on semantics and short text, LDA keeps soft mixtures and auditability, and both are hypothesis generators judged by stability and use.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where LDA wins",
+              "Where embedding clustering wins",
+              "The deciding question",
+              "What I'd reach for now"
+            ]
+          }
         }
       ]
     },
@@ -465,7 +617,17 @@
             }
           ],
           "badge": "Trending — BM25-in-hybrid-retrieval is a fixture of RAG-era screens (2025–26)",
-          "oneLiner": "BM25 adds two ideas to TF-IDF — saturating term frequency so stuffing stops paying, and length normalization so bulk doesn't win — and it's still the baseline because it's free, interpretable, domain-robust, and exact-match-faithful, which is precisely the half of hybrid retrieval dense vectors can't cover."
+          "oneLiner": "BM25 adds two ideas to TF-IDF — saturating term frequency so stuffing stops paying, and length normalization so bulk doesn't win — and it's still the baseline because it's free, interpretable, domain-robust, and exact-match-faithful, which is precisely the half of hybrid retrieval dense vectors can't cover.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q17",
@@ -490,7 +652,18 @@
             }
           ],
           "badge": "Trending — the canonical hybrid-retrieval scenario, recurs everywhere (2025–26)",
-          "oneLiner": "Embeddings map an unseen SKU to semantic noise — dense retrieval is structurally blind to arbitrary exact strings — so the fix is hybrid: a minimally-analyzed BM25 arm for identifiers fused with the dense arm by RRF, a reranker on top, and retrieval evals sliced by query type so this failure class can't hide in the average."
+          "oneLiner": "Embeddings map an unseen SKU to semantic noise — dense retrieval is structurally blind to arbitrary exact strings — so the fix is hybrid: a minimally-analyzed BM25 arm for identifiers fused with the dense arm by RRF, a reranker on top, and retrieval evals sliced by query type so this failure class can't hide in the average.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q18",
@@ -511,7 +684,17 @@
             }
           ],
           "badge": "Evergreen — the metric-selection probe for anything retrieval-shaped.",
-          "oneLiner": "Match the metric to the consumer: recall@k when an LLM eats the whole top-k, MRR when the first hit satisfies, MAP when completeness matters, NDCG for graded human-facing rankings — and report intervals over the query set, because per-query variance swallows small deltas."
+          "oneLiner": "Match the metric to the consumer: recall@k when an LLM eats the whole top-k, MRR when the first hit satisfies, MAP when completeness matters, NDCG for graded human-facing rankings — and report intervals over the query set, because per-query variance swallows small deltas.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where MRR fits",
+              "Where MAP and NDCG fit",
+              "Where recall@k fits",
+              "The deciding question"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q19",
@@ -532,7 +715,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Pointwise scores items, pairwise learns orderings, listwise optimizes the list metric directly — and LTR lives mid-funnel, fusing text scores with business features over candidate sets, trained on click data that must be de-biased for position or you're just relearning the old ranker."
+          "oneLiner": "Pointwise scores items, pairwise learns orderings, listwise optimizes the list metric directly — and LTR lives mid-funnel, fusing text scores with business features over candidate sets, trained on click data that must be de-biased for position or you're just relearning the old ranker.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How the three differ",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         }
       ]
     },
@@ -564,7 +757,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "BLEU counts n-gram precision, ROUGE counts recall, BERTScore counts embedding similarity — and all three score a fluent hallucination happily, which is why they track regressions on a dashboard but never gate a release without faithfulness checks and human-calibrated judgment on top."
+          "oneLiner": "BLEU counts n-gram precision, ROUGE counts recall, BERTScore counts embedding similarity — and all three score a fluent hallucination happily, which is why they track regressions on a dashboard but never gate a release without faithfulness checks and human-calibrated judgment on top.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "What BLEU measures",
+              "What ROUGE measures",
+              "What BERTScore measures",
+              "Why none gates alone"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q21",
@@ -585,7 +788,18 @@
             }
           ],
           "badge": "Trending — slicing-and-significance questions recur across applied-NLP screens (2025–26)",
-          "oneLiner": "Aggregate F1 launders slice failures and small deltas are often bootstrap noise — so I slice by segment and surface, test significance on paired outcomes, hand-categorize a sample of errors, and re-label fresh production traffic, because the complaint stream is telling me which of those the frozen eval missed."
+          "oneLiner": "Aggregate F1 launders slice failures and small deltas are often bootstrap noise — so I slice by segment and surface, test significance on paired outcomes, hand-categorize a sample of errors, and re-label fresh production traffic, because the complaint stream is telling me which of those the frozen eval missed.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         }
       ]
     },
@@ -613,7 +827,18 @@
             }
           ],
           "badge": "Trending — low-label-budget scenarios recur on applied-NLP screens (2025–26)",
-          "oneLiner": "Augment with back-translation or LLM paraphrase but spot-check for label-breaking transforms, weak-supervise with labeling functions or LLM annotation audited against a human gold slice — and keep the eval set human-labeled and synthetic-free, or you're measuring the generator."
+          "oneLiner": "Augment with back-translation or LLM paraphrase but spot-check for label-breaking transforms, weak-supervise with labeling functions or LLM annotation audited against a human gold slice — and keep the eval set human-labeled and synthetic-free, or you're measuring the generator.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Baseline first",
+              "Augment the labels",
+              "Weak supervision",
+              "Failure modes",
+              "What I'd ship"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q23",
@@ -634,7 +859,18 @@
             }
           ],
           "badge": "Trending — code-mixing/noisy-text questions recur in global-product JDs (2025–26)",
-          "oneLiner": "Code-mixed text breaks LID first, then the tokenizer, then every English assumption downstream — the fix is span-level LID, minimal normalization, a multilingual model fine-tuned on your real tickets rather than translate-then-process, and eval slices per language mix so the failure can't hide in the aggregate."
+          "oneLiner": "Code-mixed text breaks LID first, then the tokenizer, then every English assumption downstream — the fix is span-level LID, minimal normalization, a multilingual model fine-tuned on your real tickets rather than translate-then-process, and eval slices per language mix so the failure can't hide in the aggregate.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "What breaks where",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q24",
@@ -655,7 +891,18 @@
             }
           ],
           "badge": "Trending — MinHash/dedup questions recur in data-engineering-for-AI JDs (2025–26)",
-          "oneLiner": "Exact hashing catches identical docs; near-dup needs MinHash signatures approximating Jaccard plus LSH banding so similar documents collide into candidate buckets — near-linear instead of quadratic — and PII gets layered regex-plus-NER detection with consistent pseudonymization, both audited on labeled slices because silent leakage is the asymmetric failure."
+          "oneLiner": "Exact hashing catches identical docs; near-dup needs MinHash signatures approximating Jaccard plus LSH banding so similar documents collide into candidate buckets — near-linear instead of quadratic — and PII gets layered regex-plus-NER detection with consistent pseudonymization, both audited on labeled slices because silent leakage is the asymmetric failure.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         }
       ]
     },
@@ -687,7 +934,18 @@
             }
           ],
           "badge": "Trending — the canonical applied-NLP system-design question (2025–26)",
-          "oneLiner": "Cold-start with rules or LLM zero-shot to ship and generate weak labels, spend human labels on a gold eval set plus active-learning picks, distill to a cheap model at volume with the LLM as low-confidence fallback — and keep it alive with drift monitors and a watched other-bucket, because taxonomies rot before models do."
+          "oneLiner": "Cold-start with rules or LLM zero-shot to ship and generate weak labels, spend human labels on a gold eval set plus active-learning picks, distill to a cheap model at volume with the LLM as low-confidence fallback — and keep it alive with drift monitors and a watched other-bucket, because taxonomies rot before models do.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q26",
@@ -712,7 +970,18 @@
             }
           ],
           "badge": "Trending — search-system design remains a staple loop question (2025–26)",
-          "oneLiner": "Autocomplete is its own millisecond system on prefix structures; search runs query understanding into a hybrid-recall, LTR-mid, rerank-top funnel where each stage is an order cheaper per document — evaluated by NDCG per query-type slice offline and conversion online, with zero-result rate as the canary."
+          "oneLiner": "Autocomplete is its own millisecond system on prefix structures; search runs query understanding into a hybrid-recall, LTR-mid, rerank-top funnel where each stage is an order cheaper per document — evaluated by NDCG per query-type slice offline and conversion online, with zero-result rate as the canary.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q27",
@@ -737,7 +1006,18 @@
             }
           ],
           "badge": "Trending — moderation-system design recurs in platform JDs (2025–26)",
-          "oneLiner": "Set thresholds per category from the business's asymmetric costs — recall-at-all-costs for severe harm, precision-lean for spam — behind a hash-rules-model-human cascade that survives the volume, with appeals as your false-positive monitor and random-sample prevalence as the honest north star in an adversarial pursuit."
+          "oneLiner": "Set thresholds per category from the business's asymmetric costs — recall-at-all-costs for severe harm, precision-lean for spam — behind a hash-rules-model-human cascade that survives the volume, with appeals as your false-positive monitor and random-sample prevalence as the honest north star in an adversarial pursuit.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q28",
@@ -758,7 +1038,17 @@
             }
           ],
           "badge": "Trending — the decision-framework question of this pillar (2025–26)",
-          "oneLiner": "Volume times lifetime sets the economics, task shape sets the capability boundary, and label availability sets the path — with distillation converting LLM judgment into classical economics and the cascade buying LLM quality at bulk-classical prices, re-priced yearly because the frontier moves."
+          "oneLiner": "Volume times lifetime sets the economics, task shape sets the capability boundary, and label availability sets the path — with distillation converting LLM judgment into classical economics and the cascade buying LLM quality at bulk-classical prices, re-priced yearly because the frontier moves.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where classical wins",
+              "Where the LLM wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q29",
@@ -779,7 +1069,18 @@
             }
           ],
           "badge": "Trending — embedding-ops questions recur in RAG-platform JDs (2025–26)",
-          "oneLiner": "One embedding space per index, version-enforced at query time; model upgrades mean re-embed-everything into a blue-green index gated by golden-query recall; ANN parameters are a measured recall-latency trade on your data; and drift is your corpus moving around a frozen model, caught by tracked retrieval metrics — plus remembering vectors are data with deletion obligations."
+          "oneLiner": "One embedding space per index, version-enforced at query time; model upgrades mean re-embed-everything into a blue-green index gated by golden-query recall; ANN parameters are a measured recall-latency trade on your data; and drift is your corpus moving around a frozen model, caught by tracked retrieval metrics — plus remembering vectors are data with deletion obligations.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         }
       ]
     },
@@ -807,7 +1108,17 @@
             }
           ],
           "badge": "Evergreen (the lineage version is how it's asked now)",
-          "oneLiner": "Extractive points at a span, abstractive writes the answer, open-domain retrieves first — and retrieve-then-generate open-domain QA is literally RAG's origin, with modern stacks composing all three eras: trained retrieval, generated answers, span-grounded citations."
+          "oneLiner": "Extractive points at a span, abstractive writes the answer, open-domain retrieves first — and retrieve-then-generate open-domain QA is literally RAG's origin, with modern stacks composing all three eras: trained retrieval, generated answers, span-grounded citations.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "The three families",
+              "How extractive works",
+              "The open-domain step",
+              "What RAG kept",
+              "Where it still breaks"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q31",
@@ -832,7 +1143,17 @@
             }
           ],
           "badge": "Evergreen (MT is the field's history exam — and its lessons are current events)",
-          "oneLiner": "MT went from noisy-channel phrase pipelines to end-to-end seq2seq, inventing attention, mainstreaming BPE and back-translation, and teaching the field that end-to-end beats assembled pipelines given data — the transformer itself was built for translation, so modern NLP is MT's lessons generalized."
+          "oneLiner": "MT went from noisy-channel phrase pipelines to end-to-end seq2seq, inventing attention, mainstreaming BPE and back-translation, and teaching the field that end-to-end beats assembled pipelines given data — the transformer itself was built for translation, so modern NLP is MT's lessons generalized.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "The SMT recipe",
+              "What NMT changed",
+              "Prove it",
+              "Lessons that generalised",
+              "Where it still breaks"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q32",
@@ -857,7 +1178,17 @@
             }
           ],
           "badge": "Evergreen — the \"do you know why, not just what\" architecture-history probe.",
-          "oneLiner": "Fixed windows died of the hard context limit, RNNs of vanishing gradients, LSTMs — after gating fixed trainability — of sequential non-parallelism, and transformers bought parallel training and unit path-length at quadratic cost, which is exactly the term today's SSM work is trying to kill next."
+          "oneLiner": "Fixed windows died of the hard context limit, RNNs of vanishing gradients, LSTMs — after gating fixed trainability — of sequential non-parallelism, and transformers bought parallel training and unit path-length at quadratic cost, which is exactly the term today's SSM work is trying to kill next.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Count tables",
+              "Fixed-window networks",
+              "Recurrent networks",
+              "LSTMs",
+              "Attention"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q33",
@@ -878,7 +1209,17 @@
             }
           ],
           "badge": "Evergreen (tests whether classical knowledge comes with honest currency)",
-          "oneLiner": "Constituency nests phrases, dependency draws typed head-to-dependent arcs — dependency won production because arcs are queryable — and in 2026 parses survive where inspectable structure beats implicit competence: high-precision rule extraction, aspect linking, and anywhere audit matters more than recall."
+          "oneLiner": "Constituency nests phrases, dependency draws typed head-to-dependent arcs — dependency won production because arcs are queryable — and in 2026 parses survive where inspectable structure beats implicit competence: high-precision rule extraction, aspect linking, and anywhere audit matters more than recall.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where constituency fits",
+              "Where dependency fits",
+              "Who uses parses now",
+              "What I'd pick in 2026"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q34",
@@ -899,7 +1240,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "WSD dissolved into contextual embeddings, SRL survives as schema-guided event extraction where machines consume the frames, and coreference is the real survivor because entity-centric pipelines need explicit mention clusters — the rule being that a semantic task outlives absorption only if something downstream eats its structure."
+          "oneLiner": "WSD dissolved into contextual embeddings, SRL survives as schema-guided event extraction where machines consume the frames, and coreference is the real survivor because entity-centric pipelines need explicit mention clusters — the rule being that a semantic task outlives absorption only if something downstream eats its structure.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Three tasks defined",
+              "What LLMs absorbed",
+              "What still stands",
+              "Where it breaks",
+              "What I'd build"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q35",
@@ -924,7 +1275,18 @@
             }
           ],
           "badge": "Trending — annotation-quality questions recur as eval-set building became core work (2025–26)",
-          "oneLiner": "Iterate guidelines through pilot-adjudicate-revise cycles until chance-corrected agreement stabilizes, report kappa per class, and treat human agreement as the model's ceiling and the eval set's error bar — with disagreement mined as signal, because most label noise is guideline ambiguity wearing an annotator's name."
+          "oneLiner": "Iterate guidelines through pilot-adjudicate-revise cycles until chance-corrected agreement stabilizes, report kappa per class, and treat human agreement as the model's ceiling and the eval set's error bar — with disagreement mined as signal, because most label noise is guideline ambiguity wearing an annotator's name.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify the task",
+              "Draft the guidelines",
+              "Pilot and measure",
+              "Scale with checks",
+              "Failure modes",
+              "Keep it alive"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q36",
@@ -945,7 +1307,17 @@
             }
           ],
           "badge": "Evergreen (quick fluency check; the wrong answer is treating them as rivals)",
-          "oneLiner": "NLTK teaches, spaCy ships classical pipelines fast, Hugging Face supplies and fine-tunes the transformers — production stacks layer spaCy's structure and rules over HF's models, and the real decision is which layer your requirement lives in, checked against your domain's accuracy, not the library's fame."
+          "oneLiner": "NLTK teaches, spaCy ships classical pipelines fast, Hugging Face supplies and fine-tunes the transformers — production stacks layer spaCy's structure and rules over HF's models, and the real decision is which layer your requirement lives in, checked against your domain's accuracy, not the library's fame.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where NLTK fits",
+              "Where spaCy fits",
+              "Where Hugging Face fits",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q37",
@@ -970,7 +1342,17 @@
             }
           ],
           "badge": "Evergreen (the anti-hype judgment question)",
-          "oneLiner": "Sparse features are the right call when the requirement is interpretability, exact-token fidelity, microsecond economics, or tiny-data stability — the test is whether the task is lexically or semantically separable, and the TF-IDF baseline is what tells you, which is why it always runs first."
+          "oneLiner": "Sparse features are the right call when the requirement is interpretability, exact-token fidelity, microsecond economics, or tiny-data stability — the test is whether the task is lexically or semantically separable, and the TF-IDF baseline is what tells you, which is why it always runs first.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where bag-of-words wins",
+              "Where it loses",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q38",
@@ -995,7 +1377,17 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Noisy-channel correction maximizes an error model times a language-model prior over edit-distance candidates — real-word errors force the prior to be contextual — and the same Bayes decomposition is the architecture of ASR, classical MT, and search's did-you-mean, which is why it's worth knowing beyond spellcheck."
+          "oneLiner": "Noisy-channel correction maximizes an error model times a language-model prior over edit-distance candidates — real-word errors force the prior to be contextual — and the same Bayes decomposition is the architecture of ASR, classical MT, and search's did-you-mean, which is why it's worth knowing beyond spellcheck.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q39",
@@ -1020,7 +1412,17 @@
             }
           ],
           "badge": "Trending — embedding-selection questions recur with every RAG build (2025–26)",
-          "oneLiner": "Intrinsic benchmarks shortlist, but only recall-at-k on your own queries against your own corpus — sliced by query type, with prefixes, truncation, metric and dimension-cost checked — predicts the system, and the bake-off harness that proves it is an afternoon that routinely overturns the leaderboard."
+          "oneLiner": "Intrinsic benchmarks shortlist, but only recall-at-k on your own queries against your own corpus — sliced by query type, with prefixes, truncation, metric and dimension-cost checked — predicts the system, and the bake-off harness that proves it is an afternoon that routinely overturns the leaderboard.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "What intrinsic tells you",
+              "What extrinsic tells you",
+              "The traps",
+              "How I'd decide"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q40",
@@ -1045,7 +1447,18 @@
             }
           ],
           "badge": "Evergreen",
-          "oneLiner": "Semantic dedup swaps MinHash for a bi-encoder-ANN recall stage with a cross-encoder precision stage on the candidates, thresholds calibrated on your own labeled pairs — and it earns its keep in ticket merging, eval decontamination, and catching banned content that came back reworded."
+          "oneLiner": "Semantic dedup swaps MinHash for a bi-encoder-ANN recall stage with a cross-encoder precision stage on the candidates, thresholds calibrated on your own labeled pairs — and it earns its keep in ticket merging, eval decontamination, and catching banned content that came back reworded.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q41",
@@ -1070,7 +1483,17 @@
             }
           ],
           "badge": "Evergreen — the generative-vs-discriminative probe, POS edition.",
-          "oneLiner": "An HMM generates tags by Markov chain and words by per-tag emission — tractable because of two independence assumptions, one absurd — and CRFs replaced it by modeling the conditional you actually need over rich whole-sentence features, while its Viterbi machinery outlived it everywhere."
+          "oneLiner": "An HMM generates tags by Markov chain and words by per-tag emission — tractable because of two independence assumptions, one absurd — and CRFs replaced it by modeling the conditional you actually need over rich whole-sentence features, while its Viterbi machinery outlived it everywhere.",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q42",
@@ -1091,7 +1514,17 @@
             }
           ],
           "badge": "Evergreen (era-literacy; occasionally a genuine efficiency question)",
-          "oneLiner": "Text CNNs learned n-gram detectors with pooling asking 'did the pattern appear anywhere' — fast and strong for local-pattern classification, structurally blind to long range, displaced by attention's content-based routing — surviving in efficiency niches and as the cleanest parable of inductive bias versus generality."
+          "oneLiner": "Text CNNs learned n-gram detectors with pooling asking 'did the pattern appear anywhere' — fast and strong for local-pattern classification, structurally blind to long range, displaced by attention's content-based routing — surviving in efficiency niches and as the cleanest parable of inductive bias versus generality.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "What they did well",
+              "How it works",
+              "Why transformers won",
+              "What survived",
+              "Where I'd still use one"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q43",
@@ -1115,7 +1548,17 @@
             }
           ],
           "badge": "Evergreen — the warm-up that reveals whether your knowledge has a skeleton.",
-          "oneLiner": "Morphology up through syntax, semantics and discourse — with ambiguity at every level being the field's whole difficulty — and every task maps text to one of five output shapes, which still dictate metrics and architecture even now that one model family serves them all."
+          "oneLiner": "Morphology up through syntax, semantics and discourse — with ambiguity at every level being the field's whole difficulty — and every task maps text to one of five output shapes, which still dictate metrics and architecture even now that one model family serves them all.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "The levels",
+              "One sentence through them",
+              "The task families",
+              "Where ambiguity lives",
+              "How I use the map"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q44",
@@ -1140,7 +1583,17 @@
             }
           ],
           "badge": "Evergreen (the history question, asked to test judgment rather than trivia)",
-          "oneLiner": "Rules left the precision floor every system still stands on, statistics left the measurement discipline and the retrieval machinery, neural left learned representations — and a serious 2026 system is all three stacked, which is why era-purism in either direction is a design smell."
+          "oneLiner": "Rules left the precision floor every system still stands on, statistics left the measurement discipline and the retrieval machinery, neural left learned representations — and a serious 2026 system is all three stacked, which is why era-purism in either direction is a design smell.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "The rules era",
+              "The statistical era",
+              "The neural era",
+              "What each handed on",
+              "What it means today"
+            ]
+          }
         },
         {
           "id": "nlp-classical-q45",
@@ -1165,7 +1618,17 @@
             }
           ],
           "badge": "Trending — the synthesis close; the framing recurs across senior AI JDs that list 'NLP fundamentals' beside 'LLMs' (2025–26)",
-          "oneLiner": "Classical NLP is the economics of the cost ladder, the substrate under every RAG stack, and the diagnostic toolkit when the black box misbehaves — model knowledge depreciates with every release, but retrieval, evaluation and data discipline are what every release still runs on."
+          "oneLiner": "Classical NLP is the economics of the cost ladder, the substrate under every RAG stack, and the diagnostic toolkit when the black box misbehaves — model knowledge depreciates with every release, but retrieval, evaluation and data discipline are what every release still runs on.",
+          "modelAnswer": {
+            "type": "defend",
+            "spine": [
+              "State the claim",
+              "Leverage on cost",
+              "Leverage on retrieval",
+              "Leverage on evaluation",
+              "My evidence"
+            ]
+          }
         }
       ]
     }
