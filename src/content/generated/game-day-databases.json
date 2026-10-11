@@ -1572,7 +1572,17 @@
             }
           ],
           "flow": "partition → C or A · normal operation → latency or consistency → decide per operation",
-          "trap": "\"we chose CA\""
+          "trap": "\"we chose CA\"",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q48",
@@ -1665,7 +1675,17 @@
             }
           ],
           "flow": "log → connector → stream (ordered per key) → idempotent consumers",
-          "trap": "polling <code>updated_at</code> and missing deletes"
+          "trap": "polling <code>updated_at</code> and missing deletes",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q51",
@@ -1686,7 +1706,17 @@
             }
           ],
           "flow": "pick N → set R and W per operation → R + W &gt; N for read-after-write",
-          "trap": "assuming a quorum makes operations transactional"
+          "trap": "assuming a quorum makes operations transactional",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q52",
@@ -1707,7 +1737,18 @@
             }
           ],
           "flow": "queries → partition key per query → sort key for ranges → duplicate data per pattern",
-          "trap": "designing entities first, like a relational schema"
+          "trap": "designing entities first, like a relational schema",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "databases-q53",
@@ -1728,7 +1769,17 @@
             }
           ],
           "flow": "isolation and compliance need → cost per tenant → tier → enforce below the application",
-          "trap": "tenant isolation by remembering a <code>WHERE</code> clause"
+          "trap": "tenant isolation by remembering a <code>WHERE</code> clause",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where shared tables win",
+              "Where separation wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q54",
@@ -1753,7 +1804,17 @@
             }
           ],
           "flow": "start in the database you have → measure recall and p95 → move when a limit is hit",
-          "trap": "a separate vector store on day one for ten thousand documents"
+          "trap": "a separate vector store on day one for ten thousand documents",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where pgvector wins",
+              "Where a dedicated store wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q55",
@@ -1815,7 +1876,18 @@
             }
           ],
           "flow": "symptom → evidence → cause → fix → guard → number",
-          "trap": "\"we added an index and it got faster\""
+          "trap": "\"we added an index and it got faster\"",
+          "modelAnswer": {
+            "type": "story",
+            "spine": [
+              "The decision it served",
+              "The constraint",
+              "Options weighed",
+              "What I built",
+              "What broke",
+              "The number"
+            ]
+          }
         }
       ]
     }

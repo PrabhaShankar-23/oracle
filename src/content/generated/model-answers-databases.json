@@ -4856,6 +4856,109 @@
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;two numbers on a&lt;br/&gt;timeline\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;what each backup method&lt;br/&gt;gives\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;the three false comforts\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;a restore on a schedule,&lt;br/&gt;with a stopwatch\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;availability is not&lt;br/&gt;recoverability\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   },
+  "databases-q47": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you state CAP precisely (a choice during a partition), know PACELC adds the everyday latency trade, and can place real systems with their settings.",
+    "trap": "&quot;pick two of three&quot;, or labelling a database CP or AP as if it weren&#39;t configurable.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"CAP says: when the network splits a distributed data store, each side has to choose. Either refuse some requests to stay consistent, or keep answering and risk the sides disagreeing. Partition tolerance isn't optional, so the real choice is consistency or availability, and only during a partition.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"PACELC adds the part that matters every day. If there's a partition, choose availability or consistency; else, when everything is healthy, choose latency or consistency. Waiting for more replicas to confirm is slower and safer.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"The labels are per operation and per setting. A single-leader Postgres with synchronous replicas behaves as CP: the minority side stops taking writes. Cassandra and DynamoDB default towards availability and low latency, and can be tuned to quorum reads and writes for stronger consistency. Spanner and etcd choose consistency and pay in latency.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"So I decide per data type. Payments and inventory get consistency. A shopping cart, a feed or a presence indicator can be available and eventually consistent, as long as I've said what the user sees meanwhile and how conflicts resolve.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"And consistency in CAP means linearizability, which is a different thing from the C in ACID.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"During a partition: consistent or available. Otherwise: consistent or fast. Decided per operation.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "a choice during a partition",
+        "html": "<p><strong>\"The three letters, precisely.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Letter</th>\n<th>Means</th>\n<th>Not</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>C · Consistency</strong></td>\n<td>every read sees the latest acknowledged write (linearizability)</td>\n<td>the C in ACID</td>\n</tr>\n<tr>\n<td><strong>A · Availability</strong></td>\n<td>every request to a non-failed node gets a non-error answer</td>\n<td>\"five nines\" uptime</td>\n</tr>\n<tr>\n<td><strong>P · Partition tolerance</strong></td>\n<td>the system keeps working when messages between nodes are lost</td>\n<td>something you can decline</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">network partition happens  →  each side must choose:\n   refuse (or block) requests it can't make safe     → CP\n   answer from what it has, possibly stale           → AP\nno partition               →  both C and A are possible     ← \"pick two\" is the wrong reading\n</code></pre>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "PACELC adds the normal case",
+        "html": "<p><strong>\"Two decisions, one for bad days and one for every day.\"</strong></p>\n<figure><div class=\"mermaid\">flowchart TB\n    Q([\"Is there a partition?\"]):::ask\n    P[\"Yes · P: choose&lt;br/&gt;A: answer, maybe stale&lt;br/&gt;C: refuse the minority side\"]:::calc\n    E[\"No · E (else): choose&lt;br/&gt;L: answer from one replica&lt;br/&gt;C: wait for a quorum\"]:::step\n    Q --&gt; P\n    Q --&gt; E\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n</div></figure>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>During a partition</th>\n<th>Else (healthy)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Trade</strong></td>\n<td>Availability against Consistency</td>\n<td>Latency against Consistency</td>\n</tr>\n<tr>\n<td><strong>How often it applies</strong></td>\n<td>rarely</td>\n<td>on every request</td>\n</tr>\n<tr>\n<td><strong>Cause</strong></td>\n<td>nodes can't talk</td>\n<td>talking to more replicas takes longer</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "real systems, with their settings",
+        "html": "<p><strong>\"Typical behaviour by default; most are tunable.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>System</th>\n<th>Partition</th>\n<th>Else</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>PostgreSQL / MySQL, single leader, synchronous replica</strong></td>\n<td>C</td>\n<td>C</td>\n<td>the side without the leader takes no writes</td>\n</tr>\n<tr>\n<td><strong>The same with asynchronous replicas, reads from replicas</strong></td>\n<td>C for writes</td>\n<td>L</td>\n<td>replica reads can be stale</td>\n</tr>\n<tr>\n<td><strong>Spanner, CockroachDB, etcd, ZooKeeper</strong></td>\n<td>C</td>\n<td>C</td>\n<td>consensus; the minority is unavailable</td>\n</tr>\n<tr>\n<td><strong>Cassandra, DynamoDB (defaults), Riak</strong></td>\n<td>A</td>\n<td>L</td>\n<td>tunable per request up to quorum</td>\n</tr>\n<tr>\n<td><strong>MongoDB (majority write concern)</strong></td>\n<td>C</td>\n<td>C</td>\n<td>lower concerns trade towards L</td>\n</tr>\n<tr>\n<td><strong>Redis with asynchronous replication</strong></td>\n<td>A (may lose acknowledged writes on failover)</td>\n<td>L</td>\n<td>—</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version and the configuration in use.</p>\n<table>\n<thead>\n<tr>\n<th>Why a single label misleads</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>It's per operation</strong></td>\n<td>Cassandra at <code>QUORUM</code> behaves differently from <code>ONE</code></td>\n</tr>\n<tr>\n<td><strong>It's per data path</strong></td>\n<td>the same Postgres is strict on the primary and stale on a replica</td>\n</tr>\n<tr>\n<td><strong>Defaults change</strong></td>\n<td>check the client and the cluster settings</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "decide per data type",
+        "html": "<p><strong>\"What does the user see during a partition, for each kind of data?\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Data</th>\n<th>Choose</th>\n<th>During a partition the user sees</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Payments, balances, inventory, unique usernames</strong></td>\n<td>consistency</td>\n<td>an error or a retry, never a wrong answer</td>\n</tr>\n<tr>\n<td><strong>Shopping cart</strong></td>\n<td>availability</td>\n<td>their cart; merges on recovery</td>\n</tr>\n<tr>\n<td><strong>Feed, likes, view counts</strong></td>\n<td>availability, low latency</td>\n<td>slightly old numbers</td>\n</tr>\n<tr>\n<td><strong>Configuration, leader election, locks</strong></td>\n<td>consistency</td>\n<td>the minority side waits</td>\n</tr>\n<tr>\n<td><strong>Sessions, presence</strong></td>\n<td>availability</td>\n<td>possibly stale status</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>If I choose availability, I must also choose</th>\n<th>Options</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How conflicts resolve</strong></td>\n<td>last write wins (can lose data), version vectors, CRDTs, application merge</td>\n</tr>\n<tr>\n<td><strong>What \"eventually\" means</strong></td>\n<td>a bound, or a way to detect staleness</td>\n</tr>\n<tr>\n<td><strong>Which reads must be strong anyway</strong></td>\n<td>routed to a quorum or the leader</td>\n</tr>\n</tbody></table>\n<p>Measure: replica lag, quorum latency against single-replica latency, the rate of conflicting writes.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "the consistency spectrum",
+        "html": "<p><strong>\"Between 'linearizable' and 'eventual' there are useful steps.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Model</th>\n<th>Guarantee</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Linearizable</strong></td>\n<td>behaves like one copy</td>\n<td>coordination on every operation</td>\n</tr>\n<tr>\n<td><strong>Sequential / serializable</strong></td>\n<td>some single order, not necessarily real-time</td>\n<td>—</td>\n</tr>\n<tr>\n<td><strong>Causal</strong></td>\n<td>effects never appear before their causes</td>\n<td>tracking dependencies</td>\n</tr>\n<tr>\n<td><strong>Read-your-writes, monotonic reads</strong></td>\n<td>per-session guarantees</td>\n<td>session routing</td>\n</tr>\n<tr>\n<td><strong>Eventual</strong></td>\n<td>replicas converge if writes stop</td>\n<td>none; conflicts possible</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Don't mix up</th>\n<th>With</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>C in CAP</strong> (linearizability across replicas)</td>\n<td><strong>C in ACID</strong> (a transaction keeps invariants)</td>\n</tr>\n<tr>\n<td><strong>A in CAP</strong> (every non-failed node answers)</td>\n<td>high availability as an SLA</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>consistency level per operation</em>, chosen from what the <em>product</em> can tolerate.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;CAP means pick two of three.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Partitions happen whether you pick them or not. The choice is C or A, during one.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Reading</th>\n<th>Problem</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"We're CA\"</strong></td>\n<td>means \"we haven't decided what happens in a partition\"</td>\n</tr>\n<tr>\n<td><strong>\"Pick two\"</strong></td>\n<td>hides that C and A are both available when the network is healthy</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 Five nodes split 3 / 2. The system requires a majority to write. What does each side do?",
+        "tag": "edge",
+        "html": "<p><strong>The side with 3 keeps working; the side with 2 refuses writes.</strong></p>\n<pre><code class=\"language-text\">majority of 5 = 3\nside A: 3 nodes ≥ 3 → accepts writes\nside B: 2 nodes &lt; 3 → unavailable for writes     ← CP: consistency kept, availability lost for B\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why does PACELC matter more day to day?",
+        "tag": "probe",
+        "html": "<p><strong>Partitions are rare; the latency trade is paid on every request.</strong></p>\n<ul>\n<li><strong>Wait for a quorum:</strong> slower, consistent.</li>\n<li><strong>Answer from one replica:</strong> faster, possibly stale.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "Is &quot;last write wins&quot; a safe conflict rule?",
+        "tag": "probe",
+        "html": "<p><strong>It's simple, and it silently drops one of the writes.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>Loses data?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Last write wins</strong> (by timestamp)</td>\n<td>yes; and clocks disagree</td>\n</tr>\n<tr>\n<td><strong>Version vectors + application merge</strong></td>\n<td>no; more work</td>\n</tr>\n<tr>\n<td><strong>CRDTs</strong></td>\n<td>no, for the data types they cover</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Design for two regions: users must be able to write in both. What do you tell the business?",
+        "tag": "senior",
+        "html": "<p><strong>That they're choosing between conflicts and write latency or availability.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>One write region; the other reads and fails over</strong></td>\n<td>simple; remote users pay latency; failover has an RPO</td>\n</tr>\n<tr>\n<td><strong>Multi-leader / active-active</strong></td>\n<td>local writes; conflicts must be resolved</td>\n</tr>\n<tr>\n<td><strong>A consensus database across regions</strong></td>\n<td>no conflicts; every write waits for a cross-region quorum</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Pick two of three.&quot; — the choice exists only during a partition.",
+      "&quot;MongoDB is CP, Cassandra is AP.&quot; — by default settings, per operation.",
+      "&quot;We chose CA.&quot; — a single node, or an undecided design.",
+      "&quot;Eventually consistent&quot;, without saying what the user sees meanwhile."
+    ],
+    "links": [
+      {
+        "label": "CAP and Consistency",
+        "target": "11-dbms/Sql/05-Scaling/CAP-and-Consistency"
+      },
+      {
+        "label": "Replication",
+        "target": "11-dbms/Sql/05-Scaling/Replication"
+      },
+      {
+        "label": "quorums",
+        "target": "model-answers/12-DATABASES/51-quorums"
+      },
+      {
+        "label": "read your writes",
+        "target": "model-answers/12-DATABASES/39-read-your-writes"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;a choice during a&lt;br/&gt;partition\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;PACELC adds the normal&lt;br/&gt;case\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;real systems, with their&lt;br/&gt;settings\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;decide per data type\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;the consistency spectrum\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
   "databases-q48": {
     "type": "design",
     "spine": [
@@ -5076,6 +5179,528 @@
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;the dual-write problem\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;which guarantee I need\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;the outbox row in the&lt;br/&gt;same transaction\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;atomic write, duplicate&lt;br/&gt;delivery, one effect\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;where each crash lands\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;sagas for multi-service&lt;br/&gt;flows\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   },
+  "databases-q50": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "log-based capture against polling, the delivery guarantee (at-least-once, ordered per key), and the operating risks: slots, schema changes, snapshots.",
+    "trap": "dual writes from the application to the database and to the other system, called &quot;CDC&quot;.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"Change data capture turns every committed insert, update and delete in a database into a stream of events that other systems consume. The database stays the source of truth; everything else is derived from the stream.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"The good way is log-based. The database already writes every change to its log for recovery and replication. A connector reads that log, the WAL in Postgres or the binlog in MySQL, and publishes row-level events, in commit order, usually to Kafka. It first takes a consistent snapshot of existing rows, then switches to streaming.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"The risks are operational. Delivery is at-least-once, so consumers must be idempotent. A stopped connector leaves a replication slot holding log on the primary until the disk fills. And a schema change upstream can break consumers.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"I use it to keep search indexes, caches, warehouses and other services in sync without dual writes, and to migrate databases with no downtime.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"Paired with an outbox table, it publishes business events, not raw row changes.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Read the log, not the tables; expect duplicates; watch the slot.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "committed changes as a stream",
+        "html": "<p><strong>\"One event per row change.\"</strong> An illustrative update event:</p>\n<pre><code class=\"language-text\">{ \"op\": \"u\",                       ← c = create, u = update, d = delete, r = snapshot read\n  \"source\": { \"table\": \"orders\", \"lsn\": 23876512, \"ts_ms\": 1760000000000 },\n  \"before\": { \"id\": 77, \"status\": \"pending\" },\n  \"after\":  { \"id\": 77, \"status\": \"paid\" } }\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Property</th>\n<th>Meaning</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Committed only</strong></td>\n<td>rolled-back changes never appear</td>\n</tr>\n<tr>\n<td><strong>In commit order</strong></td>\n<td>per table, and per key once partitioned by key</td>\n</tr>\n<tr>\n<td><strong>Before and after images</strong></td>\n<td>consumers can see what changed</td>\n</tr>\n<tr>\n<td><strong>A log position on each event</strong></td>\n<td>consumers can resume, and deduplicate</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "read the log, snapshot first",
+        "html": "<p><strong>\"The connector is another replica that emits events.\"</strong></p>\n<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant A as App\n    participant D as Database\n    participant C as Connector\n    participant K as Broker\n    A-&gt;&gt;D: write, COMMIT\n    Note over C: first run: snapshot\n    C-&gt;&gt;D: read log from position\n    D--&gt;&gt;C: changes, commit order\n    C-&gt;&gt;K: publish, keyed by PK\n    Note over C: save position\n    Note over K: consumers apply\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Approach</th>\n<th>How</th>\n<th>Catches deletes</th>\n<th>Load on the database</th>\n<th>Latency</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Log-based</strong></td>\n<td>reads the WAL / binlog</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>low</td>\n<td>sub-second to seconds</td>\n</tr>\n<tr>\n<td><strong>Polling</strong> (<code>WHERE updated_at &gt; :last</code>)</td>\n<td>repeated queries</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> (needs soft deletes)</td>\n<td>a query per poll</td>\n<td>the poll interval</td>\n</tr>\n<tr>\n<td><strong>Triggers</strong></td>\n<td>a trigger writes to a change table</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>on every write, inside the transaction</td>\n<td>low</td>\n</tr>\n<tr>\n<td><strong>Dual writes from the app</strong></td>\n<td>the app writes both places</td>\n<td>—</td>\n<td>—</td>\n<td><strong>not CDC: they drift</strong></td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Engine</th>\n<th>Source</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>PostgreSQL</strong></td>\n<td>logical decoding through a replication slot (<code>wal_level = logical</code>)</td>\n</tr>\n<tr>\n<td><strong>MySQL</strong></td>\n<td>the binlog in row format</td>\n</tr>\n<tr>\n<td><strong>Tools</strong></td>\n<td>Debezium, Kafka Connect, managed services such as AWS DMS</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "duplicates, slots, schemas",
+        "html": "<p><strong>\"What to design for.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Risk</th>\n<th>Cause</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Duplicate events</strong></td>\n<td>the connector crashed after publishing, before saving its position</td>\n<td>idempotent consumers: upsert by key, compare log positions</td>\n</tr>\n<tr>\n<td><strong>The primary's disk fills</strong></td>\n<td>a stopped connector's replication slot retains log</td>\n<td>alert on slot lag; a retention limit on slots</td>\n</tr>\n<tr>\n<td><strong>Out-of-order effects</strong></td>\n<td>events for one key spread over several partitions</td>\n<td>partition by primary key</td>\n</tr>\n<tr>\n<td><strong>A consumer breaks</strong></td>\n<td>a column was dropped or renamed upstream</td>\n<td>a schema registry with compatibility rules; expand-and-contract migrations</td>\n</tr>\n<tr>\n<td><strong>The initial snapshot is huge</strong></td>\n<td>billions of existing rows</td>\n<td>incremental, chunked snapshots</td>\n</tr>\n<tr>\n<td><strong>Large transactions</strong></td>\n<td>a bulk update emits millions of events at once</td>\n<td>batch the upstream change; size consumers for bursts</td>\n</tr>\n<tr>\n<td><strong>Sensitive columns leak</strong></td>\n<td>the stream copies every column</td>\n<td>filter or mask columns in the connector</td>\n</tr>\n<tr>\n<td><strong>Internal schema becomes a public API</strong></td>\n<td>consumers couple to table shapes</td>\n<td>publish from an outbox instead</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "the jobs it&#39;s right for",
+        "html": "<p><strong>\"Anywhere a second copy of the data must follow the first.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Use</th>\n<th>Why CDC</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Search index, cache invalidation</strong></td>\n<td>no dual write; nothing is missed, including deletes</td>\n</tr>\n<tr>\n<td><strong>Warehouse or lake loading</strong></td>\n<td>near-real-time, no heavy extract queries</td>\n</tr>\n<tr>\n<td><strong>Read models and materialised views in other services</strong></td>\n<td>the owner's database stays private</td>\n</tr>\n<tr>\n<td><strong>Zero-downtime migration</strong></td>\n<td>snapshot + stream into the new database, then cut over</td>\n</tr>\n<tr>\n<td><strong>Audit trail</strong></td>\n<td>every change, with before and after</td>\n</tr>\n<tr>\n<td><strong>Outbox relay</strong></td>\n<td>publishes business events atomically with the write</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Cut-over with CDC:</strong></span><span class=\"flow-step\">snapshot to the new store</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">stream changes until lag ≈ 0</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">pause writes briefly</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">switch the application</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">keep the reverse stream for rollback</span></div>\n<p>Measure: end-to-end lag (commit to consumer), slot or binlog retention on the source, consumer error and retry rates.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "outbox and event sourcing",
+        "html": "<p><strong>\"Raw row changes are not the same as business events.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Raw table CDC</th>\n<th>Outbox + CDC</th>\n<th>Event sourcing</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Stream contains</strong></td>\n<td>row changes of internal tables</td>\n<td>events the service chose to publish</td>\n<td>the events <em>are</em> the data</td>\n</tr>\n<tr>\n<td><strong>Consumers depend on</strong></td>\n<td>your schema</td>\n<td>a contract</td>\n<td>a contract</td>\n</tr>\n<tr>\n<td><strong>Atomic with the write</strong></td>\n<td>yes</td>\n<td>yes (same transaction)</td>\n<td>by construction</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>internal replication: search, warehouse</td>\n<td>events for other teams</td>\n<td>the domain is naturally a log</td>\n</tr>\n</tbody></table>\n<p>The outbox pattern is in <span class=\"vault-ref\" title=\"model-answers/12-DATABASES/49-order-and-event-outbox\">order-and-event-outbox</span>.</p>\n<p>Fix layer: <em>data pipeline</em>: the <em>log</em> as the single source of changes.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;The service writes to the database and then to Elasticsearch. That&#39;s our CDC.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>That's a dual write. One of the two can fail.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Dual write</th>\n<th>Log-based CDC</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A crash between the two writes</strong></td>\n<td>the stores disagree, permanently</td>\n<td>the change is still in the log</td>\n</tr>\n<tr>\n<td><strong>Ordering</strong></td>\n<td>whatever the network did</td>\n<td>commit order</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The connector publishes the event at log position 500, then crashes before saving its position. What does the consumer receive after restart?",
+        "tag": "edge",
+        "html": "<p><strong>The event at 500 again.</strong></p>\n<pre><code class=\"language-text\">saved position = 499 → restart → re-read from 499 → publish 500 a second time\nconsumer: upsert by key, or skip if position ≤ last applied        ← at-least-once\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why is polling on  weaker?",
+        "tag": "updated_at",
+        "html": "<p><strong>It misses things the log has.</strong></p>\n<ul>\n<li><strong>Deletes:</strong> the row is gone; nothing to select.</li>\n<li><strong>Intermediate states:</strong> two updates between polls look like one.</li>\n<li><strong>Rows committed late</strong> with an earlier timestamp are skipped.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you load existing data before streaming starts?",
+        "tag": "probe",
+        "html": "<p><strong>A consistent snapshot, then the stream from the position where the snapshot was taken.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Start:</strong></span><span class=\"flow-step\">note the log position</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">snapshot the tables</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">stream from that position</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">consumers apply idempotently, so overlap is harmless</span></div>"
+      },
+      {
+        "number": 5,
+        "question": "What&#39;s the first alert you&#39;d set up on a CDC pipeline?",
+        "tag": "senior",
+        "html": "<p><strong>Retained log on the source.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Alert</th>\n<th>Catches</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Replication-slot lag / binlog retention</strong></td>\n<td>a stuck connector about to fill the primary's disk</td>\n</tr>\n<tr>\n<td><strong>End-to-end lag</strong></td>\n<td>consumers falling behind</td>\n</tr>\n<tr>\n<td><strong>Connector state</strong></td>\n<td>a silent failure</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We write to both systems.&quot; — a dual write.",
+      "&quot;Exactly-once.&quot; — at-least-once, with idempotent consumers.",
+      "&quot;Poll every minute for changes.&quot; — and the deletes?",
+      "&quot;Set it up and forget it.&quot; — the slot will remind you."
+    ],
+    "links": [
+      {
+        "label": "CDC and Data Pipelines",
+        "target": "11-dbms/Sql/06-Data-Systems/CDC-and-Data-Pipelines"
+      },
+      {
+        "label": "Replication",
+        "target": "11-dbms/Sql/05-Scaling/Replication"
+      },
+      {
+        "label": "write ahead log",
+        "target": "model-answers/12-DATABASES/25-write-ahead-log"
+      },
+      {
+        "label": "order and event outbox",
+        "target": "model-answers/12-DATABASES/49-order-and-event-outbox"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;committed changes as a&lt;br/&gt;stream\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;read the log, snapshot&lt;br/&gt;first\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;duplicates, slots,&lt;br/&gt;schemas\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;the jobs it's right for\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;outbox and event&lt;br/&gt;sourcing\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q51": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "the overlap rule <code>R + W &gt; N</code>, what each setting tolerates, and that overlap alone isn&#39;t linearizability.",
+    "trap": "&quot;R + W &gt; N means strongly consistent&quot;, with no mention of concurrent writes, sloppy quorums or repair.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"In a leaderless replicated store, N is how many replicas hold each key, W is how many must acknowledge a write, and R is how many must answer a read.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"The rule is: if R plus W is greater than N, every read set overlaps every write set in at least one replica. So a read always reaches at least one replica that has the latest acknowledged write, and it picks the newest version it sees.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"The same numbers set fault tolerance. A write survives N minus W replicas being down; a read survives N minus R. With three replicas, two and two tolerates one failure for both. One and one is fastest and can return stale data.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"So I tune per operation. Quorum reads and writes for data that must be current. Write one, read one for telemetry. And I keep read repair and anti-entropy running, because that's what makes replicas converge.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"Overlap is not full linearizability: concurrent writes still need a conflict rule, and sloppy quorums weaken the guarantee. For that, you need consensus, like Raft or Paxos.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"R plus W greater than N gives overlap; smaller R or W buys speed and availability at the cost of freshness.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "three numbers per key",
+        "html": "<p><strong>\"Who has it, who must confirm a write, who must answer a read.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Symbol</th>\n<th>Meaning</th>\n<th>Larger means</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>N</strong></td>\n<td>replicas that store each key</td>\n<td>more durability, more copies to keep in sync</td>\n</tr>\n<tr>\n<td><strong>W</strong></td>\n<td>acknowledgements before a write succeeds</td>\n<td>safer writes, slower and less available</td>\n</tr>\n<tr>\n<td><strong>R</strong></td>\n<td>replicas consulted before a read returns</td>\n<td>fresher reads, slower and less available</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "why R + W &gt; N overlaps",
+        "html": "<p><strong>\"With N = 3, W = 2, R = 2: any two readers and any two writers share a node.\"</strong></p>\n<pre><code class=\"language-text\">replicas:       A      B      C\nwrite (W = 2):  ✅ v2  ✅ v2  ·  v1        ← C missed it\nread  (R = 2):  any pair → {A,B} {A,C} {B,C} → each includes A or B → sees v2\n\nR + W &gt; N   →   2 + 2 &gt; 3   →   at least  R + W − N = 1  replica in common\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Step of a read</th>\n<th>What happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Ask R replicas</strong></td>\n<td>each returns its value and version</td>\n</tr>\n<tr>\n<td><strong>Pick the newest version</strong></td>\n<td>by timestamp or version vector</td>\n</tr>\n<tr>\n<td><strong>Read repair</strong></td>\n<td>write the newest value back to any replica that was behind</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "what each setting tolerates",
+        "html": "<p><strong>\"Computed for common settings.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>N</th>\n<th>W</th>\n<th>R</th>\n<th>R + W &gt; N</th>\n<th>Writes survive</th>\n<th>Reads survive</th>\n<th>Character</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>3</td>\n<td>2</td>\n<td>2</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> overlap</td>\n<td>1 node down</td>\n<td>1 node down</td>\n<td>balanced: the usual default</td>\n</tr>\n<tr>\n<td>3</td>\n<td>1</td>\n<td>1</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td>2 down</td>\n<td>2 down</td>\n<td>fastest; <strong>stale reads possible</strong></td>\n</tr>\n<tr>\n<td>3</td>\n<td>3</td>\n<td>1</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td><strong>0</strong> down</td>\n<td>2 down</td>\n<td>fast reads; one failure blocks writes</td>\n</tr>\n<tr>\n<td>3</td>\n<td>1</td>\n<td>3</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>2 down</td>\n<td><strong>0</strong> down</td>\n<td>fast writes; one failure blocks reads</td>\n</tr>\n<tr>\n<td>5</td>\n<td>3</td>\n<td>3</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>2 down</td>\n<td>2 down</td>\n<td>tolerates two failures</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">writes tolerate  N − W  failures\nreads tolerate   N − R  failures\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Overlap still doesn't cover</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Concurrent writes to one key</strong></td>\n<td>two writers each reach W; a conflict rule decides (last write wins can drop one)</td>\n</tr>\n<tr>\n<td><strong>Sloppy quorums / hinted handoff</strong></td>\n<td>writes accepted by stand-in nodes outside the key's N: overlap isn't guaranteed</td>\n</tr>\n<tr>\n<td><strong>A failed write that reached fewer than W</strong></td>\n<td>it isn't rolled back; a later read may still see it</td>\n</tr>\n<tr>\n<td><strong>Clock skew</strong></td>\n<td>\"newest\" by timestamp can be wrong</td>\n</tr>\n<tr>\n<td><strong>A replica restored from an old backup</strong></td>\n<td>it rejoins holding stale data</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "tune per operation, keep repair running",
+        "html": "<p><strong>\"Consistency level is chosen per request.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Data</th>\n<th>Write</th>\n<th>Read</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Account settings, inventory counts</strong></td>\n<td>quorum</td>\n<td>quorum</td>\n<td>must read the latest</td>\n</tr>\n<tr>\n<td><strong>Telemetry, logs, clickstream</strong></td>\n<td>one</td>\n<td>one</td>\n<td>volume and latency matter; loss or staleness is tolerable</td>\n</tr>\n<tr>\n<td><strong>Write-heavy with rare, careful reads</strong></td>\n<td>one</td>\n<td>all</td>\n<td>cheap writes; reads pay</td>\n</tr>\n<tr>\n<td><strong>Multi-datacentre</strong></td>\n<td>local quorum</td>\n<td>local quorum</td>\n<td>consistent within a region without cross-region latency</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Convergence mechanism</th>\n<th>Fixes</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Read repair</strong></td>\n<td>keys that are read</td>\n</tr>\n<tr>\n<td><strong>Anti-entropy (Merkle-tree repair)</strong></td>\n<td>keys that are never read</td>\n</tr>\n<tr>\n<td><strong>Hinted handoff</strong></td>\n<td>writes missed while a node was briefly down</td>\n</tr>\n</tbody></table>\n<p>Measure: latency at each consistency level, the rate of read repairs (how often replicas disagreed), repair completion within the tombstone window.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "quorums against consensus",
+        "html": "<p><strong>\"Both use majorities; they promise different things.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Leaderless quorum (Dynamo-style)</th>\n<th>Consensus (Raft, Paxos)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Order of writes</strong></td>\n<td>none agreed; conflicts resolved afterwards</td>\n<td>one agreed log</td>\n</tr>\n<tr>\n<td><strong>Guarantee</strong></td>\n<td>overlap: you'll see <em>a</em> latest version</td>\n<td>linearizable</td>\n</tr>\n<tr>\n<td><strong>Availability</strong></td>\n<td>tunable; can accept writes on any replica</td>\n<td>needs a majority and a leader</td>\n</tr>\n<tr>\n<td><strong>Used by</strong></td>\n<td>Cassandra, Riak, DynamoDB's original design</td>\n<td>etcd, ZooKeeper, Spanner, CockroachDB</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version in use.</p>\n<p>Fix layer: <em>consistency level per operation</em>, plus <em>repair</em> as routine operations.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;R + W &gt; N, so it&#39;s strongly consistent.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>It guarantees overlap, not a single order of events.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Still possible</th>\n<th>Because</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Two concurrent writes, one silently lost</strong></td>\n<td>last write wins</td>\n</tr>\n<tr>\n<td><strong>A read that sees a write that \"failed\"</strong></td>\n<td>partial writes aren't rolled back</td>\n</tr>\n<tr>\n<td><strong>No overlap at all</strong></td>\n<td>a sloppy quorum used stand-in nodes</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 N = 3, W = 1, R = 1. A write lands on replica A only; a read asks replica C. Result?",
+        "tag": "edge",
+        "html": "<p><strong>The old value.</strong></p>\n<pre><code class=\"language-text\">R + W = 1 + 1 = 2, not &gt; 3 → no guaranteed overlap\nwrite set {A}, read set {C} → no replica in common → stale read\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why is N usually odd?",
+        "tag": "probe",
+        "html": "<p><strong>An even N adds cost without adding tolerance.</strong></p>\n<table>\n<thead>\n<tr>\n<th>N</th>\n<th>Majority</th>\n<th>Failures tolerated</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>3</td>\n<td>2</td>\n<td>1</td>\n</tr>\n<tr>\n<td>4</td>\n<td>3</td>\n<td>1</td>\n</tr>\n<tr>\n<td>5</td>\n<td>3</td>\n<td>2</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "What does read repair not fix?",
+        "tag": "probe",
+        "html": "<p><strong>Data nobody reads.</strong></p>\n<ul>\n<li><strong>Cold keys</strong> stay inconsistent until a background repair runs.</li>\n<li><strong>Deletes</strong> rely on tombstones reaching every replica before they expire, or the data comes back.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "When would you refuse a leaderless quorum store?",
+        "tag": "senior",
+        "html": "<p><strong>When the data needs one agreed order.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Need</th>\n<th>Use</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Unique constraints, counters that must not double-count, locks</strong></td>\n<td>consensus or a single-leader database</td>\n</tr>\n<tr>\n<td><strong>High-volume writes where a rare conflict is acceptable</strong></td>\n<td>a quorum store</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;R + W &gt; N is strong consistency.&quot; — it&#39;s overlap.",
+      "&quot;W = 1 is fine, we have three replicas.&quot; — the other two may never get it without repair.",
+      "&quot;Quorum and Raft are the same.&quot; — one orders writes, the other doesn&#39;t.",
+      "&quot;Repair is optional maintenance.&quot; — it&#39;s how replicas converge."
+    ],
+    "links": [
+      {
+        "label": "CAP and Consistency",
+        "target": "11-dbms/Sql/05-Scaling/CAP-and-Consistency"
+      },
+      {
+        "label": "Replication",
+        "target": "11-dbms/Sql/05-Scaling/Replication"
+      },
+      {
+        "label": "cap and pacelc",
+        "target": "model-answers/12-DATABASES/47-cap-and-pacelc"
+      },
+      {
+        "label": "nosql data models",
+        "target": "model-answers/12-DATABASES/32-nosql-data-models"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;three numbers per key\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;why R + W &gt; N overlaps\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;what each setting&lt;br/&gt;tolerates\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;tune per operation, keep&lt;br/&gt;repair running\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;quorums against&lt;br/&gt;consensus\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q52": {
+    "type": "design",
+    "spine": [
+      "Clarify",
+      "Constraints and numbers",
+      "Baseline design",
+      "Deep-dive",
+      "Failure modes",
+      "Evolve"
+    ],
+    "testing": "query-first modelling: partition key, sort key, deliberate duplication, and bounded partitions.",
+    "trap": "drawing normalised entities first and then discovering there are no joins.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Clarify</strong></td>\n<td>\"In these stores I model from the queries, not the entities. So first I list every access pattern, with its frequency and whether it needs a range or an order. I'll use a chat application as the example.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Constraints and numbers</strong></td>\n<td>\"The rules are: a query must name a partition key; within a partition, rows are sorted by a sort key and I can read a range; there are no joins; and a partition must stay bounded in size and in traffic.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Baseline design</strong></td>\n<td>\"So each access pattern becomes one partition read. Messages in a conversation: partition by conversation id, sort by time. A user's conversations: partition by user id, sort by last activity. The same fact is stored in more than one table, on purpose.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Deep-dive</strong></td>\n<td>\"A busy conversation would grow without limit, so I add a time bucket to the partition key: conversation and month. In DynamoDB I can put several entity types in one table with composite keys, and add a secondary index for a second pattern.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Failure modes</strong></td>\n<td>\"The failure modes are a hot partition, an unbounded partition, and a new access pattern nobody planned for, which means a new table or index and a backfill.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Evolve</strong></td>\n<td>\"And writes to several tables aren't atomic by default, so I plan how the copies are kept in step.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Queries first, one partition per query, duplicate on purpose, keep partitions bounded.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify",
+        "claim": "the access patterns, before any table",
+        "html": "<p><strong>\"The design input is this table.\"</strong> A chat application:</p>\n<table>\n<thead>\n<tr>\n<th>#</th>\n<th>Access pattern</th>\n<th>Frequency</th>\n<th>Shape</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><strong>Latest messages in a conversation</strong></td>\n<td>very high</td>\n<td>one conversation, newest first, a page at a time</td>\n</tr>\n<tr>\n<td>2</td>\n<td><strong>A user's conversations, most recently active first</strong></td>\n<td>high</td>\n<td>one user, ordered</td>\n</tr>\n<tr>\n<td>3</td>\n<td><strong>Send a message</strong></td>\n<td>very high</td>\n<td>a write</td>\n</tr>\n<tr>\n<td>4</td>\n<td><strong>One message by id</strong></td>\n<td>low</td>\n<td>a point read</td>\n</tr>\n<tr>\n<td>5</td>\n<td><strong>Unread count per conversation for a user</strong></td>\n<td>high</td>\n<td>one user, one number per conversation</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Order flips:</strong></span><span class=\"flow-step\">relational: entities</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">normalise</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">queries</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Here:</strong></span><span class=\"flow-step\"><strong>queries</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">a key per query</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">duplicate data per pattern</span></div>"
+      },
+      {
+        "number": 2,
+        "name": "Constraints and numbers",
+        "claim": "what the store allows",
+        "html": "<p><strong>\"Four rules that shape everything.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Rule</th>\n<th>Consequence</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A query names a partition key</strong></td>\n<td>no ad-hoc filters across the dataset</td>\n</tr>\n<tr>\n<td><strong>Rows in a partition are sorted by the sort (clustering) key</strong></td>\n<td>ranges and \"latest N\" are one sequential read</td>\n</tr>\n<tr>\n<td><strong>No joins</strong></td>\n<td>everything a query needs sits in one partition</td>\n</tr>\n<tr>\n<td><strong>A partition lives on one set of replicas</strong></td>\n<td>it must stay bounded in size and request rate</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">partition size check for pattern 1, keyed by conversation only:\na busy group: 5,000 messages/day × 365 days × 1 KB ≈ 1.8 GB a year, growing forever   ← illustrative\nkeyed by (conversation, month): 5,000 × 30 × 1 KB ≈ 150 MB per partition, bounded\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Engine guidance</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>DynamoDB</strong></td>\n<td>an item is at most 400 KB; a partition's throughput is limited, so spread hot keys</td>\n</tr>\n<tr>\n<td><strong>Cassandra</strong></td>\n<td>keep partitions to roughly tens of MB up to about 100 MB as a rule of thumb</td>\n</tr>\n</tbody></table>\n<p>Limits as generally documented; I'd confirm against the current documentation.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Baseline design",
+        "claim": "one table per query",
+        "html": "<p><strong>\"Each pattern maps to a key.\"</strong> Cassandra-style definitions:</p>\n<pre><code class=\"language-sql\">-- pattern 1: latest messages in a conversation\nmessages_by_conversation (\n  conversation_id, bucket, sent_at, message_id, sender_id, body,\n  PRIMARY KEY ((conversation_id, bucket), sent_at, message_id)\n) WITH CLUSTERING ORDER BY (sent_at DESC, message_id DESC);\n\n-- pattern 2: a user's conversations, most recent first\nconversations_by_user (\n  user_id, last_activity, conversation_id, title, unread,\n  PRIMARY KEY ((user_id), last_activity, conversation_id)\n) WITH CLUSTERING ORDER BY (last_activity DESC, conversation_id ASC);\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Pattern</th>\n<th>Table</th>\n<th>Partition key</th>\n<th>Sort key</th>\n<th>Read</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1</strong></td>\n<td><code>messages_by_conversation</code></td>\n<td><code>(conversation_id, bucket)</code></td>\n<td><code>sent_at DESC, message_id</code></td>\n<td>one partition, first N rows</td>\n</tr>\n<tr>\n<td><strong>2, 5</strong></td>\n<td><code>conversations_by_user</code></td>\n<td><code>user_id</code></td>\n<td><code>last_activity DESC</code></td>\n<td>one partition</td>\n</tr>\n<tr>\n<td><strong>4</strong></td>\n<td><code>messages_by_id</code></td>\n<td><code>message_id</code></td>\n<td>—</td>\n<td>a point read</td>\n</tr>\n<tr>\n<td><strong>3 (write)</strong></td>\n<td>writes to 1, 4 and updates 2 for each member</td>\n<td></td>\n<td></td>\n<td>fan-out on write</td>\n</tr>\n</tbody></table>\n<p>The conversation title is stored in every member's row of table 2. That's the deliberate duplication.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Deep-dive",
+        "claim": "buckets, single-table design, indexes",
+        "html": "<p><strong>\"Three techniques.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Technique</th>\n<th>What</th>\n<th>When</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Bucketing</strong></td>\n<td>add a time or hash bucket to the partition key</td>\n<td>a partition would otherwise grow without bound</td>\n</tr>\n<tr>\n<td><strong>Composite sort keys</strong></td>\n<td><code>ORDER#2026-10-11#1001</code></td>\n<td>several entity types or a hierarchy in one partition</td>\n</tr>\n<tr>\n<td><strong>Single-table design</strong> (DynamoDB)</td>\n<td>all entity types in one table with generic <code>PK</code> / <code>SK</code></td>\n<td>one request fetches a parent and its children</td>\n</tr>\n<tr>\n<td><strong>A global secondary index</strong></td>\n<td>a second partition and sort key over the same items</td>\n<td>one extra access pattern; eventually consistent</td>\n</tr>\n</tbody></table>\n<p>DynamoDB single-table layout for the same application:</p>\n<table>\n<thead>\n<tr>\n<th>PK</th>\n<th>SK</th>\n<th>Attributes</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>USER#7</code></td>\n<td><code>PROFILE</code></td>\n<td>name, email</td>\n</tr>\n<tr>\n<td><code>USER#7</code></td>\n<td><code>CONV#2026-10-11T09:00#c42</code></td>\n<td>title, unread</td>\n</tr>\n<tr>\n<td><code>CONV#c42#2026-10</code></td>\n<td><code>MSG#2026-10-11T09:00:05#m901</code></td>\n<td>sender, body</td>\n</tr>\n<tr>\n<td><code>CONV#c42#2026-10</code></td>\n<td><code>MSG#2026-10-11T09:00:09#m902</code></td>\n<td>sender, body</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Query \"latest messages\":</strong></span><span class=\"flow-step\"><code>PK = CONV#c42#2026-10</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>SK begins_with MSG#</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">descending</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">limit 50</span></div>\n<p>Reading across a bucket boundary: query the current month; if the page isn't full, query the previous month.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Failure modes",
+        "claim": "hot, unbounded, unplanned",
+        "html": "<p><strong>\"What goes wrong with a key.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Cause</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A hot partition</strong></td>\n<td>one key takes most traffic: a huge group, a celebrity</td>\n<td>add a shard suffix to the key; cache reads</td>\n</tr>\n<tr>\n<td><strong>An unbounded partition</strong></td>\n<td>a key that only grows</td>\n<td>bucket by time</td>\n</tr>\n<tr>\n<td><strong>A scan in production</strong></td>\n<td>a query with no partition key</td>\n<td>a table or index for that pattern</td>\n</tr>\n<tr>\n<td><strong>A new access pattern</strong></td>\n<td>\"now search messages by text\"</td>\n<td>a new table or index plus a backfill; or a search engine</td>\n</tr>\n<tr>\n<td><strong>Copies drift</strong></td>\n<td>a multi-table write half-succeeded</td>\n<td>idempotent retries; transactions where offered; repair jobs</td>\n</tr>\n<tr>\n<td><strong>Stale index reads</strong></td>\n<td>global secondary indexes are eventually consistent</td>\n<td>read the base table when it must be current</td>\n</tr>\n<tr>\n<td><strong>Tombstone build-up</strong> (Cassandra)</td>\n<td>many deletes inside a partition</td>\n<td>TTLs with time-window compaction; avoid queue-like tables</td>\n</tr>\n</tbody></table>\n<p>Measure: partition size distribution, top keys by request rate, throttled or timed-out requests, the share of queries that are scans.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Evolve",
+        "claim": "keeping the copies in step",
+        "html": "<p><strong>\"One logical write, several physical ones.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Mechanism</th>\n<th>Guarantee</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Application writes each table, with retries</strong></td>\n<td>eventual, if every write is idempotent</td>\n<td>simplest</td>\n</tr>\n<tr>\n<td><strong>A logged batch</strong> (Cassandra)</td>\n<td>all of them eventually apply</td>\n<td>slower</td>\n</tr>\n<tr>\n<td><strong><code>TransactWriteItems</code></strong> (DynamoDB)</td>\n<td>atomic across items</td>\n<td>about double the write cost; size limits</td>\n</tr>\n<tr>\n<td><strong>Streams / CDC</strong></td>\n<td>derive the other tables from the first</td>\n<td>lag; a pipeline</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Growth step</th>\n<th>Change</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>More patterns</strong></td>\n<td>an index or table each; question whether this store still fits</td>\n</tr>\n<tr>\n<td><strong>Analytics</strong></td>\n<td>export to a column store; don't scan the operational table</td>\n</tr>\n<tr>\n<td><strong>Ad-hoc queries become common</strong></td>\n<td>that workload belongs in a relational or search system</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>data model</em>: <em>keys designed from the access patterns</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Start with users, conversations and messages tables, like a normal schema.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>That design needs joins the store doesn't have.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Entity-first</th>\n<th>Query-first</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>3 normalised tables</strong></td>\n<td>a table per access pattern</td>\n</tr>\n<tr>\n<td><strong>\"Conversations of a user\" needs a join</strong></td>\n<td>one partition read</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 Messages are keyed by  only. A group sends 5,000 messages a day at about 1 KB each. Partition size after a year?",
+        "tag": "conversation_id",
+        "html": "<p><strong>About 1.8 GB, and still growing.</strong></p>\n<pre><code class=\"language-text\">5,000 × 365 × 1 KB = 1,825,000 KB ≈ 1.8 GB\nwith a monthly bucket: 5,000 × 30 × 1 KB ≈ 150 MB per partition\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why not just add a secondary index for every new query?",
+        "tag": "probe",
+        "html": "<p><strong>Each one is another copy to write and pay for.</strong></p>\n<ul>\n<li><strong>DynamoDB GSI:</strong> extra write capacity, eventually consistent.</li>\n<li><strong>Cassandra secondary index:</strong> queries every node unless the partition key is also given.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you page through a partition?",
+        "tag": "probe",
+        "html": "<p><strong>By the sort key, not by offset.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Page:</strong></span><span class=\"flow-step\">read N rows</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">keep the last sort key</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">next query starts after it</span></div>\n<p>The stores return this cursor for you (<code>LastEvaluatedKey</code>, a paging state).</p>"
+      },
+      {
+        "number": 5,
+        "question": "Six months in, the product wants five new filters on messages. What do you say?",
+        "tag": "senior",
+        "html": "<p><strong>That this is the cost of the model, and it needs a decision.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A table or index per filter</strong></td>\n<td>write cost and backfills grow</td>\n</tr>\n<tr>\n<td><strong>A search engine fed by streams</strong></td>\n<td>flexible queries; another system</td>\n</tr>\n<tr>\n<td><strong>Move that data to a relational store</strong></td>\n<td>if the access patterns are no longer few and known</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;d normalise it first.&quot; — there are no joins.",
+      "&quot;We can add queries later.&quot; — each needs a key designed for it.",
+      "&quot;Partition by user id&quot; for everything. — check size and heat per key.",
+      "&quot;Use <code>Scan</code> with a filter.&quot; — that reads the whole table."
+    ],
+    "links": [
+      {
+        "label": "SQL vs NoSQL",
+        "target": "11-dbms/Sql/06-Data-Systems/SQL-vs-NoSQL"
+      },
+      {
+        "label": "Sharding",
+        "target": "11-dbms/Sql/05-Scaling/Sharding"
+      },
+      {
+        "label": "nosql data models",
+        "target": "model-answers/12-DATABASES/32-nosql-data-models"
+      },
+      {
+        "label": "hot shard",
+        "target": "model-answers/12-DATABASES/41-hot-shard"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;the access patterns,&lt;br/&gt;before any table\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;what the store allows\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;one table per query\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;buckets, single-table&lt;br/&gt;design, indexes\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;hot, unbounded,&lt;br/&gt;unplanned\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;keeping the copies in&lt;br/&gt;step\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q53": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where shared tables win",
+      "Where separation wins",
+      "The deciding question",
+      "What I'd pick"
+    ],
+    "testing": "isolation against operating cost, and that in the shared model isolation is enforced by the database, not by remembering a <code>WHERE</code> clause.",
+    "trap": "&quot;we filter by tenant_id in every query&quot;, with nothing that stops the one query that forgets.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Frame the axis</strong></td>\n<td>\"The axis is isolation against density. The more separate each tenant's data is, the safer and more customisable it is, and the more it costs to run per tenant.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Where shared tables win</strong></td>\n<td>\"Shared tables, with a tenant id on every row, win for many small tenants. One schema, one migration, one connection pool, the lowest cost per tenant. The risk is a leak or a noisy neighbour, so isolation has to be enforced in the database, with row-level security, and the tenant id has to lead every key and index.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where separation wins</strong></td>\n<td>\"A schema or a database per tenant wins when a tenant needs hard isolation: its own backup and restore, its own encryption key, its own region, or contractual separation. The cost is running migrations and monitoring across hundreds or thousands of units.\"</td>\n</tr>\n<tr>\n<td><strong>4 · The deciding question</strong></td>\n<td>\"So I ask how many tenants, how unequal they are, and what compliance or contracts demand.\"</td>\n</tr>\n<tr>\n<td><strong>5 · What I'd pick</strong></td>\n<td>\"Usually a hybrid: shared tables for the long tail, dedicated databases for the few large or regulated tenants, behind one routing layer so a tenant can be moved.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Share by default with enforced isolation; dedicate where a contract or size requires it.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "isolation against density",
+        "html": "<p><strong>\"Three models on one line.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Spectrum:</strong></span><span class=\"flow-step\">shared tables (pool)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">schema per tenant (bridge)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">database per tenant (silo)</span></div>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Shared tables</th>\n<th>Schema per tenant</th>\n<th>Database per tenant</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Isolation</strong></td>\n<td>logical: a column</td>\n<td>namespace</td>\n<td>physical</td>\n</tr>\n<tr>\n<td><strong>Cost per tenant</strong></td>\n<td>lowest</td>\n<td>medium</td>\n<td>highest</td>\n</tr>\n<tr>\n<td><strong>Tenants per cluster</strong></td>\n<td>very many</td>\n<td>hundreds to low thousands</td>\n<td>tens to hundreds</td>\n</tr>\n<tr>\n<td><strong>Migrations</strong></td>\n<td>one</td>\n<td>one per schema</td>\n<td>one per database</td>\n</tr>\n<tr>\n<td><strong>Per-tenant backup / restore</strong></td>\n<td>hard: extract rows</td>\n<td>easier</td>\n<td>native</td>\n</tr>\n<tr>\n<td><strong>Noisy neighbour</strong></td>\n<td>shared everything</td>\n<td>shared instance</td>\n<td>isolated</td>\n</tr>\n<tr>\n<td><strong>Per-tenant customisation</strong></td>\n<td>none</td>\n<td>some</td>\n<td>full</td>\n</tr>\n<tr>\n<td><strong>Cross-tenant analytics</strong></td>\n<td>one query</td>\n<td>a union</td>\n<td>a pipeline</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where shared tables win",
+        "claim": "many small tenants, enforced isolation",
+        "html": "<p><strong>\"Cheap to run. Safe only if the database enforces the boundary.\"</strong></p>\n<pre><code class=\"language-sql\">-- PostgreSQL: the database applies the filter, whatever the query says\nALTER TABLE invoices ENABLE ROW LEVEL SECURITY;\nCREATE POLICY tenant_isolation ON invoices\n  USING (tenant_id = current_setting('app.tenant_id')::bigint);\n-- per request, inside the transaction:  SET LOCAL app.tenant_id = '42';\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Database</strong></td>\n<td>row-level security; the application role is not the table owner and can't bypass it</td>\n</tr>\n<tr>\n<td><strong>Schema</strong></td>\n<td><code>tenant_id</code> on every table, first in every primary key, foreign key and index</td>\n</tr>\n<tr>\n<td><strong>Application</strong></td>\n<td>the tenant comes from the authenticated session, never from a request parameter</td>\n</tr>\n<tr>\n<td><strong>Tests</strong></td>\n<td>an automated check that tenant A's token can't read tenant B's rows, on every endpoint</td>\n</tr>\n<tr>\n<td><strong>Resources</strong></td>\n<td>per-tenant rate limits and statement timeouts against noisy neighbours</td>\n</tr>\n</tbody></table>\n<p>With a pooler in transaction mode, the tenant setting must be transaction-local (<code>SET LOCAL</code>), or it leaks to the next request on that connection.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where separation wins",
+        "claim": "hard isolation",
+        "html": "<p><strong>\"Requirements a shared table can't meet cleanly.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Requirement</th>\n<th>Why separation helps</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Restore one tenant to yesterday</strong></td>\n<td>restore one database, not a row extraction</td>\n</tr>\n<tr>\n<td><strong>A customer-managed encryption key</strong></td>\n<td>one key per database</td>\n</tr>\n<tr>\n<td><strong>Data residency</strong></td>\n<td>place that tenant's database in its region</td>\n</tr>\n<tr>\n<td><strong>Contractual or regulatory separation</strong></td>\n<td>\"our data is not co-mingled\" is literally true</td>\n</tr>\n<tr>\n<td><strong>A very large or very busy tenant</strong></td>\n<td>its load and maintenance are its own</td>\n</tr>\n<tr>\n<td><strong>Deleting a tenant completely</strong></td>\n<td>drop the database</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Migrations × N</strong></td>\n<td>must be automated, resumable, and tolerate tenants on different versions for a while</td>\n</tr>\n<tr>\n<td><strong>Connections</strong></td>\n<td>a pool per database doesn't scale; a pooler or per-request routing is needed</td>\n</tr>\n<tr>\n<td><strong>Catalogue bloat</strong> (schema per tenant)</td>\n<td>tens of thousands of tables strain the catalogue, tooling and backups</td>\n</tr>\n<tr>\n<td><strong>Monitoring and on-call</strong></td>\n<td>N of everything</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "count, skew, compliance",
+        "html": "<p><strong>\"Three inputs.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Question</th>\n<th>Answer</th>\n<th>Points to</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How many tenants?</strong></td>\n<td>tens of thousands, self-serve</td>\n<td>shared tables</td>\n</tr>\n<tr>\n<td></td>\n<td>a few dozen enterprises</td>\n<td>database per tenant</td>\n</tr>\n<tr>\n<td><strong>How unequal are they?</strong></td>\n<td>one tenant is half the data</td>\n<td>isolate that one</td>\n</tr>\n<tr>\n<td><strong>Compliance or contract?</strong></td>\n<td>residency, own key, no co-mingling</td>\n<td>dedicated</td>\n</tr>\n<tr>\n<td><strong>Per-tenant restore required?</strong></td>\n<td>yes, as a product promise</td>\n<td>schema or database</td>\n</tr>\n<tr>\n<td><strong>Team size to operate it?</strong></td>\n<td>small</td>\n<td>fewer units to run</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick",
+        "claim": "hybrid, behind a tenant directory",
+        "html": "<p><strong>\"Pool by default, silo by exception, and make moving possible.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Path:</strong></span><span class=\"flow-step\">request</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">authenticate</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">tenant directory (<code>tenant → cluster, database, tier</code>)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">connection for that tenant</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">row-level security inside</span></div>\n<table>\n<thead>\n<tr>\n<th>Tier</th>\n<th>Placement</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Free and small tenants</strong></td>\n<td>shared tables on pooled clusters</td>\n</tr>\n<tr>\n<td><strong>Large tenants</strong></td>\n<td>a dedicated shard or database; the same schema</td>\n</tr>\n<tr>\n<td><strong>Regulated tenants</strong></td>\n<td>a dedicated database in their region, own key</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Keep the same in every tier</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>One schema and one codebase</strong></td>\n<td>a tenant moves between tiers without a rewrite</td>\n</tr>\n<tr>\n<td><strong><code>tenant_id</code> on every row, even in a dedicated database</strong></td>\n<td>moving back, merging and analytics stay possible</td>\n</tr>\n<tr>\n<td><strong>The directory</strong></td>\n<td>placement is data, not code</td>\n</tr>\n</tbody></table>\n<p>Measure: rows, storage and query load per tenant; cross-tenant access test results; migration duration across all units.</p>\n<p>Fix layer: <em>data model</em> (tenant key everywhere) plus <em>routing</em> (the directory); isolation enforced in the <em>database</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Every query has WHERE tenant_id = ?, so tenants are isolated.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Until one query, report or admin script forgets it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Isolation by</th>\n<th>Fails when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Convention in application code</strong></td>\n<td>one missing predicate</td>\n</tr>\n<tr>\n<td><strong>Row-level security</strong></td>\n<td>someone connects as a role that bypasses it: so don't</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A pooled connection ran  at session level for tenant 42. The pooler hands the same connection to tenant 7&#39;s request, which forgets to set it. What does tenant 7 see?",
+        "tag": "edge",
+        "html": "<p><strong>Tenant 42's rows.</strong></p>\n<pre><code class=\"language-text\">session-level setting survives the request → policy still filters on 42\nfix: SET LOCAL inside each transaction (reset at commit), and fail closed when the setting is missing\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why does schema-per-tenant struggle at 50,000 tenants?",
+        "tag": "probe",
+        "html": "<p><strong>The number of objects, not the data volume.</strong></p>\n<ul>\n<li><strong>50,000 schemas × 40 tables</strong> = 2 million tables in one catalogue.</li>\n<li><strong>Migrations, backups, autovacuum and tooling</strong> all iterate over them.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you run a migration across 800 tenant databases?",
+        "tag": "probe",
+        "html": "<p><strong>As a tracked, resumable rollout.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Rollout:</strong></span><span class=\"flow-step\">canary tenants</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">batches</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">record the version per tenant</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">retry failures</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the application tolerates both versions throughout</span></div>"
+      },
+      {
+        "number": 5,
+        "question": "An enterprise prospect demands &quot;our own database&quot;. You&#39;re on shared tables. Response?",
+        "tag": "senior",
+        "html": "<p><strong>Say yes, as a tier, if the architecture already allows it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>If you have</th>\n<th>Then</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A tenant directory and the tenant key everywhere</strong></td>\n<td>provision a dedicated database, copy the tenant, flip the directory</td>\n</tr>\n<tr>\n<td><strong>Neither</strong></td>\n<td>it's a project: build the routing first</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We always filter by tenant id.&quot; — enforced by what?",
+      "&quot;A database per tenant, for safety&quot;, with 40,000 tenants.",
+      "&quot;A schema per tenant scales fine.&quot; — to how many?",
+      "&quot;We&#39;ll decide per customer.&quot; — without a routing layer, you can&#39;t."
+    ],
+    "links": [
+      {
+        "label": "Schema Design",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Schema-Design"
+      },
+      {
+        "label": "Sharding",
+        "target": "11-dbms/Sql/05-Scaling/Sharding"
+      },
+      {
+        "label": "Design Scenarios",
+        "target": "11-dbms/Sql/07-Practice/Design-Scenarios"
+      },
+      {
+        "label": "shard key multi tenant",
+        "target": "model-answers/12-DATABASES/48-shard-key-multi-tenant"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Frame the axis&lt;br/&gt;isolation against&lt;br/&gt;density\"]):::step\n        N2(\"2 · Where shared&lt;br/&gt;tables win&lt;br/&gt;many small tenants,&lt;br/&gt;enforced isolation\"):::ask\n        N3(\"3 · Where separation wins&lt;br/&gt;hard isolation\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · The deciding&lt;br/&gt;question&lt;br/&gt;count, skew, compliance\"):::ask\n        N5([\"5 · What I'd pick&lt;br/&gt;hybrid, behind a tenant&lt;br/&gt;directory\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q54": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where pgvector wins",
+      "Where a dedicated store wins",
+      "The deciding question",
+      "What I'd pick"
+    ],
+    "testing": "that you weigh one system with transactional metadata against a specialised index at scale, and ask about filters, recall and who operates it.",
+    "trap": "a separate vector database on day one for ten thousand documents.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Frame the axis</strong></td>\n<td>\"The axis is one system against a specialised one. Vectors next to the rows they describe, or vectors in a store built only for similarity search, kept in sync with the source.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Where pgvector wins</strong></td>\n<td>\"In Postgres, the embedding is a column. It's written in the same transaction as the document, deleted with it, filtered with ordinary SQL, joined to permissions, and backed up with everything else. For up to a few million vectors at moderate query rates, that's usually enough.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where a dedicated store wins</strong></td>\n<td>\"A dedicated store wins at large scale: hundreds of millions of vectors, high query rates, heavy filtered search, and features like quantisation, hybrid search and separate scaling of index and storage.\"</td>\n</tr>\n<tr>\n<td><strong>4 · The deciding question</strong></td>\n<td>\"So I ask: how many vectors, at what query rate and latency? How selective are the filters? How fresh must the index be after a write? And who runs a second system and its sync?\"</td>\n</tr>\n<tr>\n<td><strong>5 · What I'd pick</strong></td>\n<td>\"I start in the database I already have, measure recall and p95 latency on my own data, and move when a measured limit is hit. If I move, the vectors are a derived index fed from the source by CDC.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Start where the data lives; move for a measured reason; keep the source of truth relational.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "one system or a specialised one",
+        "html": "<p><strong>\"What each side gives.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>pgvector (in PostgreSQL)</th>\n<th>Dedicated vector store</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Vectors live</strong></td>\n<td>in a column beside the row</td>\n<td>in a separate system</td>\n</tr>\n<tr>\n<td><strong>Consistency with the source</strong></td>\n<td>transactional</td>\n<td>eventual: a sync pipeline</td>\n</tr>\n<tr>\n<td><strong>Metadata filters</strong></td>\n<td>full SQL, joins</td>\n<td>the store's filter language</td>\n</tr>\n<tr>\n<td><strong>Scale</strong></td>\n<td>one node (plus replicas)</td>\n<td>built to scale out</td>\n</tr>\n<tr>\n<td><strong>Index features</strong></td>\n<td>HNSW, IVFFlat; some quantisation</td>\n<td>many index types, quantisation, tiering</td>\n</tr>\n<tr>\n<td><strong>Operations</strong></td>\n<td>nothing new</td>\n<td>a second system</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>moderate scale; filters and joins matter</td>\n<td>very large scale; search is the product</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where pgvector wins",
+        "claim": "vectors beside their rows",
+        "html": "<p><strong>\"Retrieval is a SQL query, with everything SQL brings.\"</strong></p>\n<pre><code class=\"language-sql\">-- PostgreSQL + pgvector: nearest chunks this user may see\nSELECT c.id, c.text\nFROM chunks c\nJOIN documents d ON d.id = c.document_id\nWHERE d.tenant_id = 42 AND d.status = 'published'\nORDER BY c.embedding &lt;=&gt; :query_vec        -- cosine distance\nLIMIT 5;\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Advantage</th>\n<th>Why it matters</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>One transaction</strong></td>\n<td>a document and its embedding appear, change and disappear together</td>\n</tr>\n<tr>\n<td><strong>Permissions in the same query</strong></td>\n<td>row-level security and joins apply to retrieval</td>\n</tr>\n<tr>\n<td><strong>No sync pipeline</strong></td>\n<td>no lag, no orphaned vectors after a delete</td>\n</tr>\n<tr>\n<td><strong>Existing backups, replicas, monitoring</strong></td>\n<td>nothing new to run</td>\n</tr>\n<tr>\n<td><strong>Hybrid search nearby</strong></td>\n<td>full-text search is in the same database</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Index</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>None (exact scan)</strong></td>\n<td>perfect recall; fine for small sets or highly selective filters</td>\n</tr>\n<tr>\n<td><strong>HNSW</strong></td>\n<td>fast, high recall; more memory, slower builds</td>\n</tr>\n<tr>\n<td><strong>IVFFlat</strong></td>\n<td>faster builds, less memory; recall depends on lists and probes</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where a dedicated store wins",
+        "claim": "scale and search features",
+        "html": "<p><strong>\"Limits you can hit in a general-purpose database.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Limit in the shared database</th>\n<th>What a dedicated store offers</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The index wants to live in memory</strong></td>\n<td>quantisation, disk-based indexes, tiered storage</td>\n</tr>\n<tr>\n<td><strong>Index builds and vector queries compete with transactions</strong></td>\n<td>separate hardware, scaled independently</td>\n</tr>\n<tr>\n<td><strong>Filtered approximate search loses results</strong></td>\n<td>filter-aware indexes built for it</td>\n</tr>\n<tr>\n<td><strong>Hundreds of millions to billions of vectors</strong></td>\n<td>sharding and replication designed around the index</td>\n</tr>\n<tr>\n<td><strong>Search-specific needs</strong></td>\n<td>hybrid dense + sparse, multi-vector, re-ranking hooks</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">memory for the raw vectors alone (float32):\nvectors × dimensions × 4 bytes\n  1,000,000 × 1,536 × 4 ≈   6.1 GB\n100,000,000 × 1,536 × 4 ≈ 614 GB           ← before the graph index; where quantisation matters\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Cost you take on</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Sync</strong></td>\n<td>CDC or dual writes; lag; deletes must propagate</td>\n</tr>\n<tr>\n<td><strong>Permissions</strong></td>\n<td>copied into metadata and kept current, or re-checked after retrieval</td>\n</tr>\n<tr>\n<td><strong>Operations</strong></td>\n<td>backups, upgrades, capacity, on-call for another store</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "size, filters, freshness, ownership",
+        "html": "<p><strong>\"Five questions, answered with measurements.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Question</th>\n<th>Stays in Postgres</th>\n<th>Points to a dedicated store</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How many vectors?</strong></td>\n<td>thousands to a few million</td>\n<td>hundreds of millions</td>\n</tr>\n<tr>\n<td><strong>Query rate and latency target?</strong></td>\n<td>moderate; tens of ms is fine</td>\n<td>very high rate, tight p99</td>\n</tr>\n<tr>\n<td><strong>How selective are the filters?</strong></td>\n<td>selective filters (a tenant, a document set): filter first, then exact or indexed search</td>\n<td>broad filters over a huge index</td>\n</tr>\n<tr>\n<td><strong>Freshness after a write?</strong></td>\n<td>must be immediate and transactional</td>\n<td>seconds of lag is acceptable</td>\n</tr>\n<tr>\n<td><strong>Who operates it?</strong></td>\n<td>a small team</td>\n<td>a team that owns search</td>\n</tr>\n</tbody></table>\n<p><strong>The filtered-search problem.</strong> With an approximate index, the filter is often applied after the nearest neighbours are fetched:</p>\n<pre><code class=\"language-text\">index returns top 40 nearest → filter tenant_id = 42 → only 3 match → asked for 5\nfixes: filter first when the filter is selective (then scan exactly) · partition or partial index per tenant ·\n       fetch more candidates · a store with filter-aware search\n</code></pre>\n<p>Measure on your own data: recall@k against an exact search, p50/p95 latency under concurrent load, index build time and memory.</p>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick",
+        "claim": "start in Postgres, move on evidence",
+        "html": "<p><strong>\"The default and the exit.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Path:</strong></span><span class=\"flow-step\">embeddings in PostgreSQL</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">measure recall and p95</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">tune the index, partition by tenant</span><span class=\"flow-arrow\" data-label=\"measured limit\"></span><span class=\"flow-step\">a dedicated store as a <strong>derived index</strong> fed by CDC</span></div>\n<table>\n<thead>\n<tr>\n<th>If I move</th>\n<th>Rule</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Source of truth</strong></td>\n<td>stays relational: text, metadata, permissions</td>\n</tr>\n<tr>\n<td><strong>The vector store</strong></td>\n<td>can be rebuilt from the source at any time</td>\n</tr>\n<tr>\n<td><strong>Deletes and permission changes</strong></td>\n<td>propagate through the same stream; verified by reconciliation</td>\n</tr>\n<tr>\n<td><strong>Embedding model version</strong></td>\n<td>stored with each vector; a model change is a re-index</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>storage choice</em> for a <em>derived index</em>; the decision follows <em>measured</em> recall and latency.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;A real RAG system needs a real vector database.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>It needs retrieval that meets its recall and latency targets.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Corpus</th>\n<th>Sensible start</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>10,000 chunks</strong></td>\n<td>exact search in PostgreSQL; no approximate index needed</td>\n</tr>\n<tr>\n<td><strong>5 million chunks</strong></td>\n<td>pgvector with HNSW; measure</td>\n</tr>\n<tr>\n<td><strong>500 million chunks</strong></td>\n<td>a dedicated store</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 100 million vectors of 1,536 float32 dimensions. How much memory for the raw vectors?",
+        "tag": "edge",
+        "html": "<p><strong>About 614 GB.</strong></p>\n<pre><code class=\"language-text\">100,000,000 × 1,536 × 4 bytes = 614,400,000,000 bytes ≈ 614 GB\n</code></pre>\n<p>That's before the index structure, which is why quantisation or disk-based indexes come in at this size.</p>"
+      },
+      {
+        "number": 3,
+        "question": "How do you know the approximate index is good enough?",
+        "tag": "probe",
+        "html": "<p><strong>Compare it with exact search on a sample of real queries.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Check:</strong></span><span class=\"flow-step\">run each query exactly (no index)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">run it through the index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">recall@k = overlap ÷ k</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">tune the search parameters against latency</span></div>"
+      },
+      {
+        "number": 4,
+        "question": "A document is deleted. What must happen to its vectors?",
+        "tag": "probe",
+        "html": "<p><strong>They must go too, and you must be able to prove it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Store</th>\n<th>How</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>pgvector</strong></td>\n<td>a foreign key with cascade: the same transaction</td>\n</tr>\n<tr>\n<td><strong>Dedicated</strong></td>\n<td>a delete event through the sync; a reconciliation job to catch misses</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Retrieval must respect per-user permissions. Where is that enforced?",
+        "tag": "senior",
+        "html": "<p><strong>At query time, against current permissions, not only at indexing time.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Approach</th>\n<th>Risk</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Permissions copied into vector metadata</strong></td>\n<td>stale after a change, until re-synced</td>\n</tr>\n<tr>\n<td><strong>Filter in SQL beside the vectors</strong></td>\n<td>current by construction</td>\n</tr>\n<tr>\n<td><strong>Retrieve, then re-check against the source</strong></td>\n<td>safe; may return fewer than k</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Vectors need a vector database.&quot; — at what size?",
+      "&quot;pgvector doesn&#39;t scale.&quot; — to what, measured how?",
+      "&quot;We&#39;ll sync the two stores.&quot; — including deletes and permission changes?",
+      "&quot;Recall is fine.&quot; — against an exact baseline?"
+    ],
+    "links": [
+      {
+        "label": "Vector and AI Workloads",
+        "target": "11-dbms/Sql/06-Data-Systems/Vector-and-AI-Workloads"
+      },
+      {
+        "label": "Vector Database Landscape",
+        "target": "04-RAG/05-Vector Stores & Indexing (architect core)/01-Vector Database Landscape"
+      },
+      {
+        "label": "change data capture",
+        "target": "model-answers/12-DATABASES/50-change-data-capture"
+      },
+      {
+        "label": "sql or nosql",
+        "target": "model-answers/12-DATABASES/30-sql-or-nosql"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Frame the axis&lt;br/&gt;one system or a&lt;br/&gt;specialised one\"]):::step\n        N2(\"2 · Where pgvector&lt;br/&gt;wins&lt;br/&gt;vectors beside their&lt;br/&gt;rows\"):::ask\n        N3(\"3 · Where a dedicated&lt;br/&gt;store wins&lt;br/&gt;scale and search&lt;br/&gt;features\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · The deciding&lt;br/&gt;question&lt;br/&gt;size, filters,&lt;br/&gt;freshness, ownership\"):::ask\n        N5([\"5 · What I'd pick&lt;br/&gt;start in Postgres, move&lt;br/&gt;on evidence\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
   "databases-q55": {
     "type": "design",
     "spine": [
@@ -5178,5 +5803,112 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;users, questions, data&lt;br/&gt;and its owners\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;warehouse cost and&lt;br/&gt;latency\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;the semantic layer first\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;ambiguity and&lt;br/&gt;verification\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;plausible wrong answers\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;grow the semantic layer&lt;br/&gt;from questions\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q56": {
+    "type": "story",
+    "spine": [
+      "The decision it served",
+      "The constraint",
+      "Options weighed",
+      "What I built",
+      "What broke",
+      "The number"
+    ],
+    "testing": "that you worked from evidence to a cause, can say why the obvious fix was wrong, and left a guard behind.",
+    "trap": "&quot;we added an index and it got faster&quot;, or a story with no number and no evidence.",
+    "speakTime": "~2 min",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · The decision it served</strong></td>\n<td>\"Our CV-parsing service kept getting OOM-killed in production. <code>&lt;fill: what users or the business saw: failed parses, delays, restarts per day&gt;</code>. I had to decide whether to give it more memory or find out why it needed it.\"</td>\n</tr>\n<tr>\n<td><strong>2 · The constraint</strong></td>\n<td>\"The constraint was that it only happened in production, under real data. <code>&lt;fill: why staging didn't show it — data size or shape&gt;</code>. And each restart lost in-flight work.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Options weighed</strong></td>\n<td>\"Three options: raise the memory limit, stream the work in smaller pieces, or find the cause. I held back on the limit, because memory that grows with input size isn't a leak.\"</td>\n</tr>\n<tr>\n<td><strong>4 · What I built</strong></td>\n<td>\"So I looked at how memory grew against input. <code>&lt;fill: the tool — a heap or allocation profile, row counts, the query plan&gt;</code>. It wasn't a leak: it jumped during one step. The matching path was producing a Cartesian product: every candidate row paired with every other, because of duplicates on the join key. I deduplicated before the match.\"</td>\n</tr>\n<tr>\n<td><strong>5 · What broke</strong></td>\n<td>\"<code>&lt;fill: what went wrong on the way — a first theory that was wrong, how long it ran undiagnosed&gt;</code>. And afterwards I added a guard, <code>&lt;fill: the alert, test or constraint&gt;</code>, so it couldn't come back quietly.\"</td>\n</tr>\n<tr>\n<td><strong>6 · The number</strong></td>\n<td>\"<code>&lt;fill: memory before → after; restarts per day before → after&gt;</code>.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"When memory scales with input, look for the multiplication before buying memory.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The decision it served",
+        "claim": "more memory, or the cause",
+        "html": "<p><strong>\"Open with the symptom and what it cost.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Part</th>\n<th>Content</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>System</strong></td>\n<td>cv-parser service</td>\n</tr>\n<tr>\n<td><strong>Symptom</strong></td>\n<td>repeated OOMKill in production (recorded in S4)</td>\n</tr>\n<tr>\n<td><strong>Cost</strong></td>\n<td><code>&lt;fill: failed or delayed parses, restarts per day, who noticed&gt;</code></td>\n</tr>\n<tr>\n<td><strong>The decision</strong></td>\n<td>raise the limit, or diagnose</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Arc to keep in your head:</strong></span><span class=\"flow-step\">symptom</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">evidence</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">cause</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">fix</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">guard</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">number</span></div>"
+      },
+      {
+        "number": 2,
+        "name": "The constraint",
+        "claim": "production only",
+        "html": "<p><strong>\"Why it was hard.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Constraint</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Only under production data</strong></td>\n<td><code>&lt;fill: what was different — volume, duplicates in real data, one large input&gt;</code></td>\n</tr>\n<tr>\n<td><strong>A restart loses work</strong></td>\n<td><code>&lt;fill: what happened to in-flight jobs&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Limited visibility</strong></td>\n<td><code>&lt;fill: what monitoring existed at the time&gt;</code></td>\n</tr>\n</tbody></table>\n<p><code>&lt;fill: how long it had been happening before you picked it up&gt;</code></p>"
+      },
+      {
+        "number": 3,
+        "name": "Options weighed",
+        "claim": "limit, stream, or fix",
+        "html": "<p><strong>\"Three options and why two were set aside.\"</strong> The options are from S4.</p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>For</th>\n<th>Against</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Raise the memory limit</strong></td>\n<td>minutes to do</td>\n<td>hides a cost that grows with input; the next larger input kills it again</td>\n</tr>\n<tr>\n<td><strong>Stream the work in chunks</strong></td>\n<td>bounds memory</td>\n<td>more code; still does the unnecessary work, only more slowly</td>\n</tr>\n<tr>\n<td><strong>Find and fix the cause</strong></td>\n<td>removes the work itself</td>\n<td>needs a diagnosis first</td>\n</tr>\n</tbody></table>\n<p><strong>How to tell a leak from an algorithmic blow-up:</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Leak</th>\n<th>Algorithmic</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Memory over time, steady load</strong></td>\n<td>climbs slowly, never returns</td>\n<td>flat</td>\n</tr>\n<tr>\n<td><strong>Memory against input size</strong></td>\n<td>unrelated</td>\n<td><strong>jumps with certain inputs</strong></td>\n</tr>\n<tr>\n<td><strong>After the request ends</strong></td>\n<td>not released</td>\n<td>released</td>\n</tr>\n</tbody></table>\n<p><code>&lt;fill: which of these you actually observed&gt;</code></p>"
+      },
+      {
+        "number": 4,
+        "name": "What I built",
+        "claim": "find the multiplication, remove it",
+        "html": "<p><strong>\"Why duplicates on a join key multiply rows.\"</strong> An illustration of the mechanism, not the production query:</p>\n<pre><code class=\"language-text\">left side:  3 rows with key = 'python'\nright side: 4 rows with key = 'python'\njoin on key → 3 × 4 = 12 rows for that one key\n\nwith n duplicates on each side: n × n rows        ← 1,000 × 1,000 = 1,000,000\nafter deduplicating both sides: 1 × 1 = 1\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>What</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Evidence</strong></td>\n<td><code>&lt;fill: the tool and what it showed — allocation profile, row count before and after the match step, or the plan's row estimates&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Where the product formed</strong></td>\n<td><code>&lt;fill: a SQL join, or an in-memory match in the service&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Cause</strong></td>\n<td>a Cartesian product in the matching path (S4)</td>\n</tr>\n<tr>\n<td><strong>Fix</strong></td>\n<td>deduplicate before matching (S4) <code>&lt;fill: where — a DISTINCT or GROUP BY, a set in code, a unique constraint upstream&gt;</code></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What broke",
+        "claim": "the wrong turn, and the guard",
+        "html": "<p><strong>\"The part that makes it credible.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Content</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A first theory that was wrong</strong></td>\n<td><code>&lt;fill: for example, suspected a leak or a large file&gt;</code></td>\n</tr>\n<tr>\n<td><strong>How long it ran undiagnosed</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n<tr>\n<td><strong>The guard added</strong></td>\n<td><code>&lt;fill: an alert on memory against input size, a test with duplicate-heavy data, a row-count limit on the match, a uniqueness constraint&gt;</code></td>\n</tr>\n<tr>\n<td><strong>What I'd do sooner next time</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n</tbody></table>\n<p>A guard worth naming, if you added one: a test that feeds the matcher duplicate-heavy input and asserts the output size stays linear.</p>"
+      },
+      {
+        "number": 6,
+        "name": "The number",
+        "claim": "before and after",
+        "html": "<p><strong>\"Close on a measurement.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Measure</th>\n<th>Before</th>\n<th>After</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Peak memory per job</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Restarts (OOMKills) per day</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Rows or pairs produced by the match step</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Job duration</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n</tbody></table>\n<p>If you have only one of these, give that one. One measured number is better than four estimates.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Why not just raise the memory limit?&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Because the need grew with the square of the input.</strong> <code>&lt;fill: what you said or decided at the time&gt;</code></p>\n<table>\n<thead>\n<tr>\n<th>Input duplicates</th>\n<th>Pairs produced</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>n</strong></td>\n<td>n × n</td>\n</tr>\n<tr>\n<td><strong>2n</strong></td>\n<td>4 × as many</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A key appears 300 times on one side of a join and 200 on the other. How many rows does that key alone produce?",
+        "tag": "edge",
+        "html": "<p><strong>60,000.</strong></p>\n<pre><code class=\"language-text\">300 × 200 = 60,000 rows from one key\n</code></pre>\n<p><code>&lt;fill: the real duplicate counts you saw, if you measured them&gt;</code></p>"
+      },
+      {
+        "number": 3,
+        "question": "How did you rule out a memory leak?",
+        "tag": "probe",
+        "html": "<p><code>&lt;fill: what you checked&gt;</code> <strong>Shape:</strong> memory tracked the input, not the uptime.</p>\n<table>\n<thead>\n<tr>\n<th>Checked</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Memory after the job finished</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n<tr>\n<td><strong>Memory against input size</strong></td>\n<td><code>&lt;fill&gt;</code></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "Why didn&#39;t it show in staging?",
+        "tag": "probe",
+        "html": "<p><code>&lt;fill: your answer&gt;</code> <strong>Shape:</strong> staging data lacked the duplicates or the volume.</p>\n<ul>\n<li><strong>Lesson:</strong> test data needs the ugly properties of production data, not only its schema.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "What stops it recurring?",
+        "tag": "senior",
+        "html": "<p><code>&lt;fill: the guard you added&gt;</code> <strong>Shape:</strong> a control at the cause and an alert at the symptom.</p>\n<table>\n<thead>\n<tr>\n<th>Level</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Cause</strong></td>\n<td>uniqueness enforced where the duplicates enter</td>\n</tr>\n<tr>\n<td><strong>Code</strong></td>\n<td>a test with duplicate-heavy input</td>\n</tr>\n<tr>\n<td><strong>Operations</strong></td>\n<td>an alert on memory or output rows against input size</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We added an index and it got faster.&quot; — no diagnosis in that.",
+      "&quot;We increased the memory.&quot; — as the ending.",
+      "A number you didn&#39;t measure.",
+      "&quot;It was a memory leak&quot; — the point of the story is that it wasn&#39;t."
+    ],
+    "links": [
+      {
+        "label": "Joins",
+        "target": "11-dbms/Sql/01-Query-Writing/Joins"
+      },
+      {
+        "label": "Slow Query Debugging",
+        "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+      },
+      {
+        "label": "query suddenly slow",
+        "target": "model-answers/12-DATABASES/38-query-suddenly-slow"
+      }
+    ],
+    "warning": "The story bank (<span class=\"vault-ref\" title=\"16-PROJECT-STORIES\">PROJECT-STORIES</span> S4) records four facts: the cv-parser service was repeatedly OOM-killed in production; the cause was algorithmic, not a leak; it was a Cartesian product in the matching path; the fix was deduplication. Everything else here is a <code>&lt;fill: …&gt;</code> slot: how you found it, where the product was formed, and every number. Don&#39;t say one you didn&#39;t measure.",
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision it&lt;br/&gt;served&lt;br/&gt;more memory, or the&lt;br/&gt;cause\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;production only\"]:::calc\n        N3[\"3 · Options weighed&lt;br/&gt;limit, stream, or fix\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What I built&lt;br/&gt;find the multiplication,&lt;br/&gt;remove it\"]:::step\n        N5[\"5 · What broke&lt;br/&gt;the wrong turn, and the&lt;br/&gt;guard\"]:::step\n        N6([\"6 · The number&lt;br/&gt;before and after\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   }
 }
