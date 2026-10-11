@@ -35,7 +35,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "dense-rank by salary → filter rank = N → one row",
-          "trap": "<code>LIMIT 1 OFFSET 1</code> with ties at the top"
+          "trap": "<code>LIMIT 1 OFFSET 1</code> with ties at the top",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q2",
@@ -93,7 +104,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">users(id, email)\n</code></pre>",
           "flow": "group + having → keep min id → delete the rest → unique constraint",
-          "trap": "cleaning up without fixing the write path"
+          "trap": "cleaning up without fixing the write path",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q4",
@@ -115,7 +137,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "order → choose frame (<code>ROWS</code>) → aggregate over it",
-          "trap": "leaving the frame implicit when the sort key has ties"
+          "trap": "leaving the frame implicit when the sort key has ties",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q5",
@@ -137,7 +170,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "alias employee + alias manager → join on manager_id → compare",
-          "trap": "forgetting the top of the tree has no manager"
+          "trap": "forgetting the top of the tree has no manager",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q6",
@@ -200,7 +244,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "group by month → LAG previous → (cur − prev) / prev",
-          "trap": "a month with no orders silently disappears from the series"
+          "trap": "a month with no orders silently disappears from the series",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q8",
@@ -257,7 +312,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "group by the row key → one CASE-sum per output column",
-          "trap": "<code>COUNT(CASE … ELSE 0 END)</code> counts every row"
+          "trap": "<code>COUNT(CASE … ELSE 0 END)</code> counts every row",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q10",
@@ -279,7 +345,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "row_number + count per group → middle positions → average",
-          "trap": "using <code>AVG</code> and calling it the median"
+          "trap": "using <code>AVG</code> and calling it the median",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q11",
@@ -302,7 +379,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">profile_changes(user_id, city, updated_at)\n</code></pre>",
           "flow": "partition by key → order newest first → keep row 1",
-          "trap": "<code>GROUP BY user_id</code> with <code>MAX(updated_at)</code> and a non-aggregated <code>city</code>"
+          "trap": "<code>GROUP BY user_id</code> with <code>MAX(updated_at)</code> and a non-aggregated <code>city</code>",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q12",
@@ -324,7 +412,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "anchor → recursive member joins to the CTE → stops when no rows are added",
-          "trap": "no guard against cycles"
+          "trap": "no guard against cycles",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q13",
@@ -346,7 +445,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">events(user_id, ts)\n</code></pre>",
           "flow": "LAG → gap &gt; threshold? flag 1 → running sum of flags",
-          "trap": "trying to do it in one window pass"
+          "trap": "trying to do it in one window pass",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q14",
@@ -369,7 +479,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">bookings(id, room_id, start_ts, end_ts)\n</code></pre>",
           "flow": "overlap test <code>a.start &lt; b.end AND b.start &lt; a.end</code> → sweep line for the peak",
-          "trap": "checking only \"b starts inside a\""
+          "trap": "checking only \"b starts inside a\"",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q15",
@@ -392,7 +513,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>",
           "flow": "min date per user → cohort → exists on d0 + N → users back / cohort size",
-          "trap": "counting logins, not distinct users"
+          "trap": "counting logins, not distinct users",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q16",
@@ -415,7 +547,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">inventory(sku PRIMARY KEY, qty, updated_at)\n</code></pre>",
           "flow": "insert → conflict on key → update only if the incoming row is newer",
-          "trap": "read-then-write in the application: a race between the two statements"
+          "trap": "read-then-write in the application: a race between the two statements",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q17",
@@ -438,7 +581,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "order by (sort key, id) → pass the last row as a cursor → seek, limit",
-          "trap": "a non-unique sort key, which skips or repeats rows"
+          "trap": "a non-unique sort key, which skips or repeats rows",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         }
       ]
     },
