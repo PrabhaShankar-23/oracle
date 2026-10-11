@@ -620,7 +620,17 @@
             }
           ],
           "flow": "sorted tree → seek + range → skipped when the predicate isn't sargable or selective",
-          "trap": "\"add an index\" with no plan, no selectivity, no write cost"
+          "trap": "\"add an index\" with no plan, no selectivity, no write cost",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q19",
@@ -674,7 +684,17 @@
             }
           ],
           "flow": "query columns ⊆ index columns → no heap lookups → fewer random reads",
-          "trap": "<code>SELECT *</code> on a query you tried to cover"
+          "trap": "<code>SELECT *</code> on a query you tried to cover",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q21",
@@ -695,7 +715,17 @@
             }
           ],
           "flow": "find the costliest node → compare estimated vs actual rows → fix the cause",
-          "trap": "tuning from <code>EXPLAIN</code> without <code>ANALYZE</code>"
+          "trap": "tuning from <code>EXPLAIN</code> without <code>ANALYZE</code>",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q22",
@@ -749,7 +779,17 @@
             }
           ],
           "flow": "versions per row → snapshot reads → garbage collection of dead versions",
-          "trap": "an idle-in-transaction session left open for hours"
+          "trap": "an idle-in-transaction session left open for hours",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q24",
@@ -770,7 +810,17 @@
             }
           ],
           "flow": "lock cycle → detector aborts one → fix lock order → retry",
-          "trap": "treating the deadlock error as fatal instead of retrying"
+          "trap": "treating the deadlock error as fatal instead of retrying",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q25",
@@ -791,7 +841,17 @@
             }
           ],
           "flow": "log record → fsync at commit → pages later → replay on crash",
-          "trap": "turning off fsync \"for performance\" on data you can't lose"
+          "trap": "turning off fsync \"for performance\" on data you can't lose",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q26",
@@ -812,7 +872,17 @@
             }
           ],
           "flow": "row estimates + available indexes + sort order → algorithm",
-          "trap": "forcing a join type instead of fixing the statistics"
+          "trap": "forcing a join type instead of fixing the statistics",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q27",
@@ -833,7 +903,17 @@
             }
           ],
           "flow": "read-heavy + range scans → B-tree · write-heavy ingest → LSM + compaction budget",
-          "trap": "ignoring compaction when sizing an LSM store"
+          "trap": "ignoring compaction when sizing an LSM store",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where B-tree wins",
+              "Where LSM wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q28",
@@ -854,7 +934,17 @@
             }
           ],
           "flow": "list query → loop triggers a query per row → replace with a join or one IN query",
-          "trap": "\"the query is fast\": each one is, there are just 500 of them"
+          "trap": "\"the query is fast\": each one is, there are just 500 of them",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q29",
@@ -875,7 +965,17 @@
             }
           ],
           "flow": "fixed pool → queue instead of overload → size from DB cores, not app threads",
-          "trap": "raising the pool size when the database is the bottleneck"
+          "trap": "raising the pool size when the database is the bottleneck",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         }
       ]
     },

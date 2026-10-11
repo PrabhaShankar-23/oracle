@@ -1829,6 +1829,109 @@
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Read the tables&lt;br/&gt;what OFFSET costs\"]):::step\n        N2[\"2 · Name the pattern&lt;br/&gt;seek past the last row&lt;br/&gt;seen\"]:::step\n        N3[\"3 · Write it&lt;br/&gt;a row-value comparison\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Trace it on data&lt;br/&gt;page, cursor, page\"]:::step\n        N5[\"5 · Variants and traps&lt;br/&gt;the tie-breaker, and&lt;br/&gt;what you give up\"]:::bad\n        N6([\"6 · How it performs&lt;br/&gt;a seek against a scan\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   },
+  "databases-q18": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you can explain why a lookup is a few page reads, and list the predicates that make the planner ignore the index.",
+    "trap": "&quot;an index makes queries faster&quot;, with nothing about writes, selectivity or functions on the column.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"A B-tree index is a sorted copy of one or more columns, with a pointer back to each row, arranged as a shallow tree so any value is found in a few page reads.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"Each node is a disk page holding hundreds of keys. The root points to branches, branches to leaves, and the leaves hold the keys in order and are linked sideways. So a lookup walks three or four pages, and a range walks down once and then along the leaves.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It isn't used when the predicate can't use the sort order: a function on the column, a leading wildcard, a type mismatch. And the planner skips it on purpose when the predicate matches a large share of the table, because a scan is cheaper than that many random reads.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"I index for the queries I have: the columns in where, join and order by. I confirm with the plan. And I count the cost, because every insert, update and delete maintains every index.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"It serves equality, ranges, prefixes and sorting. A hash index serves equality only. Full-text and array searches want an inverted index.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Sorted, shallow, great for selective lookups and ranges; and never free on writes.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "a sorted copy with pointers",
+        "html": "<p><strong>\"The table is in insertion order; the index is in key order.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Table (heap)</th>\n<th></th>\n<th>Index on <code>email</code></th>\n<th></th>\n</tr>\n</thead>\n<tbody><tr>\n<td>row 1</td>\n<td><a href=\"mailto:b@x.com\">b@x.com</a></td>\n<td><a href=\"mailto:a@x.com\">a@x.com</a></td>\n<td>→ row 3</td>\n</tr>\n<tr>\n<td>row 2</td>\n<td><a href=\"mailto:c@x.com\">c@x.com</a></td>\n<td><a href=\"mailto:b@x.com\">b@x.com</a></td>\n<td>→ row 1</td>\n</tr>\n<tr>\n<td>row 3</td>\n<td><a href=\"mailto:a@x.com\">a@x.com</a></td>\n<td><a href=\"mailto:c@x.com\">c@x.com</a></td>\n<td>→ row 2</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Without the index</th>\n<th>With it</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>read every row, test each</strong></td>\n<td>walk the tree to the key, follow the pointer</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "wide nodes, few levels",
+        "html": "<p><strong>\"The tree is shallow because each page holds many keys.\"</strong></p>\n<figure><div class=\"mermaid\">flowchart TB\n    R([\"root page&lt;br/&gt;keys: g · p\"]):::ask\n    B1[\"branch&lt;br/&gt;a … f\"]:::step\n    B2[\"branch&lt;br/&gt;g … o\"]:::step\n    B3[\"branch&lt;br/&gt;p … z\"]:::step\n    L1[\"leaf: a b c ⇄\"]:::calc\n    L2[\"leaf: g h k ⇄\"]:::calc\n    L3[\"leaf: p q t\"]:::calc\n    R --&gt; B1\n    R --&gt; B2\n    R --&gt; B3\n    B1 --&gt; L1\n    B2 --&gt; L2\n    B3 --&gt; L3\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n</div></figure>\n<pre><code class=\"language-text\">levels = ceil( log_fanout(rows) )\nfanout 200, 1,000,000 rows      → 3 levels\nfanout 200, 1,000,000,000 rows  → 4 levels            ← a thousand times the rows, one more page read\nbinary tree, 1,000,000,000 rows → 30 levels\n</code></pre>\n<p>The fan-out of 200 is illustrative; it depends on key size and page size.</p>\n<table>\n<thead>\n<tr>\n<th>Operation</th>\n<th>Path</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Equality</strong></td>\n<td>root ─▶ branch ─▶ leaf ─▶ row</td>\n</tr>\n<tr>\n<td><strong>Range</strong></td>\n<td>walk down to the start ─▶ follow the leaf links ─▶ stop at the end</td>\n</tr>\n<tr>\n<td><strong><code>ORDER BY</code> the key</strong></td>\n<td>read the leaves in order: no sort</td>\n</tr>\n<tr>\n<td><strong>Insert</strong></td>\n<td>find the leaf, add the key; a full page splits in two</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "predicates that hide the order",
+        "html": "<p><strong>\"Each predicate, and the plan it gets.\"</strong> Plans produced by SQLite 3.51 on the sample, with indexes on <code>users(email)</code> and <code>orders(created_at)</code>.</p>\n<table>\n<thead>\n<tr>\n<th>Predicate</th>\n<th>Plan</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>email = 'a@x.com'</code></td>\n<td><code>SEARCH … USING INDEX (email=?)</code></td>\n<td>equality <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>created_at &gt;= … AND created_at &lt; …</code></td>\n<td><code>SEARCH … (created_at&gt;? AND created_at&lt;?)</code></td>\n<td>range <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>ORDER BY created_at LIMIT 3</code></td>\n<td><code>SCAN orders USING INDEX</code></td>\n<td>reads the index in order; no sort <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>email GLOB 'a@*'</code> (a prefix)</td>\n<td><code>SEARCH … (email&gt;? AND email&lt;?)</code></td>\n<td>a prefix is a range <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>email LIKE '%x.com'</code></td>\n<td><code>SCAN users</code></td>\n<td>a leading wildcard: no starting point <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>lower(email) = 'a@x.com'</code></td>\n<td><code>SCAN users</code></td>\n<td>the index stores <code>email</code>, not <code>lower(email)</code> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>substr(created_at,1,7) = '2026-02'</code></td>\n<td><code>SCAN orders</code></td>\n<td>a function on the column <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n</tbody></table>\n<p>After <code>CREATE INDEX … ON users(lower(email))</code> the <code>lower(email)</code> query becomes <code>SEARCH users USING INDEX ix_lower (&lt;expr&gt;=?)</code>.</p>\n<table>\n<thead>\n<tr>\n<th>Also not used when</th>\n<th>Reason</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The predicate matches much of the table</strong></td>\n<td>many random row reads cost more than one sequential scan</td>\n</tr>\n<tr>\n<td><strong>Types don't match</strong> (a string column compared with a number)</td>\n<td>an implicit cast is a function on the column</td>\n</tr>\n<tr>\n<td><strong>Statistics are stale</strong></td>\n<td>the planner misjudges the selectivity</td>\n</tr>\n<tr>\n<td><strong>The leading column of a composite index is missing</strong></td>\n<td>see <span class=\"vault-ref\" title=\"model-answers/12-DATABASES/19-composite-index\">composite-index</span></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "from the queries, checked by the plan",
+        "html": "<p><strong>\"An index is a trade: read speed for write work.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Order:</strong></span><span class=\"flow-step\">list the slow queries</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">read their plans</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">index the <code>WHERE</code>, <code>JOIN</code> and <code>ORDER BY</code> columns</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">plan again</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">measure writes</span></div>\n<table>\n<thead>\n<tr>\n<th>Index for</th>\n<th>Don't index</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Selective filters</strong></td>\n<td>a boolean or a status with three values, on its own</td>\n</tr>\n<tr>\n<td><strong>Foreign keys used in joins</strong></td>\n<td>columns no query filters or sorts by</td>\n</tr>\n<tr>\n<td><strong>Sort keys of paged lists</strong></td>\n<td>small tables: a scan is one page</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Cost of each index</th>\n<th>Where it shows</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Every write updates it</strong></td>\n<td>insert and update latency</td>\n</tr>\n<tr>\n<td><strong>Memory</strong></td>\n<td>indexes compete for the buffer cache</td>\n</tr>\n<tr>\n<td><strong>Page splits and bloat</strong></td>\n<td>random keys (UUID v4) scatter inserts</td>\n</tr>\n</tbody></table>\n<p>Measure: the plan, index usage counters (unused indexes are pure cost), write latency before and after.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "other index types",
+        "html": "<p><strong>\"B-tree is the default because it does the most kinds of query.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Index</th>\n<th>Serves</th>\n<th>Pick when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>B-tree</strong></td>\n<td><code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, prefix, <code>ORDER BY</code></td>\n<td>almost always</td>\n</tr>\n<tr>\n<td><strong>Hash</strong></td>\n<td><code>=</code> only</td>\n<td>pure key lookups, in memory</td>\n</tr>\n<tr>\n<td><strong>Inverted (GIN, full-text)</strong></td>\n<td>\"contains this word or element\"</td>\n<td>text search, arrays, JSON keys</td>\n</tr>\n<tr>\n<td><strong>Spatial (GiST, R-tree)</strong></td>\n<td>\"within\", \"overlaps\", nearest</td>\n<td>geometry, ranges</td>\n</tr>\n<tr>\n<td><strong>Block range (BRIN)</strong></td>\n<td>ranges on naturally ordered data</td>\n<td>huge append-only tables</td>\n</tr>\n<tr>\n<td><strong>LSM-tree</strong> (a storage structure)</td>\n<td>write-heavy workloads</td>\n<td>see <span class=\"vault-ref\" title=\"model-answers/12-DATABASES/27-btree-or-lsm\">btree-or-lsm</span></td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>indexes</em>, chosen from the <em>query shapes</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Index every column in the WHERE clauses, to be safe.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Each one slows every write, and most won't be chosen.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Indexes on a table</th>\n<th>Write cost</th>\n<th>Benefit</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The few the queries need</strong></td>\n<td>small</td>\n<td>used</td>\n</tr>\n<tr>\n<td><strong>One per column</strong></td>\n<td>every insert updates all of them</td>\n<td>the planner uses one or two</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A table has an index on ; 95% of rows are &#39;active&#39;. Does  use it?",
+        "tag": "status",
+        "html": "<p><strong>No, and that's the right decision.</strong></p>\n<pre><code class=\"language-text\">1,000,000 rows × 95% = 950,000 index entries → 950,000 row fetches in key order (random pages)\nfull scan            = every page once, sequentially\n</code></pre>\n<p><code>WHERE status = 'failed'</code> on the remaining few percent would use it. A partial index on the rare values is smaller still.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Why a B-tree and not a binary tree or a hash table?",
+        "tag": "probe",
+        "html": "<p><strong>It's built for pages and for ranges.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Structure</th>\n<th>Page reads for one key in a billion</th>\n<th>Ranges</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Binary tree</strong></td>\n<td>about 30</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong>B-tree</strong></td>\n<td>about 4</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong>Hash</strong></td>\n<td>1–2</td>\n<td>no</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "What&#39;s the difference between a clustered and a secondary index?",
+        "tag": "probe",
+        "html": "<p><strong>Whether the leaves hold the row itself.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Clustered</th>\n<th>Secondary</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Leaves hold</strong></td>\n<td>the whole row</td>\n<td>the key and a pointer (or the primary key)</td>\n</tr>\n<tr>\n<td><strong>Per table</strong></td>\n<td>one</td>\n<td>many</td>\n</tr>\n<tr>\n<td><strong>Engines</strong></td>\n<td>InnoDB: the primary key is clustered</td>\n<td>PostgreSQL: all indexes are secondary to a heap</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "How do you find indexes to remove?",
+        "tag": "senior",
+        "html": "<p><strong>From usage statistics over a full business cycle.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Signal</th>\n<th>Action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Zero scans in the usage counters</strong></td>\n<td>candidate to drop</td>\n</tr>\n<tr>\n<td><strong>A prefix of another index</strong> (<code>(a)</code> beside <code>(a, b)</code>)</td>\n<td>redundant</td>\n</tr>\n<tr>\n<td><strong>Used only by a monthly job</strong></td>\n<td>keep, or build it for the job</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Indexes make queries faster.&quot; — which queries, at what write cost?",
+      "&quot;It has an index, so it&#39;s used.&quot; — not with a function or a leading wildcard.",
+      "&quot;A full scan is always bad.&quot; — it&#39;s right when most rows match.",
+      "&quot;Index everything.&quot; — every write pays."
+    ],
+    "links": [
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      },
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "composite index",
+        "target": "model-answers/12-DATABASES/19-composite-index"
+      },
+      {
+        "label": "covering index",
+        "target": "model-answers/12-DATABASES/20-covering-index"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;a sorted copy with&lt;br/&gt;pointers\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;wide nodes, few levels\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;predicates that hide the&lt;br/&gt;order\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;from the queries,&lt;br/&gt;checked by the plan\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;other index types\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
   "databases-q19": {
     "type": "concept",
     "spine": [
@@ -1927,6 +2030,212 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;sorted by first, then&lt;br/&gt;second\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;the leftmost prefix\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;no leader, function,&lt;br/&gt;early range\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;equality, then range,&lt;br/&gt;then sort\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;covering indexes\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q20": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you know the second step of an index lookup (fetching the row) and how to remove it.",
+    "trap": "adding every selected column to every index, and paying for it on each write.",
+    "speakTime": "~60 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"A covering index is one that contains every column a query needs. The database answers from the index alone and never reads the table row.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"A normal index lookup has two steps: find the entries in the index, then fetch each row from the table. That second step is a random read per row. If the select list and the filters are all in the index, the second step disappears.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It stops covering the moment the query asks for one more column, which is why select star defeats it. And a wider index costs more on every write and takes more memory.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"I use it for a few hot, narrow queries: a list endpoint, a count, an existence check. The plan tells me it worked: index-only scan on PostgreSQL, covering index on SQLite.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"On PostgreSQL and SQL Server, include columns add payload to the leaves without making the key wider.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"All needed columns in the index, so no trip to the table.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "the index answers alone",
+        "html": "<p><strong>\"Covering is a property of an index and a query together.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Query needs</th>\n<th>Index holds</th>\n<th>Covering?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>customer_id</code>, <code>created_at</code></td>\n<td><code>(customer_id, created_at)</code></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>customer_id</code>, <code>created_at</code>, <code>amount</code></td>\n<td><code>(customer_id, created_at)</code></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> <code>amount</code> is only in the table</td>\n</tr>\n<tr>\n<td><code>customer_id</code>, <code>created_at</code>, <code>amount</code></td>\n<td><code>(customer_id, created_at, amount)</code></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "removing the row fetch",
+        "html": "<p><strong>\"Two steps become one.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Ordinary:</strong></span><span class=\"flow-step\">seek in the index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">for each entry, <strong>fetch the row from the table</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">return</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Covering:</strong></span><span class=\"flow-step\">seek in the index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">return</span></div>\n<p>Plans produced by SQLite 3.51 on the sample, with an index on <code>(customer_id, created_at)</code>:</p>\n<table>\n<thead>\n<tr>\n<th>Query</th>\n<th>Plan</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>SELECT created_at … WHERE customer_id = 1</code></td>\n<td><code>SEARCH orders USING COVERING INDEX ix (customer_id=?)</code></td>\n</tr>\n<tr>\n<td><code>SELECT COUNT(*) … WHERE customer_id = 1</code></td>\n<td><code>SEARCH orders USING COVERING INDEX ix (customer_id=?)</code></td>\n</tr>\n<tr>\n<td><code>SELECT created_at, amount … WHERE customer_id = 1</code></td>\n<td><code>SEARCH orders USING INDEX ix (customer_id=?)</code></td>\n</tr>\n<tr>\n<td><code>SELECT * … WHERE customer_id = 1</code></td>\n<td><code>SEARCH orders USING INDEX ix (customer_id=?)</code></td>\n</tr>\n</tbody></table>\n<p>After adding <code>(customer_id, created_at, amount)</code>, the third query becomes <code>SEARCH orders USING COVERING INDEX ix2 (customer_id=?)</code>.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "one more column, and the write cost",
+        "html": "<p><strong>\"Covering is fragile and not free.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Break</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>SELECT *</code></strong></td>\n<td>asks for columns the index doesn't hold</td>\n</tr>\n<tr>\n<td><strong>A new column added to the query later</strong></td>\n<td>silently back to index + row fetch</td>\n</tr>\n<tr>\n<td><strong>PostgreSQL: pages not marked all-visible</strong></td>\n<td>the index-only scan still visits the heap to check row visibility; vacuum keeps the visibility map current</td>\n</tr>\n<tr>\n<td><strong>Wide indexes</strong></td>\n<td>more pages to write, cache and replicate</td>\n</tr>\n<tr>\n<td><strong>Frequently updated columns in the index</strong></td>\n<td>each update rewrites the index entry</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">row fetches saved  = rows returned per query × queries per second\ncost added         = wider index entries on every insert and on updates to those columns\n</code></pre>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "a few hot, narrow queries",
+        "html": "<p><strong>\"I cover queries that return many rows from few columns.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Good candidate</th>\n<th>Poor candidate</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A list endpoint: ids, titles, dates</strong></td>\n<td>a detail page that needs the whole row</td>\n</tr>\n<tr>\n<td><strong><code>COUNT</code>, <code>EXISTS</code>, <code>MIN</code>/<code>MAX</code> on the key</strong></td>\n<td>queries returning one row: one fetch is cheap</td>\n</tr>\n<tr>\n<td><strong>A join that needs only the key and one value</strong></td>\n<td>columns that change on most updates</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Check:</strong></span><span class=\"flow-step\">write the query with an explicit column list</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">build the index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">read the plan</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">measure reads per execution and write latency</span></div>\n<p>Measure: heap fetches (PostgreSQL reports them per index-only scan), buffer reads, and insert latency before and after.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "INCLUDE columns and clustered tables",
+        "html": "<p><strong>\"Key columns order the index; included columns only ride along.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Key column</th>\n<th><code>INCLUDE</code> column</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Used for seeking and sorting</strong></td>\n<td>yes</td>\n<td>no</td>\n</tr>\n<tr>\n<td><strong>Stored in</strong></td>\n<td>every level of the tree</td>\n<td>the leaves only</td>\n</tr>\n<tr>\n<td><strong>Supported by</strong></td>\n<td>all engines</td>\n<td>PostgreSQL 11+, SQL Server</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Engine</th>\n<th>What \"the index already has it\" means</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>MySQL InnoDB</strong></td>\n<td>every secondary index carries the primary key, so it covers <code>SELECT pk</code> for free</td>\n</tr>\n<tr>\n<td><strong>InnoDB primary key</strong></td>\n<td>clustered: the leaf <em>is</em> the row, so it covers everything</td>\n</tr>\n<tr>\n<td><strong>PostgreSQL</strong></td>\n<td>a heap plus secondary indexes; index-only scans depend on the visibility map</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version in use.</p>\n<p>Fix layer: <em>indexes</em>, sized to the <em>select list</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Put every column the table has into the index, so everything is covered.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>That's a second copy of the table, maintained on every write.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Narrow covering index</th>\n<th>\"Everything\" index</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Size</strong></td>\n<td>a fraction of the table</td>\n<td>about the table</td>\n</tr>\n<tr>\n<td><strong>Write cost</strong></td>\n<td>small</td>\n<td>close to doubling the write</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The index is . Is  covered?",
+        "tag": "edge",
+        "html": "<p><strong>No. <code>amount</code> forces a row fetch.</strong></p>\n<pre><code class=\"language-text\">plan: SEARCH orders USING INDEX ix (customer_id=?)            ← no \"COVERING\"; run on the sample\nadd amount to the index → USING COVERING INDEX ix2\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why does SELECT * hurt here?",
+        "tag": "probe",
+        "html": "<p><strong>It widens what the query needs to every column.</strong></p>\n<ul>\n<li><strong>No index covers it</strong> short of the clustered one.</li>\n<li><strong>Name the columns,</strong> and the planner can answer from an index.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "Key column or INCLUDE column?",
+        "tag": "probe",
+        "html": "<p><strong>Key if you filter or sort by it; include if you only return it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Column is used in</th>\n<th>Put it in</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>WHERE</code>, <code>JOIN</code>, <code>ORDER BY</code></strong></td>\n<td>the key</td>\n</tr>\n<tr>\n<td><strong>only the <code>SELECT</code> list</strong></td>\n<td><code>INCLUDE</code></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "The index-only scan on PostgreSQL still shows many heap fetches. Why?",
+        "tag": "senior",
+        "html": "<p><strong>The pages aren't marked all-visible yet.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Cause:</strong></span><span class=\"flow-step\">recent writes</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">visibility map bits cleared</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the scan checks the heap for those pages</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">vacuum sets the bits again</span></div>\n<p>On a table with heavy churn, tune autovacuum for it, or accept that the scan is only partly index-only.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;A covering index covers the table.&quot; — it covers a query.",
+      "&quot;Add all the columns.&quot; — that&#39;s a second table.",
+      "&quot;<code>SELECT *</code> is fine with a covering index.&quot; — it defeats it.",
+      "&quot;It&#39;s free once built.&quot; — every write maintains it."
+    ],
+    "links": [
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      },
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "composite index",
+        "target": "model-answers/12-DATABASES/19-composite-index"
+      },
+      {
+        "label": "btree index",
+        "target": "model-answers/12-DATABASES/18-btree-index"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;the index answers alone\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;removing the row fetch\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;one more column, and the&lt;br/&gt;write cost\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;a few hot, narrow&lt;br/&gt;queries\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;INCLUDE columns and&lt;br/&gt;clustered tables\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q21": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "a method: the order to read a plan in, and the three or four signs that explain a slow query.",
+    "trap": "reading the estimated cost as time, or reading <code>EXPLAIN</code> without <code>ANALYZE</code> and trusting the estimates.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"A plan is the tree of operations the database chose for a query: how it reads each table, how it joins them, and where it sorts or aggregates. Explain shows the choice; explain analyze runs the query and shows what happened.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"I read it from the innermost nodes outward, because those run first and feed their parents. At each node I look at three things: the access method, the estimated rows, and with analyze, the actual rows and time.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"The first thing I compare is estimated against actual rows. If they differ by orders of magnitude, the planner chose with bad information, and everything above that node is suspect.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"Then I look for the expensive shapes: a sequential scan that returns few rows, a nested loop with a large outer side, a sort or hash that spills to disk, and a filter that discards most of what was read.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"The plan depends on statistics. If the estimates are off, I refresh statistics before I change the query or add an index.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Inside out; estimates against actuals; then the node where the time goes.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "the plan, and the two commands",
+        "html": "<p><strong>\"One shows the intention; the other shows the result.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Command</th>\n<th>Runs the query?</th>\n<th>Shows</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>EXPLAIN</code></strong></td>\n<td>no</td>\n<td>the chosen plan with estimated cost and rows</td>\n</tr>\n<tr>\n<td><strong><code>EXPLAIN ANALYZE</code></strong> (PostgreSQL, MySQL 8.0.18+)</td>\n<td><strong>yes</strong></td>\n<td>the same plus actual rows, loops and time per node</td>\n</tr>\n<tr>\n<td><strong><code>EXPLAIN (ANALYZE, BUFFERS)</code></strong> (PostgreSQL)</td>\n<td>yes</td>\n<td>also pages read from cache and from disk</td>\n</tr>\n<tr>\n<td><strong><code>EXPLAIN QUERY PLAN</code></strong> (SQLite)</td>\n<td>no</td>\n<td>the access path per table</td>\n</tr>\n</tbody></table>\n<p><code>EXPLAIN ANALYZE</code> on an <code>UPDATE</code> or <code>DELETE</code> performs it. Wrap it in a transaction and roll back.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "read from the inside out",
+        "html": "<p><strong>\"Children feed parents. The deepest node runs first.\"</strong></p>\n<figure><div class=\"mermaid\">flowchart TB\n    S([\"Sort · ORDER BY total\"]):::ask\n    A[\"Aggregate · GROUP BY name\"]:::step\n    J[\"Join · orders ⋈ customers\"]:::calc\n    O[\"Read orders&lt;br/&gt;filter: status = paid\"]:::step\n    C[\"Look up customer&lt;br/&gt;by primary key\"]:::step\n    O --&gt; J\n    C --&gt; J\n    J --&gt; A --&gt; S\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n</div></figure>\n<p>The same query on the sample, as SQLite 3.51 reports it:</p>\n<pre><code class=\"language-text\">query: revenue per customer for paid orders, highest first\n\nSCAN o                                          ← reads all of orders\nSEARCH c USING INTEGER PRIMARY KEY (rowid=?)    ← one key lookup per order row\nUSE TEMP B-TREE FOR GROUP BY                    ← groups in a temporary structure\nUSE TEMP B-TREE FOR ORDER BY                    ← then sorts the groups\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>On each node, read</th>\n<th>It tells you</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Access method</strong></td>\n<td>scan, index seek, index-only</td>\n</tr>\n<tr>\n<td><strong>Estimated rows</strong></td>\n<td>what the planner expected</td>\n</tr>\n<tr>\n<td><strong>Actual rows × loops</strong></td>\n<td>what happened; multiply the two</td>\n</tr>\n<tr>\n<td><strong>Time</strong></td>\n<td>cumulative: a parent includes its children</td>\n</tr>\n<tr>\n<td><strong>Filter / rows removed</strong></td>\n<td>how much was read and thrown away</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "estimates against actuals",
+        "html": "<p><strong>\"A wrong estimate is the root of most bad plans.\"</strong></p>\n<pre><code class=\"language-text\">node:  Index Scan on orders   (rows=12)   (actual rows=480,000)       ← illustrative\nratio: 480,000 / 12 = 40,000× under-estimated\neffect: the parent chose a nested loop, expecting 12 iterations\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Estimate is wrong because</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Statistics are stale</strong></td>\n<td>analyse the table</td>\n</tr>\n<tr>\n<td><strong>Columns are correlated</strong> (city and postcode)</td>\n<td>extended or multi-column statistics</td>\n</tr>\n<tr>\n<td><strong>A function or cast hides the column</strong></td>\n<td>rewrite the predicate</td>\n</tr>\n<tr>\n<td><strong>Skewed values</strong></td>\n<td>more detailed statistics; a plan per value class</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Trap in reading</th>\n<th>Reality</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"Cost is milliseconds\"</strong></td>\n<td>cost is an abstract unit for comparing plans</td>\n</tr>\n<tr>\n<td><strong>\"Actual rows = 100\"</strong></td>\n<td>per loop; with loops = 5,000 that's 500,000</td>\n</tr>\n<tr>\n<td><strong>\"The top node is slow\"</strong></td>\n<td>its time includes everything below it</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "the expensive shapes",
+        "html": "<p><strong>\"What I look for, and what each means.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Shape in the plan</th>\n<th>Usually means</th>\n<th>Next step</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A sequential scan returning few rows</strong></td>\n<td>a missing or unusable index</td>\n<td>index the predicate; check for a function on the column</td>\n</tr>\n<tr>\n<td><strong>Rows removed by filter ≫ rows returned</strong></td>\n<td>the index finds too much, then filters</td>\n<td>a better-matched composite index</td>\n</tr>\n<tr>\n<td><strong>A nested loop with a large outer side</strong></td>\n<td>a bad estimate picked the wrong join</td>\n<td>fix the estimate</td>\n</tr>\n<tr>\n<td><strong>A sort or hash spilling to disk</strong></td>\n<td>the working set outgrew memory</td>\n<td>reduce rows earlier; then memory</td>\n</tr>\n<tr>\n<td><strong>A sort feeding a <code>LIMIT</code></strong></td>\n<td>no index in the sort order</td>\n<td>index the <code>ORDER BY</code></td>\n</tr>\n<tr>\n<td><strong>The same subplan executed per row</strong></td>\n<td>a correlated subquery</td>\n<td>rewrite as a join</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Method:</strong></span><span class=\"flow-step\">find the node with the most self-time</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">compare its estimate with actual</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">change one thing</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">plan again</span></div>\n<p>On the sample, an index on <code>orders(customer_id, status, amount)</code> changes the first line to <code>SCAN o USING COVERING INDEX ix_o</code>: the table is no longer read, and the two temporary B-trees remain.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "statistics and the planner",
+        "html": "<p><strong>\"The planner is a cost model fed by statistics.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Inputs:</strong></span><span class=\"flow-step\">table and column statistics + available indexes + configuration</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">candidate plans</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>lowest estimated cost wins</strong></span></div>\n<table>\n<thead>\n<tr>\n<th>Statistic</th>\n<th>Used for</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Row count, pages</strong></td>\n<td>scan cost</td>\n</tr>\n<tr>\n<td><strong>Distinct values, most common values, histogram</strong></td>\n<td>selectivity of a predicate</td>\n</tr>\n<tr>\n<td><strong>Correlation with physical order</strong></td>\n<td>index range scan cost</td>\n</tr>\n</tbody></table>\n<p>So a plan can change with no deploy: the data and its statistics changed. That's <span class=\"vault-ref\" title=\"model-answers/12-DATABASES/38-query-suddenly-slow\">query-suddenly-slow</span>.</p>\n<p>Fix layer: <em>statistics</em> first, then <em>indexes</em>, then <em>query shape</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;The cost went from 9,000 to 1,200, so it&#39;s seven times faster.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Cost is the planner's estimate in its own units, not time.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Cost</th>\n<th>Actual time</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>From</strong></td>\n<td><code>EXPLAIN</code></td>\n<td><code>EXPLAIN ANALYZE</code></td>\n</tr>\n<tr>\n<td><strong>Is</strong></td>\n<td>a model's guess</td>\n<td>a measurement</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A node shows &quot;actual rows=40 loops=2500&quot;. How many rows did it produce?",
+        "tag": "edge",
+        "html": "<p><strong>100,000.</strong></p>\n<pre><code class=\"language-text\">rows per loop × loops = 40 × 2,500 = 100,000\n</code></pre>\n<p>The node is the inner side of a nested loop that ran 2,500 times.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Is a sequential scan always a problem?",
+        "tag": "probe",
+        "html": "<p><strong>No. It's right for small tables and for predicates that match much of the table.</strong></p>\n<ul>\n<li><strong>Worry</strong> when it reads a million rows to return ten.</li>\n<li><strong>Don't</strong> when it returns most of what it reads.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you get the plan of a query that was slow last night?",
+        "tag": "probe",
+        "html": "<p><strong>It has to be captured when it happens.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Tool</th>\n<th>Captures</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Automatic plan logging for slow statements</strong> (PostgreSQL <code>auto_explain</code>)</td>\n<td>the actual plan at the time</td>\n</tr>\n<tr>\n<td><strong>Query statistics views</strong></td>\n<td>which statements, how often, how long</td>\n</tr>\n<tr>\n<td><strong>Re-running it today</strong></td>\n<td>today's plan, which may differ</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "The plan is right in staging and wrong in production. Why?",
+        "tag": "senior",
+        "html": "<p><strong>Different data, so different statistics, so a different plan.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Difference</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Volume</strong></td>\n<td>a scan that's fine on 10,000 rows</td>\n</tr>\n<tr>\n<td><strong>Skew</strong></td>\n<td>one tenant with half the rows</td>\n</tr>\n<tr>\n<td><strong>Parameters</strong></td>\n<td>a generic plan cached for a typical value</td>\n</tr>\n</tbody></table>\n<p>Test plans on production-shaped data, with the parameter values that hurt.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I read it top to bottom.&quot; — execution starts at the leaves.",
+      "&quot;The cost is the time.&quot; — it&#39;s a unit for comparison.",
+      "&quot;Sequential scans are bad.&quot; — sometimes they&#39;re the best plan.",
+      "&quot;I ran <code>EXPLAIN</code>.&quot; — with <code>ANALYZE</code>, or you saw only estimates."
+    ],
+    "links": [
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "Slow Query Debugging",
+        "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+      },
+      {
+        "label": "query suddenly slow",
+        "target": "model-answers/12-DATABASES/38-query-suddenly-slow"
+      },
+      {
+        "label": "join algorithms",
+        "target": "model-answers/12-DATABASES/26-join-algorithms"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;the plan, and the two&lt;br/&gt;commands\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;read from the inside out\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;estimates against&lt;br/&gt;actuals\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;the expensive shapes\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;statistics and the&lt;br/&gt;planner\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   },
   "databases-q22": {
     "type": "concept",
@@ -2030,6 +2339,719 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;levels are defined by&lt;br/&gt;what they allow\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;the four levels\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;lost updates and write&lt;br/&gt;skew\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;protect the invariant,&lt;br/&gt;not the whole workload\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;MVCC\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q23": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you know readers see a snapshot built from row versions, and that old versions have to be cleaned up by something.",
+    "trap": "&quot;MVCC means no locks&quot;. Writers still lock rows against other writers.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"MVCC is multi-version concurrency control. An update doesn't overwrite a row in place for everyone. The database keeps the old version as well, so each transaction reads a consistent snapshot.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"Every row version is stamped with the transaction that created it and the one that replaced it. A reader has a snapshot: the set of transactions that had committed when it started. It sees the newest version that its snapshot allows, and ignores the rest.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"The benefit is that readers don't block writers and writers don't block readers. The cost is dead versions. Someone has to remove them: vacuum in PostgreSQL, purge of the undo log in InnoDB. And a long-running transaction pins old versions, so cleanup can't proceed and the table bloats.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"So I keep transactions short, alert on the oldest open transaction, and make sure vacuum keeps up on the tables with heavy updates.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"The isolation level decides when the snapshot is taken: per statement at read committed, once per transaction at repeatable read.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Versions buy concurrency; cleanup is the bill.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "several versions of one row",
+        "html": "<p><strong>\"An update adds a version; it doesn't replace one.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Lock-based reads</th>\n<th>MVCC</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A reader meets a row being updated</strong></td>\n<td>waits for the writer</td>\n<td>reads the last committed version</td>\n</tr>\n<tr>\n<td><strong>A writer meets a row being read</strong></td>\n<td>waits for the reader</td>\n<td>proceeds</td>\n</tr>\n<tr>\n<td><strong>Two writers on one row</strong></td>\n<td>one waits</td>\n<td>one waits (still a lock)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "versions and a snapshot",
+        "html": "<p><strong>\"One row, three versions, and who sees which.\"</strong> PostgreSQL-style: each version records its creating and deleting transaction.</p>\n<table>\n<thead>\n<tr>\n<th>Version</th>\n<th>balance</th>\n<th>created by</th>\n<th>replaced by</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>v1</td>\n<td>100</td>\n<td>txn 90 (committed)</td>\n<td>txn 105</td>\n</tr>\n<tr>\n<td>v2</td>\n<td>70</td>\n<td>txn 105 (committed)</td>\n<td>txn 112</td>\n</tr>\n<tr>\n<td>v3</td>\n<td>40</td>\n<td>txn 112 (<strong>in progress</strong>)</td>\n<td>—</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Reader</th>\n<th>Its snapshot</th>\n<th>Sees</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Started before 105 committed</strong></td>\n<td>90 visible</td>\n<td><strong>100</strong></td>\n<td>105 isn't in its snapshot</td>\n</tr>\n<tr>\n<td><strong>Started after 105 committed</strong></td>\n<td>90, 105 visible</td>\n<td><strong>70</strong></td>\n<td>112 hasn't committed</td>\n</tr>\n<tr>\n<td><strong>Transaction 112 itself</strong></td>\n<td>its own writes</td>\n<td><strong>40</strong></td>\n<td>you see your own changes</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Visibility rule:</strong></span><span class=\"flow-step\">created by a transaction in my snapshot ─and─ not replaced by one in my snapshot</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">visible</span></div>\n<table>\n<thead>\n<tr>\n<th>Engine</th>\n<th>Where old versions live</th>\n<th>Cleaned by</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>PostgreSQL</strong></td>\n<td>in the table itself, as dead tuples</td>\n<td>vacuum / autovacuum</td>\n</tr>\n<tr>\n<td><strong>MySQL InnoDB</strong></td>\n<td>in the undo log; the row is updated in place</td>\n<td>the purge thread</td>\n</tr>\n<tr>\n<td><strong>Oracle</strong></td>\n<td>undo segments</td>\n<td>undo retention</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version in use.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "dead versions and the long transaction",
+        "html": "<p><strong>\"Cleanup can only remove versions that no snapshot can still see.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Time</th>\n<th>Session A (a report)</th>\n<th>Session B (the application)</th>\n<th>Dead versions</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><code>BEGIN</code>; reads at repeatable read</td>\n<td></td>\n<td>0</td>\n</tr>\n<tr>\n<td>2</td>\n<td>(still open, idle)</td>\n<td>updates 1 million rows</td>\n<td>1 million, <strong>pinned by A</strong></td>\n</tr>\n<tr>\n<td>3</td>\n<td>(still open)</td>\n<td>updates them again</td>\n<td>2 million, pinned</td>\n</tr>\n<tr>\n<td>4</td>\n<td>vacuum runs</td>\n<td></td>\n<td><strong>can remove nothing</strong></td>\n</tr>\n<tr>\n<td>5</td>\n<td><code>COMMIT</code></td>\n<td></td>\n<td>removable at the next vacuum</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Cost</th>\n<th>Symptom</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Bloat</strong></td>\n<td>tables and indexes grow; scans read dead rows</td>\n</tr>\n<tr>\n<td><strong>Cleanup load</strong></td>\n<td>vacuum I/O competing with queries</td>\n</tr>\n<tr>\n<td><strong>Long transactions</strong></td>\n<td>\"snapshot too old\" (Oracle), undo growth (InnoDB), bloat (PostgreSQL)</td>\n</tr>\n<tr>\n<td><strong>Transaction id wraparound</strong> (PostgreSQL)</td>\n<td>forced, aggressive vacuum if ids aren't frozen in time</td>\n</tr>\n<tr>\n<td><strong>Write skew</strong></td>\n<td>a snapshot can't see a concurrent change it never conflicts with</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "short transactions, watched cleanup",
+        "html": "<p><strong>\"I manage the two things MVCC depends on.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Practice</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Short transactions; no user think-time inside one</strong></td>\n<td>nothing pins old versions</td>\n</tr>\n<tr>\n<td><strong>A timeout on idle-in-transaction sessions</strong></td>\n<td>a forgotten <code>BEGIN</code> can't block cleanup for hours</td>\n</tr>\n<tr>\n<td><strong>Long reports on a replica or a snapshot export</strong></td>\n<td>their snapshot doesn't hold back the primary</td>\n</tr>\n<tr>\n<td><strong>Autovacuum tuned per hot table</strong></td>\n<td>the default thresholds are too lazy for large, busy tables</td>\n</tr>\n<tr>\n<td><strong>Batch large updates</strong></td>\n<td>each batch's versions become removable quickly</td>\n</tr>\n</tbody></table>\n<p>Measure: age of the oldest open transaction, dead-tuple counts and bloat per table, vacuum runs and duration, undo history length (InnoDB).</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "snapshots and isolation levels",
+        "html": "<p><strong>\"MVCC is the mechanism; the isolation level picks the snapshot.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Isolation level</th>\n<th>Snapshot taken</th>\n<th>So</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Read committed</strong></td>\n<td>at the start of each statement</td>\n<td>two statements can see different data</td>\n</tr>\n<tr>\n<td><strong>Repeatable read / snapshot</strong></td>\n<td>once, at the first statement</td>\n<td>the whole transaction sees one moment</td>\n</tr>\n<tr>\n<td><strong>Serializable</strong> (PostgreSQL SSI)</td>\n<td>one snapshot + tracking of read/write dependencies</td>\n<td>aborts a transaction that would break serial order</td>\n</tr>\n</tbody></table>\n<p>The anomalies each level allows are in <span class=\"vault-ref\" title=\"model-answers/12-DATABASES/22-isolation-levels\">isolation-levels</span>.</p>\n<p>Fix layer: <em>transaction length</em> in the application; <em>cleanup settings</em> in the database.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;With MVCC there are no locks.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Readers don't lock. Writers still do.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Pair</th>\n<th>Blocks?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Reader and writer</strong></td>\n<td>no</td>\n</tr>\n<tr>\n<td><strong>Writer and writer, same row</strong></td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong>Schema change and anything</strong></td>\n<td>yes</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A session ran  yesterday and never committed. Updates continue. What happens to the table?",
+        "tag": "BEGIN",
+        "html": "<p><strong>It grows, and vacuum can't shrink it.</strong></p>\n<pre><code class=\"language-text\">oldest snapshot = yesterday\nevery version newer than that might still be needed by it → none can be removed\ndead versions accumulate until that session ends\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why does a DELETE not free space straight away?",
+        "tag": "probe",
+        "html": "<p><strong>It marks the version dead; other snapshots may still need it.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Lifecycle:</strong></span><span class=\"flow-step\">live</span><span class=\"flow-arrow\" data-label=\"delete\"></span><span class=\"flow-step\">dead but visible to old snapshots</span><span class=\"flow-arrow\" data-label=\"no snapshot needs it\"></span><span class=\"flow-step\">removable</span><span class=\"flow-arrow\" data-label=\"vacuum\"></span><span class=\"flow-step\">space reusable</span></div>"
+      },
+      {
+        "number": 4,
+        "question": "How does InnoDB differ from PostgreSQL here?",
+        "tag": "probe",
+        "html": "<p><strong>Where the old versions are kept.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>PostgreSQL</th>\n<th>InnoDB</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Update writes</strong></td>\n<td>a new tuple in the table</td>\n<td>the row in place + an undo record</td>\n</tr>\n<tr>\n<td><strong>Old readers</strong></td>\n<td>read the old tuple</td>\n<td>rebuild the old version from undo</td>\n</tr>\n<tr>\n<td><strong>Bloat shows as</strong></td>\n<td>table and index size</td>\n<td>undo log (history list) length</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "How would you detect the long-transaction problem before it hurts?",
+        "tag": "senior",
+        "html": "<p><strong>Alert on the cause, not the symptom.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Alert on</th>\n<th>Catches</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Age of the oldest transaction</strong></td>\n<td>the session pinning versions</td>\n</tr>\n<tr>\n<td><strong>Sessions idle in a transaction</strong></td>\n<td>application bugs and forgotten consoles</td>\n</tr>\n<tr>\n<td><strong>Dead-tuple ratio per table</strong></td>\n<td>cleanup falling behind</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;MVCC means no locking.&quot; — writers lock.",
+      "&quot;Deleted rows are gone.&quot; — they&#39;re dead versions until cleanup.",
+      "&quot;Vacuum is a maintenance nicety.&quot; — it&#39;s part of how MVCC works.",
+      "&quot;A long read is harmless.&quot; — it pins every newer dead version."
+    ],
+    "links": [
+      {
+        "label": "MVCC",
+        "target": "11-dbms/Sql/03-Transactions/MVCC"
+      },
+      {
+        "label": "Isolation Levels",
+        "target": "11-dbms/Sql/03-Transactions/Isolation-Levels"
+      },
+      {
+        "label": "Locks and Deadlocks",
+        "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+      },
+      {
+        "label": "isolation levels",
+        "target": "model-answers/12-DATABASES/22-isolation-levels"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;several versions of one&lt;br/&gt;row\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;versions and a snapshot\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;dead versions and the&lt;br/&gt;long transaction\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;short transactions,&lt;br/&gt;watched cleanup\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;snapshots and isolation&lt;br/&gt;levels\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q24": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "the cycle (two transactions, two locks, opposite order), that the database resolves it by killing one, and that consistent lock ordering prevents it.",
+    "trap": "confusing a deadlock with a lock wait, or &quot;fixing&quot; it by raising a timeout.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"A deadlock is a cycle of waiting. Transaction one holds a lock that two wants, and two holds a lock that one wants. Neither can proceed, and waiting longer won't help.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"The classic case is two transfers in opposite directions. One locks account A then asks for B; the other locks B then asks for A. The database keeps a wait-for graph, finds the cycle, and aborts one transaction as the victim.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It also comes from less obvious places: a batch updating rows in a different order from the application, an unindexed foreign key that locks more than expected, and gap locks in InnoDB.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"Prevention is ordering: every code path takes locks in the same order, for example by ascending primary key. I keep transactions short, and I always retry the victim, because the database will sometimes pick one anyway.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"A lock wait is different: one transaction is simply slow and the other is queued behind it. That ends on its own; a deadlock doesn't.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Same lock order everywhere, short transactions, retry the victim.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "a cycle of waiting",
+        "html": "<p><strong>\"Four conditions must all hold; break one and there's no deadlock.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Condition</th>\n<th>In a database</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Mutual exclusion</strong></td>\n<td>a row lock is held by one writer</td>\n</tr>\n<tr>\n<td><strong>Hold and wait</strong></td>\n<td>a transaction keeps its locks while asking for more</td>\n</tr>\n<tr>\n<td><strong>No pre-emption</strong></td>\n<td>locks are released only at commit or rollback</td>\n</tr>\n<tr>\n<td><strong>Circular wait</strong></td>\n<td>T1 waits for T2, T2 waits for T1 ← <strong>the one I can design out</strong></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "opposite order, then a victim",
+        "html": "<p><strong>\"Two transfers, opposite directions.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Time</th>\n<th>T1: transfer A → B</th>\n<th>T2: transfer B → A</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><code>UPDATE accounts … WHERE id = 'A'</code> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> A</td>\n<td></td>\n</tr>\n<tr>\n<td>2</td>\n<td></td>\n<td><code>UPDATE accounts … WHERE id = 'B'</code> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> B</td>\n</tr>\n<tr>\n<td>3</td>\n<td><code>UPDATE … WHERE id = 'B'</code> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2zm10 14.5V20H8v-3.5l4-4zm-4-5-4-4V4h8v3.5z\"></path></svg> waits for T2</td>\n<td></td>\n</tr>\n<tr>\n<td><strong>4</strong></td>\n<td></td>\n<td><strong><code>UPDATE … WHERE id = 'A'</code> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2zm10 14.5V20H8v-3.5l4-4zm-4-5-4-4V4h8v3.5z\"></path></svg> waits for T1</strong></td>\n</tr>\n<tr>\n<td>5</td>\n<td></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> deadlock detected: T2 is rolled back</td>\n</tr>\n<tr>\n<td>6</td>\n<td>gets <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> B, commits</td>\n<td>the application retries T2</td>\n</tr>\n</tbody></table>\n<figure><div class=\"mermaid\">flowchart LR\n    T1([\"T1&lt;br/&gt;holds A\"]):::step\n    T2([\"T2&lt;br/&gt;holds B\"]):::bad\n    T1 -- \"waits for B\" --&gt; T2\n    T2 -- \"waits for A\" --&gt; T1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>\n<p>The detector looks for a cycle in the wait-for graph. A sketch of that check:</p>\n<pre><code class=\"language-python\">def has_cycle(waits, start):\n    seen, t = [], start\n    while t in waits and t not in seen:\n        seen.append(t); t = waits[t]\n    return t in seen\nprint(has_cycle({\"T1\": \"T2\", \"T2\": \"T1\"}, \"T1\"))   # opposite order\nprint(has_cycle({\"T1\": \"T2\"}, \"T1\"))               # same order: a queue\n# → True\n# → False\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "the less obvious sources",
+        "html": "<p><strong>\"Most production deadlocks aren't the textbook transfer.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Source</th>\n<th>Why it deadlocks</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Two code paths touching the same tables in different orders</strong></td>\n<td>order A → B in the API, B → A in a batch job</td>\n</tr>\n<tr>\n<td><strong>Bulk <code>UPDATE … WHERE id IN (…)</code> with unordered ids</strong></td>\n<td>two batches lock overlapping rows in different orders</td>\n</tr>\n<tr>\n<td><strong>An unindexed foreign key</strong></td>\n<td>a parent delete or update scans and locks far more child rows than intended</td>\n</tr>\n<tr>\n<td><strong>Gap locks</strong> (InnoDB, repeatable read)</td>\n<td>two inserts into the same gap each wait for the other's gap lock</td>\n</tr>\n<tr>\n<td><strong>Lock upgrade</strong></td>\n<td>two transactions hold a shared lock on a row and both ask for exclusive</td>\n</tr>\n<tr>\n<td><strong>Long transactions</strong></td>\n<td>locks held longer means more chance to overlap</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "order, shorten, retry",
+        "html": "<p><strong>\"With one lock order there's a queue, never a cycle.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Time</th>\n<th>T1: transfer A → B</th>\n<th>T2: transfer B → A</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>locks the lower id first: <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> A</td>\n<td></td>\n</tr>\n<tr>\n<td>2</td>\n<td></td>\n<td>locks the lower id first: <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2zm10 14.5V20H8v-3.5l4-4zm-4-5-4-4V4h8v3.5z\"></path></svg> waits for A</td>\n</tr>\n<tr>\n<td>3</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> B, updates both, commits</td>\n<td></td>\n</tr>\n<tr>\n<td>4</td>\n<td></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> A, <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2M9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9zm9 14H6V10h12zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2\"></path></svg> B, updates both, commits</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Practice</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A fixed lock order</strong> (ascending primary key; parent before child)</td>\n<td>no circular wait</td>\n</tr>\n<tr>\n<td><strong><code>SELECT … FOR UPDATE … ORDER BY id</code></strong> up front</td>\n<td>all locks taken in order, before any work</td>\n</tr>\n<tr>\n<td><strong>Short transactions; no remote calls inside</strong></td>\n<td>less overlap</td>\n</tr>\n<tr>\n<td><strong>Sort the rows of a batch by key</strong></td>\n<td>concurrent batches don't cross</td>\n</tr>\n<tr>\n<td><strong>Index foreign keys and <code>WHERE</code> columns of updates</strong></td>\n<td>fewer rows locked</td>\n</tr>\n<tr>\n<td><strong>Retry on the deadlock error</strong> (PostgreSQL <code>40P01</code>, MySQL 1213)</td>\n<td>the victim succeeds the second time</td>\n</tr>\n</tbody></table>\n<p>Measure: deadlocks per minute, the deadlock log (it names both statements), lock-wait time, retries per transaction.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "lock waits and timeouts",
+        "html": "<p><strong>\"Three things that look alike in an error log.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Deadlock</th>\n<th>Lock wait</th>\n<th>Lock timeout</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Shape</strong></td>\n<td>a cycle</td>\n<td>a queue behind a slow holder</td>\n<td>a wait that exceeded the limit</td>\n</tr>\n<tr>\n<td><strong>Ends by itself?</strong></td>\n<td>no</td>\n<td>yes, when the holder commits</td>\n<td>cut off by the timeout</td>\n</tr>\n<tr>\n<td><strong>Database action</strong></td>\n<td>aborts a victim at once</td>\n<td>none</td>\n<td>errors the waiter</td>\n</tr>\n<tr>\n<td><strong>Fix</strong></td>\n<td>lock ordering</td>\n<td>shorten the holder's transaction</td>\n<td>the same; the timeout is a guard</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>transaction design</em> in the application; <em>indexes</em> so locks stay narrow.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Increase the lock timeout so they stop failing.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>A deadlock isn't a timeout. Neither side will ever finish.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Setting</th>\n<th>Effect on a deadlock</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A longer lock timeout</strong></td>\n<td>none: the detector aborts a victim first</td>\n</tr>\n<tr>\n<td><strong>Disabling detection</strong></td>\n<td>both wait until the timeout, then fail anyway</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 Both transfers lock accounts in ascending id order. T1 moves A → B, T2 moves B → A, at the same instant. What happens?",
+        "tag": "edge",
+        "html": "<p><strong>T2 waits for T1, then runs. No deadlock.</strong></p>\n<pre><code class=\"language-text\">T1: lock A ✅ → lock B ✅ → commit\nT2: lock A ⏳ (T1 holds it) → after T1 commits: lock A ✅ → lock B ✅ → commit\nwait-for graph: T2 → T1 only      ← no cycle\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "How does the database choose the victim?",
+        "tag": "probe",
+        "html": "<p><strong>By engine-specific rules, roughly \"the cheapest to roll back\".</strong></p>\n<ul>\n<li><strong>InnoDB:</strong> the transaction that has modified the fewest rows.</li>\n<li><strong>PostgreSQL:</strong> the one whose wait triggered the check.</li>\n<li><strong>Either way:</strong> the application must be ready to be the victim.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "Is it safe to retry automatically?",
+        "tag": "probe",
+        "html": "<p><strong>Yes, if the whole transaction is retried and its side effects are inside it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Safe</th>\n<th>Not safe</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Re-run the entire transaction from the start</strong></td>\n<td>re-run only the failed statement</td>\n</tr>\n<tr>\n<td><strong>Side effects are database writes</strong></td>\n<td>an email or a payment call was made mid-transaction</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Deadlocks jumped after yesterday&#39;s release. First three steps?",
+        "tag": "senior",
+        "html": "<p><strong>Read the deadlock report, find the new lock order, fix the order.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Steps:</strong></span><span class=\"flow-step\">the deadlock log names both statements</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">find which one the release added or reordered</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">align its lock order with the existing path, or add the missing index</span></div>\n<p>Recall Q43 covers this as a production diagnosis.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Raise the timeout.&quot; — a cycle doesn&#39;t time out its way to success.",
+      "&quot;Deadlocks mean the database is broken.&quot; — they&#39;re a normal outcome to handle.",
+      "&quot;We don&#39;t need retries.&quot; — the detector will pick a victim.",
+      "&quot;Use a table lock.&quot; — it trades deadlocks for no concurrency."
+    ],
+    "links": [
+      {
+        "label": "Locks and Deadlocks",
+        "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+      },
+      {
+        "label": "Isolation Levels",
+        "target": "11-dbms/Sql/03-Transactions/Isolation-Levels"
+      },
+      {
+        "label": "ACID",
+        "target": "11-dbms/Sql/03-Transactions/ACID"
+      },
+      {
+        "label": "isolation levels",
+        "target": "model-answers/12-DATABASES/22-isolation-levels"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;a cycle of waiting\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;opposite order, then a&lt;br/&gt;victim\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;the less obvious sources\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;order, shorten, retry\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;lock waits and timeouts\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q25": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that durability comes from an append-only log flushed at commit, and that the same log drives recovery, replication and CDC.",
+    "trap": "&quot;commit writes the data to the table files&quot;. It doesn&#39;t; it writes the log.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"The write-ahead log is an append-only record of every change. The rule is in the name: a change is written to the log, and the log is flushed to disk, before the change is allowed to reach the data files.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"On commit, the database flushes the log records for that transaction and then acknowledges. The table pages are changed only in memory and written out later, in the background, at a checkpoint. After a crash, recovery replays the log from the last checkpoint: committed changes are redone, uncommitted ones are discarded.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It only holds if the flush is real. If the fsync is turned off, or the disk lies about it, a committed transaction can be lost. And the log has to be kept until it's no longer needed, so a stuck replica or replication slot can fill the disk.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"In practice I leave synchronous commit on for anything that matters, put the log on fast storage, and monitor how much log is being retained.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"The same log is what replicas replay, what point-in-time recovery rolls forward, and what change data capture reads.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"One sequential log gives durability, crash recovery, replication and CDC.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "log first, data files later",
+        "html": "<p><strong>\"Two places a change can be; only one has to be durable at commit.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>The log</th>\n<th>The data files</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Write pattern</strong></td>\n<td>sequential append</td>\n<td>random page writes</td>\n</tr>\n<tr>\n<td><strong>Flushed</strong></td>\n<td>at every commit</td>\n<td>later, at checkpoints</td>\n</tr>\n<tr>\n<td><strong>If lost in a crash</strong></td>\n<td>committed work is lost</td>\n<td>nothing: rebuilt from the log</td>\n</tr>\n</tbody></table>\n<p>Why it's fast: one sequential flush covers many random page changes, and several commits can share one flush (group commit).</p>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "commit, checkpoint, recover",
+        "html": "<p><strong>\"The path of one commit, and what a crash leaves behind.\"</strong></p>\n<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant C as Client\n    participant M as Memory pages\n    participant L as Log on disk\n    participant D as Data files\n    C-&gt;&gt;M: UPDATE, page changed\n    C-&gt;&gt;L: COMMIT, append + fsync\n    L--&gt;&gt;C: acknowledged\n    Note over M,D: crash here loses nothing\n    M-&gt;&gt;D: checkpoint writes pages\n    Note over L: older log can be recycled\n</div></figure>\n<p>A sketch of redo recovery: two transactions, one committed, then a crash before any page reached the data files.</p>\n<pre><code class=\"language-python\">log, disk = [], {\"A\": 100, \"B\": 50}             # disk = data files\ndef write(txn, key, val): log.append((txn, key, val))   # log first\ndef commit(txn): log.append((txn, \"COMMIT\", None))      # fsync here\nwrite(1, \"A\", 70); write(1, \"B\", 80); commit(1)\nwrite(2, \"A\", 0)                                 # no commit, then crash\ncommitted = {t for t, k, _ in log if k == \"COMMIT\"}\nfor t, k, v in log:                              # recovery: replay the log\n    if k != \"COMMIT\" and t in committed:\n        disk[k] = v                              # redo committed only\nprint(disk)\n# → {'A': 70, 'B': 80}\n</code></pre>\n<p>Transaction 2's change to A never appears: it had no commit record.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "a flush that isn&#39;t, and a log that grows",
+        "html": "<p><strong>\"The guarantee is exactly as strong as the fsync.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Cause</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A committed transaction is lost</strong></td>\n<td><code>fsync</code> disabled, or asynchronous commit, or a disk cache that acknowledges early</td>\n<td>keep sync on; storage that honours flushes</td>\n</tr>\n<tr>\n<td><strong>The disk fills with log</strong></td>\n<td>a replica or a replication slot that stopped consuming; a failing archive command</td>\n<td>alert on retained log size</td>\n</tr>\n<tr>\n<td><strong>Long recovery after a crash</strong></td>\n<td>checkpoints too far apart</td>\n<td>bound the checkpoint interval</td>\n</tr>\n<tr>\n<td><strong>I/O spikes</strong></td>\n<td>a checkpoint writing everything at once</td>\n<td>spread checkpoints out</td>\n</tr>\n<tr>\n<td><strong>A torn page</strong> (half-written at the crash)</td>\n<td>a partial page write</td>\n<td>full-page images in the log (PostgreSQL), doublewrite buffer (InnoDB)</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Setting</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Synchronous commit</strong></td>\n<td>durable; each commit waits for a flush</td>\n</tr>\n<tr>\n<td><strong>Asynchronous commit</strong></td>\n<td>faster; a crash can lose the last fraction of a second of commits, without corruption</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "what I set and watch",
+        "html": "<p><strong>\"Three decisions and three numbers.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Decision</th>\n<th>Default I'd take</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Sync or async commit</strong></td>\n<td>sync for money and orders; async only for data I can lose or replay</td>\n</tr>\n<tr>\n<td><strong>Where the log lives</strong></td>\n<td>fast, separate storage with a battery- or capacitor-backed cache</td>\n</tr>\n<tr>\n<td><strong>Archiving</strong></td>\n<td>ship the log off the machine continuously: it's the basis of point-in-time recovery</td>\n</tr>\n</tbody></table>\n<p>Measure: log generated per second, retained log size (per replication slot), commit latency (it is mostly the flush), checkpoint duration.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "one log, four uses",
+        "html": "<p><strong>\"Everything that needs 'the changes, in order' reads the same log.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Use</th>\n<th>How the log serves it</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Crash recovery</strong></td>\n<td>replay from the last checkpoint</td>\n</tr>\n<tr>\n<td><strong>Replication</strong></td>\n<td>replicas receive and replay the log stream</td>\n</tr>\n<tr>\n<td><strong>Point-in-time recovery</strong></td>\n<td>a base backup + archived log, replayed to a chosen moment</td>\n</tr>\n<tr>\n<td><strong>Change data capture</strong></td>\n<td>a decoder turns log records into row-change events</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Engine</th>\n<th>Name</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>PostgreSQL</strong></td>\n<td>WAL</td>\n</tr>\n<tr>\n<td><strong>MySQL InnoDB</strong></td>\n<td>redo log (crash recovery) + binlog (replication, CDC)</td>\n</tr>\n<tr>\n<td><strong>SQLite</strong></td>\n<td>WAL mode, or a rollback journal</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>durability settings</em> and <em>storage</em>; the application chooses sync or async per workload.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;COMMIT writes the changed rows to the table file.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>It flushes the log. The table pages follow later.</strong></p>\n<table>\n<thead>\n<tr>\n<th>At commit</th>\n<th>On disk</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Log records</strong></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> flushed</td>\n</tr>\n<tr>\n<td><strong>Table and index pages</strong></td>\n<td>still only in memory, possibly for minutes</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The server loses power one millisecond after acknowledging a commit. No checkpoint has run. Is the change lost?",
+        "tag": "edge",
+        "html": "<p><strong>No.</strong></p>\n<pre><code class=\"language-text\">commit acknowledged ⇒ its log records were fsynced\nrestart → recovery replays the log from the last checkpoint → the change is redone\n</code></pre>\n<p>It would be lost only if the flush was skipped (async commit, fsync off, a lying disk).</p>"
+      },
+      {
+        "number": 3,
+        "question": "What is a checkpoint for?",
+        "tag": "probe",
+        "html": "<p><strong>It bounds recovery time and lets old log be recycled.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Checkpoint:</strong></span><span class=\"flow-step\">write all dirty pages to the data files</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">record the log position</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">log before it is no longer needed for crash recovery</span></div>"
+      },
+      {
+        "number": 4,
+        "question": "When is asynchronous commit acceptable?",
+        "tag": "probe",
+        "html": "<p><strong>When losing the last moment of commits is tolerable.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Fine</th>\n<th>Not fine</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Click streams, metrics, caches that can be rebuilt</strong></td>\n<td>payments, orders, anything acknowledged to a user as final</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "The primary&#39;s disk is filling with log files. What do you check?",
+        "tag": "senior",
+        "html": "<p><strong>Who is making the database keep them.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Check</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>An inactive replication slot</strong></td>\n<td>drop it, or repair its consumer</td>\n</tr>\n<tr>\n<td><strong>A replica far behind</strong></td>\n<td>fix the lag, or rebuild the replica</td>\n</tr>\n<tr>\n<td><strong>A failing archive command</strong></td>\n<td>repair archiving; log is kept until it succeeds</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Commit writes the table.&quot; — it writes the log.",
+      "&quot;Turn off fsync for speed.&quot; — that removes durability.",
+      "&quot;The log is just for crashes.&quot; — replicas, recovery and CDC read it too.",
+      "&quot;Checkpoints make commits durable.&quot; — the log flush does."
+    ],
+    "links": [
+      {
+        "label": "ACID",
+        "target": "11-dbms/Sql/03-Transactions/ACID"
+      },
+      {
+        "label": "Replication",
+        "target": "11-dbms/Sql/05-Scaling/Replication"
+      },
+      {
+        "label": "CDC and Data Pipelines",
+        "target": "11-dbms/Sql/06-Data-Systems/CDC-and-Data-Pipelines"
+      },
+      {
+        "label": "order and event outbox",
+        "target": "model-answers/12-DATABASES/49-order-and-event-outbox"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;log first, data files&lt;br/&gt;later\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;commit, checkpoint,&lt;br/&gt;recover\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;a flush that isn't, and&lt;br/&gt;a log that grows\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;what I set and watch\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;one log, four uses\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q26": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "the cost shape of each algorithm, what input each needs, and that a wrong row estimate is what makes the planner pick badly.",
+    "trap": "&quot;nested loops are slow&quot;. With an index on the inner side and few outer rows, it&#39;s the fastest of the three.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"These are the three ways a database physically joins two inputs. The SQL says what to join; the planner picks how, from its row estimates.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"A nested loop takes each row of the outer input and looks up matches in the inner one. A hash join builds a hash table on the smaller input, then probes it with the larger. A merge join walks two sorted inputs in step.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"Nested loop is best when the outer side is small and the inner side has an index. Hash join is best for large, unsorted inputs with an equality condition, as long as the hash table fits in memory. Merge join is best when both sides are already sorted, for example from indexes.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"So when a join is slow, I look at the estimates. The usual failure is a nested loop chosen for an expected ten rows that turned out to be half a million. I fix the estimate or the index and let the planner choose again.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"The same estimates also decide the join order, which often matters more than the algorithm.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Few rows and an index: loop. Big and unsorted: hash. Already sorted: merge.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "logical join, physical algorithm",
+        "html": "<p><strong>\"The same <code>JOIN</code> can run three ways.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>You write</th>\n<th>The planner decides</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>which tables, on which condition</strong></td>\n<td>the algorithm for each join</td>\n</tr>\n<tr>\n<td><strong>inner, left, semi, anti</strong></td>\n<td>the order of the joins</td>\n</tr>\n<tr>\n<td></td>\n<td>which input is outer or build side</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "three ways to find matches",
+        "html": "<p><strong>\"What each one does with inputs of n and m rows.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Nested loop</th>\n<th>Hash join</th>\n<th>Merge join</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Steps</strong></td>\n<td>for each outer row, look up the inner side</td>\n<td>build a hash table on the smaller input; probe with the other</td>\n<td>walk two sorted inputs with two pointers</td>\n</tr>\n<tr>\n<td><strong>Cost shape</strong></td>\n<td>n × m without an index; n × log m with one</td>\n<td>n + m</td>\n<td>n + m, plus sorts if not sorted</td>\n</tr>\n<tr>\n<td><strong>Needs</strong></td>\n<td>an index on the inner side to be good</td>\n<td>memory for the hash table; an equality condition</td>\n<td>both inputs sorted on the join key</td>\n</tr>\n<tr>\n<td><strong>Conditions</strong></td>\n<td>any (<code>=</code>, <code>&lt;</code>, ranges)</td>\n<td><code>=</code> only</td>\n<td><code>=</code> (and some range forms)</td>\n</tr>\n<tr>\n<td><strong>First row arrives</strong></td>\n<td>immediately</td>\n<td>after the build</td>\n<td>after any sort</td>\n</tr>\n</tbody></table>\n<p>A count of comparisons for 1,000 × 1,000 rows, sketched in Python:</p>\n<pre><code class=\"language-python\">import random\nrandom.seed(1)\na = random.sample(range(5000), 1000); b = random.sample(range(5000), 1000)\nnested = sum(1 for x in a for y in b)            # every pair\nhashed = len(b) + len(a)                          # build + probe\nsa, sb, i, j, merged = sorted(a), sorted(b), 0, 0, 0\nwhile i &lt; len(sa) and j &lt; len(sb):                # two pointers\n    merged += 1\n    if sa[i] &lt; sb[j]: i += 1\n    elif sa[i] &gt; sb[j]: j += 1\n    else: i += 1; j += 1\nprint(nested, hashed, merged)\n# → 1000000 2000 1788\n</code></pre>\n<p>The merge count excludes the two sorts it needed first.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "when each one wins and fails",
+        "html": "<p><strong>\"Pick-when and fail-when, side by side.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Wins when</th>\n<th>Fails when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Nested loop</strong></td>\n<td>the outer side is small (tens or hundreds of rows) and the inner side has an index; <code>LIMIT</code> queries</td>\n<td>the outer side is large: one index lookup per row, millions of times</td>\n</tr>\n<tr>\n<td><strong>Hash join</strong></td>\n<td>both sides are large and unsorted; analytics</td>\n<td>the hash table exceeds memory and spills to disk in batches</td>\n</tr>\n<tr>\n<td><strong>Merge join</strong></td>\n<td>both sides arrive sorted from indexes; very large inputs</td>\n<td>the inputs need sorting first: the sorts dominate</td>\n</tr>\n</tbody></table>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;bar&quot;,&quot;title&quot;:&quot;Comparisons to join 1,000 × 1,000 rows&quot;,&quot;caption&quot;:&quot;Computed by the snippet above; the nested loop has no index, and the merge count excludes its sorts.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;algorithm&quot;},&quot;y&quot;:{&quot;label&quot;:&quot;comparisons&quot;,&quot;domain&quot;:[0,1000000]},&quot;bars&quot;:[{&quot;label&quot;:&quot;nested loop&quot;,&quot;value&quot;:1000000,&quot;tone&quot;:&quot;bad&quot;},{&quot;label&quot;:&quot;hash&quot;,&quot;value&quot;:2000},{&quot;label&quot;:&quot;merge&quot;,&quot;value&quot;:1788}]}\"></div><figcaption>Computed by the snippet above; the nested loop has no index, and the merge count excludes its sorts.</figcaption></figure>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "fix the estimate, not the algorithm",
+        "html": "<p><strong>\"A bad join choice is nearly always a bad row estimate.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>In the plan</th>\n<th>Likely cause</th>\n<th>Action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Nested loop, estimated 10 rows, actual 500,000</strong></td>\n<td>stale or missing statistics; correlated predicates</td>\n<td>analyse; extended statistics</td>\n</tr>\n<tr>\n<td><strong>Nested loop with a scan on the inner side</strong></td>\n<td>no index on the join column</td>\n<td>index the foreign key</td>\n</tr>\n<tr>\n<td><strong>Hash join with \"batches &gt; 1\" or disk usage</strong></td>\n<td>the build side didn't fit in memory</td>\n<td>filter earlier; then raise the work memory</td>\n</tr>\n<tr>\n<td><strong>A sort feeding a merge join</strong></td>\n<td>no index in join-key order</td>\n<td>an index, or let it hash</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Order:</strong></span><span class=\"flow-step\">actual plan</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">estimates against actuals at the join</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">fix statistics or the index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">plan again</span></div>\n<p>Hints or disabling an algorithm are a diagnostic, not a fix: they stop the planner adapting when the data changes.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "join order",
+        "html": "<p><strong>\"With several tables, the order can matter more than the algorithm.\"</strong></p>\n<pre><code class=\"language-text\">orders (10,000,000) ⋈ customers (100,000) ⋈ countries (200),  filter: country = 'IN'\n\ngood: filter countries → 1 row → its customers → their orders        ← small intermediate results\nbad:  orders ⋈ customers first → 10,000,000 rows → then filter       ← illustrative sizes\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>The planner</th>\n<th>Because</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Starts from the most selective input</strong></td>\n<td>intermediate results stay small</td>\n</tr>\n<tr>\n<td><strong>Searches fewer orderings beyond a dozen or so tables</strong></td>\n<td>the number of orders grows factorially</td>\n</tr>\n</tbody></table>\n<p>Engine note: PostgreSQL has all three algorithms. MySQL historically used nested loops only and added hash joins in 8.0.18. I'd confirm against the version in use.</p>\n<p>Fix layer: <em>statistics</em> and <em>indexes</em>; the planner picks the algorithm.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Nested loops are slow; force hash joins.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>For a few outer rows with an indexed inner side, the loop wins easily.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Query</th>\n<th>Best</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>One order and its five items</strong></td>\n<td>nested loop: six index lookups</td>\n</tr>\n<tr>\n<td><strong>All orders joined to all items</strong></td>\n<td>hash join</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The outer side has 500,000 rows; the inner side is looked up by index at about 4 page reads each. Roughly how many page reads?",
+        "tag": "edge",
+        "html": "<p><strong>About two million, mostly random.</strong></p>\n<pre><code class=\"language-text\">500,000 lookups × 4 pages = 2,000,000 page reads\na hash join reads each table once, sequentially\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why can&#39;t a hash join do ?",
+        "tag": "probe",
+        "html": "<p><strong>A hash table answers \"equal to\", not \"less than\".</strong></p>\n<ul>\n<li><strong>Equality:</strong> same hash, same bucket.</li>\n<li><strong>A range:</strong> matching rows are spread across every bucket.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "What happens when the hash table doesn&#39;t fit in memory?",
+        "tag": "probe",
+        "html": "<p><strong>It partitions both inputs to disk and joins them a batch at a time.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Spill:</strong></span><span class=\"flow-step\">split both sides by hash into batches</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">write to temporary files</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">join each pair of batches in memory</span></div>\n<p>Correct, and much slower. The plan shows the batch count.</p>"
+      },
+      {
+        "number": 5,
+        "question": "A join flips from hash to nested loop some mornings and goes slow. Why?",
+        "tag": "senior",
+        "html": "<p><strong>The estimate sits near the planner's crossover point.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Cause</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Statistics refreshed on a sample that looked small</strong></td>\n<td>more detailed statistics on that column</td>\n</tr>\n<tr>\n<td><strong>A parameter value that's unusually selective</strong></td>\n<td>check plan caching behaviour for it</td>\n</tr>\n<tr>\n<td><strong>Overnight load, statistics not yet updated</strong></td>\n<td>analyse after the load</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Nested loops are bad.&quot; — best for small, indexed lookups.",
+      "&quot;Hash joins are always fastest.&quot; — not when they spill, and not for the first row.",
+      "&quot;I&#39;d force the join type.&quot; — fix what the planner is told.",
+      "&quot;The SQL decides the algorithm.&quot; — the planner does."
+    ],
+    "links": [
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "Joins",
+        "target": "11-dbms/Sql/01-Query-Writing/Joins"
+      },
+      {
+        "label": "reading explain",
+        "target": "model-answers/12-DATABASES/21-reading-explain"
+      },
+      {
+        "label": "query suddenly slow",
+        "target": "model-answers/12-DATABASES/38-query-suddenly-slow"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;logical join, physical&lt;br/&gt;algorithm\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;three ways to find&lt;br/&gt;matches\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;when each one wins and&lt;br/&gt;fails\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;fix the estimate, not&lt;br/&gt;the algorithm\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;join order\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q27": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where B-tree wins",
+      "Where LSM wins",
+      "The deciding question",
+      "What I'd pick"
+    ],
+    "testing": "that you can explain the write path of each, and name the cost that each pushes somewhere else (read, write and space amplification).",
+    "trap": "&quot;LSM is faster&quot;. It&#39;s faster to write and pays for it in reads and background compaction.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Frame the axis</strong></td>\n<td>\"These are the two main on-disk storage structures. The axis is where the cost of keeping data sorted is paid: at write time, in place, or later, in the background.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Where B-tree wins</strong></td>\n<td>\"A B-tree updates pages in place. A read is one walk down the tree, so point reads and range scans are fast and predictable. That suits read-heavy and mixed transactional workloads.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where LSM wins</strong></td>\n<td>\"An LSM-tree never updates in place. Writes go to a memory table and a log, then are flushed as sorted, immutable files and merged later by compaction. Every write is sequential, so it sustains a much higher write rate and compresses well.\"</td>\n</tr>\n<tr>\n<td><strong>4 · The deciding question</strong></td>\n<td>\"The question is the workload: what's the ratio of writes to reads, and are reads by key or by range? A read in an LSM may have to check several files, so it leans on bloom filters, and compaction competes with the foreground for I/O.\"</td>\n</tr>\n<tr>\n<td><strong>5 · What I'd pick</strong></td>\n<td>\"For an ordinary transactional system I'd take the B-tree engine I already run. For ingest-heavy data, like events, metrics or time series, I'd choose an LSM store and budget for compaction.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"B-tree pays on write and reads cheaply; LSM writes cheaply and pays on read and compaction.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "three amplifications",
+        "html": "<p><strong>\"Every storage engine trades among three costs.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Amplification</th>\n<th>Meaning</th>\n<th>B-tree</th>\n<th>LSM-tree</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Write</strong></td>\n<td>bytes written to disk per byte of data</td>\n<td>a whole page per small change, plus the log</td>\n<td>rewritten at each compaction level</td>\n</tr>\n<tr>\n<td><strong>Read</strong></td>\n<td>places checked per lookup</td>\n<td>one path down the tree</td>\n<td>memtable + several sorted files</td>\n</tr>\n<tr>\n<td><strong>Space</strong></td>\n<td>disk used per byte of live data</td>\n<td>half-empty pages after splits</td>\n<td>old versions until compaction removes them</td>\n</tr>\n</tbody></table>\n<p>No design minimises all three at once.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Where B-tree wins",
+        "claim": "in-place updates, one read path",
+        "html": "<p><strong>\"The data has one home.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Write:</strong></span><span class=\"flow-step\">find the page</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">change it in memory</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">log the change</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">write the page later (a random write)</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Read:</strong></span><span class=\"flow-step\">root</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">branch</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">leaf: three or four page reads</span></div>\n<table>\n<thead>\n<tr>\n<th>Strength</th>\n<th>Because</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Predictable point reads</strong></td>\n<td>exactly one place to look</td>\n</tr>\n<tr>\n<td><strong>Fast range scans</strong></td>\n<td>leaves are linked in key order</td>\n</tr>\n<tr>\n<td><strong>Mature transactions and locking</strong></td>\n<td>a row lives at one address</td>\n</tr>\n<tr>\n<td><strong>No background merge debt</strong></td>\n<td>the work is done at write time</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Weakness</th>\n<th>Because</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Random writes</strong></td>\n<td>each update lands on a different page</td>\n</tr>\n<tr>\n<td><strong>Page splits and fragmentation</strong></td>\n<td>random keys fill pages unevenly</td>\n</tr>\n</tbody></table>\n<p>Used by: PostgreSQL, MySQL InnoDB, SQL Server, Oracle.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where LSM wins",
+        "claim": "sequential writes, merged later",
+        "html": "<p><strong>\"Append now, sort out later.\"</strong></p>\n<figure><div class=\"mermaid\">flowchart TB\n    W([\"write\"]):::ask\n    M[\"memtable (sorted, in memory)&lt;br/&gt;+ append to the log\"]:::step\n    S0[\"flush: new sorted file&lt;br/&gt;immutable, sequential write\"]:::calc\n    C[\"compaction: merge files,&lt;br/&gt;drop old versions and tombstones\"]:::bad\n    R([\"read: memtable, then files&lt;br/&gt;newest first, bloom filters skip most\"]):::ok\n    W --&gt; M --&gt; S0 --&gt; C --&gt; R\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>\n<p>A toy version: a memtable that flushes every two keys, and a read that checks newest first.</p>\n<pre><code class=\"language-python\">mem, files = {}, []\ndef put(k, v):\n    mem[k] = v\n    if len(mem) == 2:                       # flush a sorted, immutable file\n        files.insert(0, dict(sorted(mem.items()))); mem.clear()\ndef get(k):\n    if k in mem: return mem[k], 0\n    for n, f in enumerate(files, 1):        # newest file first\n        if k in f: return f[k], n\n    return None, len(files)\nfor k, v in [(\"a\", 1), (\"b\", 2), (\"a\", 3), (\"c\", 4), (\"d\", 5)]: put(k, v)\nprint(files, mem)\nprint(get(\"a\"), get(\"b\"), get(\"z\"))         # (value, files checked)\n# → [{'a': 3, 'c': 4}, {'a': 1, 'b': 2}] {'d': 5}\n# → (3, 1) (2, 2) (None, 2)\n</code></pre>\n<p>The old <code>a = 1</code> still occupies space until compaction; a missing key checks every file unless a bloom filter says \"not here\".</p>\n<p>Used by: RocksDB, Cassandra, ScyllaDB, HBase, LevelDB; MyRocks for MySQL.</p>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "the shape of the workload",
+        "html": "<p><strong>\"Four questions about the workload.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Question</th>\n<th>Points to B-tree</th>\n<th>Points to LSM</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Write rate against read rate</strong></td>\n<td>reads dominate, or balanced</td>\n<td>writes dominate</td>\n</tr>\n<tr>\n<td><strong>Reads by key or by long range</strong></td>\n<td>many range scans</td>\n<td>mostly point reads, or scans of recent data</td>\n</tr>\n<tr>\n<td><strong>Is tail latency critical?</strong></td>\n<td>yes: no compaction stalls</td>\n<td>can tolerate background I/O spikes</td>\n</tr>\n<tr>\n<td><strong>Storage cost matters at scale?</strong></td>\n<td>less</td>\n<td>yes: sorted immutable files compress well</td>\n</tr>\n<tr>\n<td><strong>Many deletes or overwrites?</strong></td>\n<td>handled in place</td>\n<td>tombstones and old versions wait for compaction</td>\n</tr>\n</tbody></table>\n<p>Measure before deciding: writes per second and bytes per write, read mix (point against range), p99 read latency under sustained write load.</p>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick",
+        "claim": "by workload, with the cost named",
+        "html": "<p><strong>\"A default, and the case for the alternative.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Workload</th>\n<th>Pick</th>\n<th>The cost I accept</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Orders, accounts, anything transactional</strong></td>\n<td>B-tree (the relational engine already in use)</td>\n<td>random write I/O</td>\n</tr>\n<tr>\n<td><strong>Events, metrics, logs, time series</strong></td>\n<td>LSM</td>\n<td>compaction to size and monitor; slower misses</td>\n</tr>\n<tr>\n<td><strong>A key-value store with huge write volume</strong></td>\n<td>LSM</td>\n<td>tuning compaction strategy to the workload</td>\n</tr>\n<tr>\n<td><strong>Unsure</strong></td>\n<td>B-tree</td>\n<td>— it's the forgiving default</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>LSM operating concern</th>\n<th>What to watch</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Compaction falling behind</strong></td>\n<td>pending compaction bytes; file count per level</td>\n</tr>\n<tr>\n<td><strong>Write stalls</strong></td>\n<td>the engine throttles writes when it can't keep up</td>\n</tr>\n<tr>\n<td><strong>Space spikes</strong></td>\n<td>compaction needs room for the merged copy</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>storage engine</em>, chosen from the <em>write-to-read ratio</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;LSM is just faster.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Faster to write; not faster to read, and the work is deferred, not removed.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>B-tree</th>\n<th>LSM</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Write</strong></td>\n<td>random</td>\n<td>sequential <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong>Point read (hit)</strong></td>\n<td>one path <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>several places</td>\n</tr>\n<tr>\n<td><strong>Background work</strong></td>\n<td>little <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n<td>compaction</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 In the toy LSM above, how many files does a read for a key that doesn&#39;t exist check?",
+        "tag": "edge",
+        "html": "<p><strong>All of them: 2.</strong></p>\n<pre><code class=\"language-text\">get(\"z\") → not in memtable → file 1: no → file 2: no → (None, 2)      ← run above\n</code></pre>\n<p>A bloom filter per file answers \"definitely not here\" from memory, so most of those checks are skipped.</p>"
+      },
+      {
+        "number": 3,
+        "question": "What does a bloom filter do here?",
+        "tag": "probe",
+        "html": "<p><strong>It lets a read skip files that can't contain the key.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Answer</th>\n<th>Meaning</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"No\"</strong></td>\n<td>certain: skip the file</td>\n</tr>\n<tr>\n<td><strong>\"Maybe\"</strong></td>\n<td>read the file; a small false-positive rate</td>\n</tr>\n</tbody></table>\n<p>It helps point lookups, not range scans.</p>"
+      },
+      {
+        "number": 4,
+        "question": "How does a delete work in an LSM-tree?",
+        "tag": "probe",
+        "html": "<p><strong>It writes a marker, a tombstone.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Delete:</strong></span><span class=\"flow-step\">write a tombstone</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">reads see the tombstone and return \"not found\"</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">compaction eventually drops the tombstone and the old value</span></div>\n<p>Many tombstones slow range scans until compaction catches up.</p>"
+      },
+      {
+        "number": 5,
+        "question": "An LSM store shows periodic latency spikes under steady load. Diagnosis?",
+        "tag": "senior",
+        "html": "<p><strong>Compaction or flush competing with the foreground.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Check</th>\n<th>Action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Pending compaction growing</strong></td>\n<td>more compaction throughput, or lower the write rate</td>\n</tr>\n<tr>\n<td><strong>Write stalls in the engine's metrics</strong></td>\n<td>tune memtable and level sizes</td>\n</tr>\n<tr>\n<td><strong>Disk saturated during merges</strong></td>\n<td>rate-limit compaction; faster storage</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;LSM is faster.&quot; — at writing.",
+      "&quot;B-trees are old.&quot; — they&#39;re the right default for transactions.",
+      "&quot;Compaction is a detail.&quot; — it&#39;s the main operating cost.",
+      "&quot;Bloom filters speed up range scans.&quot; — point lookups only."
+    ],
+    "links": [
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      },
+      {
+        "label": "SQL vs NoSQL",
+        "target": "11-dbms/Sql/06-Data-Systems/SQL-vs-NoSQL"
+      },
+      {
+        "label": "btree index",
+        "target": "model-answers/12-DATABASES/18-btree-index"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Frame the axis&lt;br/&gt;three amplifications\"]):::step\n        N2(\"2 · Where B-tree wins&lt;br/&gt;in-place updates, one&lt;br/&gt;read path\"):::ask\n        N3(\"3 · Where LSM wins&lt;br/&gt;sequential writes,&lt;br/&gt;merged later\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · The deciding&lt;br/&gt;question&lt;br/&gt;the shape of the&lt;br/&gt;workload\"):::ask\n        N5([\"5 · What I'd pick&lt;br/&gt;by workload, with the&lt;br/&gt;cost named\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q28": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you recognise it as a round-trip problem caused by lazy loading, and know more than one fix and how to detect it.",
+    "trap": "&quot;switch everything to eager loading&quot;, which swaps N+1 for loading half the database on every request.",
+    "speakTime": "~60 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"N plus one is when code runs one query to fetch a list, and then one more query for each item in that list. A hundred customers become a hundred and one queries.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"It comes from lazy loading in an ORM. The loop looks innocent: for each customer, read its orders. Each access fires a query. Every query is fast; the total isn't, because each one is a network round trip.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It's invisible in development, with ten rows and a local database. It shows up in production as a slow endpoint whose slow-query log is empty.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"The fix is to fetch in bulk: a join, or a second query with an IN list of the parent ids. And I detect it by counting queries per request, with an assertion in tests.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"The same shape appears in GraphQL resolvers and between microservices: one call per item where one batched call would do.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"One query per item is the bug; batch the fetch and count queries per request.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "one query, then one per row",
+        "html": "<p><strong>\"The count grows with the data, not with the code.\"</strong></p>\n<pre><code class=\"language-text\">queries = 1 (the list) + N (one per item)\nN = 100     → 101 queries\nN = 100, each item also loads its address → 1 + 100 + 100 = 201\n</code></pre>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>N+1</th>\n<th>Batched</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Queries for 100 customers</strong></td>\n<td>101</td>\n<td>1 or 2</td>\n</tr>\n<tr>\n<td><strong>Each query</strong></td>\n<td>fast</td>\n<td>slightly larger</td>\n</tr>\n<tr>\n<td><strong>Total time</strong></td>\n<td>101 round trips</td>\n<td>1–2 round trips</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "lazy loading in a loop",
+        "html": "<p><strong>\"Counting the statements the database receives.\"</strong> Run on the sample with SQLite's statement trace.</p>\n<pre><code class=\"language-python\">import sqlite3\nd = sqlite3.connect(\":memory:\")\nd.executescript(\"CREATE TABLE customers(id INTEGER PRIMARY KEY, name TEXT);\"\n  \"CREATE TABLE orders(id INTEGER PRIMARY KEY, customer_id INT, amount INT);\"\n  \"INSERT INTO customers VALUES (1,'Acme'),(2,'Birla'),(3,'Corex');\"\n  \"INSERT INTO orders VALUES (1,1,100),(2,1,150),(3,2,200);\")\nn = [0]; d.set_trace_callback(lambda s: n.__setitem__(0, n[0] + 1))\nfor cid, _ in d.execute(\"SELECT id, name FROM customers\").fetchall():\n    d.execute(\"SELECT amount FROM orders WHERE customer_id = ?\",\n              (cid,)).fetchall()                    # one per customer\nprint(\"lazy loop:\", n[0]); n[0] = 0\nd.execute(\"SELECT c.name, o.amount FROM customers c \"\n          \"LEFT JOIN orders o ON o.customer_id = c.id\").fetchall()\nprint(\"join:\", n[0]); n[0] = 0\nd.execute(\"SELECT id, name FROM customers\").fetchall()\nd.execute(\"SELECT customer_id, amount FROM orders \"\n          \"WHERE customer_id IN (1, 2, 3)\").fetchall()\nprint(\"batched IN:\", n[0])\n# → lazy loop: 4\n# → join: 1\n# → batched IN: 2\n</code></pre>\n<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant A as Application\n    participant D as Database\n    A-&gt;&gt;D: SELECT customers\n    D--&gt;&gt;A: 3 rows\n    loop for each customer\n        A-&gt;&gt;D: SELECT orders WHERE customer_id = ?\n        D--&gt;&gt;A: rows\n    end\n    Note over A,D: 1 + N round trips\n</div></figure>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "fast queries, slow endpoint",
+        "html": "<p><strong>\"Why it gets through review and testing.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Environment</th>\n<th>N</th>\n<th>Database</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Development</strong></td>\n<td>10</td>\n<td>same machine</td>\n<td>unnoticeable</td>\n</tr>\n<tr>\n<td><strong>Production</strong></td>\n<td>2,000</td>\n<td>across a network</td>\n<td>seconds</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">time ≈ queries × (round trip + execution)\n2,001 × (1 ms + 0.2 ms) ≈ 2.4 s          ← illustrative; no single query is slow\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Symptom</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A slow endpoint, an empty slow-query log</strong></td>\n<td>every statement is under the threshold</td>\n</tr>\n<tr>\n<td><strong>Query count scales with page size</strong></td>\n<td>the signature of N+1</td>\n</tr>\n<tr>\n<td><strong>The connection is held for the whole loop</strong></td>\n<td>pool pressure under load</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "batch the fetch, count the queries",
+        "html": "<p><strong>\"Three fixes, picked by the shape of the data.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Fix</th>\n<th>How</th>\n<th>Pick when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Join fetch</strong></td>\n<td>one query joining parent and children</td>\n<td>one collection; not paginated</td>\n</tr>\n<tr>\n<td><strong>Batched <code>IN</code> query</strong></td>\n<td>load parents, then all children with <code>WHERE parent_id IN (…)</code></td>\n<td>several collections; pagination on the parent</td>\n</tr>\n<tr>\n<td><strong>A projection / DTO query</strong></td>\n<td>select exactly the columns the screen needs</td>\n<td>read-only lists</td>\n</tr>\n<tr>\n<td><strong>A dataloader</strong></td>\n<td>collect keys during a request, fetch once</td>\n<td>GraphQL resolvers</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Framework</th>\n<th>Form</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>JPA / Hibernate</strong></td>\n<td><code>JOIN FETCH</code>, <code>@EntityGraph</code>, <code>@BatchSize</code></td>\n</tr>\n<tr>\n<td><strong>SQLAlchemy</strong></td>\n<td><code>selectinload</code>, <code>joinedload</code></td>\n</tr>\n<tr>\n<td><strong>Django</strong></td>\n<td><code>select_related</code>, <code>prefetch_related</code></td>\n</tr>\n</tbody></table>\n<p>Measure: queries per request, in a test that fails above a fixed number; the same count per endpoint in tracing.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "the same shape elsewhere",
+        "html": "<p><strong>\"Any per-item call across a boundary is N+1.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Where</th>\n<th>The N+1</th>\n<th>The batch</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>ORM</strong></td>\n<td>a lazy association in a loop</td>\n<td>fetch join, <code>IN</code> batch</td>\n</tr>\n<tr>\n<td><strong>GraphQL</strong></td>\n<td>a resolver per field per item</td>\n<td>a dataloader</td>\n</tr>\n<tr>\n<td><strong>Microservices</strong></td>\n<td>one HTTP call per id</td>\n<td>a bulk endpoint</td>\n</tr>\n<tr>\n<td><strong>Cache</strong></td>\n<td>one <code>GET</code> per key</td>\n<td><code>MGET</code>, a pipeline</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Over-correction</th>\n<th>Problem</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Eager-load every association</strong></td>\n<td>every query drags in data nobody asked for</td>\n</tr>\n<tr>\n<td><strong>Join two collections at once</strong></td>\n<td>a cartesian product: orders × addresses rows per customer</td>\n</tr>\n</tbody></table>\n<p>Fix layer: the <em>data-access code</em>; the database is doing what it was asked.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Make all associations eager.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>That loads everything on every query, wanted or not.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Global eager</th>\n<th>Fetch per use case</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A list screen</strong></td>\n<td>loads every child of every row</td>\n<td>loads what the screen shows</td>\n</tr>\n<tr>\n<td><strong>Memory and row count</strong></td>\n<td>grows with every association</td>\n<td>bounded</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A page lists 50 posts; each shows its author and its comment count, both lazy. How many queries?",
+        "tag": "edge",
+        "html": "<p><strong>101.</strong></p>\n<pre><code class=\"language-text\">1 (posts) + 50 (authors) + 50 (comment counts) = 101\nbatched: posts + authors IN (…) + counts GROUP BY post_id = 3\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Join fetch or a batched IN query?",
+        "tag": "probe",
+        "html": "<p><strong>Join for one small collection; <code>IN</code> when paginating or loading several.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Join fetch</th>\n<th>Batched <code>IN</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Queries</strong></td>\n<td>1</td>\n<td>2</td>\n</tr>\n<tr>\n<td><strong>Parent row repeated per child</strong></td>\n<td>yes</td>\n<td>no</td>\n</tr>\n<tr>\n<td><strong>Works with <code>LIMIT</code> on parents</strong></td>\n<td>badly: the limit applies to joined rows</td>\n<td>yes</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "How do you catch it before production?",
+        "tag": "probe",
+        "html": "<p><strong>Assert on the number of statements.</strong></p>\n<ul>\n<li><strong>In tests:</strong> run the endpoint with 1 item and with 20; the query count must be the same.</li>\n<li><strong>In tracing:</strong> a span per query makes the staircase visible.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "A join fetch on two collections made the query slower. Why?",
+        "tag": "senior",
+        "html": "<p><strong>It multiplied the rows.</strong></p>\n<pre><code class=\"language-text\">1 customer × 20 orders × 5 addresses = 100 rows returned for 25 real objects\n</code></pre>\n<p>Fetch one collection by join and the other by a batched query.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Each query is fast, so it&#39;s fine.&quot; — count them.",
+      "&quot;Eager-load everything.&quot; — a different problem.",
+      "&quot;It&#39;s the database&#39;s fault.&quot; — it&#39;s the access pattern.",
+      "&quot;We&#39;ll add a cache.&quot; — the batch is the fix."
+    ],
+    "links": [
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "Slow Query Debugging",
+        "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+      },
+      {
+        "label": "Caching and Pooling",
+        "target": "11-dbms/Sql/05-Scaling/Caching-and-Pooling"
+      },
+      {
+        "label": "Joins",
+        "target": "11-dbms/Sql/01-Query-Writing/Joins"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;one query, then one per&lt;br/&gt;row\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;lazy loading in a loop\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;fast queries, slow&lt;br/&gt;endpoint\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;batch the fetch, count&lt;br/&gt;the queries\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;the same shape elsewhere\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q29": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you know a connection is expensive, that a bigger pool is usually slower, and that the pool must be sized against the database&#39;s limit across all instances.",
+    "trap": "&quot;we saw pool timeouts, so we raised the pool size&quot;.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"A connection pool keeps a fixed set of open database connections and lends them to requests. Opening a connection is expensive: a network handshake, TLS, authentication, and on PostgreSQL a whole server process. So we reuse them.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"A request borrows a connection, runs its queries, and returns it. If none is free, it waits, up to a timeout. So the pool is also a limit on how much work reaches the database at once.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"The counter-intuitive part is size. The database can only run as many queries at once as it has cores and I/O capacity. Beyond that, more connections just add context switching and lock contention, and throughput goes down. And pool size multiplies: twenty instances with fifty each is a thousand connections.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"I start small, around twice the core count of the database server, divide that across the application instances, and measure wait time. When the pool is exhausted, I look at how long connections are held before I touch the size.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"With many instances or serverless functions, I put a proxy pooler like PgBouncer in front, so thousands of clients share a few real connections.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Small pool, short holds, sized against the database, not the application.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "a connection is not cheap",
+        "html": "<p><strong>\"What a new connection costs, and what a pooled one costs.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Step for a new connection</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>TCP handshake</strong></td>\n<td>a round trip</td>\n</tr>\n<tr>\n<td><strong>TLS handshake</strong></td>\n<td>more round trips, CPU</td>\n</tr>\n<tr>\n<td><strong>Authentication</strong></td>\n<td>a round trip, a password hash</td>\n</tr>\n<tr>\n<td><strong>Server side</strong></td>\n<td>PostgreSQL: a new process; MySQL: a thread; memory for each</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Per request without a pool</th>\n<th>With a pool</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Setup</strong></td>\n<td>all of the above</td>\n<td>none: borrow an open one</td>\n</tr>\n<tr>\n<td><strong>Limit on concurrency</strong></td>\n<td>none: a spike opens hundreds</td>\n<td>the pool size</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "borrow, use, return",
+        "html": "<p><strong>\"A connection's life in the pool.\"</strong></p>\n<figure><div class=\"mermaid\">stateDiagram-v2\n    [*] --&gt; Idle: opened at start-up\n    Idle --&gt; InUse: borrowed by a request\n    InUse --&gt; Idle: returned\n    InUse --&gt; Leaked: never returned\n    Idle --&gt; Closed: max lifetime or idle timeout\n    Leaked --&gt; Closed: leak detection reclaims\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Setting</th>\n<th>Meaning</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Maximum size</strong></td>\n<td>the most connections the pool will open</td>\n</tr>\n<tr>\n<td><strong>Connection (acquire) timeout</strong></td>\n<td>how long a request waits for a free one before failing</td>\n</tr>\n<tr>\n<td><strong>Max lifetime</strong></td>\n<td>recycle before a firewall or the database closes it</td>\n</tr>\n<tr>\n<td><strong>Idle timeout / minimum idle</strong></td>\n<td>how far the pool shrinks when quiet</td>\n</tr>\n<tr>\n<td><strong>Leak detection threshold</strong></td>\n<td>log a connection held longer than this</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "bigger is slower, and it multiplies",
+        "html": "<p><strong>\"Two pieces of arithmetic.\"</strong></p>\n<pre><code class=\"language-text\">starting point (a rule of thumb, then measure):\n  connections ≈ (database cores × 2) + effective disks\n  8 cores, SSD  →  8 × 2 + 1 = 17\n\nacross the fleet:\n  20 instances × pool of 50 = 1,000 connections      ← against max_connections = 200\n  200 / 20 instances        = 10 per instance at most\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Symptom</th>\n<th>Cause</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Throughput falls as the pool grows</strong></td>\n<td>more active queries than cores: context switches, lock and cache contention</td>\n</tr>\n<tr>\n<td><strong>\"Too many connections\" from the database</strong></td>\n<td>pool size × instances exceeds the server limit</td>\n</tr>\n<tr>\n<td><strong>Pool timeouts under normal load</strong></td>\n<td>connections held too long, or leaked</td>\n</tr>\n<tr>\n<td><strong>Memory pressure on the database</strong></td>\n<td>each connection reserves memory</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "size from demand, fix the hold time first",
+        "html": "<p><strong>\"How many connections a workload needs.\"</strong></p>\n<pre><code class=\"language-text\">connections in use ≈ requests per second × seconds a connection is held\n400 rps × 0.025 s = 10 connections\n\nthe same 400 rps holding the connection across a 500 ms HTTP call:\n400 × 0.525 s     = 210 connections        ← the hold time is the lever, not the pool size\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Pool exhausted? Check, in order</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A remote call inside a transaction</strong></td>\n<td>move it outside; hold the connection only for database work</td>\n</tr>\n<tr>\n<td><strong>Slow queries</strong></td>\n<td>fix the query; it holds a connection the whole time</td>\n</tr>\n<tr>\n<td><strong>A leak</strong> (borrowed, never returned)</td>\n<td>leak detection; <code>try-with-resources</code> / context managers</td>\n</tr>\n<tr>\n<td><strong>N+1 loops</strong></td>\n<td>batch them</td>\n</tr>\n<tr>\n<td><strong>Genuinely more demand than capacity</strong></td>\n<td>then scale the database or add a pooler; only now consider the size</td>\n</tr>\n</tbody></table>\n<p>Measure: active and idle connections, threads waiting, acquire time (p99), connection usage time, timeouts per minute.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "a proxy pooler",
+        "html": "<p><strong>\"When there are more clients than the database can hold.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Path:</strong></span><span class=\"flow-step\">many application instances or functions</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">pooler (PgBouncer, RDS Proxy, ProxySQL)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">a few real database connections</span></div>\n<table>\n<thead>\n<tr>\n<th>Pooling mode</th>\n<th>A server connection is held for</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Session</strong></td>\n<td>the whole client session</td>\n<td>safest; least sharing</td>\n</tr>\n<tr>\n<td><strong>Transaction</strong></td>\n<td>one transaction</td>\n<td>most common; session state (session-level settings, advisory locks, some prepared-statement use) doesn't carry over</td>\n</tr>\n<tr>\n<td><strong>Statement</strong></td>\n<td>one statement</td>\n<td>no multi-statement transactions</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version in use.</p>\n<p>Fix layer: <em>connection hold time</em> in the application; <em>pool size</em> against the database's capacity.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;We got pool timeouts, so we doubled the pool.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>That moves the queue into the database, where it's more expensive.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Waiting where</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>In the pool</strong></td>\n<td>a parked request</td>\n</tr>\n<tr>\n<td><strong>In the database</strong></td>\n<td>a process, memory, lock and CPU contention for everyone</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 30 application instances, pool size 20 each, database  = 300. What happens at peak?",
+        "tag": "max_connections",
+        "html": "<p><strong>The fleet can ask for 600; the database refuses beyond 300.</strong></p>\n<pre><code class=\"language-text\">30 × 20 = 600 &gt; 300\nfits: 300 / 30 = 10 per instance (less a few reserved for admin and replication)\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why is a smaller pool sometimes faster?",
+        "tag": "probe",
+        "html": "<p><strong>The database does the same work with less switching.</strong></p>\n<ul>\n<li><strong>Cores are the limit:</strong> eight cores run eight queries at once.</li>\n<li><strong>Beyond that,</strong> queries take turns and hold locks longer while they wait.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you find a connection leak?",
+        "tag": "probe",
+        "html": "<p><strong>Active connections climb and never come back down.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Signal</th>\n<th>Tool</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Active count rising with no load</strong></td>\n<td>pool metrics</td>\n</tr>\n<tr>\n<td><strong>The code path that borrowed it</strong></td>\n<td>the pool's leak-detection stack trace</td>\n</tr>\n<tr>\n<td><strong>Sessions idle in a transaction</strong></td>\n<td>the database's session view</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Serverless functions scale to 2,000 concurrent executions. How do they talk to PostgreSQL?",
+        "tag": "senior",
+        "html": "<p><strong>Through a pooler; never 2,000 direct connections.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A transaction-mode pooler</strong></td>\n<td>thousands of clients share tens of connections</td>\n</tr>\n<tr>\n<td><strong>A data API over HTTP</strong></td>\n<td>no connection held by the function</td>\n</tr>\n<tr>\n<td><strong>Limit function concurrency</strong></td>\n<td>a blunt cap that protects the database</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Raise the pool size.&quot; — find out why connections are held.",
+      "&quot;One connection per request, no pool.&quot; — setup cost and no limit.",
+      "&quot;A pool of 200 for safety.&quot; — per instance, times instances.",
+      "&quot;The pool is an application setting.&quot; — it&#39;s a share of the database&#39;s capacity."
+    ],
+    "links": [
+      {
+        "label": "Caching and Pooling",
+        "target": "11-dbms/Sql/05-Scaling/Caching-and-Pooling"
+      },
+      {
+        "label": "Slow Query Debugging",
+        "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+      },
+      {
+        "label": "n plus one",
+        "target": "model-answers/12-DATABASES/28-n-plus-one"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;a connection is not&lt;br/&gt;cheap\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;borrow, use, return\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;bigger is slower, and it&lt;br/&gt;multiplies\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;size from demand, fix&lt;br/&gt;the hold time first\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;a proxy pooler\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   },
   "databases-q30": {
     "type": "trade-off",
