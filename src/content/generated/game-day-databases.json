@@ -1036,7 +1036,17 @@
             }
           ],
           "flow": "normalise first → measure the read path → denormalise the one hot query → own the sync",
-          "trap": "duplicated data with no owner for consistency"
+          "trap": "duplicated data with no owner for consistency",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where normalised wins",
+              "Where denormalised wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q32",
@@ -1057,7 +1067,17 @@
             }
           ],
           "flow": "shape of the query → model → each added store is another thing to operate",
-          "trap": "a document store used for heavily relational data"
+          "trap": "a document store used for heavily relational data",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where key-value and document win",
+              "Where wide-column and graph win",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q33",
@@ -1078,7 +1098,17 @@
             }
           ],
           "flow": "need distributed generation? → time-ordered id · single writer → bigint",
-          "trap": "random UUIDs as the clustered key of a write-heavy table"
+          "trap": "random UUIDs as the clustered key of a write-heavy table",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where auto-increment wins",
+              "Where UUID wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q34",
@@ -1099,7 +1129,17 @@
             }
           ],
           "flow": "conflict rate low → version check + retry · high → lock briefly",
-          "trap": "read–modify–write with neither"
+          "trap": "read–modify–write with neither",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where optimistic wins",
+              "Where pessimistic wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q35",
@@ -1124,7 +1164,17 @@
             }
           ],
           "flow": "many small transactions → row · few big aggregations → column",
-          "trap": "running analytics on the primary OLTP database at peak"
+          "trap": "running analytics on the primary OLTP database at peak",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where row store wins",
+              "Where column store wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q36",
@@ -1145,7 +1195,17 @@
             }
           ],
           "flow": "cache-aside by default → invalidate on write → TTL backstop → stampede guard",
-          "trap": "updating the cache instead of deleting it, and racing a concurrent write"
+          "trap": "updating the cache instead of deleting it, and racing a concurrent write",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where cache-aside wins",
+              "Where the other two win",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q37",
@@ -1174,7 +1234,17 @@
             }
           ],
           "flow": "read problem → replicas · big-table problem → partition · write or size ceiling → shard",
-          "trap": "\"the database is slow, so we shard\""
+          "trap": "\"the database is slow, so we shard\"",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         }
       ]
     },
@@ -1237,7 +1307,18 @@
             }
           ],
           "flow": "write to primary → read from a lagging replica → pin recent writers to the primary",
-          "trap": "sending every read to replicas with no rule for recent writes"
+          "trap": "sending every read to replicas with no rule for recent writes",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "databases-q40",
@@ -1293,7 +1374,18 @@
             }
           ],
           "flow": "find the hot key → isolate or cache it now → change the key or add a directory",
-          "trap": "adding more shards when one key is the whole problem"
+          "trap": "adding more shards when one key is the whole problem",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "databases-q42",
@@ -1314,7 +1406,18 @@
             }
           ],
           "flow": "instances × pool vs limit → find leaks and long holders → pooler + timeouts",
-          "trap": "raising <code>max_connections</code> and making every query slower"
+          "trap": "raising <code>max_connections</code> and making every query slower",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "databases-q43",
@@ -1335,7 +1438,18 @@
             }
           ],
           "flow": "deadlock log → the two statements → make lock order consistent → retry as the net",
-          "trap": "raising lock timeouts"
+          "trap": "raising lock timeouts",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "databases-q44",
@@ -1356,7 +1470,18 @@
             }
           ],
           "flow": "dead versions → cleanup blocked or too slow → unblock + tune → rebuild if needed",
-          "trap": "<code>VACUUM FULL</code> on a live table: it takes an exclusive lock"
+          "trap": "<code>VACUUM FULL</code> on a live table: it takes an exclusive lock",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "databases-q45",
@@ -1377,7 +1502,18 @@
             }
           ],
           "flow": "partitioned? drop the partition · else batch by key range, throttled",
-          "trap": "<code>DELETE … WHERE created_at &lt; …</code> in one transaction at midday"
+          "trap": "<code>DELETE … WHERE created_at &lt; …</code> in one transaction at midday",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "databases-q46",
@@ -1398,7 +1534,17 @@
             }
           ],
           "flow": "set RPO/RTO with the business → base backup + log archive → restore drill → measure",
-          "trap": "\"we have replicas, so we're covered\""
+          "trap": "\"we have replicas, so we're covered\"",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         }
       ]
     },
