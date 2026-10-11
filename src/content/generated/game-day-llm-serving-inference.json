@@ -55,6 +55,16 @@
                 "target": "02-DL/08-AI systems &amp; serving Architecture/01-LLM Serving System End-to-End"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "The path, hop by hop",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
           }
         },
         {
@@ -79,7 +89,17 @@
             }
           ],
           "flow": "prefill compute-bound → decode bandwidth-bound → optimise each separately",
-          "trap": "one \"latency number\" covering both phases"
+          "trap": "one \"latency number\" covering both phases",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "Why prefill is compute-bound",
+              "Why decode is bandwidth-bound",
+              "Prove it",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q3",
@@ -127,6 +147,16 @@
                 "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/03-Capacity &amp; throughput math"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "What drives TTFT",
+              "What drives TPOT",
+              "Where they trade",
+              "What I'd set as SLOs"
+            ]
           }
         },
         {
@@ -150,7 +180,17 @@
             }
           ],
           "flow": "weights fixed → cache scales with context × batch → cache caps concurrency",
-          "trap": "sizing capacity from GPU utilisation %"
+          "trap": "sizing capacity from GPU utilisation %",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q5",
@@ -198,6 +238,16 @@
                 "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/03-Capacity &amp; throughput math"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How continuous batching works",
+              "How paging works",
+              "Prove it",
+              "So what for the system"
+            ]
           }
         },
         {
@@ -225,7 +275,17 @@
             }
           ],
           "flow": "stable prefix first → volatile last → hit skips prefill entirely",
-          "trap": "injecting a timestamp into the system prompt"
+          "trap": "injecting a timestamp into the system prompt",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "Where it silently breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q7",
@@ -267,6 +327,16 @@
                 "target": "02-DL/08-AI systems &amp; serving Architecture/02-Token Streaming Mechanics"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What breaks it",
+              "So what for the system"
+            ]
           }
         }
       ]
@@ -298,7 +368,17 @@
             }
           ],
           "flow": "SLO per tier → measure goodput → tune batch to the frontier",
-          "trap": "reporting tokens/sec with no SLO attached"
+          "trap": "reporting tokens/sec with no SLO attached",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Why throughput misleads",
+              "Why latency misleads",
+              "What goodput measures",
+              "How I'd tune to it"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q9",
@@ -341,6 +421,17 @@
                 "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/03-Cost optimization"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline plan",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
           }
         },
         {
@@ -364,7 +455,17 @@
             }
           ],
           "flow": "bandwidth is the bottleneck → shrink weights → activations have outliers",
-          "trap": "assuming \"more bits removed = more speed\""
+          "trap": "assuming \"more bits removed = more speed\"",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where weight-only wins",
+              "Where activations pay",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q11",
@@ -408,6 +509,16 @@
                 "target": "05-LLM-Production/07-Efficient Inference &amp; Serving (core)/02-Advanced scheduling"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "When it breaks",
+              "So what for the system"
+            ]
           }
         },
         {
@@ -450,6 +561,16 @@
                 "label": "Self hosted vs API — build vs buy",
                 "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/06-Self-hosted vs API — build vs buy"
               }
+            ]
+          },
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where the API wins",
+              "Where self-hosting wins",
+              "The deciding question",
+              "What I'd pick here"
             ]
           }
         },
@@ -495,6 +616,17 @@
                 "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/02-Model routing"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
           }
         },
         {
@@ -539,6 +671,16 @@
                 "target": "02-DL/03-Transformer Architecture Core/09-Kv cache and mitigations"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where MQA wins",
+              "Where GQA wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
           }
         },
         {
@@ -582,6 +724,16 @@
                 "target": "02-DL/07-Inference Optimization/03-Knowledge Distillation"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where distillation wins",
+              "Where fine-tuning wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
           }
         },
         {
@@ -609,7 +761,18 @@
             }
           ],
           "flow": "one base in VRAM → adapters multiplexed → merge only the hot tenants",
-          "trap": "promising per-tenant fine-tunes before asking whether prompting suffices"
+          "trap": "promising per-tenant fine-tunes before asking whether prompting suffices",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         }
       ]
     },
@@ -634,7 +797,18 @@
           ],
           "links": [],
           "flow": "budget upfront → summarise/drop → escalate model → map-reduce → typed error",
-          "trap": "answering only \"use a bigger context window\""
+          "trap": "answering only \"use a bigger context window\"",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Budget before the call",
+              "The reduction ladder",
+              "What is never cut",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q18",
@@ -657,7 +831,18 @@
             }
           ],
           "flow": "warm pool → predictive scale → degrade under load rather than cold-start into it",
-          "trap": "quoting container start time as the cold-start number"
+          "trap": "quoting container start time as the cold-start number",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q19",
@@ -704,6 +889,16 @@
                 "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/05-Rate limiting quota &amp; API-level multi-tenancy"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "What load really is",
+              "Prove it",
+              "What breaks on scale-down",
+              "So what for the system"
+            ]
           }
         },
         {
@@ -747,6 +942,17 @@
                 "target": "02-DL/08-AI systems &amp; serving Architecture/03-Multi-Tenant Serving"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
           }
         },
         {
@@ -770,7 +976,18 @@
             }
           ],
           "flow": "TTFT or TPOT? → queue vs contention vs outside the model → per-stage spans",
-          "trap": "reading GPU utilisation and concluding there's headroom"
+          "trap": "reading GPU utilisation and concluding there's headroom",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Split the metric",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q22",
@@ -793,7 +1010,18 @@
             }
           ],
           "flow": "measure per hop → remove calls → cache → shrink tokens → only then add replicas",
-          "trap": "tuning the model when the latency budget is being spent in retrieval"
+          "trap": "tuning the model when the latency budget is being spent in retrieval",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Measure per hop",
+              "Remove calls",
+              "Run in parallel",
+              "Cache at every level",
+              "Shrink the payload",
+              "Then the model"
+            ]
+          }
         }
       ]
     },
@@ -823,7 +1051,18 @@
             }
           ],
           "flow": "shared pool → priority classes → chat pre-empts → batch absorbs the slack",
-          "trap": "two static clusters — you then pay for the peak of each"
+          "trap": "two static clusters — you then pay for the peak of each",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q24",
@@ -867,6 +1106,17 @@
                 "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/03-Cost optimization"
               }
             ]
+          },
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Attribute the spend",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
           }
         }
       ]
@@ -897,7 +1147,18 @@
             }
           ],
           "flow": "symptom → measurement → wrong hypothesis → real cause → lever + rejected lever → number",
-          "trap": "a fix with no before-number — it reads as a guess that happened to work"
+          "trap": "a fix with no before-number — it reads as a guess that happened to work",
+          "modelAnswer": {
+            "type": "story",
+            "spine": [
+              "The decision it served",
+              "The constraint",
+              "Options weighed",
+              "What I built",
+              "What broke",
+              "The number"
+            ]
+          }
         }
       ]
     },
@@ -925,7 +1186,18 @@
             }
           ],
           "badge": "Trending — the standard system-design opener in LLM loops (2025–26)",
-          "oneLiner": "Gateway, guardrails, context assembly and routing on the way in; provider abstraction with fallbacks in the middle; validation, streaming, caching, tracing and budget enforcement on the way out — the model is one swappable box in the diagram."
+          "oneLiner": "Gateway, guardrails, context assembly and routing on the way in; provider abstraction with fallbacks in the middle; validation, streaming, caching, tracing and budget enforcement on the way out — the model is one swappable box in the diagram.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q27",
@@ -950,7 +1222,18 @@
             }
           ],
           "badge": "Evergreen (now table stakes in LLMOps JDs)",
-          "oneLiner": "Trace everything with prompt and model versions plus token economics, sample a quality-scored stream, and alert on rates and drift — validation failures, refusals, cost slope — because with hosted models, behavior changes you didn't ship are a when, not an if."
+          "oneLiner": "Trace everything with prompt and model versions plus token economics, sample a quality-scored stream, and alert on rates and drift — validation failures, refusals, cost slope — because with hosted models, behavior changes you didn't ship are a when, not an if.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "What to capture",
+              "Quality as a signal",
+              "What to alert on",
+              "Failure modes",
+              "Close the loop"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q28",
@@ -971,7 +1254,18 @@
             }
           ],
           "badge": "Trending — LLM multi-tenancy questions recur in platform JDs (2025–26)",
-          "oneLiner": "Limit tokens, not requests — input and output separately, with output enforced by caps since it's unknown at admission — and pair platform-protecting rate limits with fair-share scheduling, because in a batched serving world one greedy tenant taxes everyone's TTFT."
+          "oneLiner": "Limit tokens, not requests — input and output separately, with output enforced by caps since it's unknown at admission — and pair platform-protecting rate limits with fair-share scheduling, because in a batched serving world one greedy tenant taxes everyone's TTFT.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q29",
@@ -996,7 +1290,18 @@
             }
           ],
           "badge": "Trending — provider-failure resilience recurs across LLMOps discourse (2025–26)",
-          "oneLiner": "Breakers and pre-evaled fallback chains for outages, backpressure and load-shedding for capacity, pinned versions plus eval tripwires for silent behavior changes — a hosted model is a critical dependency you don't control, so the resilience is built before the bad day."
+          "oneLiner": "Breakers and pre-evaled fallback chains for outages, backpressure and load-shedding for capacity, pinned versions plus eval tripwires for silent behavior changes — a hosted model is a critical dependency you don't control, so the resilience is built before the bad day.",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Availability failures",
+              "Latency degradation",
+              "Silent behaviour change",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "llm-serving-inference-q30",
@@ -1021,7 +1326,18 @@
             }
           ],
           "badge": "Trending — continuous batching / PagedAttention recurs in serving blogs + LLM-infra JDs (2025–26)",
-          "oneLiner": "Static batching serializes on the slowest sequence and naive KV allocation wastes the memory that would let you batch bigger — continuous batching plus paged KV is the standard fix, tuned against TTFT and inter-token SLOs."
+          "oneLiner": "Static batching serializes on the slowest sequence and naive KV allocation wastes the memory that would let you batch bigger — continuous batching plus paged KV is the standard fix, tuned against TTFT and inter-token SLOs.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         }
       ]
     }
