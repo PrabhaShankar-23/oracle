@@ -68,7 +68,7 @@
               "Trace it step by step",
               "The rule that decides it",
               "Variants that flip the answer",
-              "The production version of the trap"
+              "The production version"
             ]
           }
         },
@@ -438,7 +438,7 @@
             "spine": [
               "Frame the axis",
               "Where sub-interpreters win",
-              "Where multiprocessing still wins",
+              "Where processes win",
               "The deciding question",
               "What I'd pick for an AI backend"
             ]
@@ -456,7 +456,7 @@
             "spine": [
               "Constraints",
               "The layers",
-              "The hard part: invalidation",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -474,7 +474,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: the crash window",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -510,7 +510,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: the partial-failure policy",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -576,7 +576,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: memory per worker",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -615,7 +615,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: disconnects and backpressure",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -652,7 +652,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: at-least-once",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -670,7 +670,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: context across boundaries",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -697,7 +697,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: reliability and cost",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -717,7 +717,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: batching",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -735,7 +735,7 @@
             "spine": [
               "Constraints",
               "The policy",
-              "The hard part: the AI stack",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -753,7 +753,7 @@
             "spine": [
               "Constraints",
               "Runtime model",
-              "The hard part: quality signals",
+              "The hard part",
               "Failure modes",
               "What I'd monitor"
             ]
@@ -796,11 +796,11 @@
           "modelAnswer": {
             "type": "story",
             "spine": [
-              "The symptom in user terms",
+              "The symptom",
               "What I first suspected",
-              "The measurement that proved me wrong",
-              "The fix, and what I didn't do",
-              "What broke and what I added",
+              "The measurement",
+              "The fix",
+              "What I added",
               "The number"
             ]
           }
@@ -879,7 +879,7 @@
             "spine": [
               "Frame the axis",
               "Where CPython wins",
-              "Where PyPy or compiled Python wins",
+              "Where PyPy or compiling wins",
               "The deciding question",
               "What I'd pick for an AI backend"
             ]
