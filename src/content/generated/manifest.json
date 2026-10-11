@@ -2731,6 +2731,51 @@
       ]
     },
     {
+      "slug": "databases",
+      "number": 12,
+      "icon": "🗄️",
+      "title": "Databases",
+      "count": 56,
+      "bands": [
+        {
+          "id": "databases-write-the-query",
+          "letter": null,
+          "name": "Write the query",
+          "count": 17
+        },
+        {
+          "id": "databases-engine-mechanics",
+          "letter": null,
+          "name": "Engine mechanics",
+          "count": 12
+        },
+        {
+          "id": "databases-trade-offs",
+          "letter": null,
+          "name": "Trade-offs",
+          "count": 8
+        },
+        {
+          "id": "databases-scaling-failure",
+          "letter": null,
+          "name": "Scaling & failure",
+          "count": 9
+        },
+        {
+          "id": "databases-architect",
+          "letter": null,
+          "name": "Architect",
+          "count": 9
+        },
+        {
+          "id": "databases-your-story",
+          "letter": null,
+          "name": "Your story",
+          "count": 1
+        }
+      ]
+    },
+    {
       "slug": "real-time-systems",
       "number": 15,
       "icon": "🎙️",

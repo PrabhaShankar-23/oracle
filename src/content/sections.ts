@@ -55,7 +55,7 @@ const RECALL_ORDER = [
   'llm-foundations', 'rag', 'agentic-ai', 'mcp-context-engineering', 'prompt-engineering', 'llm-serving-inference',
   'ml-dl', 'nlp-classical', 'real-time-systems',
   // Backend
-  'python', 'fastapi', 'java-spring',
+  'python', 'fastapi', 'java-spring', 'databases',
   // Cloud (none yet)
   // Front-end
   'react',

@@ -2898,6 +2898,398 @@
     "band": "More questions"
   },
   {
+    "id": "databases-q1",
+    "text": "Second-highest salary. Then the Nth.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q2",
+    "text": "Top two earners in each department.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q3",
+    "text": "Find duplicate emails. Then delete them, keeping one row each.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q4",
+    "text": "Running total of paid revenue, and a 3-order moving average.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q5",
+    "text": "Employees who earn more than their manager.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q6",
+    "text": "Customers who have never placed an order.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q7",
+    "text": "Month-over-month revenue growth, in percent.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q8",
+    "text": "Longest streak of consecutive login days per user.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q9",
+    "text": "One row per customer, with paid and refunded totals as columns.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q10",
+    "text": "Median salary per department.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q11",
+    "text": "Latest record per user from a change log.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q12",
+    "text": "Everyone who reports to a manager, directly or indirectly, with their depth.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q13",
+    "text": "Split each user's events into sessions: a new session after 30 minutes of inactivity.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q14",
+    "text": "Find overlapping bookings for a room, and the peak number at once.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q15",
+    "text": "Day-1 retention by signup cohort.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q16",
+    "text": "Write an idempotent upsert that never lets an older update overwrite a newer one.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q17",
+    "text": "📝 \"Paginate a large table without OFFSET.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Write the query"
+  },
+  {
+    "id": "databases-q18",
+    "text": "How does a B-tree index work, and when is it not used?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q19",
+    "text": "Composite index on (customer_id, created_at). Which queries can use it?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q20",
+    "text": "What is a covering index?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q21",
+    "text": "Walk me through reading an EXPLAIN plan.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q22",
+    "text": "Isolation levels: which anomalies does each one allow?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q23",
+    "text": "What is MVCC, and what does it cost?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q24",
+    "text": "How does a deadlock happen, and how do you prevent it?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q25",
+    "text": "What does the write-ahead log give you?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q26",
+    "text": "Nested loop, hash join, merge join: when does the planner pick each?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q27",
+    "text": "📝 \"B-tree or LSM-tree?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q28",
+    "text": "What is the N+1 query problem?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q29",
+    "text": "Why a connection pool, and how big?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Engine mechanics"
+  },
+  {
+    "id": "databases-q30",
+    "text": "SQL or NoSQL: how do you actually decide?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q31",
+    "text": "Normalise or denormalise?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q32",
+    "text": "Key-value, document, wide-column, graph: which fits what?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q33",
+    "text": "UUID or auto-increment primary key?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q34",
+    "text": "Optimistic or pessimistic locking?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q35",
+    "text": "Row store or column store?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q36",
+    "text": "Cache-aside, write-through or write-behind?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q37",
+    "text": "Partitioning, replication, sharding: which problem does each solve?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Trade-offs"
+  },
+  {
+    "id": "databases-q38",
+    "text": "A query that took 20 ms now takes 4 s. Nothing was deployed. Diagnose it.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q39",
+    "text": "A user saves a change and doesn't see it on the next page. Why?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q40",
+    "text": "📝 \"Add a NOT NULL column to a 500 GB table with zero downtime.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q41",
+    "text": "One shard is hot while the others idle. What now?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q42",
+    "text": "The database hits max connections under load.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q43",
+    "text": "Deadlocks spike after a release.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q44",
+    "text": "Rows are being deleted, but the table keeps growing.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q45",
+    "text": "Delete 200 million old rows from a live table.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q46",
+    "text": "📝 \"What are RPO and RTO, and how do you know your backups work?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Scaling & failure"
+  },
+  {
+    "id": "databases-q47",
+    "text": "Explain CAP and PACELC with real systems.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q48",
+    "text": "Choose a shard key for a multi-tenant SaaS.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q49",
+    "text": "Save an order and publish an event. How do you keep them consistent?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q50",
+    "text": "How does change data capture work, and what do you use it for?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q51",
+    "text": "Quorums: what do N, R and W buy you?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q52",
+    "text": "Model data for a DynamoDB- or Cassandra-style store.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q53",
+    "text": "Multi-tenant data: shared tables, schema per tenant, or database per tenant?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q54",
+    "text": "Where do vectors go: in Postgres with pgvector, or a dedicated vector store?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q55",
+    "text": "Scale NL-to-SQL when the database has hundreds of tables.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Architect"
+  },
+  {
+    "id": "databases-q56",
+    "text": "Tell me about a database problem you diagnosed in production.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Your story"
+  },
+  {
     "id": "real-time-systems-q1",
     "text": "What's the latency budget for a natural voice conversation?",
     "topic": "real-time-systems",

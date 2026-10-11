@@ -1,0 +1,1316 @@
+{
+  "slug": "databases",
+  "number": 12,
+  "icon": "🗄️",
+  "title": "Databases",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD (or write the query) → <em>then</em> expand → grade what you missed.",
+    "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m12 17.27 4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08z\"></path></svg> = decides the round. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg> = trending 2026. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2\"></path></svg> = <em>you</em> were asked this. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M3 10h11v2H3zm0-2h11V6H3zm0 8h7v-2H3zm15.01-3.13.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71zm-.71.71-5.3 5.3V21h2.12l5.3-5.3z\"></path></svg> = no vault note yet.",
+    "<strong>Created:</strong> 11 Oct 2026 · <strong>Depth:</strong> <code>11-dbms/Sql/</code> (30 notes) · <strong>Generator:</strong> [[meta_prompts/databases_recall_prompt_v1]] (extends [[meta_prompts/interview_day_prompt_v2]])",
+    "<strong>Not trend-scanned to the <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg> bar:</strong> an open-web check on 11 Oct 2026 found only prep guides, so no question carries <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg>. No <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2\"></path></svg> either; add them from real loops."
+  ],
+  "bands": [
+    {
+      "id": "databases-write-the-query",
+      "letter": null,
+      "name": "Write the query",
+      "questions": [
+        {
+          "id": "databases-q1",
+          "number": 1,
+          "marks": [],
+          "text": "Second-highest salary. Then the Nth.",
+          "points": [
+            "<strong>Pattern:</strong> rank the distinct values, then filter on the rank",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT salary FROM (\n  SELECT salary,\n         DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk\n  FROM employees\n) WHERE rnk = 2 LIMIT 1;\n</code></pre>",
+            "<strong>On the sample:</strong> salaries 300, 260, 250, 250… → <code>260</code>",
+            "<code>DENSE_RANK</code> = Nth <strong>distinct</strong> value · <code>ROW_NUMBER</code> would count the tied 250s separately",
+            "No Nth value → empty result; wrap in a scalar subquery if they want <code>NULL</code>"
+          ],
+          "links": [
+            {
+              "label": "Window Functions",
+              "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
+          "flow": "dense-rank by salary → filter rank = N → one row",
+          "trap": "<code>LIMIT 1 OFFSET 1</code> with ties at the top"
+        },
+        {
+          "id": "databases-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "Top two earners in each department.",
+          "points": [
+            "<strong>Pattern:</strong> number rows inside a partition, then filter outside",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT dept_id, name, salary FROM (\n  SELECT e.*, ROW_NUMBER() OVER (\n           PARTITION BY dept_id ORDER BY salary DESC, id) AS rn\n  FROM employees e\n) WHERE rn &lt;= 2;\n</code></pre>",
+            "<strong>On the sample:</strong> Eng → Asha 300, Dev 260 · Sales → Fay 220, Eli 200",
+            "<code>ROW_NUMBER</code> = exactly N rows · <code>DENSE_RANK</code> = N salary levels, ties kept",
+            "Add a <strong>tie-breaker</strong> to <code>ORDER BY</code>, or the result changes between runs"
+          ],
+          "links": [
+            {
+              "label": "Window Functions",
+              "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
+          "flow": "partition → order → number → filter in the outer query",
+          "trap": "filtering on a window function in the same <code>WHERE</code>"
+        },
+        {
+          "id": "databases-q3",
+          "number": 3,
+          "marks": [],
+          "text": "Find duplicate emails. Then delete them, keeping one row each.",
+          "points": [
+            "<strong>Pattern:</strong> group to find, keep <code>MIN(id)</code> per group to delete",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT email, COUNT(*) AS n FROM users\nGROUP BY email HAVING COUNT(*) &gt; 1;\n\nDELETE FROM users\nWHERE id NOT IN (SELECT MIN(id) FROM users GROUP BY email);\n</code></pre>",
+            "<strong>On the sample:</strong> <code>a@x.com</code> × 3 → after the delete, ids 1, 2, 5 remain",
+            "<code>HAVING</code> filters groups; <code>WHERE</code> filters rows before grouping",
+            "Then add a <strong>unique constraint</strong>, or the duplicates come back",
+            "Big table → delete in batches (Q45)"
+          ],
+          "links": [
+            {
+              "label": "Aggregation and Group By",
+              "target": "11-dbms/Sql/01-Query-Writing/Aggregation-and-Group-By"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">users(id, email)\n</code></pre>",
+          "flow": "group + having → keep min id → delete the rest → unique constraint",
+          "trap": "cleaning up without fixing the write path"
+        },
+        {
+          "id": "databases-q4",
+          "number": 4,
+          "marks": [],
+          "text": "Running total of paid revenue, and a 3-order moving average.",
+          "points": [
+            "<strong>Pattern:</strong> an aggregate with <code>OVER (ORDER BY …)</code> and an explicit frame",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT created_at, amount,\n  SUM(amount) OVER (ORDER BY created_at, id) AS running_total,\n  AVG(amount) OVER (ORDER BY created_at, id\n      ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS avg_3\nFROM orders WHERE status = 'paid';\n</code></pre>",
+            "<strong>On the sample:</strong> amounts 100, 150, 300… → running 100, 250, 550 · avg_3 100, 125, 183.3",
+            "Default frame with <code>ORDER BY</code> is <code>RANGE … CURRENT ROW</code> → <strong>ties are summed together</strong>",
+            "<code>ROWS</code> counts rows; <code>RANGE</code> groups equal sort keys"
+          ],
+          "links": [
+            {
+              "label": "Window Functions",
+              "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
+          "flow": "order → choose frame (<code>ROWS</code>) → aggregate over it",
+          "trap": "leaving the frame implicit when the sort key has ties"
+        },
+        {
+          "id": "databases-q5",
+          "number": 5,
+          "marks": [],
+          "text": "Employees who earn more than their manager.",
+          "points": [
+            "<strong>Pattern:</strong> self-join: the same table twice, with two aliases",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT e.name, e.salary,\n       m.name AS manager, m.salary AS manager_salary\nFROM employees e JOIN employees m ON m.id = e.manager_id\nWHERE e.salary &gt; m.salary;\n</code></pre>",
+            "<strong>On the sample:</strong> Dev 260 &gt; Bo 250 · Fay 220 &gt; Eli 200",
+            "Inner join drops the CEO (<code>manager_id</code> NULL); <code>LEFT JOIN</code> keeps them",
+            "Index on <code>manager_id</code> if the hierarchy is large"
+          ],
+          "links": [
+            {
+              "label": "Joins",
+              "target": "11-dbms/Sql/01-Query-Writing/Joins"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
+          "flow": "alias employee + alias manager → join on manager_id → compare",
+          "trap": "forgetting the top of the tree has no manager"
+        },
+        {
+          "id": "databases-q6",
+          "number": 6,
+          "marks": [
+            "decides"
+          ],
+          "text": "Customers who have never placed an order.",
+          "points": [
+            "<strong>Pattern:</strong> anti-join → <code>NOT EXISTS</code> (or <code>LEFT JOIN … IS NULL</code>)",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT c.name FROM customers c\nWHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.customer_id = c.id);\n</code></pre>",
+            "<strong>On the sample:</strong> <code>Corex</code>",
+            "Same data with <code>NOT IN (SELECT customer_id FROM orders)</code> → <strong>zero rows</strong>",
+            "Why: one NULL in the list makes <code>x NOT IN (…)</code> evaluate to UNKNOWN for every row",
+            "<code>NOT EXISTS</code> is NULL-safe and plans as an anti-join"
+          ],
+          "links": [
+            {
+              "label": "NULL Semantics",
+              "target": "11-dbms/Sql/01-Query-Writing/NULL-Semantics"
+            },
+            {
+              "label": "Subqueries and Set Ops",
+              "target": "11-dbms/Sql/01-Query-Writing/Subqueries-and-Set-Ops"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">customers(id, name)\norders(id, customer_id, amount, status, created_at)   -- customer_id can be NULL\n</code></pre>",
+          "flow": "anti-join → <code>NOT EXISTS</code> → check the subquery column for NULLs",
+          "trap": "<code>NOT IN</code> over a nullable column"
+        },
+        {
+          "id": "databases-q7",
+          "number": 7,
+          "marks": [],
+          "text": "Month-over-month revenue growth, in percent.",
+          "points": [
+            "<strong>Pattern:</strong> aggregate to the period first, then <code>LAG</code> over the periods",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">WITH m AS (\n  SELECT substr(created_at, 1, 7) AS month,\n         SUM(amount) AS revenue\n  FROM orders WHERE status = 'paid' GROUP BY 1\n)\nSELECT month, revenue,\n       100.0 * (revenue - LAG(revenue) OVER (ORDER BY month))\n             / LAG(revenue) OVER (ORDER BY month) AS growth_pct\nFROM m;\n</code></pre>",
+            "<strong>On the sample:</strong> Jan 250 → Feb 300 (+20.0%) → Mar 520 (+73.3%)",
+            "First month → NULL growth, not 0",
+            "Postgres: <code>date_trunc('month', created_at)</code> · missing months need a <strong>calendar table</strong>",
+            "<code>100.0</code>, not <code>100</code>: integer division truncates"
+          ],
+          "links": [
+            {
+              "label": "Window Functions",
+              "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
+          "flow": "group by month → LAG previous → (cur − prev) / prev",
+          "trap": "a month with no orders silently disappears from the series"
+        },
+        {
+          "id": "databases-q8",
+          "number": 8,
+          "marks": [
+            "decides"
+          ],
+          "text": "Longest streak of consecutive login days per user.",
+          "points": [
+            "<strong>Pattern:</strong> <strong>gaps and islands</strong> → date minus row number is constant inside a streak",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">WITH d AS (SELECT DISTINCT user_id, login_date FROM logins),\ng AS (\n  SELECT user_id, login_date,\n         julianday(login_date) - ROW_NUMBER() OVER (\n           PARTITION BY user_id ORDER BY login_date) AS grp\n  FROM d\n)\nSELECT user_id, MAX(n) AS longest_streak FROM (\n  SELECT user_id, grp, COUNT(*) AS n FROM g\n  GROUP BY user_id, grp\n) GROUP BY user_id;\n</code></pre>",
+            "<strong>On the sample:</strong> user 1 (1–3 Mar, 7–8 Mar) → 3 · user 2 → 1",
+            "<code>DISTINCT</code> first: two logins on one day would break the arithmetic",
+            "Postgres: <code>login_date - ROW_NUMBER()::int</code> in place of <code>julianday</code>"
+          ],
+          "links": [
+            {
+              "label": "Query Patterns",
+              "target": "11-dbms/Sql/01-Query-Writing/Query-Patterns"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>",
+          "flow": "dedupe days → date − row_number = island id → count per island → max",
+          "trap": "skipping the dedupe step"
+        },
+        {
+          "id": "databases-q9",
+          "number": 9,
+          "marks": [],
+          "text": "One row per customer, with paid and refunded totals as columns.",
+          "points": [
+            "<strong>Pattern:</strong> pivot by <strong>conditional aggregation</strong>",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT customer_id,\n  SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS paid,\n  SUM(CASE WHEN status = 'refunded' THEN amount ELSE 0 END)\n    AS refunded\nFROM orders WHERE customer_id IS NOT NULL\nGROUP BY customer_id;\n</code></pre>",
+            "<strong>On the sample:</strong> customer 1 → 950 / 0 · customer 2 → 50 / 200",
+            "Postgres shorthand: <code>SUM(amount) FILTER (WHERE status = 'paid')</code>",
+            "Columns must be known up front; unknown categories → pivot in the application"
+          ],
+          "links": [
+            {
+              "label": "Aggregation and Group By",
+              "target": "11-dbms/Sql/01-Query-Writing/Aggregation-and-Group-By"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
+          "flow": "group by the row key → one CASE-sum per output column",
+          "trap": "<code>COUNT(CASE … ELSE 0 END)</code> counts every row"
+        },
+        {
+          "id": "databases-q10",
+          "number": 10,
+          "marks": [],
+          "text": "Median salary per department.",
+          "points": [
+            "<strong>Pattern:</strong> number the rows, pick the middle one or two, average them",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">WITH r AS (\n  SELECT dept_id, salary,\n    ROW_NUMBER() OVER (\n      PARTITION BY dept_id ORDER BY salary) AS rn,\n    COUNT(*) OVER (PARTITION BY dept_id) AS n\n  FROM employees\n)\nSELECT dept_id, AVG(salary) AS median FROM r\nWHERE rn IN ((n + 1) / 2, (n + 2) / 2)\nGROUP BY dept_id;\n</code></pre>",
+            "<strong>On the sample:</strong> Eng (250, 250, 260, 300) → 255.0 · Sales (150, 200, 220) → 200.0",
+            "Odd n → both expressions give the same row · even n → the two middle rows",
+            "Postgres has it built in: <code>percentile_cont(0.5) WITHIN GROUP (ORDER BY salary)</code>"
+          ],
+          "links": [
+            {
+              "label": "Window Functions",
+              "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
+          "flow": "row_number + count per group → middle positions → average",
+          "trap": "using <code>AVG</code> and calling it the median"
+        },
+        {
+          "id": "databases-q11",
+          "number": 11,
+          "marks": [],
+          "text": "Latest record per user from a change log.",
+          "points": [
+            "<strong>Pattern:</strong> top-1 per group → <code>ROW_NUMBER … ORDER BY updated_at DESC</code>, keep <code>rn = 1</code>",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT user_id, city FROM (\n  SELECT p.*, ROW_NUMBER() OVER (\n           PARTITION BY user_id ORDER BY updated_at DESC) AS rn\n  FROM profile_changes p\n) WHERE rn = 1;\n</code></pre>",
+            "<strong>On the sample:</strong> user 1 → Pune · user 2 → Goa",
+            "Postgres shorthand: <code>SELECT DISTINCT ON (user_id) … ORDER BY user_id, updated_at DESC</code>",
+            "Equal timestamps → add a tie-breaker column",
+            "Index <code>(user_id, updated_at DESC)</code> makes it cheap"
+          ],
+          "links": [
+            {
+              "label": "Query Patterns",
+              "target": "11-dbms/Sql/01-Query-Writing/Query-Patterns"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">profile_changes(user_id, city, updated_at)\n</code></pre>",
+          "flow": "partition by key → order newest first → keep row 1",
+          "trap": "<code>GROUP BY user_id</code> with <code>MAX(updated_at)</code> and a non-aggregated <code>city</code>"
+        },
+        {
+          "id": "databases-q12",
+          "number": 12,
+          "marks": [],
+          "text": "Everyone who reports to a manager, directly or indirectly, with their depth.",
+          "points": [
+            "<strong>Pattern:</strong> <strong>recursive CTE</strong> → anchor row, then join children to the previous level",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">WITH RECURSIVE tree AS (\n  SELECT id, name, 0 AS depth FROM employees WHERE id = 1\n  UNION ALL\n  SELECT e.id, e.name, t.depth + 1\n  FROM employees e JOIN tree t ON e.manager_id = t.id\n)\nSELECT depth, name FROM tree ORDER BY depth, id;\n</code></pre>",
+            "<strong>On the sample:</strong> 0 Asha · 1 Bo, Chen, Eli · 2 Dev, Fay, Gus",
+            "A cycle in the data → infinite recursion: cap <code>depth</code>, or track the path",
+            "Index on <code>manager_id</code>; each level is one join"
+          ],
+          "links": [
+            {
+              "label": "CTEs and Recursive",
+              "target": "11-dbms/Sql/01-Query-Writing/CTEs-and-Recursive"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
+          "flow": "anchor → recursive member joins to the CTE → stops when no rows are added",
+          "trap": "no guard against cycles"
+        },
+        {
+          "id": "databases-q13",
+          "number": 13,
+          "marks": [],
+          "text": "Split each user's events into sessions: a new session after 30 minutes of inactivity.",
+          "points": [
+            "<strong>Pattern:</strong> flag a boundary with <code>LAG</code>, then a running <code>SUM</code> of the flags = session id",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">WITH f AS (\n  SELECT user_id, ts,\n    CASE WHEN LAG(ts) OVER w IS NULL\n           OR (julianday(ts) - julianday(LAG(ts) OVER w))\n              * 1440 &gt; 30\n         THEN 1 ELSE 0 END AS is_new\n  FROM events\n  WINDOW w AS (PARTITION BY user_id ORDER BY ts)\n)\nSELECT user_id, ts,\n  SUM(is_new) OVER (\n    PARTITION BY user_id ORDER BY ts) AS session_no\nFROM f;\n</code></pre>",
+            "<strong>On the sample:</strong> user 1 at 10:00, 10:10 → session 1 · 10:50, 11:05 → session 2",
+            "Postgres: <code>ts - LAG(ts) OVER w &gt; interval '30 minutes'</code>",
+            "Same two-step shape solves any \"start a new group when…\" problem"
+          ],
+          "links": [
+            {
+              "label": "Query Patterns",
+              "target": "11-dbms/Sql/01-Query-Writing/Query-Patterns"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">events(user_id, ts)\n</code></pre>",
+          "flow": "LAG → gap &gt; threshold? flag 1 → running sum of flags",
+          "trap": "trying to do it in one window pass"
+        },
+        {
+          "id": "databases-q14",
+          "number": 14,
+          "marks": [],
+          "text": "Find overlapping bookings for a room, and the peak number at once.",
+          "points": [
+            "<strong>Pattern:</strong> two intervals overlap when <strong>each starts before the other ends</strong>",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT a.id, b.id FROM bookings a JOIN bookings b\n  ON a.room_id = b.room_id AND a.id &lt; b.id\n AND a.start_ts &lt; b.end_ts AND b.start_ts &lt; a.end_ts;\n\nWITH pts AS (SELECT start_ts AS t, 1 AS d FROM bookings\n             UNION ALL SELECT end_ts, -1 FROM bookings)\nSELECT MAX(running) AS peak\nFROM (SELECT SUM(d) OVER (ORDER BY t, d) AS running FROM pts);\n</code></pre>",
+            "<strong>On the sample:</strong> pairs (1,2), (1,3), (2,3) · peak = 3",
+            "<code>a.id &lt; b.id</code> → each pair once, no self-pairs",
+            "Peak = <strong>sweep line</strong>: +1 at a start, −1 at an end, running sum; <code>ORDER BY t, d</code> ends before starts at the same instant",
+            "To <em>prevent</em> overlaps: Postgres exclusion constraint on a range type"
+          ],
+          "links": [
+            {
+              "label": "Joins",
+              "target": "11-dbms/Sql/01-Query-Writing/Joins"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">bookings(id, room_id, start_ts, end_ts)\n</code></pre>",
+          "flow": "overlap test <code>a.start &lt; b.end AND b.start &lt; a.end</code> → sweep line for the peak",
+          "trap": "checking only \"b starts inside a\""
+        },
+        {
+          "id": "databases-q15",
+          "number": 15,
+          "marks": [],
+          "text": "Day-1 retention by signup cohort.",
+          "points": [
+            "<strong>Pattern:</strong> first event per user = cohort; then test for an event at cohort + N days",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">WITH first AS (\n  SELECT user_id, MIN(login_date) AS d0\n  FROM logins GROUP BY user_id\n)\nSELECT f.d0 AS cohort, COUNT(*) AS users,\n  SUM(EXISTS (\n    SELECT 1 FROM logins l\n    WHERE l.user_id = f.user_id\n      AND l.login_date = date(f.d0, '+1 day'))) AS back_day_1\nFROM first f GROUP BY f.d0;\n</code></pre>",
+            "<strong>On the sample:</strong> cohort 1 Mar → 2 users, 1 back on day 1 (50%)",
+            "Postgres: <code>COUNT(*) FILTER (WHERE EXISTS (…))</code> and <code>d0 + 1</code>",
+            "Say which definition: <strong>exactly</strong> day N, or <strong>on or after</strong> day N",
+            "Recent cohorts haven't had N days yet → exclude them"
+          ],
+          "links": [
+            {
+              "label": "Query Problems",
+              "target": "11-dbms/Sql/07-Practice/Query-Problems"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>",
+          "flow": "min date per user → cohort → exists on d0 + N → users back / cohort size",
+          "trap": "counting logins, not distinct users"
+        },
+        {
+          "id": "databases-q16",
+          "number": 16,
+          "marks": [],
+          "text": "Write an idempotent upsert that never lets an older update overwrite a newer one.",
+          "points": [
+            "<strong>Pattern:</strong> <code>INSERT … ON CONFLICT DO UPDATE</code>, guarded by a version or timestamp",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">INSERT INTO inventory(sku, qty, updated_at) VALUES (?, ?, ?)\nON CONFLICT(sku) DO UPDATE\n  SET qty = excluded.qty, updated_at = excluded.updated_at\n  WHERE excluded.updated_at &gt; inventory.updated_at;\n</code></pre>",
+            "<strong>On the sample:</strong> A1 at 1 Mar → apply 5 Mar (qty 9) <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> → apply 2 Mar (qty 2) ignored → A1 stays 9",
+            "Replaying the same message changes nothing → safe for <strong>at-least-once</strong> delivery",
+            "Needs a unique constraint on the conflict target",
+            "MySQL: <code>ON DUPLICATE KEY UPDATE</code> · SQL Server, Oracle: <code>MERGE</code>"
+          ],
+          "links": [
+            {
+              "label": "ACID",
+              "target": "11-dbms/Sql/03-Transactions/ACID"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">inventory(sku PRIMARY KEY, qty, updated_at)\n</code></pre>",
+          "flow": "insert → conflict on key → update only if the incoming row is newer",
+          "trap": "read-then-write in the application: a race between the two statements"
+        },
+        {
+          "id": "databases-q17",
+          "number": 17,
+          "marks": [],
+          "text": "📝 \"Paginate a large table without OFFSET.",
+          "points": [
+            "<strong>Pattern:</strong> <strong>keyset (seek) pagination</strong> → \"rows after the last one I saw\"",
+            "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT id, created_at FROM orders\nWHERE (created_at, id) &lt; ('2026-03-01', 5)   -- last row seen\nORDER BY created_at DESC, id DESC\nLIMIT 2;\n</code></pre>",
+            "<strong>On the sample:</strong> next page → (4, 14 Feb), (3, 3 Feb)",
+            "<code>OFFSET n</code> reads and discards n rows → page 10,000 is slow, and rows shift under concurrent inserts",
+            "Keyset is an <strong>index seek</strong> on <code>(created_at, id)</code>: constant cost per page",
+            "Cost: no \"jump to page 57\"; the sort key must be unique → add <code>id</code> as a tie-breaker"
+          ],
+          "links": [
+            {
+              "label": "Query Optimization",
+              "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+            }
+          ],
+          "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
+          "flow": "order by (sort key, id) → pass the last row as a cursor → seek, limit",
+          "trap": "a non-unique sort key, which skips or repeats rows"
+        }
+      ]
+    },
+    {
+      "id": "databases-engine-mechanics",
+      "letter": null,
+      "name": "Engine mechanics",
+      "questions": [
+        {
+          "id": "databases-q18",
+          "number": 18,
+          "marks": [],
+          "text": "How does a B-tree index work, and when is it not used?",
+          "points": [
+            "Sorted, balanced tree → <strong>O(log n)</strong> to find a key, then a <strong>range scan</strong> along the leaves",
+            "Good for: <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code>, prefix <code>LIKE 'abc%'</code>",
+            "Not used: function on the column (<code>LOWER(email)</code>), leading wildcard, implicit type cast",
+            "Not used: <strong>low selectivity</strong> → the planner prefers a scan to many random reads",
+            "Every index is paid for on <strong>every write</strong>"
+          ],
+          "links": [
+            {
+              "label": "Index Internals",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+            }
+          ],
+          "flow": "sorted tree → seek + range → skipped when the predicate isn't sargable or selective",
+          "trap": "\"add an index\" with no plan, no selectivity, no write cost"
+        },
+        {
+          "id": "databases-q19",
+          "number": 19,
+          "marks": [
+            "decides"
+          ],
+          "text": "Composite index on (customer_id, created_at). Which queries can use it?",
+          "points": [
+            "<strong>Leftmost prefix:</strong> usable from the first column onward, in order",
+            "<code>WHERE customer_id = 1 AND created_at &gt; …</code> → seek on both <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg>",
+            "<code>WHERE created_at &gt; …</code> alone → <strong>full scan</strong>, the index can't be entered",
+            "Order rule: <strong>equality columns first, then the range column</strong>, then sort columns",
+            "Run on SQLite: first query → <code>SEARCH … USING INDEX (customer_id=? AND created_at&gt;?)</code>; second → <code>SCAN orders</code>"
+          ],
+          "links": [
+            {
+              "label": "Index Internals",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+            }
+          ],
+          "flow": "equality columns → one range column → anything after the range can't seek",
+          "trap": "ordering columns by \"most selective first\" regardless of the predicates"
+        },
+        {
+          "id": "databases-q20",
+          "number": 20,
+          "marks": [],
+          "text": "What is a covering index?",
+          "points": [
+            "The index holds <strong>every column the query needs</strong> → the table is never read",
+            "Plan shows an <strong>index-only scan</strong> (Postgres) / <code>USING COVERING INDEX</code> (SQLite, run)",
+            "Postgres: <code>INCLUDE (col)</code> adds payload columns without widening the key",
+            "Postgres caveat: needs the <strong>visibility map</strong> to be current, so vacuum matters",
+            "Cost: a wider index → more write work and more memory"
+          ],
+          "links": [
+            {
+              "label": "Index Internals",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+            }
+          ],
+          "flow": "query columns ⊆ index columns → no heap lookups → fewer random reads",
+          "trap": "<code>SELECT *</code> on a query you tried to cover"
+        },
+        {
+          "id": "databases-q21",
+          "number": 21,
+          "marks": [],
+          "text": "Walk me through reading an EXPLAIN plan.",
+          "points": [
+            "Read <strong>inside out</strong>: the deepest nodes run first",
+            "Per node: scan type (seq / index / index-only / bitmap), join type, <strong>estimated rows</strong>",
+            "<code>EXPLAIN ANALYZE</code> adds <strong>actual rows and time</strong> → estimate ≠ actual = stale statistics",
+            "Look for: a scan on a big table, a nested loop over many rows, a sort spilling to disk",
+            "Fix order: statistics → predicate shape → index → rewrite"
+          ],
+          "links": [
+            {
+              "label": "Query Optimization",
+              "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+            }
+          ],
+          "flow": "find the costliest node → compare estimated vs actual rows → fix the cause",
+          "trap": "tuning from <code>EXPLAIN</code> without <code>ANALYZE</code>"
+        },
+        {
+          "id": "databases-q22",
+          "number": 22,
+          "marks": [
+            "decides"
+          ],
+          "text": "Isolation levels: which anomalies does each one allow?",
+          "points": [
+            "<strong>Read uncommitted</strong> → dirty reads · <strong>Read committed</strong> → non-repeatable reads, phantoms",
+            "<strong>Repeatable read</strong> → standard allows phantoms · <strong>Serializable</strong> → none",
+            "Defaults differ: <strong>Postgres = read committed</strong>, <strong>MySQL InnoDB = repeatable read</strong>",
+            "Postgres repeatable read = <strong>snapshot isolation</strong>: no phantoms, but <strong>write skew</strong> remains",
+            "Serializable → transactions can abort → the application <strong>must retry</strong>"
+          ],
+          "links": [
+            {
+              "label": "Isolation Levels",
+              "target": "11-dbms/Sql/03-Transactions/Isolation-Levels"
+            }
+          ],
+          "flow": "name the anomaly → the lowest level that prevents it → retry on serialization failure",
+          "trap": "assuming \"repeatable read\" means the same thing on every engine"
+        },
+        {
+          "id": "databases-q23",
+          "number": 23,
+          "marks": [],
+          "text": "What is MVCC, and what does it cost?",
+          "points": [
+            "Each write creates a <strong>new row version</strong>; readers see a snapshot",
+            "<strong>Readers don't block writers</strong>, writers don't block readers",
+            "Cost: dead versions pile up → <strong>vacuum</strong> (Postgres) or purge of undo (InnoDB)",
+            "A <strong>long-running transaction</strong> pins old versions → bloat, slower scans",
+            "Write–write conflicts still need locks or a first-committer-wins rule"
+          ],
+          "links": [
+            {
+              "label": "MVCC",
+              "target": "11-dbms/Sql/03-Transactions/MVCC"
+            }
+          ],
+          "flow": "versions per row → snapshot reads → garbage collection of dead versions",
+          "trap": "an idle-in-transaction session left open for hours"
+        },
+        {
+          "id": "databases-q24",
+          "number": 24,
+          "marks": [],
+          "text": "How does a deadlock happen, and how do you prevent it?",
+          "points": [
+            "Two transactions each hold a lock the other needs → a <strong>cycle</strong>",
+            "The database detects it and <strong>aborts one victim</strong>",
+            "Prevent: take locks in a <strong>consistent order</strong> (e.g. sort ids before updating)",
+            "Keep transactions <strong>short</strong>; no user or network waits inside one",
+            "Always <strong>retry</strong> the victim; <code>SELECT … FOR UPDATE SKIP LOCKED</code> for queue workers"
+          ],
+          "links": [
+            {
+              "label": "Locks and Deadlocks",
+              "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+            }
+          ],
+          "flow": "lock cycle → detector aborts one → fix lock order → retry",
+          "trap": "treating the deadlock error as fatal instead of retrying"
+        },
+        {
+          "id": "databases-q25",
+          "number": 25,
+          "marks": [],
+          "text": "What does the write-ahead log give you?",
+          "points": [
+            "Change is written to the <strong>log first</strong>, sequentially, and fsynced at commit",
+            "<strong>Durability:</strong> after a crash, replay the log → committed work survives",
+            "Data pages are flushed later, at a <strong>checkpoint</strong> → cheap sequential I/O up front",
+            "The same stream feeds <strong>replication</strong> and <strong>CDC</strong>",
+            "Knobs trade safety for speed: group commit, asynchronous commit"
+          ],
+          "links": [
+            {
+              "label": "ACID",
+              "target": "11-dbms/Sql/03-Transactions/ACID"
+            }
+          ],
+          "flow": "log record → fsync at commit → pages later → replay on crash",
+          "trap": "turning off fsync \"for performance\" on data you can't lose"
+        },
+        {
+          "id": "databases-q26",
+          "number": 26,
+          "marks": [],
+          "text": "Nested loop, hash join, merge join: when does the planner pick each?",
+          "points": [
+            "<strong>Nested loop:</strong> small outer side + an <strong>index</strong> on the inner → best for selective lookups",
+            "<strong>Hash join:</strong> large, unsorted inputs with an <strong>equality</strong> condition → build a hash, probe",
+            "<strong>Merge join:</strong> both inputs <strong>already sorted</strong> (or indexed) on the key",
+            "Hash needs memory → spills to disk when it doesn't fit",
+            "A bad choice usually means a <strong>bad row estimate</strong>"
+          ],
+          "links": [
+            {
+              "label": "Joins",
+              "target": "11-dbms/Sql/01-Query-Writing/Joins"
+            }
+          ],
+          "flow": "row estimates + available indexes + sort order → algorithm",
+          "trap": "forcing a join type instead of fixing the statistics"
+        },
+        {
+          "id": "databases-q27",
+          "number": 27,
+          "marks": [],
+          "text": "📝 \"B-tree or LSM-tree?",
+          "points": [
+            "<strong>B-tree:</strong> update in place → fast, predictable reads; random I/O on writes",
+            "<strong>LSM-tree:</strong> append to a memtable + log → flush to sorted files → <strong>compaction</strong> merges them",
+            "LSM wins on <strong>write-heavy</strong> workloads; reads may check several files (<strong>Bloom filters</strong> help)",
+            "Costs differ: B-tree → page splits, fragmentation · LSM → compaction I/O, space spikes",
+            "B-tree: Postgres, MySQL InnoDB · LSM: RocksDB, Cassandra, and many distributed stores"
+          ],
+          "links": [
+            {
+              "label": "Index Internals",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+            }
+          ],
+          "flow": "read-heavy + range scans → B-tree · write-heavy ingest → LSM + compaction budget",
+          "trap": "ignoring compaction when sizing an LSM store"
+        },
+        {
+          "id": "databases-q28",
+          "number": 28,
+          "marks": [],
+          "text": "What is the N+1 query problem?",
+          "points": [
+            "One query for the list, then <strong>one query per row</strong> for a related item",
+            "Usually an ORM's <strong>lazy loading</strong> inside a loop",
+            "Invisible in tests with 5 rows; <strong>N round trips</strong> in production",
+            "Fix: join fetch, or batch with <code>WHERE id IN (…)</code>",
+            "Detect: query count per request in traces or the ORM's log"
+          ],
+          "links": [
+            {
+              "label": "Slow Query Debugging",
+              "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+            }
+          ],
+          "flow": "list query → loop triggers a query per row → replace with a join or one IN query",
+          "trap": "\"the query is fast\": each one is, there are just 500 of them"
+        },
+        {
+          "id": "databases-q29",
+          "number": 29,
+          "marks": [],
+          "text": "Why a connection pool, and how big?",
+          "points": [
+            "A connection is <strong>expensive</strong>: Postgres starts a process per connection",
+            "Pool = a fixed set of reused connections; requests <strong>queue</strong> when it's full",
+            "<strong>Smaller is usually faster</strong>: start near 2 × CPU cores of the database, then measure",
+            "Pool size × app instances must stay under the database's connection limit",
+            "External pooler (PgBouncer, transaction mode) for many instances; session features don't carry over"
+          ],
+          "links": [
+            {
+              "label": "Caching and Pooling",
+              "target": "11-dbms/Sql/05-Scaling/Caching-and-Pooling"
+            }
+          ],
+          "flow": "fixed pool → queue instead of overload → size from DB cores, not app threads",
+          "trap": "raising the pool size when the database is the bottleneck"
+        }
+      ]
+    },
+    {
+      "id": "databases-trade-offs",
+      "letter": null,
+      "name": "Trade-offs",
+      "questions": [
+        {
+          "id": "databases-q30",
+          "number": 30,
+          "marks": [
+            "decides"
+          ],
+          "text": "SQL or NoSQL: how do you actually decide?",
+          "points": [
+            "Start from <strong>access patterns</strong> and consistency needs, not from the product name",
+            "<strong>Relational:</strong> joins, ad-hoc queries, multi-row transactions, constraints",
+            "<strong>NoSQL:</strong> a known, narrow set of access patterns at very high scale; flexible or sparse records",
+            "You trade <strong>query flexibility</strong> for <strong>predictable scale</strong>",
+            "Default: one relational database until a measured limit says otherwise"
+          ],
+          "links": [
+            {
+              "label": "SQL vs NoSQL",
+              "target": "11-dbms/Sql/06-Data-Systems/SQL-vs-NoSQL"
+            }
+          ],
+          "flow": "list the queries → consistency needed → scale and shape → then pick",
+          "trap": "\"NoSQL because it scales\" with no access patterns written down"
+        },
+        {
+          "id": "databases-q31",
+          "number": 31,
+          "marks": [],
+          "text": "Normalise or denormalise?",
+          "points": [
+            "<strong>Normalise</strong> (to 3NF) → one fact in one place; no update anomalies",
+            "<strong>Denormalise</strong> → fewer joins on a hot read path; you now own <strong>keeping copies in sync</strong>",
+            "Do it for a measured read problem, not by default",
+            "Options before copying columns: an index, a <strong>materialised view</strong>, a cache",
+            "Record who updates the copy: trigger, application, or CDC"
+          ],
+          "links": [
+            {
+              "label": "Normalization and Denormalization",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Normalization-and-Denormalization"
+            }
+          ],
+          "flow": "normalise first → measure the read path → denormalise the one hot query → own the sync",
+          "trap": "duplicated data with no owner for consistency"
+        },
+        {
+          "id": "databases-q32",
+          "number": 32,
+          "marks": [],
+          "text": "Key-value, document, wide-column, graph: which fits what?",
+          "points": [
+            "<strong>Key-value</strong> → lookup by key: sessions, caches, feature flags",
+            "<strong>Document</strong> → an aggregate read and written as a whole; varying fields",
+            "<strong>Wide-column</strong> → huge write volume, queries by <strong>partition key</strong> + sorted range",
+            "<strong>Graph</strong> → the question is about <strong>relationships</strong>: paths, neighbours, many hops",
+            "Most systems are <strong>polyglot</strong>: a relational core plus one or two specialised stores"
+          ],
+          "links": [
+            {
+              "label": "SQL vs NoSQL",
+              "target": "11-dbms/Sql/06-Data-Systems/SQL-vs-NoSQL"
+            }
+          ],
+          "flow": "shape of the query → model → each added store is another thing to operate",
+          "trap": "a document store used for heavily relational data"
+        },
+        {
+          "id": "databases-q33",
+          "number": 33,
+          "marks": [],
+          "text": "UUID or auto-increment primary key?",
+          "points": [
+            "<strong>Auto-increment:</strong> small, ordered → inserts append to the index; but one generator, and ids are guessable",
+            "<strong>Random UUID (v4):</strong> generated anywhere; inserts land <strong>all over</strong> the B-tree → page splits, cache misses",
+            "<strong>Time-ordered ids (UUIDv7, ULID):</strong> distributed generation <strong>and</strong> index locality",
+            "Key size multiplies: every secondary index and foreign key carries it",
+            "Don't expose sequential ids publicly if enumeration matters"
+          ],
+          "links": [
+            {
+              "label": "Schema Design",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Schema-Design"
+            }
+          ],
+          "flow": "need distributed generation? → time-ordered id · single writer → bigint",
+          "trap": "random UUIDs as the clustered key of a write-heavy table"
+        },
+        {
+          "id": "databases-q34",
+          "number": 34,
+          "marks": [],
+          "text": "Optimistic or pessimistic locking?",
+          "points": [
+            "<strong>Optimistic:</strong> read a version, write <code>WHERE version = ?</code>; zero rows updated → someone else won → retry",
+            "<strong>Pessimistic:</strong> <code>SELECT … FOR UPDATE</code> → others wait",
+            "Optimistic fits <strong>rare conflicts</strong> and long think time (a user editing a form)",
+            "Pessimistic fits <strong>frequent conflicts</strong> on short critical sections (decrementing stock)",
+            "Never hold a database lock across a user interaction"
+          ],
+          "links": [
+            {
+              "label": "Locks and Deadlocks",
+              "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+            }
+          ],
+          "flow": "conflict rate low → version check + retry · high → lock briefly",
+          "trap": "read–modify–write with neither"
+        },
+        {
+          "id": "databases-q35",
+          "number": 35,
+          "marks": [],
+          "text": "Row store or column store?",
+          "points": [
+            "<strong>Row store (OLTP):</strong> whole rows together → fast point reads and writes",
+            "<strong>Column store (OLAP):</strong> each column together → scans a few columns of billions of rows",
+            "Columnar compresses well and <strong>skips</strong> columns and blocks the query doesn't need",
+            "Columnar is poor at single-row updates",
+            "Usual shape: OLTP database → CDC or batch → warehouse"
+          ],
+          "links": [
+            {
+              "label": "Row vs Columnar",
+              "target": "11-dbms/Sql/06-Data-Systems/Row-vs-Columnar"
+            },
+            {
+              "label": "OLTP vs OLAP",
+              "target": "11-dbms/Sql/06-Data-Systems/OLTP-vs-OLAP"
+            }
+          ],
+          "flow": "many small transactions → row · few big aggregations → column",
+          "trap": "running analytics on the primary OLTP database at peak"
+        },
+        {
+          "id": "databases-q36",
+          "number": 36,
+          "marks": [],
+          "text": "Cache-aside, write-through or write-behind?",
+          "points": [
+            "<strong>Cache-aside:</strong> read cache → miss → read DB → fill; on write, <strong>delete</strong> the key",
+            "<strong>Write-through:</strong> write the cache and DB together → fresh cache, slower writes",
+            "<strong>Write-behind:</strong> write the cache, flush later → fast, and <strong>can lose data</strong>",
+            "Every cache needs a <strong>TTL</strong> as a backstop for missed invalidations",
+            "Hot key expires → <strong>stampede</strong>: use a lock or early refresh"
+          ],
+          "links": [
+            {
+              "label": "Caching and Pooling",
+              "target": "11-dbms/Sql/05-Scaling/Caching-and-Pooling"
+            }
+          ],
+          "flow": "cache-aside by default → invalidate on write → TTL backstop → stampede guard",
+          "trap": "updating the cache instead of deleting it, and racing a concurrent write"
+        },
+        {
+          "id": "databases-q37",
+          "number": 37,
+          "marks": [],
+          "text": "Partitioning, replication, sharding: which problem does each solve?",
+          "points": [
+            "<strong>Partitioning</strong> (one node): a big table split by range or hash → pruning, cheap drops of old data",
+            "<strong>Replication:</strong> copies of all data → <strong>read scale</strong> and availability; not write scale",
+            "<strong>Sharding:</strong> data split across nodes → <strong>write scale</strong> and size; cross-shard queries get hard",
+            "Order to try: indexes and queries → cache → read replicas → partition → shard",
+            "Sharding is the hardest one to undo"
+          ],
+          "links": [
+            {
+              "label": "Partitioning",
+              "target": "11-dbms/Sql/05-Scaling/Partitioning"
+            },
+            {
+              "label": "Replication",
+              "target": "11-dbms/Sql/05-Scaling/Replication"
+            },
+            {
+              "label": "Sharding",
+              "target": "11-dbms/Sql/05-Scaling/Sharding"
+            }
+          ],
+          "flow": "read problem → replicas · big-table problem → partition · write or size ceiling → shard",
+          "trap": "\"the database is slow, so we shard\""
+        }
+      ]
+    },
+    {
+      "id": "databases-scaling-failure",
+      "letter": null,
+      "name": "Scaling & failure",
+      "questions": [
+        {
+          "id": "databases-q38",
+          "number": 38,
+          "marks": [
+            "decides"
+          ],
+          "text": "A query that took 20 ms now takes 4 s. Nothing was deployed. Diagnose it.",
+          "points": [
+            "Get the <strong>actual plan</strong> now (<code>EXPLAIN ANALYZE</code>) and compare with the old one",
+            "<strong>Plan flip:</strong> stale statistics or data growth pushed the planner to a different join or scan",
+            "<strong>Data skew:</strong> one customer or value became huge → the same plan is now wrong for it",
+            "<strong>Contention:</strong> lock waits or I/O saturation, not the query itself → check wait events",
+            "<strong>Bloat</strong> or a dropped/invalid index",
+            "Fix the cause: analyse, index, rewrite; pin a plan only as a stopgap"
+          ],
+          "links": [
+            {
+              "label": "Slow Query Debugging",
+              "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+            }
+          ],
+          "flow": "actual plan → estimated vs actual rows → plan flip, skew, or waiting? → fix that",
+          "trap": "adding an index before looking at the plan"
+        },
+        {
+          "id": "databases-q39",
+          "number": 39,
+          "marks": [],
+          "text": "A user saves a change and doesn't see it on the next page. Why?",
+          "points": [
+            "The read went to a <strong>replica</strong> that hasn't applied the write yet: <strong>replication lag</strong>",
+            "Asynchronous replication → replicas are <strong>eventually</strong> consistent",
+            "Fix for the user: <strong>read-your-writes</strong> → route that user to the primary for a short window, or wait for the replica to reach the write's log position",
+            "Synchronous replication removes it, at the cost of write latency",
+            "Monitor lag in seconds and in bytes; alert on it"
+          ],
+          "links": [
+            {
+              "label": "Replication",
+              "target": "11-dbms/Sql/05-Scaling/Replication"
+            }
+          ],
+          "flow": "write to primary → read from a lagging replica → pin recent writers to the primary",
+          "trap": "sending every read to replicas with no rule for recent writes"
+        },
+        {
+          "id": "databases-q40",
+          "number": 40,
+          "marks": [
+            "decides"
+          ],
+          "text": "📝 \"Add a NOT NULL column to a 500 GB table with zero downtime.",
+          "points": [
+            "<strong>Expand → backfill → contract</strong>; never one big blocking statement",
+            "Add the column <strong>nullable</strong> (a metadata change on modern engines)",
+            "<strong>Backfill in small batches</strong>, each its own transaction, throttled by replica lag",
+            "Application writes the new column first (dual-write), then reads it",
+            "Add the constraint last: Postgres → <code>CHECK … NOT VALID</code>, then <code>VALIDATE</code>",
+            "Set a <strong>lock timeout</strong>: a DDL waiting for a lock blocks everyone queued behind it"
+          ],
+          "links": [
+            {
+              "label": "Schema Design",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Schema-Design"
+            }
+          ],
+          "flow": "add nullable → deploy writers → backfill in batches → validate constraint → drop old",
+          "trap": "one <code>UPDATE</code> of the whole table inside a single transaction"
+        },
+        {
+          "id": "databases-q41",
+          "number": 41,
+          "marks": [],
+          "text": "One shard is hot while the others idle. What now?",
+          "points": [
+            "Cause: a <strong>skewed key</strong> → one tenant, one celebrity, or a time-based key where \"now\" is one shard",
+            "Short term: cache the hot key, rate-limit the hot tenant, move it to its own shard",
+            "Long term: a better key → add a <strong>suffix or hash</strong> to spread it, or a composite key",
+            "A <strong>directory</strong> (lookup) layer lets you move individual tenants",
+            "Measure per-key traffic before choosing; averages hide the skew"
+          ],
+          "links": [
+            {
+              "label": "Sharding",
+              "target": "11-dbms/Sql/05-Scaling/Sharding"
+            }
+          ],
+          "flow": "find the hot key → isolate or cache it now → change the key or add a directory",
+          "trap": "adding more shards when one key is the whole problem"
+        },
+        {
+          "id": "databases-q42",
+          "number": 42,
+          "marks": [],
+          "text": "The database hits max connections under load.",
+          "points": [
+            "Count first: <strong>pool size × instances</strong> vs the database limit",
+            "Autoscaling the app <strong>multiplies</strong> connections exactly when the database is struggling",
+            "Leaks: connections not returned; transactions left <strong>idle in transaction</strong>",
+            "Fix: smaller pools + an external pooler; timeouts on idle transactions",
+            "Slow queries hold connections longer → fix them and the \"connection\" problem shrinks"
+          ],
+          "links": [
+            {
+              "label": "Caching and Pooling",
+              "target": "11-dbms/Sql/05-Scaling/Caching-and-Pooling"
+            }
+          ],
+          "flow": "instances × pool vs limit → find leaks and long holders → pooler + timeouts",
+          "trap": "raising <code>max_connections</code> and making every query slower"
+        },
+        {
+          "id": "databases-q43",
+          "number": 43,
+          "marks": [],
+          "text": "Deadlocks spike after a release.",
+          "points": [
+            "Read the <strong>deadlock report</strong>: it names both statements and the locks",
+            "New code path updates the same rows in a <strong>different order</strong>",
+            "Or a new index / foreign key added a lock the old path didn't take",
+            "Batch jobs touching many rows in arbitrary order → <strong>sort by key</strong> first",
+            "Until fixed: retries with backoff keep users whole"
+          ],
+          "links": [
+            {
+              "label": "Locks and Deadlocks",
+              "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+            }
+          ],
+          "flow": "deadlock log → the two statements → make lock order consistent → retry as the net",
+          "trap": "raising lock timeouts"
+        },
+        {
+          "id": "databases-q44",
+          "number": 44,
+          "marks": [],
+          "text": "Rows are being deleted, but the table keeps growing.",
+          "points": [
+            "MVCC: a delete marks a version <strong>dead</strong>; space is reused only after cleanup",
+            "<strong>Postgres:</strong> autovacuum can't keep up, or is blocked by a <strong>long transaction</strong> or stale replication slot",
+            "Vacuum makes space reusable; it rarely returns it to the OS",
+            "Fix: find and end the old transaction; tune autovacuum for that table",
+            "Shrink for real: an online rebuild tool, or <strong>partition and drop</strong> old partitions"
+          ],
+          "links": [
+            {
+              "label": "MVCC",
+              "target": "11-dbms/Sql/03-Transactions/MVCC"
+            }
+          ],
+          "flow": "dead versions → cleanup blocked or too slow → unblock + tune → rebuild if needed",
+          "trap": "<code>VACUUM FULL</code> on a live table: it takes an exclusive lock"
+        },
+        {
+          "id": "databases-q45",
+          "number": 45,
+          "marks": [],
+          "text": "Delete 200 million old rows from a live table.",
+          "points": [
+            "Never one statement: huge transaction, long locks, log and replica lag explode",
+            "<strong>Batches</strong> of a few thousand by key range, commit each, pause on replica lag",
+            "Better: <strong>partition by time</strong> and <code>DROP</code> the old partition → instant, no bloat",
+            "If you're keeping only a small part: copy the keepers to a new table and swap",
+            "Check foreign keys and triggers: each deleted row may fan out"
+          ],
+          "links": [
+            {
+              "label": "Partitioning",
+              "target": "11-dbms/Sql/05-Scaling/Partitioning"
+            }
+          ],
+          "flow": "partitioned? drop the partition · else batch by key range, throttled",
+          "trap": "<code>DELETE … WHERE created_at &lt; …</code> in one transaction at midday"
+        },
+        {
+          "id": "databases-q46",
+          "number": 46,
+          "marks": [],
+          "text": "📝 \"What are RPO and RTO, and how do you know your backups work?",
+          "points": [
+            "<strong>RPO</strong> = how much data you can lose · <strong>RTO</strong> = how long recovery may take",
+            "Full backups + continuous <strong>log archiving</strong> → point-in-time recovery, RPO of seconds to minutes",
+            "A replica is <strong>not a backup</strong>: a bad <code>DELETE</code> replicates too",
+            "A backup is unproven until <strong>restored</strong>: schedule restore drills and time them",
+            "Keep copies in another account and region; test the decryption keys"
+          ],
+          "links": [
+            {
+              "label": "Design Scenarios",
+              "target": "11-dbms/Sql/07-Practice/Design-Scenarios"
+            }
+          ],
+          "flow": "set RPO/RTO with the business → base backup + log archive → restore drill → measure",
+          "trap": "\"we have replicas, so we're covered\""
+        }
+      ]
+    },
+    {
+      "id": "databases-architect",
+      "letter": null,
+      "name": "Architect",
+      "questions": [
+        {
+          "id": "databases-q47",
+          "number": 47,
+          "marks": [],
+          "text": "Explain CAP and PACELC with real systems.",
+          "points": [
+            "<strong>CAP:</strong> during a <strong>network partition</strong>, choose consistency or availability; you can't have both",
+            "No partition → CAP says nothing → <strong>PACELC</strong>: else, trade <strong>latency</strong> against consistency",
+            "<strong>CP-leaning:</strong> a single-leader relational database, consensus stores → refuse writes without a quorum",
+            "<strong>AP-leaning:</strong> Dynamo-style stores → accept writes, reconcile later",
+            "Often <strong>tunable per request</strong> (quorum settings); the choice is per operation, not per company"
+          ],
+          "links": [
+            {
+              "label": "CAP and Consistency",
+              "target": "11-dbms/Sql/05-Scaling/CAP-and-Consistency"
+            }
+          ],
+          "flow": "partition → C or A · normal operation → latency or consistency → decide per operation",
+          "trap": "\"we chose CA\""
+        },
+        {
+          "id": "databases-q48",
+          "number": 48,
+          "marks": [
+            "decides"
+          ],
+          "text": "Choose a shard key for a multi-tenant SaaS.",
+          "points": [
+            "Goals: <strong>most queries hit one shard</strong>, load spreads evenly, the key never changes",
+            "<code>tenant_id</code> → queries stay local; risk: one <strong>giant tenant</strong> = a hot shard",
+            "Mitigate: a directory that maps tenants to shards → big tenants get their own",
+            "Hash of the key spreads load; range keeps ranges together but hot-spots on \"latest\"",
+            "Cross-shard joins and transactions become the application's problem → design them out"
+          ],
+          "links": [
+            {
+              "label": "Sharding",
+              "target": "11-dbms/Sql/05-Scaling/Sharding"
+            }
+          ],
+          "flow": "list the queries → key that keeps each on one shard → check skew → directory for outliers",
+          "trap": "sharding on an auto-increment id or a timestamp"
+        },
+        {
+          "id": "databases-q49",
+          "number": 49,
+          "marks": [
+            "decides"
+          ],
+          "text": "Save an order and publish an event. How do you keep them consistent?",
+          "points": [
+            "The <strong>dual-write problem</strong>: DB commit and message publish can't be atomic → one can fail",
+            "<strong>Transactional outbox:</strong> write the event to an outbox table <strong>in the same transaction</strong>; a relay or CDC publishes it",
+            "Delivery is <strong>at-least-once</strong> → consumers must be <strong>idempotent</strong>",
+            "<strong>2PC</strong> gives atomicity across systems; it blocks on coordinator failure and few brokers support it",
+            "<strong>Saga:</strong> a chain of local transactions with <strong>compensating</strong> actions for multi-service flows"
+          ],
+          "links": [
+            {
+              "label": "CDC and Data Pipelines",
+              "target": "11-dbms/Sql/06-Data-Systems/CDC-and-Data-Pipelines"
+            },
+            {
+              "label": "ACID",
+              "target": "11-dbms/Sql/03-Transactions/ACID"
+            }
+          ],
+          "flow": "one local transaction (data + outbox row) → relay publishes → idempotent consumer",
+          "trap": "publish, then commit (or commit, then publish) and hope"
+        },
+        {
+          "id": "databases-q50",
+          "number": 50,
+          "marks": [],
+          "text": "How does change data capture work, and what do you use it for?",
+          "points": [
+            "Reads the database's <strong>log</strong> (WAL / binlog) and emits each committed change in order",
+            "No dual writes, low load on the source, nothing missed between polls",
+            "Uses: search index, cache invalidation, warehouse loads, the outbox relay",
+            "You own: <strong>schema evolution</strong>, ordering per key, replays, and the initial snapshot",
+            "Postgres: a stalled consumer holds its <strong>replication slot</strong> → the log piles up on the primary"
+          ],
+          "links": [
+            {
+              "label": "CDC and Data Pipelines",
+              "target": "11-dbms/Sql/06-Data-Systems/CDC-and-Data-Pipelines"
+            }
+          ],
+          "flow": "log → connector → stream (ordered per key) → idempotent consumers",
+          "trap": "polling <code>updated_at</code> and missing deletes"
+        },
+        {
+          "id": "databases-q51",
+          "number": 51,
+          "marks": [],
+          "text": "Quorums: what do N, R and W buy you?",
+          "points": [
+            "<strong>N</strong> replicas · a write waits for <strong>W</strong> acks · a read asks <strong>R</strong> replicas",
+            "<strong>R + W &gt; N</strong> → every read overlaps the latest write → strong-ish consistency",
+            "N=3, W=2, R=2 → survives one node down for reads and writes",
+            "W=1, R=1 → fastest, and stale reads are possible",
+            "Still needs conflict handling: last-write-wins loses data on clock skew"
+          ],
+          "links": [
+            {
+              "label": "CAP and Consistency",
+              "target": "11-dbms/Sql/05-Scaling/CAP-and-Consistency"
+            }
+          ],
+          "flow": "pick N → set R and W per operation → R + W &gt; N for read-after-write",
+          "trap": "assuming a quorum makes operations transactional"
+        },
+        {
+          "id": "databases-q52",
+          "number": 52,
+          "marks": [],
+          "text": "Model data for a DynamoDB- or Cassandra-style store.",
+          "points": [
+            "<strong>Access patterns first</strong>: list every query before any table",
+            "<strong>Partition key</strong> → which node and what's stored together · <strong>sort key</strong> → order within the partition",
+            "One query = one partition read; no joins → <strong>denormalise</strong> and duplicate on purpose",
+            "Keep partitions bounded: a key that grows forever becomes a hot, huge partition",
+            "A new access pattern can mean a new table or index → cost of flexibility is paid up front"
+          ],
+          "links": [
+            {
+              "label": "SQL vs NoSQL",
+              "target": "11-dbms/Sql/06-Data-Systems/SQL-vs-NoSQL"
+            }
+          ],
+          "flow": "queries → partition key per query → sort key for ranges → duplicate data per pattern",
+          "trap": "designing entities first, like a relational schema"
+        },
+        {
+          "id": "databases-q53",
+          "number": 53,
+          "marks": [],
+          "text": "Multi-tenant data: shared tables, schema per tenant, or database per tenant?",
+          "points": [
+            "<strong>Shared tables + <code>tenant_id</code>:</strong> cheapest, easiest to operate; isolation depends on every query",
+            "<strong>Schema per tenant:</strong> stronger separation; migrations × number of tenants",
+            "<strong>Database per tenant:</strong> best isolation and per-tenant restore; highest cost",
+            "Enforce in the database: <strong>row-level security</strong> or a mandatory tenant filter, not convention",
+            "Often tiered: shared for small tenants, dedicated for large or regulated ones"
+          ],
+          "links": [
+            {
+              "label": "Design Scenarios",
+              "target": "11-dbms/Sql/07-Practice/Design-Scenarios"
+            }
+          ],
+          "flow": "isolation and compliance need → cost per tenant → tier → enforce below the application",
+          "trap": "tenant isolation by remembering a <code>WHERE</code> clause"
+        },
+        {
+          "id": "databases-q54",
+          "number": 54,
+          "marks": [],
+          "text": "Where do vectors go: in Postgres with pgvector, or a dedicated vector store?",
+          "points": [
+            "<strong>pgvector:</strong> one system, <strong>transactional with your rows</strong>, SQL filters and joins on metadata",
+            "Fits up to millions of vectors and moderate query rates; measure recall and latency",
+            "<strong>Dedicated store:</strong> very large scale, heavy filtered search, index tuning as a product",
+            "Cost of a second store: sync, consistency and another thing to operate",
+            "Decide on scale, filter selectivity and who operates it"
+          ],
+          "links": [
+            {
+              "label": "Vector and AI Workloads",
+              "target": "11-dbms/Sql/06-Data-Systems/Vector-and-AI-Workloads"
+            },
+            {
+              "label": "Vector Database Landscape",
+              "target": "04-RAG/05-Vector Stores &amp; Indexing (architect core)/01-Vector Database Landscape"
+            }
+          ],
+          "flow": "start in the database you have → measure recall and p95 → move when a limit is hit",
+          "trap": "a separate vector store on day one for ten thousand documents"
+        },
+        {
+          "id": "databases-q55",
+          "number": 55,
+          "marks": [
+            "decides"
+          ],
+          "text": "Scale NL-to-SQL when the database has hundreds of tables.",
+          "points": [
+            "The whole schema won't fit, and wrong joins rise with every table shown",
+            "<strong>Retrieve the schema</strong>: index table and column descriptions, pass only the relevant few",
+            "A <strong>semantic layer</strong>: governed metrics and approved views, not raw tables",
+            "Safety: read-only role, row-level security, <code>SELECT</code> only, time and scan limits",
+            "Evaluate by <strong>result</strong>, on golden business questions, not by SQL text"
+          ],
+          "links": [
+            {
+              "label": "data and sql analyst agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/108-data and sql analyst agents"
+            }
+          ],
+          "flow": "question → retrieve relevant schema → generate over curated views → limits → check result",
+          "trap": "pasting the full schema into the prompt",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "databases-your-story",
+      "letter": null,
+      "name": "Your story",
+      "questions": [
+        {
+          "id": "databases-q56",
+          "number": 56,
+          "marks": [],
+          "text": "Tell me about a database problem you diagnosed in production.",
+          "points": [
+            "Open with the <strong>symptom and its cost</strong>: memory, latency, restarts",
+            "How you found it: the plan, the slow-query log, a heap or row-count check",
+            "The cause in one line → e.g. a <strong>Cartesian product</strong> in a matching query (S4 in the story bank)",
+            "The fix <strong>and</strong> the guard you added: a constraint, an alert, a test",
+            "<code>&lt;fill: the system, how you found it, the number before → after&gt;</code>"
+          ],
+          "links": [
+            {
+              "label": "PROJECT STORIES",
+              "target": "16-PROJECT-STORIES"
+            }
+          ],
+          "flow": "symptom → evidence → cause → fix → guard → number",
+          "trap": "\"we added an index and it got faster\""
+        }
+      ]
+    }
+  ]
+}
