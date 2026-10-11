@@ -36,7 +36,17 @@
             }
           ],
           "flow": "hash → spread → bucket → list → tree at 8 → resize at 0.75",
-          "trap": "stopping at \"it's a hash table with linked lists\" — the treeify threshold is the follow-up"
+          "trap": "stopping at \"it's a hash table with linked lists\" — the treeify threshold is the follow-up",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q2",
@@ -57,7 +67,17 @@
             }
           ],
           "flow": "hash captured at insert → mutation moves the true hash → lookup probes wrong bucket → stranded entry",
-          "trap": "saying \"it just won't be found\" without naming the leak"
+          "trap": "saying \"it just won't be found\" without naming the leak",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the mechanism",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
         },
         {
           "id": "java-spring-q3",
@@ -78,7 +98,17 @@
             }
           ],
           "flow": "modCount → CME (best effort) · snapshot/weakly-consistent → no CME but stale",
-          "trap": "calling fail-safe \"thread-safe iteration with full consistency\""
+          "trap": "calling fail-safe \"thread-safe iteration with full consistency\"",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where fail-fast fits",
+              "Where fail-safe fits",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q4",
@@ -101,7 +131,17 @@
             }
           ],
           "flow": "definitions registered → graph resolved → instantiate → inject → post-process → ready",
-          "trap": "\"a bean is any object\" — ownership of the lifecycle is the distinction"
+          "trap": "\"a bean is any object\" — ownership of the lifecycle is the distinction",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "What the container does",
+              "Where it breaks",
+              "How I use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "java-spring-q5",
@@ -122,7 +162,17 @@
             }
           ],
           "flow": "singleton default → prototype injected once → use provider or scoped proxy",
-          "trap": "expecting a prototype to refresh per call inside a singleton"
+          "trap": "expecting a prototype to refresh per call inside a singleton",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "The scopes",
+              "Where it breaks",
+              "How I fix it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "java-spring-q6",
@@ -143,7 +193,17 @@
             }
           ],
           "flow": "ambiguous → compile error → override → <code>X.super.method()</code> · class beats interface",
-          "trap": "guessing a resolution order instead of naming the compile error"
+          "trap": "guessing a resolution order instead of naming the compile error",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the mechanism",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
         }
       ]
     },
@@ -173,7 +233,17 @@
             }
           ],
           "flow": "instantiate → inject → aware → BPP.before → init → <strong>BPP.after = proxy</strong> → ready → destroy",
-          "trap": "not knowing proxying happens post-init — it explains every self-invocation bug"
+          "trap": "not knowing proxying happens post-init — it explains every self-invocation bug",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "The steps in order",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q8",
@@ -196,7 +266,17 @@
             }
           ],
           "flow": "internal call → <code>this</code>, not proxy → no advice → move it to another bean",
-          "trap": "the checked-exception rollback default — the second half of this question"
+          "trap": "the checked-exception rollback default — the second half of this question",
+          "modelAnswer": {
+            "type": "predict",
+            "spine": [
+              "Predict it out loud",
+              "Trace the mechanism",
+              "The rule that decides it",
+              "Variants that flip it",
+              "The production version"
+            ]
+          }
         },
         {
           "id": "java-spring-q9",
@@ -217,7 +297,17 @@
             }
           ],
           "flow": "interface → JDK · else → CGLIB subclass → final/private = no advice → AspectJ to escape",
-          "trap": "a <code>final</code> service class and hours lost to \"why isn't it transactional\""
+          "trap": "a <code>final</code> service class and hours lost to \"why isn't it transactional\"",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q10",
@@ -238,7 +328,17 @@
             }
           ],
           "flow": "imports listed → conditions evaluated → back off if you defined it → debug report tells you why",
-          "trap": "calling it magic instead of naming <code>@ConditionalOnMissingBean</code>"
+          "trap": "calling it magic instead of naming <code>@ConditionalOnMissingBean</code>",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q11",
@@ -261,7 +361,17 @@
             }
           ],
           "flow": "visibility + ordering → but not atomic → compound ops still need CAS or a lock",
-          "trap": "<code>volatile</code> on a counter and calling it thread-safe"
+          "trap": "<code>volatile</code> on a counter and calling it thread-safe",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q12",
@@ -282,7 +392,17 @@
             }
           ],
           "flow": "volatile reads → per-bin write lock → cooperative resize → use atomic compound methods",
-          "trap": "<code>if (!map.containsKey(k)) map.put(k,v)</code> — still a race"
+          "trap": "<code>if (!map.containsKey(k)) map.put(k,v)</code> — still a race",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q13",
@@ -303,7 +423,18 @@
             }
           ],
           "flow": "independent? → parallel futures on a dedicated pool → allOf → max not sum → per-call timeout",
-          "trap": "parallelising calls that are actually dependent, or using the common pool"
+          "trap": "parallelising calls that are actually dependent, or using the common pool",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "java-spring-q14",
@@ -324,7 +455,17 @@
             }
           ],
           "flow": "filters → dispatcher → mapping → adapter → resolvers → handler → converters → advice on error",
-          "trap": "placing <code>@ControllerAdvice</code> outside filters — it cannot catch a security-filter failure"
+          "trap": "placing <code>@ControllerAdvice</code> outside filters — it cannot catch a security-filter failure",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "The path in order",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         },
         {
           "id": "java-spring-q15",
@@ -345,7 +486,17 @@
             }
           ],
           "flow": "filter chain → authenticate → context (ThreadLocal) → authorise → method security by proxy",
-          "trap": "losing the security context across an async boundary or a thread pool"
+          "trap": "losing the security context across an async boundary or a thread pool",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How it works",
+              "Prove it",
+              "What it costs or breaks",
+              "So what for the system"
+            ]
+          }
         }
       ]
     },
@@ -375,7 +526,17 @@
             }
           ],
           "flow": "default synchronized → need timeout/interrupt/fairness/conditions → ReentrantLock in try-finally",
-          "trap": "\"ReentrantLock is faster\" — under low contention they're comparable; it's about capability"
+          "trap": "\"ReentrantLock is faster\" — under low contention they're comparable; it's about capability",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where synchronized wins",
+              "Where the lock wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q17",
@@ -398,7 +559,17 @@
             }
           ],
           "flow": "join → REQUIRED · must survive outer rollback → REQUIRES_NEW → but two connections held",
-          "trap": "REQUIRES_NEW in a loop, exhausting the Hikari pool against itself"
+          "trap": "REQUIRES_NEW in a loop, exhausting the Hikari pool against itself",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where REQUIRED fits",
+              "Where REQUIRES_NEW fits",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q18",
@@ -422,7 +593,17 @@
             }
           ],
           "flow": "blocking + high concurrency → VT · backpressure/streaming → reactive · CPU-bound → neither",
-          "trap": "presenting VT as free throughput, or reactive as generally faster"
+          "trap": "presenting VT as free throughput, or reactive as generally faster",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where virtual threads win",
+              "Where reactive wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q19",
@@ -443,7 +624,18 @@
             }
           ],
           "flow": "constructor → hard fail · field → silently resolves → real fix is extracting the shared piece",
-          "trap": "reaching for <code>@Lazy</code> and calling it fixed"
+          "trap": "reaching for <code>@Lazy</code> and calling it fixed",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "How Spring reacts",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "java-spring-q20",
@@ -464,7 +656,17 @@
             }
           ],
           "flow": "large N + splittable + CPU-bound + independent → maybe · blocking or shared state → no",
-          "trap": "<code>.parallel()</code> on a stream doing HTTP calls, poisoning the common pool"
+          "trap": "<code>.parallel()</code> on a stream doing HTTP calls, poisoning the common pool",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where parallel wins",
+              "Where it is wrong",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q21",
@@ -485,7 +687,17 @@
             }
           ],
           "flow": "group by identity → count → filter &gt;1 → keys · or seen-set single pass",
-          "trap": "the stateful-lambda version presented without noting it breaks under <code>.parallel()</code>"
+          "trap": "the stateful-lambda version presented without noting it breaks under <code>.parallel()</code>",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "The grouping solution",
+              "The seen-set solution",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q22",
@@ -506,7 +718,17 @@
             }
           ],
           "flow": "protocol-level → filter · handler-aware → interceptor · method-level → aspect",
-          "trap": "an aspect for auth, then discovering it never fired on an internal call"
+          "trap": "an aspect for auth, then discovering it never fired on an internal call",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where a filter fits",
+              "Where an interceptor fits",
+              "Where an aspect fits",
+              "The deciding question"
+            ]
+          }
         },
         {
           "id": "java-spring-q23",
@@ -527,7 +749,17 @@
             }
           ],
           "flow": "domain → unchecked hierarchy → mapped at the edge → rollback semantics follow",
-          "trap": "not connecting the checked/unchecked choice to rollback behaviour"
+          "trap": "not connecting the checked/unchecked choice to rollback behaviour",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where unchecked fits",
+              "Where checked fits",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q24",
@@ -548,7 +780,17 @@
             }
           ],
           "flow": "constructor → final + valid + testable → long arg list is a design signal, not a DI one",
-          "trap": "defending field injection with \"it's less boilerplate\" — Lombok already solved that"
+          "trap": "defending field injection with \"it's less boilerplate\" — Lombok already solved that",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where constructor wins",
+              "Where field falls short",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q25",
@@ -569,7 +811,17 @@
             }
           ],
           "flow": "immutable data carrier → DTO/event/value → compact constructor for invariants → sealed + switch",
-          "trap": "proposing records as JPA entities"
+          "trap": "proposing records as JPA entities",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "What the compiler generates",
+              "Where they break",
+              "Where I use them",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "java-spring-q26",
@@ -590,7 +842,17 @@
             }
           ],
           "flow": "startup/memory critical (serverless) → compile-time DI · else Spring · Boot AOT narrows it",
-          "trap": "framework benchmarks as the argument when hiring and ecosystem decide it"
+          "trap": "framework benchmarks as the argument when hiring and ecosystem decide it",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where Spring wins",
+              "Where the others win",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
         },
         {
           "id": "java-spring-q27",
@@ -611,7 +873,17 @@
             }
           ],
           "flow": "L1 always → L2 for read-mostly reference data → query cache last and carefully",
-          "trap": "enabling L2 globally and creating stale-read bugs across nodes"
+          "trap": "enabling L2 globally and creating stale-read bugs across nodes",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "The first-level cache",
+              "Where second-level fits",
+              "Where it hurts",
+              "What I'd enable"
+            ]
+          }
         }
       ]
     },
@@ -641,7 +913,18 @@
             }
           ],
           "flow": "lazy association in a loop → N+1 → EntityGraph / JOIN FETCH / batch size → assert query count in tests",
-          "trap": "switching everything to <code>EAGER</code> — you've traded N+1 for loading the whole graph every time"
+          "trap": "switching everything to <code>EAGER</code> — you've traded N+1 for loading the whole graph every time",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "java-spring-q29",
@@ -664,7 +947,18 @@
             }
           ],
           "flow": "identify the OOM kind → heap dump → dominator tree → find the GC root holding it",
-          "trap": "raising <code>-Xmx</code> and calling it fixed — that buys days, not a diagnosis"
+          "trap": "raising <code>-Xmx</code> and calling it fixed — that buys days, not a diagnosis",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "java-spring-q30",
@@ -685,7 +979,17 @@
             }
           ],
           "flow": "measure allocation + pauses → G1 default → ZGC for large-heap latency → tune size/target, not flags",
-          "trap": "copying GC flags from a blog post with no GC log to justify them"
+          "trap": "copying GC flags from a blog post with no GC log to justify them",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where G1 fits",
+              "Where ZGC fits",
+              "The deciding question",
+              "What I'd tune"
+            ]
+          }
         },
         {
           "id": "java-spring-q31",
@@ -706,7 +1010,18 @@
             }
           ],
           "flow": "size to DB capacity → multiply by pods → fail-fast timeout → narrow the hold time",
-          "trap": "growing the pool to fix latency caused by long-held transactions"
+          "trap": "growing the pool to fix latency caused by long-held transactions",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "java-spring-q32",
@@ -727,7 +1042,18 @@
             }
           ],
           "flow": "context closed → lazy touched later → fetch inside the boundary → return DTOs → disable OSIV",
-          "trap": "leaving OSIV on and shipping a view layer quietly issuing queries"
+          "trap": "leaving OSIV on and shipping a view layer quietly issuing queries",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the wrong fixes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "java-spring-q33",
@@ -748,7 +1074,18 @@
             }
           ],
           "flow": "measure wait/service → size → bounded queue → explicit rejection → bulkhead per dependency",
-          "trap": "<code>Executors.newCachedThreadPool()</code> in production — unbounded thread creation"
+          "trap": "<code>Executors.newCachedThreadPool()</code> in production — unbounded thread creation",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "java-spring-q34",
@@ -769,7 +1106,18 @@
             }
           ],
           "flow": "traceparent at edge → propagate every hop → MDC into logs → carry context across async/queue",
-          "trap": "losing the trace at the first <code>@Async</code> or Kafka boundary"
+          "trap": "losing the trace at the first <code>@Async</code> or Kafka boundary",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         }
       ]
     },
@@ -799,7 +1147,18 @@
             }
           ],
           "flow": "local txn + compensations → orchestrate for visibility → outbox for atomicity → idempotent consumers",
-          "trap": "proposing distributed 2PC/XA, or ignoring the compensating path"
+          "trap": "proposing distributed 2PC/XA, or ignoring the compensating path",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "java-spring-q36",
@@ -822,7 +1181,18 @@
             }
           ],
           "flow": "timeout → breaker → bulkhead → jittered bounded retry → explicit fallback",
-          "trap": "retries without a breaker — you've built a self-inflicted DDoS"
+          "trap": "retries without a breaker — you've built a self-inflicted DDoS",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "java-spring-q37",
@@ -850,7 +1220,18 @@
             }
           ],
           "flow": "reader → splitter → embed → VectorStore ‖ query → advisor → ChatClient → cite",
-          "trap": "treating Spring AI as a different architecture — it's the same design, different bindings"
+          "trap": "treating Spring AI as a different architecture — it's the same design, different bindings",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "java-spring-q38",
@@ -878,7 +1259,18 @@
             }
           ],
           "flow": "expose intention-shaped tools → schema from types → authz per call → approve destructive → idempotent",
-          "trap": "auto-exposing your whole REST surface as tools"
+          "trap": "auto-exposing your whole REST surface as tools",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "java-spring-q39",
@@ -901,7 +1293,18 @@
             }
           ],
           "flow": "advisor chain → memory store keyed by tenant+conversation → window/summarise → guardrails both sides",
-          "trap": "unbounded chat memory — cost grows every turn and eventually blows the context window"
+          "trap": "unbounded chat memory — cost grows every turn and eventually blows the context window",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive the hard part",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         }
       ]
     },
@@ -931,7 +1334,18 @@
             }
           ],
           "flow": "business symptom → wrong hypothesis → evidence → root cause → fix + guard → number",
-          "trap": "a tour of the debugging with no root cause named and no number"
+          "trap": "a tour of the debugging with no root cause named and no number",
+          "modelAnswer": {
+            "type": "story",
+            "spine": [
+              "The decision it served",
+              "The constraint",
+              "Options weighed",
+              "What I built",
+              "What broke",
+              "The number"
+            ]
+          }
         }
       ]
     }
