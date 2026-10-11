@@ -2555,7 +2555,7 @@
       "number": 6,
       "icon": "🤖",
       "title": "Agentic AI",
-      "count": 46,
+      "count": 56,
       "bands": [
         {
           "id": "agentic-ai-framing",
@@ -2604,6 +2604,12 @@
           "letter": null,
           "name": "More questions",
           "count": 21
+        },
+        {
+          "id": "agentic-ai-harness-evals-observability-added-11-oct-2026",
+          "letter": null,
+          "name": "Harness, evals & observability — added 11 Oct 2026",
+          "count": 10
         }
       ]
     },

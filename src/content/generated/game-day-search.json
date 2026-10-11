@@ -1939,6 +1939,76 @@
     "band": "More questions"
   },
   {
+    "id": "agentic-ai-q47",
+    "text": "What is an agent harness — and what matters more, the model or the harness?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q48",
+    "text": "Your long-running agent drifts after hours and confidently works on the wrong thing. Diagnose and fix it.",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q49",
+    "text": "A new model ships. What do you change in the harness?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q50",
+    "text": "The agent is live and there are no evals. Build the first eval suite.",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q51",
+    "text": "Code grader, LLM judge or human — how do you grade an agent, and how do you know the judge is any good?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q52",
+    "text": "A production agent misbehaved at 3 a.m. Debug it from the trace.",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q53",
+    "text": "What do you alert on for an agent in production, and how do you keep full traces without the cost or the privacy risk?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q54",
+    "text": "Why can a SWE-bench score mislead you about a coding agent?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q55",
+    "text": "Offline evals pass, production quality is falling. What's wrong?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q56",
+    "text": "Design the harness for a coding agent that works in your repository.",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Harness, evals & observability — added 11 Oct 2026"
+  },
+  {
     "id": "mcp-context-engineering-q1",
     "text": "What is MCP and what problem does it actually solve?",
     "topic": "mcp-context-engineering",
