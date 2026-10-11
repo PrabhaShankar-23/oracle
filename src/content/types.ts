@@ -334,6 +334,7 @@ export type GameDayAnswerType =
   | 'mechanism' | 'debug' | 'predict' // Python and AI-systems editions
   | 'threat' // AI-systems edition
   | 'defend' // real-time & voice pack: defending a decision in your own system
+  | 'query' // databases pack: write the query
 
 /** What a follow-up is for: drill deeper, tempt a shortcut, break an assumption, or go senior. */
 export type GameDayFollowUpTag = 'probe' | 'trap' | 'edge' | 'senior'

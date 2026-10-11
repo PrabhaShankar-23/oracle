@@ -1,4 +1,1063 @@
 {
+  "databases-q2": {
+    "type": "query",
+    "spine": [
+      "Read the tables",
+      "Name the pattern",
+      "Write it",
+      "Trace it on data",
+      "Variants and traps",
+      "How it performs"
+    ],
+    "testing": "that you reach for a window function, know why the filter goes outside, and can say what happens with ties.",
+    "trap": "filtering on the window function in the same <code>WHERE</code>, or a <code>GROUP BY</code> with <code>MAX</code> that can only ever return one row per group.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Read the tables</strong></td>\n<td>\"One table, employees, with a department id and a salary. The output is up to two rows per department: the department, the name and the salary.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Name the pattern</strong></td>\n<td>\"This is top-N per group. The move is to number the rows inside each department, ordered by salary, and then keep the first two.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Write it</strong></td>\n<td>\"So I use ROW_NUMBER with PARTITION BY department and ORDER BY salary descending, in a subquery, and filter on the row number in the outer query.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Trace it on data</strong></td>\n<td>\"On the sample, Engineering has salaries three hundred, two-sixty, two-fifty and two-fifty. The numbering gives one, two, three, four, so I keep Asha and Dev.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Variants and traps</strong></td>\n<td>\"The follow-up is always ties. ROW_NUMBER gives exactly two rows and picks arbitrarily between equal salaries, so I add a tie-breaker. DENSE_RANK gives the top two salary levels and keeps everyone on them. I'd ask which they want.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How it performs</strong></td>\n<td>\"For performance, an index on department and salary lets the engine read each partition already sorted. On a very large table with few departments, a lateral join that fetches two rows per department can be cheaper.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Partition, order, number, then filter outside.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Read the tables",
+        "claim": "one table, N rows per group out",
+        "html": "<p><strong>\"I say what one output row is before writing anything.\"</strong></p>\n<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>id</th>\n<th>name</th>\n<th>dept_id</th>\n<th>salary</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>Asha</td>\n<td>1</td>\n<td>300</td>\n</tr>\n<tr>\n<td>2</td>\n<td>Bo</td>\n<td>1</td>\n<td>250</td>\n</tr>\n<tr>\n<td>3</td>\n<td>Chen</td>\n<td>1</td>\n<td>250</td>\n</tr>\n<tr>\n<td>4</td>\n<td>Dev</td>\n<td>1</td>\n<td>260</td>\n</tr>\n<tr>\n<td>5</td>\n<td>Eli</td>\n<td>2</td>\n<td>200</td>\n</tr>\n<tr>\n<td>6</td>\n<td>Fay</td>\n<td>2</td>\n<td>220</td>\n</tr>\n<tr>\n<td>7</td>\n<td>Gus</td>\n<td>2</td>\n<td>150</td>\n</tr>\n</tbody></table>\n<p>Output: <code>dept_id, name, salary</code>, at most two rows per department.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Name the pattern",
+        "claim": "top-N per group",
+        "html": "<p><strong>\"'Per department' plus 'top two' means rank inside a partition.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Pattern:</strong></span><span class=\"flow-step\">partition by the group</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">order by the measure</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">number the rows</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>filter on the number, outside</strong></span></div>\n<table>\n<thead>\n<tr>\n<th>Clue in the question</th>\n<th>Points to</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"in each…\", \"per…\"</strong></td>\n<td><code>PARTITION BY</code></td>\n</tr>\n<tr>\n<td><strong>\"top\", \"highest\", \"latest\"</strong></td>\n<td><code>ORDER BY … DESC</code> inside the window</td>\n</tr>\n<tr>\n<td><strong>\"two\", \"N\"</strong></td>\n<td>a filter on the row number</td>\n</tr>\n</tbody></table>\n<p>A plain <code>GROUP BY dept_id</code> with <code>MAX(salary)</code> returns one row per group and loses the name, so it can't answer this.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Write it",
+        "claim": "number in a subquery, filter outside",
+        "html": "<p><strong>\"The window function runs after <code>WHERE</code>, so its result has to be filtered one level up.\"</strong> Run on SQLite 3.51.</p>\n<pre><code class=\"language-sql\">SELECT dept_id, name, salary FROM (\n  SELECT e.*, ROW_NUMBER() OVER (\n           PARTITION BY dept_id ORDER BY salary DESC, id) AS rn\n  FROM employees e\n) WHERE rn &lt;= 2;\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>dept_id</th>\n<th>name</th>\n<th>salary</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>Asha</td>\n<td>300</td>\n</tr>\n<tr>\n<td>1</td>\n<td>Dev</td>\n<td>260</td>\n</tr>\n<tr>\n<td>2</td>\n<td>Fay</td>\n<td>220</td>\n</tr>\n<tr>\n<td>2</td>\n<td>Eli</td>\n<td>200</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Trace it on data",
+        "claim": "the numbering, row by row",
+        "html": "<p><strong>\"Department 1, with all three ranking functions side by side.\"</strong> Run on the sample.</p>\n<table>\n<thead>\n<tr>\n<th>name</th>\n<th>salary</th>\n<th><code>ROW_NUMBER</code></th>\n<th><code>RANK</code></th>\n<th><code>DENSE_RANK</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Asha</strong></td>\n<td>300</td>\n<td><strong>1</strong></td>\n<td>1</td>\n<td>1</td>\n</tr>\n<tr>\n<td><strong>Dev</strong></td>\n<td>260</td>\n<td><strong>2</strong></td>\n<td>2</td>\n<td>2</td>\n</tr>\n<tr>\n<td>Bo</td>\n<td>250</td>\n<td>3</td>\n<td>3</td>\n<td>3</td>\n</tr>\n<tr>\n<td>Chen</td>\n<td>250</td>\n<td>4</td>\n<td>3</td>\n<td>3</td>\n</tr>\n</tbody></table>\n<p><code>rn &lt;= 2</code> keeps the two bold rows. Bo and Chen tie on 250: <code>ROW_NUMBER</code> separates them (by <code>id</code>, because I asked it to), while <code>RANK</code> and <code>DENSE_RANK</code> give both a 3.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Variants and traps",
+        "claim": "ties, and where the filter goes",
+        "html": "<p><strong>\"Which function I use is a question about ties.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>They want</th>\n<th>Use</th>\n<th>On a tie at the cut-off</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Exactly N rows per group</strong></td>\n<td><code>ROW_NUMBER</code> + a tie-breaker</td>\n<td>one is picked, deterministically</td>\n</tr>\n<tr>\n<td><strong>Everyone on the top N salary levels</strong></td>\n<td><code>DENSE_RANK</code></td>\n<td>all tied rows kept</td>\n</tr>\n<tr>\n<td><strong>Top N, with gaps after ties</strong></td>\n<td><code>RANK</code></td>\n<td>can return more or fewer than N</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Trap</th>\n<th>What happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>WHERE ROW_NUMBER() … &lt;= 2</code> in the same query</strong></td>\n<td>an error: window functions aren't allowed in <code>WHERE</code></td>\n</tr>\n<tr>\n<td><strong>No tie-breaker in <code>ORDER BY</code></strong></td>\n<td>different rows on different runs</td>\n</tr>\n<tr>\n<td><strong><code>GROUP BY</code> + <code>MAX</code></strong></td>\n<td>one row per group, and no way to get the second</td>\n</tr>\n</tbody></table>\n<p>Dialect: PostgreSQL has no <code>QUALIFY</code>; some warehouses do (<code>QUALIFY rn &lt;= 2</code>), which removes the subquery.</p>"
+      },
+      {
+        "number": 6,
+        "name": "How it performs",
+        "claim": "an index that matches the window",
+        "html": "<p><strong>\"The window needs each partition sorted; an index can hand it over already sorted.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Design</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Index on <code>(dept_id, salary DESC)</code></strong></td>\n<td>each partition is read in order; no sort</td>\n</tr>\n<tr>\n<td><strong>No index</strong></td>\n<td>a full scan and a sort of the whole table</td>\n</tr>\n<tr>\n<td><strong>Few groups, huge table</strong></td>\n<td>a lateral join (one indexed lookup of N rows per group) reads far fewer rows</td>\n</tr>\n</tbody></table>\n<p>What breaks at scale: the window numbers every row before the filter discards most of them. With a hundred million rows and ten departments, that's a hundred million rows numbered to return twenty.</p>\n<p>Fix layer: the <em>query</em> for correctness, the <em>index</em> for cost.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Why not just put the row number in the WHERE clause?&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Because <code>WHERE</code> runs before window functions are computed.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Logical order:</strong></span><span class=\"flow-step\"><code>FROM</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>WHERE</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>GROUP BY</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>HAVING</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>window functions</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>SELECT</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>ORDER BY</code></span></div>\n<p>So the number doesn't exist yet when <code>WHERE</code> runs.</p>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 On the sample, what does  return for department 1?",
+        "tag": "edge",
+        "html": "<p><strong>All four employees.</strong></p>\n<pre><code class=\"language-text\">salary levels: 300 (1), 260 (2), 250 (3)\nBo and Chen both sit on level 3 → 4 rows for \"top 3\"\n</code></pre>\n<p>That's the difference to state out loud: N levels, not N rows.</p>"
+      },
+      {
+        "number": 3,
+        "question": "How would you do it without window functions?",
+        "tag": "probe",
+        "html": "<p><strong>With a correlated count: keep a row if fewer than two salaries in its department are higher.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Approach</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Correlated subquery counting higher salaries</strong></td>\n<td>one subquery per row; slow on large groups</td>\n</tr>\n<tr>\n<td><strong>Window function</strong></td>\n<td>one pass per partition</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "A department has only one employee. What comes back?",
+        "tag": "probe",
+        "html": "<p><strong>One row for that department.</strong></p>\n<ul>\n<li><strong>\"Up to N\"</strong> is what the query gives.</li>\n<li><strong>If they want exactly N rows padded with NULLs,</strong> that needs a generated series joined in.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "This runs on a 500-million-row table every minute. What do you change?",
+        "tag": "senior",
+        "html": "<p><strong>Stop computing it from scratch.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>An index matching the partition and order</strong></td>\n<td>cheaper reads; more write cost</td>\n</tr>\n<tr>\n<td><strong>A lateral join per department</strong></td>\n<td>reads N rows per group</td>\n</tr>\n<tr>\n<td><strong>A materialised or incrementally maintained result</strong></td>\n<td>fast reads; staleness to state</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;d group by department and take the max.&quot; — that returns one row and no name.",
+      "&quot;Row number and rank are the same.&quot; — they differ exactly on ties.",
+      "&quot;I&#39;d filter on the row number in the WHERE.&quot; — it isn&#39;t computed yet.",
+      "&quot;It works on my data.&quot; — say what happens on a tie."
+    ],
+    "links": [
+      {
+        "label": "Window Functions",
+        "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+      },
+      {
+        "label": "Query Patterns",
+        "target": "11-dbms/Sql/01-Query-Writing/Query-Patterns"
+      },
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Read the tables&lt;br/&gt;one table, N rows per&lt;br/&gt;group out\"]):::step\n        N2[\"2 · Name the pattern&lt;br/&gt;top-N per group\"]:::step\n        N3[\"3 · Write it&lt;br/&gt;number in a subquery,&lt;br/&gt;filter outside\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Trace it on data&lt;br/&gt;the numbering, row by&lt;br/&gt;row\"]:::step\n        N5[\"5 · Variants and traps&lt;br/&gt;ties, and where the&lt;br/&gt;filter goes\"]:::bad\n        N6([\"6 · How it performs&lt;br/&gt;an index that matches&lt;br/&gt;the window\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q6": {
+    "type": "query",
+    "spine": [
+      "Read the tables",
+      "Name the pattern",
+      "Write it",
+      "Trace it on data",
+      "Variants and traps",
+      "How it performs"
+    ],
+    "testing": "that you know an anti-join, and that you know why <code>NOT IN</code> silently returns nothing when the subquery contains a NULL.",
+    "trap": "<code>WHERE id NOT IN (SELECT customer_id FROM orders)</code> on a nullable column.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Read the tables</strong></td>\n<td>\"Two tables: customers, and orders with a customer id that can be NULL. I want one row per customer who has no matching order.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Name the pattern</strong></td>\n<td>\"This is an anti-join: rows on the left with no match on the right.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Write it</strong></td>\n<td>\"I'd write it with NOT EXISTS and a correlated subquery. It reads as the question does, and it's safe with NULLs.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Trace it on data</strong></td>\n<td>\"On the sample, Acme and Birla have orders and Corex doesn't, so it returns Corex.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Variants and traps</strong></td>\n<td>\"The trap is NOT IN. One order in the sample has a NULL customer id, and with that NULL in the list the NOT IN version returns zero rows. Any comparison with NULL is unknown, so 'not in' can never be true. The LEFT JOIN with IS NULL form is also correct.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How it performs</strong></td>\n<td>\"With an index on orders customer id, the engine runs it as an anti-join and stops at the first match per customer. All three correct forms usually get the same plan.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"NOT EXISTS for 'has none', and I always check whether the subquery column can be NULL.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Read the tables",
+        "claim": "a nullable foreign key",
+        "html": "<p><strong>\"The NULL in <code>customer_id</code> is the detail that decides the answer.\"</strong></p>\n<pre><code class=\"language-sql\">customers(id, name)\norders(id, customer_id, amount, status, created_at)   -- customer_id can be NULL\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>customers.id</th>\n<th>name</th>\n<th></th>\n<th>orders.id</th>\n<th>customer_id</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>Acme</td>\n<td></td>\n<td>1, 2, 4, 7</td>\n<td>1</td>\n</tr>\n<tr>\n<td>2</td>\n<td>Birla</td>\n<td></td>\n<td>3, 5</td>\n<td>2</td>\n</tr>\n<tr>\n<td>3</td>\n<td>Corex</td>\n<td></td>\n<td><strong>6</strong></td>\n<td><strong>NULL</strong></td>\n</tr>\n</tbody></table>\n<p>Output: the customers with no order. Here, Corex.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Name the pattern",
+        "claim": "an anti-join",
+        "html": "<p><strong>\"'Never', 'no', 'without' in the question means rows with no match.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Pattern:</strong></span><span class=\"flow-step\">for each left row</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">does any right row match?</span><span class=\"flow-arrow\" data-label=\"no\"></span><span class=\"flow-step\"><strong>keep it</strong></span></div>\n<table>\n<thead>\n<tr>\n<th>Clue in the question</th>\n<th>Pattern</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"who have never…\", \"with no…\", \"missing\"</strong></td>\n<td>anti-join</td>\n</tr>\n<tr>\n<td><strong>\"who have at least one…\"</strong></td>\n<td>semi-join (<code>EXISTS</code>)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Write it",
+        "claim": "NOT EXISTS",
+        "html": "<p><strong>\"It reads like the question, and NULLs can't break it.\"</strong> Run on SQLite 3.51.</p>\n<pre><code class=\"language-sql\">SELECT c.name FROM customers c\nWHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.customer_id = c.id);\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>name</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Corex</td>\n</tr>\n</tbody></table>\n<p><code>SELECT 1</code> because only existence matters; no columns are read from the subquery.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Trace it on data",
+        "claim": "three forms on the same rows",
+        "html": "<p><strong>\"Same tables, three queries, and one of them is wrong.\"</strong> All run on the sample.</p>\n<table>\n<thead>\n<tr>\n<th>Form</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>NOT EXISTS (… o.customer_id = c.id)</code></strong></td>\n<td>Corex <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong><code>LEFT JOIN orders o ON … WHERE o.id IS NULL</code></strong></td>\n<td>Corex <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong><code>c.id NOT IN (SELECT customer_id FROM orders)</code></strong></td>\n<td><strong>no rows</strong> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong><code>NOT IN (… WHERE customer_id IS NOT NULL)</code></strong></td>\n<td>Corex <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n</tbody></table>\n<p>Why the third is empty, for Corex (<code>id = 3</code>):</p>\n<pre><code class=\"language-text\">3 NOT IN (1, 1, 2, 1, 2, NULL, 1)\n= 3 &lt;&gt; 1 AND 3 &lt;&gt; 2 AND 3 &lt;&gt; NULL\n= TRUE   AND TRUE   AND UNKNOWN     ← a comparison with NULL is unknown\n= UNKNOWN                            ← WHERE keeps only TRUE, so the row is dropped\n</code></pre>"
+      },
+      {
+        "number": 5,
+        "name": "Variants and traps",
+        "claim": "NULLs and duplicates",
+        "html": "<p><strong>\"The forms differ in what NULLs and duplicate matches do.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Form</th>\n<th>NULL in the subquery</th>\n<th>Duplicates on the right</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>NOT EXISTS</code></strong></td>\n<td>safe</td>\n<td>irrelevant</td>\n</tr>\n<tr>\n<td><strong><code>LEFT JOIN … IS NULL</code></strong></td>\n<td>safe</td>\n<td>irrelevant for the anti-join</td>\n</tr>\n<tr>\n<td><strong><code>NOT IN</code></strong></td>\n<td><strong>returns nothing</strong></td>\n<td>irrelevant</td>\n</tr>\n<tr>\n<td><strong><code>EXCEPT</code></strong> (ids only)</td>\n<td>NULLs compare as equal</td>\n<td>removed</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Variant asked next</th>\n<th>Change</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"…in the last 90 days\"</strong></td>\n<td>the date filter goes <em>inside</em> the subquery, not in the outer <code>WHERE</code></td>\n</tr>\n<tr>\n<td><strong>\"…who never paid\"</strong></td>\n<td><code>AND o.status = 'paid'</code> inside the subquery</td>\n</tr>\n<tr>\n<td><strong><code>LEFT JOIN</code> form</strong></td>\n<td>test <code>IS NULL</code> on a column that's never NULL in a real match, like the primary key</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "How it performs",
+        "claim": "an anti-join with early exit",
+        "html": "<p><strong>\"With an index on the join column, the engine stops at the first match.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Design</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Index on <code>orders(customer_id)</code></strong></td>\n<td>one probe per customer; stop at the first hit</td>\n</tr>\n<tr>\n<td><strong>No index</strong></td>\n<td>the planner hashes <code>orders</code> once, or scans it per customer</td>\n</tr>\n<tr>\n<td><strong><code>NOT IN</code> on a nullable column</strong></td>\n<td>the planner often can't use an anti-join at all</td>\n</tr>\n</tbody></table>\n<p>What breaks at scale: a customers table of millions against an orders table of billions is fine with the index. Without it, it's a hash of the whole orders table.</p>\n<p>Fix layer: the <em>query</em>; and the <em>schema</em>: a <code>NOT NULL</code> constraint on the foreign key removes the trap at the source.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;NOT IN is simpler and gives the same result.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Only until one NULL appears in the list.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th><code>NOT IN</code></th>\n<th><code>NOT EXISTS</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>No NULLs in the subquery</strong></td>\n<td>correct</td>\n<td>correct</td>\n</tr>\n<tr>\n<td><strong>One NULL</strong></td>\n<td>zero rows, no error</td>\n<td>correct</td>\n</tr>\n</tbody></table>\n<p>It fails silently, which is the worst way to fail.</p>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The order with the NULL customer id is deleted. What does the NOT IN version return now?",
+        "tag": "edge",
+        "html": "<p><strong>Corex.</strong></p>\n<pre><code class=\"language-text\">3 NOT IN (1, 1, 2, 1, 2, 1) = TRUE     ← no NULL left in the list\n</code></pre>\n<p>So the query \"works\" until the next NULL arrives, which is why it passes tests and fails in production.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Why does the LEFT JOIN form test ?",
+        "tag": "probe",
+        "html": "<p><strong>Because the primary key is never NULL in a real match.</strong></p>\n<ul>\n<li><strong>Matched row:</strong> <code>o.id</code> has a value.</li>\n<li><strong>No match:</strong> the join fills every <code>o</code> column with NULL.</li>\n<li><strong>Testing a nullable column</strong> would confuse \"no match\" with \"matched a NULL\".</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you count orders per customer, including customers with none?",
+        "tag": "probe",
+        "html": "<p><strong><code>LEFT JOIN</code> and count a column from the right side.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Expression</th>\n<th>Customers with no orders</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>COUNT(o.id)</code></strong></td>\n<td>0 <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong><code>COUNT(*)</code></strong></td>\n<td>1 <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg>: it counts the NULL-filled row</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "How would you stop the NULL from being possible?",
+        "tag": "senior",
+        "html": "<p><strong>With constraints, so the query can't be surprised.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Constraint</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>customer_id NOT NULL</code></strong></td>\n<td>no orphan orders</td>\n</tr>\n<tr>\n<td><strong>A foreign key to <code>customers(id)</code></strong></td>\n<td>no orders for customers that don't exist</td>\n</tr>\n</tbody></table>\n<p>If a guest order is a real case, it gets its own explicit representation, not a NULL.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;NOT IN and NOT EXISTS are the same.&quot; — not when a NULL is present.",
+      "&quot;I&#39;d use a LEFT JOIN and check for NULL.&quot; — say on which column, and why that one.",
+      "&quot;It returned no rows, so everyone has ordered.&quot; — check the subquery for NULLs first.",
+      "&quot;NULL means zero or empty.&quot; — it means unknown."
+    ],
+    "links": [
+      {
+        "label": "NULL Semantics",
+        "target": "11-dbms/Sql/01-Query-Writing/NULL-Semantics"
+      },
+      {
+        "label": "Subqueries and Set Ops",
+        "target": "11-dbms/Sql/01-Query-Writing/Subqueries-and-Set-Ops"
+      },
+      {
+        "label": "Joins",
+        "target": "11-dbms/Sql/01-Query-Writing/Joins"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Read the tables&lt;br/&gt;a nullable foreign key\"]):::step\n        N2[\"2 · Name the pattern&lt;br/&gt;an anti-join\"]:::step\n        N3[\"3 · Write it&lt;br/&gt;NOT EXISTS\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Trace it on data&lt;br/&gt;three forms on the same&lt;br/&gt;rows\"]:::step\n        N5[\"5 · Variants and traps&lt;br/&gt;NULLs and duplicates\"]:::bad\n        N6([\"6 · How it performs&lt;br/&gt;an anti-join with early&lt;br/&gt;exit\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q8": {
+    "type": "query",
+    "spine": [
+      "Read the tables",
+      "Name the pattern",
+      "Write it",
+      "Trace it on data",
+      "Variants and traps",
+      "How it performs"
+    ],
+    "testing": "whether you know the gaps-and-islands trick, and can explain why subtracting a row number from a date gives a constant inside a streak.",
+    "trap": "a self-join on &quot;yesterday&quot;, or forgetting to remove duplicate days first.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Read the tables</strong></td>\n<td>\"One table, logins, with a user id and a login date. A user can log in more than once a day. I want one row per user with their longest run of consecutive days.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Name the pattern</strong></td>\n<td>\"This is gaps and islands. A streak is an island of consecutive dates, and I need a label that's the same for every row in one island.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Write it</strong></td>\n<td>\"The trick: number each user's distinct days in date order, and subtract that number from the date. Inside a streak both go up by one each day, so the difference stays constant. Then I group by that difference, count, and take the maximum.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Trace it on data</strong></td>\n<td>\"User one logs in on the first, second and third, then the seventh and eighth. Date minus row number gives the twenty-eighth of February three times, then the third of March twice. Two islands, sizes three and two, so the answer is three.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Variants and traps</strong></td>\n<td>\"The trap is duplicates. Two logins on one day give two row numbers for one date and break the arithmetic, so I take distinct days first.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How it performs</strong></td>\n<td>\"It's one sort per user. An index on user id and login date makes that an ordered read.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Date minus row number is the island id.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Read the tables",
+        "claim": "events, possibly several a day",
+        "html": "<p><strong>\"The unit is a day, and the table may hold more than one row per day.\"</strong></p>\n<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>user_id</th>\n<th>login_date</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>2026-03-01, 03-02, 03-03, 03-07, 03-08</td>\n</tr>\n<tr>\n<td>2</td>\n<td>2026-03-01, 03-03, 03-08</td>\n</tr>\n</tbody></table>\n<p>Output: <code>user_id, longest_streak</code>. Expected: user 1 → 3, user 2 → 1.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Name the pattern",
+        "claim": "gaps and islands",
+        "html": "<p><strong>\"I need a value that's identical within a streak and different between streaks.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Pattern:</strong></span><span class=\"flow-step\">dedupe days</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">row number per user by date</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>date − row number = island id</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">count per island</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">max per user</span></div>\n<table>\n<thead>\n<tr>\n<th>Clue in the question</th>\n<th>Pattern</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"consecutive\", \"streak\", \"in a row\"</strong></td>\n<td>gaps and islands</td>\n</tr>\n<tr>\n<td><strong>\"uninterrupted period\", \"runs of the same status\"</strong></td>\n<td>the same</td>\n</tr>\n</tbody></table>\n<p>Why it works: inside a streak the date rises by one day per row and so does the row number, so their difference doesn't move. A gap makes the date jump while the row number rises by one, so the difference changes.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Write it",
+        "claim": "subtract the row number from the date",
+        "html": "<p><strong>\"Three steps as three CTE levels.\"</strong> Run on SQLite 3.51.</p>\n<pre><code class=\"language-sql\">WITH d AS (SELECT DISTINCT user_id, login_date FROM logins),\ng AS (\n  SELECT user_id, login_date,\n         julianday(login_date) - ROW_NUMBER() OVER (\n           PARTITION BY user_id ORDER BY login_date) AS grp\n  FROM d\n)\nSELECT user_id, MAX(n) AS longest_streak FROM (\n  SELECT user_id, grp, COUNT(*) AS n FROM g\n  GROUP BY user_id, grp\n) GROUP BY user_id;\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>user_id</th>\n<th>longest_streak</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>3</td>\n</tr>\n<tr>\n<td>2</td>\n<td>1</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Trace it on data",
+        "claim": "the island id appears",
+        "html": "<p><strong>\"User 1, with the intermediate columns the query computes.\"</strong> Run on the sample; the last column is date minus row number, shown as a date.</p>\n<table>\n<thead>\n<tr>\n<th>login_date</th>\n<th>row number</th>\n<th>date − row number</th>\n<th>island</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>03-01</strong></td>\n<td>1</td>\n<td><strong>02-28</strong></td>\n<td>A</td>\n</tr>\n<tr>\n<td><strong>03-02</strong></td>\n<td>2</td>\n<td><strong>02-28</strong></td>\n<td>A</td>\n</tr>\n<tr>\n<td><strong>03-03</strong></td>\n<td>3</td>\n<td><strong>02-28</strong></td>\n<td>A</td>\n</tr>\n<tr>\n<td>03-07</td>\n<td>4</td>\n<td>03-03</td>\n<td>B</td>\n</tr>\n<tr>\n<td>03-08</td>\n<td>5</td>\n<td>03-03</td>\n<td>B</td>\n</tr>\n</tbody></table>\n<p>Island A has 3 rows, island B has 2. <code>MAX</code> over the island sizes gives 3.</p>\n<p>The island id itself (28 February) means nothing. It only has to be the same within a streak.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Variants and traps",
+        "claim": "duplicates, and what they ask next",
+        "html": "<p><strong>\"The first CTE isn't decoration.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Trap</th>\n<th>What happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>No <code>DISTINCT</code>, two logins on 03-02</strong></td>\n<td>row numbers 1, 2, 3, 4 for dates 01, 02, 02, 03 → the island id changes mid-streak</td>\n</tr>\n<tr>\n<td><strong>A self-join on <code>date = date + 1</code></strong></td>\n<td>finds pairs, not runs; needs recursion to chain them</td>\n</tr>\n<tr>\n<td><strong>Timestamps, not dates</strong></td>\n<td>truncate to a day first, in the user's time zone</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Variant asked next</th>\n<th>Change</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"Current streak, as of today\"</strong></td>\n<td>keep the island whose last date is today or yesterday</td>\n</tr>\n<tr>\n<td><strong>\"Start and end of each streak\"</strong></td>\n<td><code>MIN(login_date)</code>, <code>MAX(login_date)</code> per island</td>\n</tr>\n<tr>\n<td><strong>\"Streaks of at least 7 days\"</strong></td>\n<td><code>HAVING COUNT(*) &gt;= 7</code> on the island level</td>\n</tr>\n<tr>\n<td><strong>PostgreSQL</strong></td>\n<td><code>login_date - ROW_NUMBER() OVER (…)::int</code> in place of <code>julianday</code></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "How it performs",
+        "claim": "one ordered pass per user",
+        "html": "<p><strong>\"The cost is the sort that the window needs.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Design</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Index on <code>(user_id, login_date)</code></strong></td>\n<td>each user's days are read in order; the <code>DISTINCT</code> and the window share it</td>\n</tr>\n<tr>\n<td><strong>No index</strong></td>\n<td>a sort of the whole table</td>\n</tr>\n<tr>\n<td><strong>Billions of events</strong></td>\n<td>pre-aggregate to one row per user per day, then run this on the daily table</td>\n</tr>\n</tbody></table>\n<p>What breaks at scale: recomputing every user's history on each request. A streak counter maintained on write, or a daily batch, replaces it.</p>\n<p>Fix layer: the <em>query</em> for correctness, a <em>daily rollup</em> for cost.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Join the table to itself on date = date + 1.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>That finds adjacent pairs, not the length of a run.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Self-join</th>\n<th>Date − row number</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>One join per extra day of streak</strong></td>\n<td>one pass</td>\n</tr>\n<tr>\n<td><strong>Needs recursion for runs of unknown length</strong></td>\n<td>a group-by</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 User 1 also logged in twice on 03-02 and you skip the DISTINCT. What&#39;s the longest streak the query reports?",
+        "tag": "edge",
+        "html": "<p><strong>2, not 3.</strong></p>\n<pre><code class=\"language-text\">dates:        03-01  03-02  03-02  03-03  03-07  03-08\nrow number:     1      2      3      4      5      6\ndifference:   02-28  02-28  02-27  02-27  03-02  03-02     ← the streak is split in two\nisland sizes:    2             2             2\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why does the subtraction give a constant?",
+        "tag": "probe",
+        "html": "<p><strong>Both sides rise by exactly one per row inside a streak.</strong></p>\n<pre><code class=\"language-text\">date:        d,   d+1, d+2      ← consecutive days\nrow number:  r,   r+1, r+2\ndifference:  d−r, d−r, d−r      ← constant\n</code></pre>"
+      },
+      {
+        "number": 4,
+        "question": "How would you get the current streak only?",
+        "tag": "probe",
+        "html": "<p><strong>Keep the island that ends today or yesterday.</strong></p>\n<ul>\n<li><strong>Per island:</strong> <code>MAX(login_date)</code> as its end.</li>\n<li><strong>Filter:</strong> end ≥ yesterday.</li>\n<li><strong>No such island:</strong> the current streak is 0.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "This powers a &quot;streak&quot; badge shown on every page load. Do you run this query?",
+        "tag": "senior",
+        "html": "<p><strong>No. I maintain the number on write.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Approach</th>\n<th>Cost per page load</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Run the query</strong></td>\n<td>a scan of the user's history</td>\n</tr>\n<tr>\n<td><strong>A <code>current_streak</code> and <code>last_login_date</code> column, updated on login</strong></td>\n<td>one row read</td>\n</tr>\n</tbody></table>\n<p>The query stays as the audit that rebuilds or checks the counter.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;d loop over the days in the application.&quot; — it&#39;s one query.",
+      "&quot;I&#39;d self-join on the previous day.&quot; — that gives pairs, not run lengths.",
+      "&quot;The grouping column is the streak&#39;s start date.&quot; — it&#39;s an arbitrary constant.",
+      "&quot;Duplicates don&#39;t matter.&quot; — they split the island."
+    ],
+    "links": [
+      {
+        "label": "Query Patterns",
+        "target": "11-dbms/Sql/01-Query-Writing/Query-Patterns"
+      },
+      {
+        "label": "Window Functions",
+        "target": "11-dbms/Sql/01-Query-Writing/Window-Functions"
+      },
+      {
+        "label": "CTEs and Recursive",
+        "target": "11-dbms/Sql/01-Query-Writing/CTEs-and-Recursive"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Read the tables&lt;br/&gt;events, possibly several&lt;br/&gt;a day\"]):::step\n        N2[\"2 · Name the pattern&lt;br/&gt;gaps and islands\"]:::step\n        N3[\"3 · Write it&lt;br/&gt;subtract the row number&lt;br/&gt;from the date\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Trace it on data&lt;br/&gt;the island id appears\"]:::step\n        N5[\"5 · Variants and traps&lt;br/&gt;duplicates, and what&lt;br/&gt;they ask next\"]:::bad\n        N6([\"6 · How it performs&lt;br/&gt;one ordered pass per&lt;br/&gt;user\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q19": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "the leftmost-prefix rule, the equality-then-range ordering, and that you&#39;d confirm with a plan.",
+    "trap": "ordering the columns by &quot;most selective first&quot;, whatever the queries look like.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"A composite index is one B-tree sorted by the first column, then by the second within each value of the first. It's like a phone book sorted by surname, then first name.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"So a query can use it from the left. Customer id alone: a seek. Customer id and a range on created-at: a seek on both. Created-at alone: the index can't be entered, because dates are only sorted within each customer.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It breaks in three ways: the leading column is missing from the predicate, a function wraps the column, or a range on an earlier column stops later columns from being used for seeking.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"The rule I design by is equality columns first, then one range column, then columns for sorting. And I check the plan, because that's the only proof the index is used.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"If the index also holds every column the query selects, the table isn't read at all. That's a covering index.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Usable from the left; equality first, then the range; and the plan decides.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "sorted by first, then second",
+        "html": "<p><strong>\"The index is one sorted list of pairs.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>customer_id</th>\n<th>created_at</th>\n<th>→ row</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>2026-01-05</td>\n<td>order 1</td>\n</tr>\n<tr>\n<td>1</td>\n<td>2026-01-20</td>\n<td>order 2</td>\n</tr>\n<tr>\n<td>1</td>\n<td>2026-02-14</td>\n<td>order 4</td>\n</tr>\n<tr>\n<td>1</td>\n<td>2026-03-15</td>\n<td>order 7</td>\n</tr>\n<tr>\n<td>2</td>\n<td>2026-02-03</td>\n<td>order 3</td>\n</tr>\n<tr>\n<td>2</td>\n<td>2026-03-01</td>\n<td>order 5</td>\n</tr>\n</tbody></table>\n<p>Within customer 1 the dates are in order. Across the whole index they are not: 2026-02-03 comes after 2026-03-15.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "the leftmost prefix",
+        "html": "<p><strong>\"What each predicate gets from the index.\"</strong> Plans produced by SQLite 3.51 on the sample, with the index on <code>(customer_id, created_at)</code>.</p>\n<table>\n<thead>\n<tr>\n<th>Query predicate</th>\n<th>Plan line</th>\n<th>Verdict</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>customer_id = 1 AND created_at &gt; …</code></td>\n<td><code>SEARCH … USING INDEX (customer_id=? AND created_at&gt;?)</code></td>\n<td>seek on both <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>customer_id = 1</code></td>\n<td><code>SEARCH … USING INDEX (customer_id=?)</code></td>\n<td>seek on the prefix <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>created_at &gt; …</code></td>\n<td><code>SCAN orders</code></td>\n<td><strong>full scan</strong> <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>SELECT customer_id, created_at … WHERE customer_id = 1</code></td>\n<td><code>SEARCH … USING COVERING INDEX (customer_id=?)</code></td>\n<td>index only <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><code>substr(created_at,1,7) = '2026-02'</code></td>\n<td><code>SCAN orders</code></td>\n<td>function on the column <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Seek path:</strong></span><span class=\"flow-step\">find the first entry for customer 1</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">within it, find the first date after the bound</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">read forward until the customer changes</span></div>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "no leader, function, early range",
+        "html": "<p><strong>\"Three ways a correct-looking index goes unused.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Break</th>\n<th>Why</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The leading column isn't in the <code>WHERE</code></strong></td>\n<td>the second column isn't sorted globally</td>\n<td>a second index, or a different column order</td>\n</tr>\n<tr>\n<td><strong>A function or cast on the column</strong></td>\n<td>the index stores the raw value</td>\n<td>rewrite as a range, or an expression index</td>\n</tr>\n<tr>\n<td><strong>A range on the first column, equality on the second</strong></td>\n<td>after the range, the index is only useful as a filter</td>\n<td>put the equality column first</td>\n</tr>\n<tr>\n<td><strong>Low selectivity</strong></td>\n<td>reading most of the table through an index is slower than a scan</td>\n<td>let it scan</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "equality, then range, then sort",
+        "html": "<p><strong>\"I order the columns from the query, and prove it with the plan.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Rule:</strong></span><span class=\"flow-step\">equality columns</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">one range column</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">sort columns</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">included columns for covering</span></div>\n<pre><code class=\"language-text\">query: WHERE customer_id = 1 AND created_at &gt; '2026-02-01' ORDER BY created_at\n\nno index:                SCAN orders\n                         USE TEMP B-TREE FOR ORDER BY          ← scan, then sort\nindex (created_at):      SEARCH … USING INDEX (created_at&gt;?)   ← seeks on the date only\nindex (customer_id,\n       created_at):      SEARCH … USING INDEX (customer_id=? AND created_at&gt;?)\n                                                               ← seeks on both; already in order, no sort\n</code></pre>\n<p>All three plans were produced on the sample. The third also removes the sort, because the index returns rows already ordered by date within the customer.</p>\n<p>Measure before adding: every index is paid for on every insert, update and delete.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "covering indexes",
+        "html": "<p><strong>\"If the index has every column the query needs, the table is never touched.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Ordinary index</th>\n<th>Covering index</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Reads</strong></td>\n<td>index, then the row</td>\n<td>index only</td>\n</tr>\n<tr>\n<td><strong>Plan says</strong></td>\n<td>index scan</td>\n<td>index-only scan (PostgreSQL) / <code>USING COVERING INDEX</code> (SQLite)</td>\n</tr>\n<tr>\n<td><strong>Cost</strong></td>\n<td>—</td>\n<td>a wider index: more write work and memory</td>\n</tr>\n<tr>\n<td><strong>PostgreSQL</strong></td>\n<td>—</td>\n<td><code>INCLUDE (col)</code> adds payload without widening the key</td>\n</tr>\n</tbody></table>\n<p><code>SELECT *</code> defeats it: the query now needs columns the index doesn't hold.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Put the most selective column first.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Order by how the queries filter, not by selectivity alone.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Query</th>\n<th>Best order</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>a = ? AND b &gt; ?</code></strong></td>\n<td><code>(a, b)</code>, even if <code>b</code> is more selective</td>\n</tr>\n<tr>\n<td><strong><code>a = ? AND b = ?</code></strong></td>\n<td>either; pick the one other queries also lead with</td>\n</tr>\n</tbody></table>\n<p>A range in the first position stops the second column from seeking.</p>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 With an index on , can  across all customers avoid a sort?",
+        "tag": "edge",
+        "html": "<p><strong>No.</strong></p>\n<pre><code class=\"language-text\">index order: (1, Jan) (1, Feb) (1, Mar) (2, Feb) (2, Mar) …\nneeded:      Jan, Feb, Feb, Mar, Mar …        ← dates are ordered only within a customer\n</code></pre>\n<p>That query wants an index that leads with <code>created_at</code>.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Do I need a separate index on  as well?",
+        "tag": "customer_id",
+        "html": "<p><strong>No. The composite index already serves it.</strong></p>\n<ul>\n<li><strong><code>(customer_id, created_at)</code></strong> covers every query that leads with <code>customer_id</code>.</li>\n<li><strong>A separate <code>(customer_id)</code> index</strong> is redundant write cost.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you know the index is actually used in production?",
+        "tag": "probe",
+        "html": "<p><strong>From the plan and from usage statistics.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Evidence</th>\n<th>Tells you</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>EXPLAIN ANALYZE</code> on the real query</strong></td>\n<td>which index, and actual rows</td>\n</tr>\n<tr>\n<td><strong>Index usage counters</strong></td>\n<td>indexes that are never scanned: candidates to drop</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "A table has fourteen indexes. What&#39;s your concern?",
+        "tag": "senior",
+        "html": "<p><strong>Write cost and overlap.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Problem</th>\n<th>Check</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Every write maintains all fourteen</strong></td>\n<td>insert and update latency</td>\n</tr>\n<tr>\n<td><strong>Prefix duplicates</strong></td>\n<td><code>(a)</code> next to <code>(a, b)</code></td>\n</tr>\n<tr>\n<td><strong>Never used</strong></td>\n<td>zero scans in the usage counters</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The index has that column, so the query uses it.&quot; — only from the left.",
+      "&quot;Most selective column first.&quot; — equality before range, by the queries.",
+      "&quot;I added an index and it&#39;s faster.&quot; — show the plan.",
+      "&quot;More indexes can&#39;t hurt.&quot; — every write pays for each one."
+    ],
+    "links": [
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      },
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "query suddenly slow",
+        "target": "model-answers/12-DATABASES/38-query-suddenly-slow"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;sorted by first, then&lt;br/&gt;second\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;the leftmost prefix\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;no leader, function,&lt;br/&gt;early range\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;equality, then range,&lt;br/&gt;then sort\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;covering indexes\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q22": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you can name the anomalies, know the defaults differ by engine, and know the application must retry at the strict levels.",
+    "trap": "assuming &quot;repeatable read&quot; means the same thing on every engine, or that the default level prevents lost updates.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"An isolation level says which effects of other running transactions mine is allowed to see. Each level is defined by the anomalies it still permits.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"There are four standard levels. Read uncommitted allows dirty reads. Read committed stops those and still allows non-repeatable reads and phantoms. Repeatable read gives me a stable view of rows I've read; the standard still allows phantoms. Serializable allows none: the result must match some one-at-a-time order.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"Two things catch people. Defaults differ: PostgreSQL defaults to read committed, MySQL's InnoDB to repeatable read. And PostgreSQL's repeatable read is snapshot isolation, which has no phantoms and still allows write skew.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"I stay on the default and protect each invariant explicitly: an atomic update, a row lock, or a version column. For an invariant that spans several rows, I use serializable for that transaction, and the application retries when it's told to.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"Underneath, most engines implement this with multi-version concurrency control, so readers and writers don't block each other.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Name the anomaly, pick the lowest level or lock that prevents it, and retry on failure.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "levels are defined by what they allow",
+        "html": "<p><strong>\"Four anomalies, in plain words.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Anomaly</th>\n<th>What happens</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Dirty read</strong></td>\n<td>I read a change another transaction hasn't committed, and it rolls back</td>\n</tr>\n<tr>\n<td><strong>Non-repeatable read</strong></td>\n<td>I read a row twice and get two different values</td>\n</tr>\n<tr>\n<td><strong>Phantom</strong></td>\n<td>I run the same range query twice and get a different set of rows</td>\n</tr>\n<tr>\n<td><strong>Lost update</strong></td>\n<td>two transactions read, modify and write; one overwrites the other</td>\n</tr>\n<tr>\n<td><strong>Write skew</strong></td>\n<td>two transactions each read a set, each write a different row, and together break a rule</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "the four levels",
+        "html": "<p><strong>\"The SQL standard's table, plus the two anomalies it doesn't list.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Level</th>\n<th>Dirty read</th>\n<th>Non-repeatable read</th>\n<th>Phantom</th>\n<th>Lost update</th>\n<th>Write skew</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Read uncommitted</strong></td>\n<td>possible</td>\n<td>possible</td>\n<td>possible</td>\n<td>possible</td>\n<td>possible</td>\n</tr>\n<tr>\n<td><strong>Read committed</strong></td>\n<td>—</td>\n<td>possible</td>\n<td>possible</td>\n<td>possible</td>\n<td>possible</td>\n</tr>\n<tr>\n<td><strong>Repeatable read</strong> (standard)</td>\n<td>—</td>\n<td>—</td>\n<td>possible</td>\n<td>engine-dependent</td>\n<td>possible</td>\n</tr>\n<tr>\n<td><strong>Serializable</strong></td>\n<td>—</td>\n<td>—</td>\n<td>—</td>\n<td>—</td>\n<td>—</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Engine</th>\n<th>Default</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>PostgreSQL</strong></td>\n<td>read committed</td>\n<td>its repeatable read is snapshot isolation: no phantoms; a concurrent update of the same row fails and must be retried</td>\n</tr>\n<tr>\n<td><strong>MySQL InnoDB</strong></td>\n<td>repeatable read</td>\n<td>uses gap locks to block many phantoms</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version in use.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "lost updates and write skew",
+        "html": "<p><strong>\"A lost update at read committed, as two sessions.\"</strong> PostgreSQL-style read committed.</p>\n<table>\n<thead>\n<tr>\n<th>Time</th>\n<th>Session A</th>\n<th>Session B</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td><code>SELECT stock</code> → 5</td>\n<td></td>\n</tr>\n<tr>\n<td>2</td>\n<td></td>\n<td><code>SELECT stock</code> → 5</td>\n</tr>\n<tr>\n<td>3</td>\n<td><code>UPDATE … SET stock = 4</code> (5 − 1)</td>\n<td></td>\n</tr>\n<tr>\n<td>4</td>\n<td>commit</td>\n<td></td>\n</tr>\n<tr>\n<td><strong>5</strong></td>\n<td></td>\n<td><strong><code>UPDATE … SET stock = 4</code> (5 − 1)</strong></td>\n</tr>\n<tr>\n<td>6</td>\n<td></td>\n<td>commit</td>\n</tr>\n<tr>\n<td></td>\n<td><strong>Result: stock = 4, two items sold</strong></td>\n<td></td>\n</tr>\n</tbody></table>\n<p><strong>Write skew at snapshot isolation.</strong> Rule: at least one doctor on call.</p>\n<table>\n<thead>\n<tr>\n<th>Time</th>\n<th>Session A (Alice)</th>\n<th>Session B (Bob)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>count on call → 2</td>\n<td>count on call → 2</td>\n</tr>\n<tr>\n<td>2</td>\n<td>\"2 &gt; 1, I can leave\": sets Alice off call</td>\n<td>\"2 &gt; 1, I can leave\": sets Bob off call</td>\n</tr>\n<tr>\n<td>3</td>\n<td>commit</td>\n<td>commit</td>\n</tr>\n<tr>\n<td></td>\n<td><strong>Result: nobody on call</strong></td>\n<td></td>\n</tr>\n</tbody></table>\n<p>Neither wrote a row the other wrote, so a snapshot sees no conflict. Only serializable catches it.</p>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "protect the invariant, not the whole workload",
+        "html": "<p><strong>\"I pick the smallest tool that prevents the specific anomaly.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Invariant</th>\n<th>Tool</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A counter or balance on one row</strong></td>\n<td>an atomic statement: <code>UPDATE … SET stock = stock - 1 WHERE stock &gt; 0</code></td>\n</tr>\n<tr>\n<td><strong>Read, decide, then write one row</strong></td>\n<td><code>SELECT … FOR UPDATE</code>, or a version column with a check</td>\n</tr>\n<tr>\n<td><strong>A rule across several rows</strong> (on call, no overlapping bookings)</td>\n<td>serializable for that transaction, or a constraint that encodes the rule</td>\n</tr>\n<tr>\n<td><strong>A report that must be self-consistent</strong></td>\n<td>repeatable read / a snapshot</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>At serializable:</strong></span><span class=\"flow-step\">run</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">commit</span><span class=\"flow-arrow\" data-label=\"serialisation failure\"></span><span class=\"flow-step\"><strong>retry the whole transaction</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">commit</span></div>\n<p>The retry is the application's job. A strict level without a retry loop turns anomalies into errors that reach users.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "MVCC",
+        "html": "<p><strong>\"Isolation levels are the contract; MVCC is how most engines keep it.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Lock-based</th>\n<th>MVCC</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Readers and writers</strong></td>\n<td>block each other</td>\n<td>don't block each other</td>\n</tr>\n<tr>\n<td><strong>A reader sees</strong></td>\n<td>the current row, when it can get a lock</td>\n<td>a snapshot of committed versions</td>\n</tr>\n<tr>\n<td><strong>Cost</strong></td>\n<td>waiting</td>\n<td>dead row versions to clean up</td>\n</tr>\n</tbody></table>\n<p>What each level means in practice is \"which snapshot do I read from, and when is it taken\": per statement at read committed, per transaction at repeatable read.</p>\n<p>Fix layer: the <em>transaction design</em> in the application, backed by <em>constraints</em> in the database.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;We use transactions, so concurrent updates are safe.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>A transaction gives atomicity. Isolation is a separate setting, and the default allows lost updates.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Belief</th>\n<th>Reality at read committed</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"Read then write in a transaction is safe\"</strong></td>\n<td>two transactions can both read 5 and both write 4</td>\n</tr>\n<tr>\n<td><strong>\"The database will detect it\"</strong></td>\n<td>not at that level</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 In the stock example, both sessions run  with no SELECT first. Result?",
+        "tag": "edge",
+        "html": "<p><strong>3. No update is lost.</strong></p>\n<pre><code class=\"language-text\">A: stock = stock − 1  → 4, commit\nB: waits for A's row lock, re-reads the committed value 4, → 3\n</code></pre>\n<p>The read and the write are one statement, so there's no gap for another transaction to slip into.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Why not run everything at serializable?",
+        "tag": "probe",
+        "html": "<p><strong>It costs throughput and requires retries everywhere.</strong></p>\n<ul>\n<li><strong>More aborts</strong> under contention.</li>\n<li><strong>Every transaction</strong> needs a retry loop.</li>\n<li><strong>Most work</strong> doesn't have a cross-row invariant to protect.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "What&#39;s the difference between a non-repeatable read and a phantom?",
+        "tag": "probe",
+        "html": "<p><strong>One is about a row changing; the other about the set of rows changing.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Non-repeatable read</th>\n<th>Phantom</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Second read differs because</strong></td>\n<td>an existing row was updated</td>\n<td>a row was inserted or deleted in the range</td>\n</tr>\n<tr>\n<td><strong>Stopped by</strong></td>\n<td>repeatable read</td>\n<td>serializable (or snapshot / gap locks, by engine)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "How do you find isolation bugs before production?",
+        "tag": "senior",
+        "html": "<p><strong>By testing the invariant under concurrency, not the code path alone.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Technique</th>\n<th>Finds</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Concurrent tests that run the same operation in parallel and assert the invariant</strong></td>\n<td>lost updates, write skew</td>\n</tr>\n<tr>\n<td><strong>A constraint that encodes the rule</strong></td>\n<td>violations become errors, whatever the code does</td>\n</tr>\n<tr>\n<td><strong>Serialisation-failure and deadlock rates in monitoring</strong></td>\n<td>contention that needs redesign</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Repeatable read prevents phantoms.&quot; — by the standard it doesn&#39;t; by engine it varies.",
+      "&quot;The default level is safe.&quot; — it allows lost updates.",
+      "&quot;Serializable everywhere.&quot; — with what retry logic?",
+      "&quot;ACID means no anomalies.&quot; — isolation has levels."
+    ],
+    "links": [
+      {
+        "label": "Isolation Levels",
+        "target": "11-dbms/Sql/03-Transactions/Isolation-Levels"
+      },
+      {
+        "label": "MVCC",
+        "target": "11-dbms/Sql/03-Transactions/MVCC"
+      },
+      {
+        "label": "Locks and Deadlocks",
+        "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+      },
+      {
+        "label": "ACID",
+        "target": "11-dbms/Sql/03-Transactions/ACID"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;levels are defined by&lt;br/&gt;what they allow\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;the four levels\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;lost updates and write&lt;br/&gt;skew\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;protect the invariant,&lt;br/&gt;not the whole workload\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;MVCC\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q30": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where relational wins",
+      "Where NoSQL wins",
+      "The deciding question",
+      "What I'd pick"
+    ],
+    "testing": "that you start from access patterns and consistency needs, and can say what each choice gives up.",
+    "trap": "&quot;NoSQL because it scales&quot;, with no queries written down.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Frame the axis</strong></td>\n<td>\"The axis is query flexibility against predictable scale. A relational database lets me ask questions I haven't thought of yet. A NoSQL store makes a few known questions fast at any size, and makes the others hard.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Where relational wins</strong></td>\n<td>\"Relational wins when I need joins, ad-hoc queries, transactions across several rows, and constraints the database enforces. That's most business systems.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where NoSQL wins</strong></td>\n<td>\"NoSQL wins when the access patterns are few and known in advance, the volume or write rate is beyond one node, or the records vary in shape. Key-value for lookups, document for aggregates read as a whole, wide-column for huge write volume by partition key.\"</td>\n</tr>\n<tr>\n<td><strong>4 · The deciding question</strong></td>\n<td>\"So I write down the queries first. Can I list every access pattern today? Do any need a transaction across records? What's the scale, with a number? If I can't list the patterns, I'm not ready for a store that requires them.\"</td>\n</tr>\n<tr>\n<td><strong>5 · What I'd pick</strong></td>\n<td>\"My default is one relational database until a measured limit says otherwise. Then I add a specialised store for the one workload that needs it, and accept that keeping two stores in sync is now my problem.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Queries first, then consistency, then scale; the product name comes last.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "flexibility against predictable scale",
+        "html": "<p><strong>\"Each side buys one thing with the other.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Relational</th>\n<th>NoSQL (as a family)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Queries</strong></td>\n<td>any, including ones added later</td>\n<td>the ones you designed for</td>\n</tr>\n<tr>\n<td><strong>Joins</strong></td>\n<td>in the database</td>\n<td>in the application, or denormalised away</td>\n</tr>\n<tr>\n<td><strong>Transactions</strong></td>\n<td>across rows and tables</td>\n<td>usually within one key or partition</td>\n</tr>\n<tr>\n<td><strong>Schema</strong></td>\n<td>enforced</td>\n<td>flexible; enforced in code</td>\n</tr>\n<tr>\n<td><strong>Scale-out</strong></td>\n<td>harder: replicas, then sharding</td>\n<td>built in, by partition key</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>the questions aren't all known</td>\n<td>the questions are few, known and huge</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where relational wins",
+        "claim": "unknown questions and invariants",
+        "html": "<p><strong>\"Four needs that a relational engine gives for free.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Need</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Ad-hoc queries and reporting</strong></td>\n<td>\"orders by region last quarter\", asked next month</td>\n</tr>\n<tr>\n<td><strong>Multi-row transactions</strong></td>\n<td>move money between two accounts</td>\n</tr>\n<tr>\n<td><strong>Constraints</strong></td>\n<td>unique email, foreign keys, no overlapping bookings</td>\n</tr>\n<tr>\n<td><strong>Many relationships</strong></td>\n<td>customers, orders, items, invoices, refunds</td>\n</tr>\n</tbody></table>\n<p>A single well-run relational node, with replicas, carries more load than most products ever reach.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where NoSQL wins",
+        "claim": "known patterns at scale",
+        "html": "<p><strong>\"Four models, each shaped like one kind of query.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Model</th>\n<th>Shaped for</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Key-value</strong></td>\n<td>lookup by key</td>\n<td>sessions, caches, feature flags</td>\n</tr>\n<tr>\n<td><strong>Document</strong></td>\n<td>one aggregate read and written whole; varying fields</td>\n<td>a product catalogue</td>\n</tr>\n<tr>\n<td><strong>Wide-column</strong></td>\n<td>huge write volume; query by partition key and a sorted range</td>\n<td>time-series events per device</td>\n</tr>\n<tr>\n<td><strong>Graph</strong></td>\n<td>relationships: paths, neighbours, many hops</td>\n<td>fraud rings, recommendations</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Design order flips:</strong></span><span class=\"flow-step\">relational: entities</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">normalise</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">queries later</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>NoSQL:</strong></span><span class=\"flow-step\"><strong>queries first</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">keys per query</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">duplicate data per pattern</span></div>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "can I list the queries",
+        "html": "<p><strong>\"A table I fill in before naming a product.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Access pattern</th>\n<th>Frequency</th>\n<th>Needs a transaction across records?</th>\n<th>Consistency needed</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Get order by id</strong></td>\n<td>very high</td>\n<td>no</td>\n<td>read-your-writes</td>\n</tr>\n<tr>\n<td><strong>Orders for a customer, newest first</strong></td>\n<td>high</td>\n<td>no</td>\n<td>seconds stale is fine</td>\n</tr>\n<tr>\n<td><strong>Place order: stock down, order in, payment recorded</strong></td>\n<td>high</td>\n<td><strong>yes</strong></td>\n<td>strong</td>\n</tr>\n<tr>\n<td><strong>Revenue by region, ad hoc</strong></td>\n<td>low</td>\n<td>no</td>\n<td>minutes stale is fine</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Reading of the table</th>\n<th>Choice</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A cross-record transaction on the hot path</strong></td>\n<td>relational for that data</td>\n</tr>\n<tr>\n<td><strong>Ad-hoc questions exist</strong></td>\n<td>relational, or a warehouse fed from it</td>\n</tr>\n<tr>\n<td><strong>Only two or three key-based patterns, at very high volume</strong></td>\n<td>a NoSQL store fits</td>\n</tr>\n<tr>\n<td><strong>I can't fill the table in</strong></td>\n<td>relational: it tolerates not knowing</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick",
+        "claim": "relational first, a second store on evidence",
+        "html": "<p><strong>\"One store by default; a second one for a measured reason.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Path:</strong></span><span class=\"flow-step\">one relational database</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">indexes, replicas, caching</span><span class=\"flow-arrow\" data-label=\"measured limit\"></span><span class=\"flow-step\">a specialised store for that one workload</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">sync by CDC</span></div>\n<table>\n<thead>\n<tr>\n<th>A second store adds</th>\n<th>Which I then own</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Another consistency model</strong></td>\n<td>what users see while the two disagree</td>\n</tr>\n<tr>\n<td><strong>A sync path</strong></td>\n<td>CDC or dual writes, and their failures</td>\n</tr>\n<tr>\n<td><strong>Operations</strong></td>\n<td>backups, upgrades, on-call for another system</td>\n</tr>\n</tbody></table>\n<p>Measure before moving: the plan and the wait events of the slow queries, write rate against the node's limit, data size against what one machine holds.</p>\n<p>Fix layer: <em>data model</em>, chosen from the access patterns.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;NoSQL scales and SQL doesn&#39;t.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Both scale; they scale different things.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Claim</th>\n<th>Reality</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"SQL can't scale\"</strong></td>\n<td>replicas scale reads; partitioning and sharding scale writes, at a cost</td>\n</tr>\n<tr>\n<td><strong>\"NoSQL scales everything\"</strong></td>\n<td>it scales the access patterns you designed keys for</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 A document store holds orders with the customer&#39;s address embedded. The customer changes address. What happens to old orders?",
+        "tag": "edge",
+        "html": "<p><strong>Nothing, and that may be right or wrong.</strong></p>\n<pre><code class=\"language-text\">embedded copy  → old orders keep the old address      ← correct for \"shipped to\"\nreference      → every order shows the new address    ← correct for \"current contact\"\n</code></pre>\n<p>Denormalising forces that decision per field; a relational join lets me defer it.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Isn&#39;t schemaless more flexible?",
+        "tag": "probe",
+        "html": "<p><strong>The schema still exists; it moved into the application.</strong></p>\n<ul>\n<li><strong>Schema on write:</strong> the database rejects bad data.</li>\n<li><strong>Schema on read:</strong> every reader handles every old shape, forever.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "When would you use both?",
+        "tag": "probe",
+        "html": "<p><strong>When one workload has a shape the main store handles badly.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Main store</th>\n<th>Added store</th>\n<th>For</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Relational</strong></td>\n<td>a cache or key-value store</td>\n<td>hot lookups</td>\n</tr>\n<tr>\n<td><strong>Relational</strong></td>\n<td>a search engine</td>\n<td>full-text search</td>\n</tr>\n<tr>\n<td><strong>Relational</strong></td>\n<td>a column store</td>\n<td>analytics</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "The team wants to start on a NoSQL store &quot;to be ready for scale&quot;. Your response?",
+        "tag": "senior",
+        "html": "<p><strong>Ask for the access patterns and the number.</strong></p>\n<ul>\n<li><strong>If the patterns are known and the volume is real,</strong> agree.</li>\n<li><strong>If not,</strong> start relational and set the measured trigger for moving: write rate, data size, or a specific query that no longer fits.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;NoSQL because it scales.&quot; — what, by which key?",
+      "&quot;SQL is old technology.&quot; — it&#39;s the default for good reasons.",
+      "&quot;We&#39;ll figure out the queries later&quot; with a NoSQL store. — that store needs them first.",
+      "&quot;Schemaless means no schema work.&quot; — the work moves to the code."
+    ],
+    "links": [
+      {
+        "label": "SQL vs NoSQL",
+        "target": "11-dbms/Sql/06-Data-Systems/SQL-vs-NoSQL"
+      },
+      {
+        "label": "Normalization and Denormalization",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Normalization-and-Denormalization"
+      },
+      {
+        "label": "CAP and Consistency",
+        "target": "11-dbms/Sql/05-Scaling/CAP-and-Consistency"
+      },
+      {
+        "label": "OLTP vs OLAP",
+        "target": "11-dbms/Sql/06-Data-Systems/OLTP-vs-OLAP"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Frame the axis&lt;br/&gt;flexibility against&lt;br/&gt;predictable scale\"]):::step\n        N2(\"2 · Where relational&lt;br/&gt;wins&lt;br/&gt;unknown questions and&lt;br/&gt;invariants\"):::ask\n        N3(\"3 · Where NoSQL wins&lt;br/&gt;known patterns at scale\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · The deciding&lt;br/&gt;question&lt;br/&gt;can I list the queries\"):::ask\n        N5([\"5 · What I'd pick&lt;br/&gt;relational first, a&lt;br/&gt;second store on evidence\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q38": {
+    "type": "diagnose",
+    "spine": [
+      "Name it",
+      "Rule out the fakes",
+      "Confirm with evidence",
+      "Fix by experiment",
+      "Validate",
+      "Productionise"
+    ],
+    "testing": "that you get the actual plan before touching anything, and can tell a plan change from data growth from waiting.",
+    "trap": "adding an index before looking at the plan.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Name it</strong></td>\n<td>\"The code didn't change, so either the plan changed, the data changed, or the query is waiting on something. Those are three different problems.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Rule out the fakes</strong></td>\n<td>\"First I check that it's the query at all: is it running slowly, or queued behind a lock, a saturated disk, or an exhausted connection pool?\"</td>\n</tr>\n<tr>\n<td><strong>3 · Confirm with evidence</strong></td>\n<td>\"Then I get the actual plan with timings and compare it with the old one. I look at estimated rows against actual rows. A large gap means stale statistics, and that's usually why the planner switched to a worse join or a scan.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Fix by experiment</strong></td>\n<td>\"I fix the cause the plan shows, one change at a time. Refresh statistics. Add or correct an index. Rewrite a predicate that hides a column inside a function. Pinning a plan is a stopgap only.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Validate</strong></td>\n<td>\"I confirm with the plan again and with the latency percentiles, on production-sized data and for the customer that was slow.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Productionise</strong></td>\n<td>\"Then I make it visible next time: slow-query logging with plans, an alert on the percentile, and statistics kept fresh on the tables that skew.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Fixed means the plan is the right one again, and I'd know within minutes if it flipped.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Name it",
+        "claim": "plan, data or waiting",
+        "html": "<p><strong>\"'Nothing was deployed' rules out code, not change.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>What can change with no deploy</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The plan</strong></td>\n<td>statistics went stale, or were refreshed, and the planner chose differently</td>\n</tr>\n<tr>\n<td><strong>The data</strong></td>\n<td>the table grew; one customer became a hundred times larger</td>\n</tr>\n<tr>\n<td><strong>The environment</strong></td>\n<td>a lock holder, a noisy neighbour, a cold cache after a restart</td>\n</tr>\n<tr>\n<td><strong>The parameters</strong></td>\n<td>the same query with a different value takes a different path</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Rule out the fakes",
+        "claim": "is the query even running",
+        "html": "<p><strong>\"Four things make a fast query look slow.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Fake</th>\n<th>Check</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Blocked on a lock</strong></td>\n<td>lock waits; who holds the lock</td>\n</tr>\n<tr>\n<td><strong>Waiting for a connection</strong></td>\n<td>pool wait time against query time</td>\n</tr>\n<tr>\n<td><strong>I/O or CPU saturation</strong></td>\n<td>host metrics; everything is slow, not this query</td>\n</tr>\n<tr>\n<td><strong>A cold cache</strong></td>\n<td>did the database or the host just restart?</td>\n</tr>\n</tbody></table>\n<p><strong>Split the time:</strong> total 4 s = waiting for a connection + waiting on locks + <strong>executing</strong> ← only this part is about the plan</p>"
+      },
+      {
+        "number": 3,
+        "name": "Confirm with evidence",
+        "claim": "the actual plan, estimated against actual",
+        "html": "<p><strong>\"The plan tells me which of the three it is.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Observation in the plan</th>\n<th>Likely cause</th>\n<th>Next action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Estimated 10 rows, actual 500,000</strong></td>\n<td>stale or missing statistics</td>\n<td>refresh statistics</td>\n</tr>\n<tr>\n<td><strong>A sequential scan where an index scan used to be</strong></td>\n<td>the planner now thinks the predicate is unselective, or the index is gone or invalid</td>\n<td>check the index; check statistics</td>\n</tr>\n<tr>\n<td><strong>A nested loop over a huge outer side</strong></td>\n<td>a bad row estimate chose the wrong join</td>\n<td>fix the estimate; then the join follows</td>\n</tr>\n<tr>\n<td><strong>The same plan, more rows at every node</strong></td>\n<td>data growth</td>\n<td>an index that matches, partitioning, or archiving</td>\n</tr>\n<tr>\n<td><strong>A sort or hash spilling to disk</strong></td>\n<td>the working set outgrew memory</td>\n<td>reduce rows earlier; then memory settings</td>\n</tr>\n<tr>\n<td><strong>Fast for most values, slow for one</strong></td>\n<td>skew: one tenant or status dominates</td>\n<td>a plan or index for the skewed value</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Fix by experiment",
+        "claim": "one change, then the plan again",
+        "html": "<p><strong>\"What the right index does to a plan.\"</strong> Plans produced by SQLite 3.51 on the sample <code>orders</code> table.</p>\n<pre><code class=\"language-text\">query: WHERE customer_id = 1 AND created_at &gt; '2026-02-01' ORDER BY created_at\n\nbefore:  SCAN orders\n         USE TEMP B-TREE FOR ORDER BY                   ← reads everything, then sorts\nafter:   SEARCH orders USING INDEX idx_orders_cust_created\n                (customer_id=? AND created_at&gt;?)        ← seeks, already ordered\n</code></pre>\n<div class=\"exp-list\"><section class=\"exp\"><span class=\"exp-tag\">Experiment 1</span><h4 class=\"exp-title\">Refresh statistics</h4><p>I run the engine's analyse command on the tables in the query.</p><p><strong>Why?</strong> A wrong row estimate is the most common reason for a plan flip, and this fixes it without changing anything else.</p><p class=\"exp-best\">Best suited when estimated and actual rows differ widely.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 2</span><h4 class=\"exp-title\">An index that matches the predicate</h4><p>I add or correct an index: equality columns first, then the range column.</p><p><strong>Why?</strong> The plan shows a scan and a sort that an index would remove.</p><p class=\"exp-best\">Best suited when the plan is stable and simply reads too much.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 3</span><h4 class=\"exp-title\">Rewrite the predicate</h4><p>I move a function off the indexed column, or replace <code>OR</code> with a union.</p><p><strong>Why?</strong> A predicate the index can't seek on forces a scan however good the index is.</p><p class=\"exp-best\">Best suited when an index exists and isn't used.</p></section></div>"
+      },
+      {
+        "number": 5,
+        "name": "Validate",
+        "claim": "the plan and the percentiles",
+        "html": "<p><strong>\"Faster on my laptop proves nothing.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Check</th>\n<th>Before</th>\n<th>After</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Plan for the slow value</strong></td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td><strong>p50 / p95 / p99 latency</strong></td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td><strong>Rows read per execution</strong></td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td><strong>Write latency on the table</strong> (if an index was added)</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n</tbody></table>\n<p>Validated on production-sized data and with the parameter value that was slow, because skew doesn't show on averages.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Productionise",
+        "claim": "see the next flip early",
+        "html": "<p><strong>\"I want the plan captured at the moment it goes wrong.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Practice</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Slow-query log with plans</strong></td>\n<td>the evidence exists when the alert fires</td>\n</tr>\n<tr>\n<td><strong>Alert on p95 and p99 per query group</strong></td>\n<td>minutes, not a customer report</td>\n</tr>\n<tr>\n<td><strong>Statistics on skewed, fast-growing tables</strong></td>\n<td>refreshed more often than the default</td>\n</tr>\n<tr>\n<td><strong>Query review for new indexes</strong></td>\n<td>each one is weighed against its write cost</td>\n</tr>\n<tr>\n<td><strong>Plan pinning</strong></td>\n<td>a time-boxed stopgap with an owner</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>statistics and indexes</em> in the database; <em>query shape</em> in the application.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Just add an index on the columns in the WHERE clause.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Without the plan, that's a guess with a permanent write cost.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Wrong order:</strong></span><span class=\"flow-step\">slow</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">add an index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">still slow, or slow again next month</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Right order:</strong></span><span class=\"flow-step\">slow</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">actual plan</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">estimates against actuals</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">the cause</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">one fix</span></div>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The plan says &quot;estimated rows 12, actual rows 480,000&quot;. What do you do first?",
+        "tag": "edge",
+        "html": "<p><strong>Refresh statistics and look at the plan again.</strong></p>\n<pre><code class=\"language-text\">estimate / actual = 12 / 480,000     ← off by a factor of 40,000\na planner that expects 12 rows picks a nested loop; for 480,000 it should hash or scan\n</code></pre>\n<p>If the estimate is still wrong afterwards, the columns are correlated and need extended statistics or a different predicate.</p>"
+      },
+      {
+        "number": 3,
+        "question": "It&#39;s slow only for one large customer. Why?",
+        "tag": "probe",
+        "html": "<p><strong>Skew: the plan that suits a typical customer is wrong for the huge one.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Typical customer</th>\n<th>Giant customer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>An index lookup returns 50 rows</strong></td>\n<td>the same lookup returns 5 million</td>\n</tr>\n<tr>\n<td><strong>Fine</strong></td>\n<td>a scan or a different index would be better</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "How do you tell waiting from working?",
+        "tag": "probe",
+        "html": "<p><strong>From wait events and from the plan's own timings.</strong></p>\n<ul>\n<li><strong>Execution time in the plan is small, total time is large:</strong> it was waiting.</li>\n<li><strong>Lock-wait and pool-wait metrics</strong> say on what.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "How do you stop plan flips from being incidents?",
+        "tag": "senior",
+        "html": "<p><strong>Make them visible and make the hot queries robust.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Guard</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Plan capture on slow queries</strong></td>\n<td>diagnosis in minutes</td>\n</tr>\n<tr>\n<td><strong>Indexes that make the good plan obviously cheapest</strong></td>\n<td>less room for the planner to switch</td>\n</tr>\n<tr>\n<td><strong>Load tests on production-sized, skewed data</strong></td>\n<td>flips found before release</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;d add an index.&quot; — after reading the plan.",
+      "&quot;Nothing changed, so it must be the database.&quot; — data and statistics changed.",
+      "&quot;I&#39;d increase the instance size.&quot; — that hides a bad plan for a while.",
+      "&quot;It&#39;s fast when I run it.&quot; — with which parameter, on which data?"
+    ],
+    "links": [
+      {
+        "label": "Slow Query Debugging",
+        "target": "11-dbms/Sql/04-Performance/Slow-Query-Debugging"
+      },
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      },
+      {
+        "label": "composite index",
+        "target": "model-answers/12-DATABASES/19-composite-index"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Name it&lt;br/&gt;plan, data or waiting\"]):::step\n        N2(\"2 · Rule out the fakes&lt;br/&gt;is the query even&lt;br/&gt;running\"):::ask\n        N3(\"3 · Confirm with&lt;br/&gt;evidence&lt;br/&gt;the actual plan,&lt;br/&gt;estimated against actual\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Fix by experiment&lt;br/&gt;one change, then the&lt;br/&gt;plan again\"]:::step\n        N5(\"5 · Validate&lt;br/&gt;the plan and the&lt;br/&gt;percentiles\"):::ask\n        N6([\"6 · Productionise&lt;br/&gt;see the next flip early\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q40": {
+    "type": "design",
+    "spine": [
+      "Clarify",
+      "Constraints and numbers",
+      "Baseline design",
+      "Deep-dive",
+      "Failure modes",
+      "Evolve"
+    ],
+    "testing": "that you know which statements lock the table and for how long, and that you split the change into steps that can each be rolled back.",
+    "trap": "one <code>ALTER TABLE … NOT NULL DEFAULT …</code> plus one <code>UPDATE</code> of every row.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Clarify</strong></td>\n<td>\"First I ask which engine and version, because what locks differs, and whether the value is a constant or computed.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Constraints and numbers</strong></td>\n<td>\"The limits are lock time and replica lag. No statement may hold a blocking lock for more than a moment, and the backfill must not push replicas behind.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Baseline design</strong></td>\n<td>\"So I expand, backfill, then contract. Add the column as nullable, which is a metadata change. Deploy code that writes it on every insert and update. Backfill old rows in small batches. Add the constraint last.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Deep-dive</strong></td>\n<td>\"The backfill walks the primary key in small batches, one short transaction each, and pauses when replica lag rises. On PostgreSQL I add a check constraint as not valid, then validate it, which scans without blocking writes.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Failure modes</strong></td>\n<td>\"The dangerous one is the lock queue. A schema change waiting behind a long transaction blocks every query behind it, so I set a lock timeout and retry.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Evolve</strong></td>\n<td>\"Then it becomes a rule: every migration is expand and contract, checked in the pipeline.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"No step holds a long lock, and every step before the constraint can be undone.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify",
+        "claim": "engine, version and the value",
+        "html": "<p><strong>\"Three answers change the plan.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Question</th>\n<th>Why it matters</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Which engine and version?</strong></td>\n<td>adding a column with a default is a metadata change on PostgreSQL 11+ and on MySQL 8.0 InnoDB (<code>ALGORITHM=INSTANT</code>); older versions rewrite the table</td>\n</tr>\n<tr>\n<td><strong>Is the value a constant or computed?</strong></td>\n<td>a constant can be a default; a computed value needs a backfill</td>\n</tr>\n<tr>\n<td><strong>Do old application versions still write to the table?</strong></td>\n<td>until they are gone, a <code>NOT NULL</code> constraint rejects their inserts</td>\n</tr>\n<tr>\n<td><strong>Are there replicas or CDC consumers?</strong></td>\n<td>every backfilled row is replicated and emitted</td>\n</tr>\n</tbody></table>\n<p>Engine behaviour as generally documented; I'd confirm against the version in use.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Constraints and numbers",
+        "claim": "lock time and lag",
+        "html": "<p><strong>\"Two budgets, and the arithmetic of the backfill.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Budget</th>\n<th>Limit</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Blocking lock on the table</strong></td>\n<td>well under a second per statement</td>\n</tr>\n<tr>\n<td><strong>Replica lag</strong></td>\n<td>stays inside the alert threshold throughout</td>\n</tr>\n<tr>\n<td><strong>Transaction size</strong></td>\n<td>small enough that undo, the log and vacuum keep up</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">rows              = 1,000,000,000            ← illustrative for a 500 GB table\nbatch             = 5,000 rows\nbatches           = 1,000,000,000 / 5,000    = 200,000\ntime per batch    = 0.2 s work + 0.3 s pause = 0.5 s\ntotal             = 200,000 × 0.5 s          = 100,000 s ≈ 28 hours\n</code></pre>\n<p>So the backfill is a job that runs for a day or more, and must be resumable.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Baseline design",
+        "claim": "expand, backfill, contract",
+        "html": "<p><strong>\"Five steps; each one is short or non-blocking.\"</strong></p>\n<figure><div class=\"mermaid\">flowchart TB\n    A[\"1 · Add the column, nullable&lt;br/&gt;metadata change, brief lock\"]:::step\n    B[\"2 · Deploy writers&lt;br/&gt;every insert and update sets it\"]:::step\n    C[\"3 · Backfill old rows&lt;br/&gt;small batches, throttled by lag\"]:::calc\n    D[\"4 · Add the check as NOT VALID,&lt;br/&gt;then VALIDATE: scans, writes continue\"]:::ask\n    E([\"5 · SET NOT NULL&lt;br/&gt;old app versions can no longer write\"]):::bad\n    A --&gt; B --&gt; C --&gt; D --&gt; E\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>\n<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>Lock</th>\n<th>Undo</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Add nullable</strong></td>\n<td>brief exclusive, metadata only</td>\n<td>drop the column</td>\n</tr>\n<tr>\n<td><strong>2 · Deploy writers</strong></td>\n<td>none</td>\n<td>roll the deploy back</td>\n</tr>\n<tr>\n<td><strong>3 · Backfill</strong></td>\n<td>row locks, a batch at a time</td>\n<td>stop the job</td>\n</tr>\n<tr>\n<td><strong>4 · Validate</strong></td>\n<td>allows reads and writes (PostgreSQL)</td>\n<td>drop the constraint</td>\n</tr>\n<tr>\n<td><strong>5 · Enforce</strong></td>\n<td>brief</td>\n<td><strong>point of no return for old application versions</strong></td>\n</tr>\n</tbody></table>\n<p>Step 2 comes before step 3. Otherwise rows inserted during the backfill arrive empty and the job never finishes.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Deep-dive",
+        "claim": "the batched backfill",
+        "html": "<p><strong>\"Walk the primary key; commit per batch.\"</strong> Run on SQLite through Python.</p>\n<pre><code class=\"language-python\">import sqlite3\nm = sqlite3.connect(\":memory:\")\nm.execute(\"CREATE TABLE accounts(id INTEGER PRIMARY KEY, email TEXT)\")\nm.executemany(\"INSERT INTO accounts(email) VALUES (?)\",\n              [(f\"u{i}@x.com\",) for i in range(1, 11)])\nm.execute(\"ALTER TABLE accounts ADD COLUMN email_domain TEXT\")  # expand\nlast = batches = 0\nwhile True:\n    ids = [r[0] for r in m.execute(\n        \"SELECT id FROM accounts WHERE id &gt; ? ORDER BY id LIMIT 4\", (last,))]\n    if not ids: break\n    m.execute(\"UPDATE accounts SET email_domain = substr(email, \"\n              \"instr(email, '@') + 1) WHERE id BETWEEN ? AND ?\",\n              (ids[0], ids[-1]))\n    m.commit(); last = ids[-1]; batches += 1   # one short transaction\nleft = m.execute(\"SELECT COUNT(*) FROM accounts \"\n                 \"WHERE email_domain IS NULL\").fetchone()[0]\nprint(batches, \"batches;\", left, \"rows left NULL\")\n# → 3 batches; 0 rows left NULL\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Property</th>\n<th>How</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Resumable</strong></td>\n<td>the last id is saved; a restart continues from it</td>\n</tr>\n<tr>\n<td><strong>Throttled</strong></td>\n<td>pause while replica lag or lock waits are above the limit</td>\n</tr>\n<tr>\n<td><strong>Idempotent</strong></td>\n<td>re-running a batch sets the same values</td>\n</tr>\n<tr>\n<td><strong>No <code>OFFSET</code></strong></td>\n<td>the key range is seeked, so batch 200,000 costs the same as batch 1</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>The constraint, on PostgreSQL 12+:</strong></span><span class=\"flow-step\"><code>ADD CONSTRAINT … CHECK (col IS NOT NULL) NOT VALID</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>VALIDATE CONSTRAINT</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>SET NOT NULL</code> (uses the validated check, so no second scan)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">drop the check</span></div>\n<p><strong>On MySQL:</strong> an online schema-change tool (gh-ost, pt-online-schema-change) copies to a shadow table and swaps it in.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Failure modes",
+        "claim": "the lock queue and the long transaction",
+        "html": "<p><strong>\"What turns a metadata change into an outage.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Cause</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Every query on the table stalls</strong></td>\n<td>the <code>ALTER</code> waits behind a long transaction, and everything queues behind the <code>ALTER</code></td>\n<td><code>lock_timeout</code> of a second or two, then retry</td>\n</tr>\n<tr>\n<td><strong>Replicas fall behind</strong></td>\n<td>the backfill writes faster than they apply</td>\n<td>throttle on lag</td>\n</tr>\n<tr>\n<td><strong>The log or undo space fills</strong></td>\n<td>one huge transaction</td>\n<td>commit per batch</td>\n</tr>\n<tr>\n<td><strong>Inserts fail after step 5</strong></td>\n<td>an old application version doesn't set the column</td>\n<td>confirm no old writers; a default as a safety net</td>\n</tr>\n<tr>\n<td><strong>CDC consumers are flooded</strong></td>\n<td>a billion update events</td>\n<td>tell the owners; filter or pause</td>\n</tr>\n</tbody></table>\n<p>Measure during the run: lock waits, replica lag, rows left <code>NULL</code>, write latency on the table.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Evolve",
+        "claim": "make it the only way to migrate",
+        "html": "<p><strong>\"The pattern outlives this one change.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Practice</th>\n<th>Detail</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Expand and contract for every change</strong></td>\n<td>renames, type changes and splits follow the same steps</td>\n</tr>\n<tr>\n<td><strong>A migration linter in CI</strong></td>\n<td>rejects a blocking <code>ALTER</code>, a missing lock timeout, an unbatched <code>UPDATE</code></td>\n</tr>\n<tr>\n<td><strong>Schema and code deploy separately</strong></td>\n<td>the schema is always compatible with the previous and the next application version</td>\n</tr>\n<tr>\n<td><strong>A backfill framework</strong></td>\n<td>resumable, throttled, observable; not a one-off script each time</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>migration process</em>, enforced in the <em>pipeline</em>.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Just run ALTER TABLE … ADD COLUMN … NOT NULL DEFAULT &#39;x&#39;.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Safe only for a constant default on an engine that stores it as metadata.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Case</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Constant default, PostgreSQL 11+ / MySQL 8.0 instant</strong></td>\n<td>fast; still needs a lock timeout</td>\n</tr>\n<tr>\n<td><strong>Computed value, or an older version</strong></td>\n<td>a full table rewrite under a blocking lock</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The backfill uses . What happens by batch 100,000?",
+        "tag": "edge",
+        "html": "<p><strong>Each batch reads and throws away every row before it.</strong></p>\n<pre><code class=\"language-text\">batch 100,000: OFFSET = 100,000 × 5,000 = 500,000,000 rows skipped   ← to update 5,000\nkeyset:        WHERE id &gt; last ORDER BY id LIMIT 5000                ← seeks straight there\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why add the constraint as NOT VALID first?",
+        "tag": "probe",
+        "html": "<p><strong>It splits a long blocking step into a short one and a non-blocking one.</strong></p>\n<ul>\n<li><strong><code>NOT VALID</code>:</strong> enforced for new writes at once; no scan.</li>\n<li><strong><code>VALIDATE</code>:</strong> scans existing rows while reads and writes continue.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you roll back?",
+        "tag": "probe",
+        "html": "<p><strong>Every step before enforcement has a one-line undo.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Undo:</strong></span><span class=\"flow-step\">stop the backfill</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">drop the constraint</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">roll back the writers</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">drop the column</span></div>\n<p>After <code>SET NOT NULL</code>, rolling the application back to a version that doesn't write the column fails.</p>"
+      },
+      {
+        "number": 5,
+        "question": "How do you stop the next engineer from running the blocking version?",
+        "tag": "senior",
+        "html": "<p><strong>The pipeline refuses it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Guard</th>\n<th>Catches</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A migration linter</strong></td>\n<td>blocking statements, missing timeouts</td>\n</tr>\n<tr>\n<td><strong>A default lock timeout for the migration role</strong></td>\n<td>a queue building behind a waiting <code>ALTER</code></td>\n</tr>\n<tr>\n<td><strong>Migrations tested on a production-sized copy</strong></td>\n<td>a rewrite that takes hours</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;d run the <code>ALTER</code> at night.&quot; — a blocking lock at 3 a.m. is still an outage.",
+      "&quot;One <code>UPDATE</code> to fill it in.&quot; — one transaction over 500 GB.",
+      "&quot;Adding a column is instant.&quot; — on which engine, with which default?",
+      "&quot;We&#39;ll take a short maintenance window.&quot; — the question said zero downtime."
+    ],
+    "links": [
+      {
+        "label": "Schema Design",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Schema-Design"
+      },
+      {
+        "label": "Locks and Deadlocks",
+        "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+      },
+      {
+        "label": "Replication",
+        "target": "11-dbms/Sql/05-Scaling/Replication"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;engine, version and the&lt;br/&gt;value\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;lock time and lag\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;expand, backfill,&lt;br/&gt;contract\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;the batched backfill\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;the lock queue and the&lt;br/&gt;long transaction\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;make it the only way to&lt;br/&gt;migrate\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q48": {
+    "type": "design",
+    "spine": [
+      "Clarify",
+      "Constraints and numbers",
+      "Baseline design",
+      "Deep-dive",
+      "Failure modes",
+      "Evolve"
+    ],
+    "testing": "that you choose the key from the queries, check for skew, and have a plan for the tenant that outgrows a shard.",
+    "trap": "sharding on an auto-increment id or a timestamp, or sharding before a single node is exhausted.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Clarify</strong></td>\n<td>\"First I ask whether we need to shard yet. Indexes, replicas, partitioning and a bigger node come first. Then I ask for the queries, because the key is chosen from them.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Constraints and numbers</strong></td>\n<td>\"A good key does three things: most queries touch one shard, load spreads evenly, and the key never changes for a row. I'd want the tenant size distribution, because one giant tenant changes the answer.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Baseline design</strong></td>\n<td>\"In a multi-tenant product nearly every query is scoped to a tenant, so tenant id is the key. Every table carries it, and a tenant's joins and transactions stay on one shard.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Deep-dive</strong></td>\n<td>\"The weakness is skew. So I don't hash tenants straight to shards. I use a directory that maps each tenant to a shard, which lets me give a large tenant its own shard and move tenants without rehashing everyone.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Failure modes</strong></td>\n<td>\"What still hurts: cross-tenant reports, which fan out to every shard; globally unique ids; and a tenant too big for one node, which needs a second-level key inside it.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Evolve</strong></td>\n<td>\"I'd watch load per shard and per tenant, and rebalance by moving tenants online.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Tenant id through a directory: local queries, and a way out for the outliers.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify",
+        "claim": "do we need shards, and what are the queries",
+        "html": "<p><strong>\"Sharding is the last step, so I check the earlier ones.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Before sharding:</strong></span><span class=\"flow-step\">indexes and query fixes</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">read replicas</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">caching</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">partitioning</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">a larger node ─measured write or size limit</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>shard</strong></span></div>\n<table>\n<thead>\n<tr>\n<th>Access pattern</th>\n<th>Scope</th>\n<th>Needs a transaction?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A tenant's users, projects, invoices</strong></td>\n<td>one tenant</td>\n<td>yes, within the tenant</td>\n</tr>\n<tr>\n<td><strong>A tenant's dashboard joins</strong></td>\n<td>one tenant</td>\n<td>no</td>\n</tr>\n<tr>\n<td><strong>Login by email</strong></td>\n<td>global</td>\n<td>no</td>\n</tr>\n<tr>\n<td><strong>Admin report across all tenants</strong></td>\n<td>all tenants</td>\n<td>no</td>\n</tr>\n</tbody></table>\n<p>Three of four are scoped to one tenant. That decides the key.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Constraints and numbers",
+        "claim": "three tests for a key",
+        "html": "<p><strong>\"Each candidate against the three tests.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Candidate key</th>\n<th>Queries stay on one shard</th>\n<th>Load is even</th>\n<th>Never changes</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>tenant_id</code></strong></td>\n<td>yes, for tenant-scoped work</td>\n<td><strong>only if tenants are similar in size</strong></td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong>Row id (hash)</strong></td>\n<td>no: a tenant is spread over every shard</td>\n<td>yes</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong>Auto-increment id (range)</strong></td>\n<td>no</td>\n<td>no: all new writes hit the last shard</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong><code>created_at</code> (range)</strong></td>\n<td>no</td>\n<td>no: \"now\" is one hot shard</td>\n<td>yes</td>\n</tr>\n<tr>\n<td><strong><code>region</code></strong></td>\n<td>partly</td>\n<td>no: a few values</td>\n<td>can change</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Baseline design",
+        "claim": "tenant id on every table",
+        "html": "<p><strong>\"The key is in every table and every query.\"</strong></p>\n<pre><code class=\"language-sql\">projects(tenant_id, id, name, …)   PRIMARY KEY (tenant_id, id)\ninvoices(tenant_id, id, …)         PRIMARY KEY (tenant_id, id)\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Design rule</th>\n<th>Reason</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>tenant_id</code> leads every primary key and index</strong></td>\n<td>routing and seeking use the same prefix</td>\n</tr>\n<tr>\n<td><strong>Every query carries <code>tenant_id</code></strong></td>\n<td>the router sends it to one shard</td>\n</tr>\n<tr>\n<td><strong>Joins and transactions stay inside a tenant</strong></td>\n<td>they stay on one shard</td>\n</tr>\n<tr>\n<td><strong>Small global tables (plans, countries)</strong></td>\n<td>copied to every shard as reference tables</td>\n</tr>\n<tr>\n<td><strong>Login by email</strong></td>\n<td>a small global lookup: email → tenant</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Deep-dive",
+        "claim": "skew, and the directory that absorbs it",
+        "html": "<p><strong>\"One large tenant makes one hot shard.\"</strong> Simulation: 39 tenants of 100 rows and one of 6,000, hashed to 4 shards.</p>\n<pre><code class=\"language-python\">import hashlib\ndef shard(key, n=4):\n    return int(hashlib.md5(str(key).encode()).hexdigest(), 16) % n\ntenants = {f\"t{i}\": 100 for i in range(1, 40)}\ntenants[\"big\"] = 6000                       # one giant tenant\nby_tenant, by_row = [0] * 4, [0] * 4\nfor t, rows in tenants.items():\n    by_tenant[shard(t)] += rows\n    for r in range(rows):\n        by_row[shard(f\"{t}:{r}\")] += 1\nprint(by_tenant)\nprint(by_row)\n# → [6900, 1100, 1100, 800]\n# → [2434, 2490, 2513, 2463]\n</code></pre>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;bar&quot;,&quot;title&quot;:&quot;Rows per shard, keyed by tenant_id&quot;,&quot;caption&quot;:&quot;Computed by the snippet above (39 tenants of 100 rows, one of 6,000).&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;shard&quot;},&quot;y&quot;:{&quot;label&quot;:&quot;rows&quot;,&quot;domain&quot;:[0,7000]},&quot;bars&quot;:[{&quot;label&quot;:&quot;shard 0&quot;,&quot;value&quot;:6900,&quot;tone&quot;:&quot;bad&quot;},{&quot;label&quot;:&quot;shard 1&quot;,&quot;value&quot;:1100},{&quot;label&quot;:&quot;shard 2&quot;,&quot;value&quot;:1100},{&quot;label&quot;:&quot;shard 3&quot;,&quot;value&quot;:800}]}\"></div><figcaption>Computed by the snippet above (39 tenants of 100 rows, one of 6,000).</figcaption></figure>\n<p>Hashing by row is even and useless: every tenant query now hits all four shards.</p>\n<p><strong>The fix keeps the key and changes the mapping:</strong></p>\n<table>\n<thead>\n<tr>\n<th>Mapping</th>\n<th>Placement</th>\n<th>Moving a tenant</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>hash(tenant_id) % N</code></strong></td>\n<td>fixed by arithmetic</td>\n<td>changing <code>N</code> remaps almost everyone</td>\n</tr>\n<tr>\n<td><strong>A directory: <code>tenant_id → shard</code></strong></td>\n<td>chosen per tenant; the giant gets its own shard</td>\n<td>copy the tenant, flip one directory row</td>\n</tr>\n</tbody></table>\n<p>The directory is small, read on every request and rarely written, so it is cached and replicated.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Failure modes",
+        "claim": "what sharding takes away",
+        "html": "<p><strong>\"Each loss needs an answer before launch.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Loss</th>\n<th>Answer</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Cross-tenant queries</strong></td>\n<td>fan out and merge, or run them on a warehouse fed by CDC</td>\n</tr>\n<tr>\n<td><strong>Cross-shard transactions</strong></td>\n<td>designed out; where unavoidable, a saga</td>\n</tr>\n<tr>\n<td><strong>Global uniqueness</strong> (email, ids)</td>\n<td>a global lookup table; ids that embed the shard or are UUIDs</td>\n</tr>\n<tr>\n<td><strong>A tenant too large for one node</strong></td>\n<td>a second-level key inside that tenant (<code>tenant_id, project_id</code>)</td>\n</tr>\n<tr>\n<td><strong>The directory is down</strong></td>\n<td>cached in the router; it is the most available component</td>\n</tr>\n<tr>\n<td><strong>Schema changes</strong></td>\n<td>run on every shard; versions must tolerate being mixed</td>\n</tr>\n</tbody></table>\n<p>Measure: rows, queries per second and storage per shard and per tenant; the share of queries that touch more than one shard.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Evolve",
+        "claim": "rebalance by moving tenants",
+        "html": "<p><strong>\"Growth is handled by moving entries in the directory.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Move a tenant:</strong></span><span class=\"flow-step\">copy to the new shard</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">replicate changes until caught up</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">brief write pause for that tenant</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">flip the directory row</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">delete the old copy</span></div>\n<table>\n<thead>\n<tr>\n<th>Stage</th>\n<th>Change</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Today</strong></td>\n<td>tenants packed onto a few shards by the directory</td>\n</tr>\n<tr>\n<td><strong>A tenant grows</strong></td>\n<td>moved to its own shard, online</td>\n</tr>\n<tr>\n<td><strong>Regulation</strong></td>\n<td>the directory also places a tenant in a region</td>\n</tr>\n<tr>\n<td><strong>Many small tenants</strong></td>\n<td>packed densely; noisy ones are rate-limited per tenant</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>data model</em> (the key on every table) and <em>routing</em> (the directory).</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Shard on the primary key so load is perfectly even.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Even load, and every useful query becomes a scatter.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Key</th>\n<th>One tenant's dashboard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Row id</strong></td>\n<td>asks every shard, merges the results</td>\n</tr>\n<tr>\n<td><strong><code>tenant_id</code></strong></td>\n<td>asks one shard</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 Four shards by ; you add a fifth. Roughly what share of tenants move?",
+        "tag": "edge",
+        "html": "<p><strong>About four in five.</strong></p>\n<pre><code class=\"language-text\">a tenant stays only if  h % 4 == h % 5\nthat holds for 4 residues out of every 20   ← h % 20 in {0, 1, 2, 3}\nstay = 4 / 20 = 20%      move = 80%\n</code></pre>\n<p>Consistent hashing or a directory moves only what has to move.</p>"
+      },
+      {
+        "number": 3,
+        "question": "How do you run a report across all tenants?",
+        "tag": "probe",
+        "html": "<p><strong>Not on the shards.</strong></p>\n<ul>\n<li><strong>Occasional:</strong> fan out to every shard and merge.</li>\n<li><strong>Regular:</strong> a warehouse fed by CDC from all shards.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "How do you generate unique ids across shards?",
+        "tag": "probe",
+        "html": "<p><strong>Ids that can't collide by construction.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Scheme</th>\n<th>Note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>(tenant_id, local id)</code> composite key</strong></td>\n<td>simplest; unique within the tenant</td>\n</tr>\n<tr>\n<td><strong>A time-ordered id with a shard or node part</strong></td>\n<td>sortable, no coordination</td>\n</tr>\n<tr>\n<td><strong>Random UUID</strong></td>\n<td>unique; poor index locality</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "When would you choose a database per tenant?",
+        "tag": "senior",
+        "html": "<p><strong>When isolation matters more than operating cost.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Model</th>\n<th>Pick when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Shared tables, <code>tenant_id</code> column</strong></td>\n<td>many small tenants; lowest cost</td>\n</tr>\n<tr>\n<td><strong>A schema or database per tenant</strong></td>\n<td>strict isolation, per-tenant backup and restore, few large tenants</td>\n</tr>\n<tr>\n<td><strong>A mix through the directory</strong></td>\n<td>most products: small tenants shared, large ones dedicated</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We&#39;ll shard&quot; as the first fix for a slow database. — replicas and partitioning first.",
+      "&quot;Hash the primary key.&quot; — every tenant query fans out.",
+      "&quot;Shard by date.&quot; — today is one hot shard.",
+      "&quot;Tenants are about the same size.&quot; — measure the distribution."
+    ],
+    "links": [
+      {
+        "label": "Sharding",
+        "target": "11-dbms/Sql/05-Scaling/Sharding"
+      },
+      {
+        "label": "Partitioning",
+        "target": "11-dbms/Sql/05-Scaling/Partitioning"
+      },
+      {
+        "label": "Replication",
+        "target": "11-dbms/Sql/05-Scaling/Replication"
+      },
+      {
+        "label": "Design Scenarios",
+        "target": "11-dbms/Sql/07-Practice/Design-Scenarios"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;do we need shards, and&lt;br/&gt;what are the queries\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;three tests for a key\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;tenant id on every table\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;skew, and the directory&lt;br/&gt;that absorbs it\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;what sharding takes away\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;rebalance by moving&lt;br/&gt;tenants\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q49": {
+    "type": "design",
+    "spine": [
+      "Clarify",
+      "Constraints and numbers",
+      "Baseline design",
+      "Deep-dive",
+      "Failure modes",
+      "Evolve"
+    ],
+    "testing": "that you name the dual-write problem, reach for the transactional outbox, and say that consumers must be idempotent.",
+    "trap": "&quot;commit, then publish&quot; (or the reverse) with a retry, as if that made it atomic.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Clarify</strong></td>\n<td>\"This is the dual-write problem. A database commit and a broker publish are two systems, so they can't be one atomic step. First I ask what's worse here: a lost event, or a duplicate.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Constraints and numbers</strong></td>\n<td>\"Usually a lost event is unacceptable and a duplicate is tolerable. So I want at-least-once delivery, and a bound on how late an event may be.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Baseline design</strong></td>\n<td>\"I use a transactional outbox. In the same local transaction that inserts the order, I insert a row into an outbox table. Both commit or neither does.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Deep-dive</strong></td>\n<td>\"A relay then reads the outbox and publishes: a poller, or change data capture on the log. It marks a row as sent only after the broker acknowledges.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Failure modes</strong></td>\n<td>\"If the relay crashes after publishing and before marking, the event goes out twice. So every event carries an id, and the consumer records ids it has processed and skips repeats.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Evolve</strong></td>\n<td>\"For a flow across several services I chain these into a saga, with a compensating action per step.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"One local transaction, at-least-once delivery, idempotent consumers.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify",
+        "claim": "the dual-write problem",
+        "html": "<p><strong>\"Either order of two writes has a gap.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Order</th>\n<th>Crash in the gap</th>\n<th>Result</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Commit, then publish</strong></td>\n<td>after the commit</td>\n<td>an order exists and <strong>nobody is told</strong></td>\n</tr>\n<tr>\n<td><strong>Publish, then commit</strong></td>\n<td>after the publish</td>\n<td>an event announces an order that <strong>doesn't exist</strong></td>\n</tr>\n<tr>\n<td><strong>Publish inside the transaction</strong></td>\n<td>the commit fails after the publish</td>\n<td>the same phantom event</td>\n</tr>\n</tbody></table>\n<p>A retry narrows the gap. It doesn't close it: the process can die before it retries.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Constraints and numbers",
+        "claim": "which guarantee I need",
+        "html": "<p><strong>\"Three delivery guarantees; one is practical.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Guarantee</th>\n<th>Meaning</th>\n<th>Cost</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>At-most-once</strong></td>\n<td>may lose an event</td>\n<td>none; unacceptable for orders</td>\n</tr>\n<tr>\n<td><strong>At-least-once</strong></td>\n<td>never loses; may repeat</td>\n<td>consumers must be idempotent</td>\n</tr>\n<tr>\n<td><strong>Exactly-once effect</strong></td>\n<td>at-least-once delivery + an idempotent consumer</td>\n<td>a processed-ids record</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Number to agree</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Maximum delay from commit to publish</strong></td>\n<td>sets the polling interval or justifies CDC</td>\n</tr>\n<tr>\n<td><strong>Ordering needed?</strong> per order, or global</td>\n<td>decides the partition key</td>\n</tr>\n<tr>\n<td><strong>How long consumers remember ids</strong></td>\n<td>bounds the dedupe table</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Baseline design",
+        "claim": "the outbox row in the same transaction",
+        "html": "<p><strong>\"The event becomes data in my own database first.\"</strong></p>\n<figure><div class=\"mermaid\">%%{init: {\"sequence\": {\"actorMargin\": 18, \"width\": 118, \"messageMargin\": 24, \"noteMargin\": 6, \"boxMargin\": 6}}}%%\nsequenceDiagram\n    participant S as Service\n    participant D as Database\n    participant R as Relay\n    participant B as Broker\n    S-&gt;&gt;D: BEGIN\n    S-&gt;&gt;D: insert order\n    S-&gt;&gt;D: insert outbox row\n    S-&gt;&gt;D: COMMIT\n    Note over D: both or neither\n    R-&gt;&gt;D: read unsent rows\n    R-&gt;&gt;B: publish + event id\n    B--&gt;&gt;R: ack\n    R-&gt;&gt;D: mark sent\n    Note over B: consumer dedupes by id\n</div></figure>\n<pre><code class=\"language-sql\">outbox(id, aggregate_id, topic, payload, created_at, sent_at)\n</code></pre>"
+      },
+      {
+        "number": 4,
+        "name": "Deep-dive",
+        "claim": "atomic write, duplicate delivery, one effect",
+        "html": "<p><strong>\"A crash before commit leaves nothing; a duplicate is absorbed.\"</strong> Run on SQLite through Python.</p>\n<pre><code class=\"language-python\">import sqlite3\no = sqlite3.connect(\":memory:\")\no.executescript(\"CREATE TABLE orders(id INTEGER PRIMARY KEY, total INT);\"\n                \"CREATE TABLE outbox(id INTEGER PRIMARY KEY, payload TEXT,\"\n                \" sent INT DEFAULT 0);\")\ndef place_order(total, crash=False):\n    try:\n        with o:                                # one local transaction\n            oid = o.execute(\"INSERT INTO orders(total) VALUES (?)\",\n                            (total,)).lastrowid\n            o.execute(\"INSERT INTO outbox(payload) VALUES (?)\", (str(oid),))\n            if crash: raise RuntimeError(\"crash before commit\")\n    except RuntimeError: pass\nplace_order(50); place_order(70, crash=True)\nprint(o.execute(\"SELECT COUNT(*) FROM orders\").fetchone()[0], \"orders,\",\n      o.execute(\"SELECT COUNT(*) FROM outbox\").fetchone()[0], \"outbox rows\")\nseen, delivered = set(), []\nfor mid, payload in o.execute(\"SELECT id, payload FROM outbox\").fetchall():\n    for _ in range(2):                         # the relay publishes twice\n        if mid not in seen: seen.add(mid); delivered.append(payload)\nprint(\"delivered:\", delivered)\n# → 1 orders, 1 outbox rows\n# → delivered: ['1']\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Relay style</th>\n<th>How</th>\n<th>Pick when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Polling</strong></td>\n<td>select unsent rows every interval; mark sent after the ack</td>\n<td>simple; a delay of the interval is fine</td>\n</tr>\n<tr>\n<td><strong>CDC on the log</strong></td>\n<td>a log reader streams outbox inserts to the broker</td>\n<td>low delay; no polling load</td>\n</tr>\n</tbody></table>\n<p>Ordering: publish with the aggregate id (the order id) as the partition key, so one order's events stay in order.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Failure modes",
+        "claim": "where each crash lands",
+        "html": "<p><strong>\"Every crash point ends in a retry or a duplicate, never a loss.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Crash point</th>\n<th>State left</th>\n<th>Outcome</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Before the commit</strong></td>\n<td>no order, no outbox row</td>\n<td>nothing happened</td>\n</tr>\n<tr>\n<td><strong>After the commit, before the publish</strong></td>\n<td>an unsent row</td>\n<td>the relay publishes it later</td>\n</tr>\n<tr>\n<td><strong>After the publish, before \"mark sent\"</strong></td>\n<td>still unsent</td>\n<td><strong>published again</strong> → the consumer dedupes</td>\n</tr>\n<tr>\n<td><strong>The broker is down</strong></td>\n<td>rows accumulate</td>\n<td>published when it returns; alert on backlog</td>\n</tr>\n<tr>\n<td><strong>The consumer fails mid-way</strong></td>\n<td>no ack</td>\n<td>redelivered; its work and its \"processed\" record commit together</td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Also watch</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The outbox table grows</strong></td>\n<td>delete or archive sent rows</td>\n</tr>\n<tr>\n<td><strong>A poison event blocks the queue</strong></td>\n<td>a dead-letter queue after N attempts</td>\n</tr>\n<tr>\n<td><strong>Several relays</strong></td>\n<td><code>SELECT … FOR UPDATE SKIP LOCKED</code>, or a single leader</td>\n</tr>\n</tbody></table>\n<p>Measure: outbox backlog and the age of the oldest unsent row.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Evolve",
+        "claim": "sagas for multi-service flows",
+        "html": "<p><strong>\"One outbox per service, chained.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Saga:</strong></span><span class=\"flow-step\">order placed</span><span class=\"flow-arrow\" data-label=\"event\"></span><span class=\"flow-step\">payment taken</span><span class=\"flow-arrow\" data-label=\"event\"></span><span class=\"flow-step\">stock reserved</span><span class=\"flow-arrow\" data-label=\"failure\"></span><span class=\"flow-step\"><strong>compensate:</strong> refund payment</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">cancel order</span></div>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Atomic across systems?</th>\n<th>Why I do or don't</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Outbox</strong></td>\n<td>no: eventual, never lost</td>\n<td>the default</td>\n</tr>\n<tr>\n<td><strong>Saga</strong></td>\n<td>no: each step is local, with a compensation</td>\n<td>multi-service business flows</td>\n</tr>\n<tr>\n<td><strong>Two-phase commit</strong></td>\n<td>yes</td>\n<td>blocks if the coordinator fails; few brokers support it</td>\n</tr>\n<tr>\n<td><strong>Event sourcing</strong></td>\n<td>the event log <em>is</em> the write</td>\n<td>when the events are the model, not a side effect</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>write path</em> in the service; <em>idempotency</em> in every consumer.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Publish after the commit, and retry on failure.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>The process can die between the commit and the publish, and the retry dies with it.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Gap:</strong></span><span class=\"flow-step\">commit <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>crash</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">publish never runs</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">nothing records that an event is owed</span></div>\n<p>The outbox row is that record.</p>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 The relay publishes event 17, then crashes before marking it sent. What does the consumer see?",
+        "tag": "edge",
+        "html": "<p><strong>Event 17 twice. Its effect is applied once.</strong></p>\n<pre><code class=\"language-text\">relay restarts → row 17 still unsent → publishes 17 again\nconsumer: 17 already in processed_events → skip          ← at-least-once + idempotent\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "How does a consumer become idempotent?",
+        "tag": "probe",
+        "html": "<p><strong>It makes \"already done\" a fact it can check.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Technique</th>\n<th>How</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>A processed-events table</strong></td>\n<td>insert the event id in the same transaction as the work; a unique-key violation means skip</td>\n</tr>\n<tr>\n<td><strong>A naturally idempotent write</strong></td>\n<td>\"set status = paid\", not \"add 1\"</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "Polling or CDC for the relay?",
+        "tag": "probe",
+        "html": "<p><strong>Polling to start; CDC when delay or load matters.</strong></p>\n<ul>\n<li><strong>Polling:</strong> nothing new to run; adds query load and a delay.</li>\n<li><strong>CDC:</strong> near-real-time and in commit order; one more system to operate.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "Why not two-phase commit?",
+        "tag": "senior",
+        "html": "<p><strong>It trades availability for atomicity, and most stacks can't run it.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Two-phase commit</th>\n<th>Outbox</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>If the coordinator fails</strong></td>\n<td>participants hold locks and wait</td>\n<td>nothing is blocked</td>\n</tr>\n<tr>\n<td><strong>Broker support</strong></td>\n<td>rare</td>\n<td>any broker</td>\n</tr>\n<tr>\n<td><strong>Consistency</strong></td>\n<td>atomic</td>\n<td>eventual, with no loss</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;d wrap both in a transaction.&quot; — the broker isn&#39;t in the database&#39;s transaction.",
+      "&quot;Commit, then publish, with retries.&quot; — the crash is between them.",
+      "&quot;The broker gives exactly-once.&quot; — the effect is exactly-once only with an idempotent consumer.",
+      "&quot;Duplicates won&#39;t happen.&quot; — they&#39;re the price of never losing an event."
+    ],
+    "links": [
+      {
+        "label": "CDC and Data Pipelines",
+        "target": "11-dbms/Sql/06-Data-Systems/CDC-and-Data-Pipelines"
+      },
+      {
+        "label": "ACID",
+        "target": "11-dbms/Sql/03-Transactions/ACID"
+      },
+      {
+        "label": "CAP and Consistency",
+        "target": "11-dbms/Sql/05-Scaling/CAP-and-Consistency"
+      },
+      {
+        "label": "Design Scenarios",
+        "target": "11-dbms/Sql/07-Practice/Design-Scenarios"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;the dual-write problem\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;which guarantee I need\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;the outbox row in the&lt;br/&gt;same transaction\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;atomic write, duplicate&lt;br/&gt;delivery, one effect\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;where each crash lands\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;sagas for multi-service&lt;br/&gt;flows\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
   "databases-q55": {
     "type": "design",
     "spine": [

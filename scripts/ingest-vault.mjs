@@ -832,6 +832,8 @@ const MODEL_ANSWER_TYPES = {
   '🛡️': 'threat',
   // Real-time & voice pack (meta_prompts/voice_realtime_model_answer_prompt_v1.md)
   '🏛️': 'defend',
+  // Databases pack (meta_prompts/databases_model_answer_prompt_v1.md)
+  '✍️': 'query',
 }
 
 function mdToHtml(md) {

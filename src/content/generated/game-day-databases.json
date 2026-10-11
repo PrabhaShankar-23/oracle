@@ -59,7 +59,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "partition → order → number → filter in the outer query",
-          "trap": "filtering on a window function in the same <code>WHERE</code>"
+          "trap": "filtering on a window function in the same <code>WHERE</code>",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q3",
@@ -155,7 +166,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">customers(id, name)\norders(id, customer_id, amount, status, created_at)   -- customer_id can be NULL\n</code></pre>",
           "flow": "anti-join → <code>NOT EXISTS</code> → check the subquery column for NULLs",
-          "trap": "<code>NOT IN</code> over a nullable column"
+          "trap": "<code>NOT IN</code> over a nullable column",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q7",
@@ -202,7 +224,18 @@
           ],
           "prompt": "<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>",
           "flow": "dedupe days → date − row_number = island id → count per island → max",
-          "trap": "skipping the dedupe step"
+          "trap": "skipping the dedupe step",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the tables",
+              "Name the pattern",
+              "Write it",
+              "Trace it on data",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
         },
         {
           "id": "databases-q9",
@@ -456,7 +489,17 @@
             }
           ],
           "flow": "equality columns → one range column → anything after the range can't seek",
-          "trap": "ordering columns by \"most selective first\" regardless of the predicates"
+          "trap": "ordering columns by \"most selective first\" regardless of the predicates",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q20",
@@ -521,7 +564,17 @@
             }
           ],
           "flow": "name the anomaly → the lowest level that prevents it → retry on serialization failure",
-          "trap": "assuming \"repeatable read\" means the same thing on every engine"
+          "trap": "assuming \"repeatable read\" means the same thing on every engine",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
         },
         {
           "id": "databases-q23",
@@ -698,7 +751,17 @@
             }
           ],
           "flow": "list the queries → consistency needed → scale and shape → then pick",
-          "trap": "\"NoSQL because it scales\" with no access patterns written down"
+          "trap": "\"NoSQL because it scales\" with no access patterns written down",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where relational wins",
+              "Where NoSQL wins",
+              "The deciding question",
+              "What I'd pick"
+            ]
+          }
         },
         {
           "id": "databases-q31",
@@ -888,7 +951,18 @@
             }
           ],
           "flow": "actual plan → estimated vs actual rows → plan flip, skew, or waiting? → fix that",
-          "trap": "adding an index before looking at the plan"
+          "trap": "adding an index before looking at the plan",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         },
         {
           "id": "databases-q39",
@@ -933,7 +1007,18 @@
             }
           ],
           "flow": "add nullable → deploy writers → backfill in batches → validate constraint → drop old",
-          "trap": "one <code>UPDATE</code> of the whole table inside a single transaction"
+          "trap": "one <code>UPDATE</code> of the whole table inside a single transaction",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "databases-q41",
@@ -1110,7 +1195,18 @@
             }
           ],
           "flow": "list the queries → key that keeps each on one shard → check skew → directory for outliers",
-          "trap": "sharding on an auto-increment id or a timestamp"
+          "trap": "sharding on an auto-increment id or a timestamp",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "databases-q49",
@@ -1137,7 +1233,18 @@
             }
           ],
           "flow": "one local transaction (data + outbox row) → relay publishes → idempotent consumer",
-          "trap": "publish, then commit (or commit, then publish) and hope"
+          "trap": "publish, then commit (or commit, then publish) and hope",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify",
+              "Constraints and numbers",
+              "Baseline design",
+              "Deep-dive",
+              "Failure modes",
+              "Evolve"
+            ]
+          }
         },
         {
           "id": "databases-q50",
