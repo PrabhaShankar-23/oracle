@@ -195,7 +195,7 @@
             "type": "mechanism",
             "spine": [
               "The one-line claim",
-              "Chunk on boundaries, bound the worst case",
+              "Chunk on boundaries",
               "One stream per segment",
               "Normalise before synthesis",
               "What it measured"
@@ -440,7 +440,7 @@
               "Reduce the error at the source",
               "Validate against the format",
               "Confirm high-stakes slots",
-              "Act only on committed, confirmed values"
+              "Act only on confirmed values"
             ]
           }
         },
@@ -624,9 +624,9 @@
             "spine": [
               "The rule",
               "The channel map",
-              "How the client learns the agent's state",
+              "How the client learns state",
               "The contract between repos",
-              "What breaks if you mix them up"
+              "What breaks if mixed up"
             ]
           }
         },
@@ -965,8 +965,8 @@
             "spine": [
               "What it's for",
               "What it returns",
-              "How it reads past ASR slips",
-              "Why it's independent of the Panel",
+              "Reading past ASR slips",
+              "Independent of the Panel",
               "Its limits"
             ]
           }
