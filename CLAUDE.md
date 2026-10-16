@@ -47,7 +47,7 @@ Material Design 3 theme · Mermaid, Observable Plot and highlight.js (lazy-loade
 - Vault charts: a ```` ```chart ```` YAML fence in a note is validated by the ingest (`validateChart`, `ChartSpec` in
   `types.ts`) and drawn by `src/lib/chart.ts` with Observable Plot; colours come from `chartColors()` in `theme.ts`.
   The spec format is documented in the vault's `02-Game-Day/meta_prompts/model_answer_prompt_v1.md` §5a.
-- `src/components/layout/` — app bar, `SideNav` section sidebar (permanent at `lg`+, inside `NavDrawer` below), global search.
+- `src/components/layout/` — app bar, `SideNav` section sidebar (permanent at `lg`+, inside `NavDrawer` below; layered: sections → groups → sub-groups → pages, one short panel per layer with a back row, opening on the current page's layer), global search.
 - `src/components/content/` — `PageContainer`, `PageHeader`, `HtmlContent` (renders vault HTML with
   diagrams, highlighting, copy buttons), `TableOfContents`, `articleStyles`.
 - `src/pages/` — one folder per section. Content pages are `lazy()`-loaded in `src/App.tsx`.
