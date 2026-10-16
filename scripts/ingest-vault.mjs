@@ -11,7 +11,7 @@ import path from 'node:path'
 
 const VAULT =
   process.env.VAULT_DIR ??
-  path.join(homedir(), 'Desktop/java/Spring Boot/AlgoHandbook')
+  path.join(homedir(), 'AlgoHandbook')
 const OUT = path.resolve(import.meta.dirname, '../src/content/generated')
 
 const CASE_STUDIES_DIR = '01-System Design/07-Design-problems/html'

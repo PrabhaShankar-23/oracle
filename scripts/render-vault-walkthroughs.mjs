@@ -10,7 +10,7 @@ import { walkthroughs } from '../src/content/deep/index.ts'
 import { inlineCodeHtml } from '../src/lib/inlineCode.ts'
 import { barsSvg, cellsSvg, gridSvg, intervalsSvg, treeSvg } from '../src/lib/recallDiagramSvg.ts'
 
-const VAULT = process.env.VAULT_DIR ?? path.join(homedir(), 'Desktop/java/Spring Boot/AlgoHandbook')
+const VAULT = process.env.VAULT_DIR ?? path.join(homedir(), 'AlgoHandbook')
 const FILE = path.join(VAULT, '04-DSA-V2/00-index/03-dsa-cold-recall.html')
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')

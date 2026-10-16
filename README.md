@@ -14,7 +14,7 @@ npm run dev
 ## Update content from the vault
 
 ```bash
-npm run ingest                       # default vault path: ~/Desktop/java/Spring Boot/AlgoHandbook
+npm run ingest                       # default vault path: ~/AlgoHandbook
 VAULT_DIR=/path/to/vault npm run ingest
 ```
 
