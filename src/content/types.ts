@@ -244,6 +244,7 @@ export type Manifest = {
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
   agenticDecisions: NoteSummary[]
   networking: NoteSummary[]
+  voice: (NoteSummary & { category?: string })[]
   python: NoteSummary[]
 }
 
@@ -464,6 +465,15 @@ export type NetworkingChapter = {
   id: string
   title: string
   notes: NetworkingNote[]
+}
+
+/* ---------------- Voice AI (08-voice-system) ---------------- */
+
+/** One voice-system note: the same series shape as networking. */
+export type VoiceChapter = {
+  id: string
+  title: string
+  notes: AgenticDecision[]
 }
 
 /** One Python concept note — same series shape, from `07-python`. */

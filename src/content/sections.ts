@@ -148,6 +148,13 @@ export const sections: Section[] = [
         group: 'Networking',
         subgroup: n.sectionTitle,
       })),
+      ...manifest.voice.map((n) => ({
+        title: n.title,
+        path: `/system-design/voice/${n.slug}`,
+        description: [n.tier, n.category].filter(Boolean).join(' · '),
+        group: 'Voice AI',
+        subgroup: n.sectionTitle,
+      })),
       {
         title: 'WebRTC revision cards',
         path: '/system-design/webrtc',
@@ -312,6 +319,13 @@ export const searchIndex: SearchItem[] = [
     secondary: `Networking · ${n.sectionTitle} · ${n.tier}`,
     path: `/system-design/networking/${n.slug}`,
     group: 'Networking',
+  })),
+  ...manifest.voice.map((n) => ({
+    key: `voice:${n.slug}`,
+    label: n.title,
+    secondary: `Voice AI · ${n.sectionTitle} · ${n.tier}`,
+    path: `/system-design/voice/${n.slug}`,
+    group: 'Voice AI',
   })),
   ...manifest.gameDayDocs.flatMap((d) =>
     d.headings.map((h) => ({

@@ -5221,6 +5221,520 @@
       "sectionTitle": "Networking for AI systems"
     }
   ],
+  "voice": [
+    {
+      "slug": "foundations-map",
+      "title": "Chapter map: Foundations",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "what-a-voice-agent-is",
+      "title": "What a Voice Agent Is — One Turn, End to End",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "the-latency-budget",
+      "title": "The Latency Budget — End of Speech to First Audio",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "pipeline-shapes",
+      "title": "Pipeline Shapes — Cascaded, Turn-Based Realtime, Full-Duplex",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "audio-for-engineers",
+      "title": "Audio for Engineers — Samples, Frames, Codecs",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "how-people-take-turns",
+      "title": "How People Take Turns — Gaps, Pauses, Backchannels, Overlap",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "the-voice-number-line",
+      "title": "The Voice Number Line",
+      "tier": "BREADTH",
+      "category": "Platform",
+      "section": "01-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "media-transport-map",
+      "title": "Chapter map: Media & transport",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "02-media-transport",
+      "sectionTitle": "Media & transport"
+    },
+    {
+      "slug": "browser-capture",
+      "title": "Browser Capture — Microphone, Devices, Permissions",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "02-media-transport",
+      "sectionTitle": "Media & transport"
+    },
+    {
+      "slug": "rooms-participants-tracks",
+      "title": "Rooms, Participants and Tracks — A Call as LiveKit Models It",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "02-media-transport",
+      "sectionTitle": "Media & transport"
+    },
+    {
+      "slug": "tokens-grants-dispatch",
+      "title": "Tokens, Grants and Agent Dispatch",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "02-media-transport",
+      "sectionTitle": "Media & transport"
+    },
+    {
+      "slug": "side-channels",
+      "title": "Side Channels — Transcripts, State and RPC Beside the Audio",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "02-media-transport",
+      "sectionTitle": "Media & transport"
+    },
+    {
+      "slug": "telephony-and-sip-phone-callers-in-a-room",
+      "title": "Telephony and SIP — Phone Callers in a Room",
+      "tier": "BREADTH",
+      "category": "Platform",
+      "section": "02-media-transport",
+      "sectionTitle": "Media & transport"
+    },
+    {
+      "slug": "audio-cleanup-map",
+      "title": "Chapter map: Audio cleanup",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "03-audio-cleanup",
+      "sectionTitle": "Audio cleanup"
+    },
+    {
+      "slug": "echo-cancellation",
+      "title": "Echo Cancellation — Why the Agent Hears Itself",
+      "tier": "CORE",
+      "category": "Signal",
+      "section": "03-audio-cleanup",
+      "sectionTitle": "Audio cleanup"
+    },
+    {
+      "slug": "noise-suppression",
+      "title": "Noise Suppression and Background-Voice Removal",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "03-audio-cleanup",
+      "sectionTitle": "Audio cleanup"
+    },
+    {
+      "slug": "server-side-echo-guard",
+      "title": "The Server-Side Echo Guard — The Agent's Words Are Never Testimony",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "03-audio-cleanup",
+      "sectionTitle": "Audio cleanup"
+    },
+    {
+      "slug": "agc-headphones-and-ducking-client-side-mitigations",
+      "title": "AGC, Headphones and Ducking — Client-Side Mitigations",
+      "tier": "BREADTH",
+      "category": "Signal",
+      "section": "03-audio-cleanup",
+      "sectionTitle": "Audio cleanup"
+    },
+    {
+      "slug": "listening-map",
+      "title": "Chapter map: Listening",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "voice-activity-detection",
+      "title": "Voice Activity Detection — Is Someone Speaking Right Now?",
+      "tier": "CORE",
+      "category": "Signal",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "streaming-speech-to-text",
+      "title": "Streaming Speech-to-Text — Interim and Final Words, While They Speak",
+      "tier": "CORE",
+      "category": "Signal",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "vocabulary-keyterm-prompting",
+      "title": "Vocabulary — Keyterm Prompting and What It Buys",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "accent-language-code-switching",
+      "title": "Accent, Language and Code-Switching",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "diarization-who-spoke-as-a-signal",
+      "title": "Diarization — Who Spoke, as a Signal",
+      "tier": "BREADTH",
+      "category": "Signal",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "measuring-recognition",
+      "title": "Measuring Recognition — WER, Term Recall, Goldens",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "04-listening",
+      "sectionTitle": "Listening"
+    },
+    {
+      "slug": "turn-taking-map",
+      "title": "Chapter map: Turn-taking",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "endpointing",
+      "title": "Endpointing — Deciding the Turn Is Over",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "semantic-turn-detection",
+      "title": "Semantic Turn Detection — Finished, or Pausing to Think?",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "barge-in",
+      "title": "Barge-in — Stopping When the Person Talks Over the Agent",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "backchannels-and-overlap",
+      "title": "Backchannels and Overlap — \"Mm-hm\" Is Not an Interruption",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "preemptive-generation",
+      "title": "Preemptive Generation — Starting the Reply Before the Turn Is Confirmed",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "silence-and-timeouts-when-the-person-says-nothing",
+      "title": "Silence and Timeouts — When the Person Says Nothing",
+      "tier": "BREADTH",
+      "category": "Conversation",
+      "section": "05-turn-taking",
+      "sectionTitle": "Turn-taking"
+    },
+    {
+      "slug": "thinking-map",
+      "title": "Chapter map: Thinking",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "model-on-the-hot-path",
+      "title": "The Model on the Hot Path — Time to First Token in a Spoken Turn",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "speculative-pre-generation",
+      "title": "Speculative Pre-generation — The Reply Is Ready When the Turn Ends",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "latency-tiered-agents",
+      "title": "Latency-Tiered Agents — In the Turn, Beside It, After the Call",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "writing-for-the-ear",
+      "title": "Writing for the Ear — Prompts Whose Output Is Spoken",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "persona-and-personality",
+      "title": "Persona and Personality — Who the Agent Is, in Every Line",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "guardrails-beside-the-reply",
+      "title": "Guardrails Beside the Reply — Draft and Hold",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "tools-and-slow-work",
+      "title": "Tools and Slow Work in a Turn — Never Leave Silence",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
+      "slug": "speaking-map",
+      "title": "Chapter map: Speaking",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "streaming-text-to-speech",
+      "title": "Streaming Text-to-Speech — Time to First Byte",
+      "tier": "CORE",
+      "category": "Signal",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "sentence-chunking-and-flushing",
+      "title": "Sentence Chunking and Flushing — Bounding the First Segment",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "pronunciation",
+      "title": "Pronunciation — Saying Domain Terms Right",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "choosing-a-voice",
+      "title": "Choosing a Voice — By Ear and by Goldens",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "realtime-speech-to-speech",
+      "title": "Realtime Speech-to-Speech Models — When the Cascade Loses",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "background-audio-and-thinking-sounds",
+      "title": "Background Audio and Thinking Sounds",
+      "tier": "BREADTH",
+      "category": "Conversation",
+      "section": "07-speaking",
+      "sectionTitle": "Speaking"
+    },
+    {
+      "slug": "agent-runtime-map",
+      "title": "Chapter map: Agent runtime",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "agent-server-jobs-isolation",
+      "title": "Agent Server, Jobs and Process Isolation",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "agent-session-and-pipeline",
+      "title": "The Agent Session and Its Pipeline — Session, Agent, Nodes, Hooks",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "handoffs-tasks-workflows",
+      "title": "Handoffs, Tasks and Workflows — LiveKit's Tools vs Owning the Graph",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "event-loop-discipline",
+      "title": "Event-Loop Discipline — One Blocking Call Is Dead Air",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "control-plane-vs-agent-runtime",
+      "title": "Control Plane vs Agent Runtime — Why the API Server Doesn't Run the Call",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "livekit-cloud-vs-self-hosted",
+      "title": "LiveKit Cloud vs Self-Hosted",
+      "tier": "BREADTH",
+      "category": "Platform",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
+      "slug": "production-map",
+      "title": "Chapter map: Production",
+      "tier": "MAP",
+      "category": "Concept map & reading order",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "measuring-a-turn",
+      "title": "Measuring a Turn — Key Metrics, Traces, Logs, Alerts",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "latency-optimization-playbook",
+      "title": "Latency Optimization Playbook — The Levers, in Order",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "evaluating-a-voice-agent",
+      "title": "Evaluating a Voice Agent — Goldens, Test Conditions, Simulations",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "degradation-ladder",
+      "title": "The Degradation Ladder — Fallbacks, Circuit Breakers, the LLM Gateway",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "scaling-to-1000-calls",
+      "title": "Scaling to 1,000 Concurrent Calls — Vendors Are the Ceiling",
+      "tier": "CORE",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "cost-per-minute",
+      "title": "Cost per Minute — What a Voice Call Spends",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "recording-transcripts-pii",
+      "title": "Recording, Transcripts and PII",
+      "tier": "SUPPORTING",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "fairness-across-accents",
+      "title": "Fairness Across Accents — Per-Cohort Accuracy as a Release Gate",
+      "tier": "SUPPORTING",
+      "category": "Signal",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    },
+    {
+      "slug": "region-placement-everything-near-the-caller",
+      "title": "Region Placement — Everything Near the Caller",
+      "tier": "BREADTH",
+      "category": "Platform",
+      "section": "09-production",
+      "sectionTitle": "Production"
+    }
+  ],
   "python": [
     {
       "slug": "data-model-object-semantics-map",

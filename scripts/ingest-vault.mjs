@@ -1184,6 +1184,8 @@ function parseDecisionMeta(blockquoteText) {
     if (/^(CORE|SUPPORTING|BREADTH)$/i.test(p)) fields['depth tier'] = p
     else if (/^(Senior|Architect|Staff)$/i.test(p)) fields['seniority relevance'] = p
     else if (/^Created\s+/i.test(p)) fields['created'] = p.replace(/^Created\s+/i, '')
+    // `Index 006` / `Index 032a` (voice notes): the topic's place in its index, used for ordering.
+    else if (/^Index\s+\d+[a-z]?$/i.test(p)) fields['index'] = p.replace(/^Index\s+/i, '')
     else if (p && !/^Revised\s+/i.test(p) && !fields['category']) fields['category'] = p
   }
   return {
@@ -1192,6 +1194,7 @@ function parseDecisionMeta(blockquoteText) {
       fields['round relevance'] ?? fields['architect relevance'] ?? fields['seniority relevance'],
     tier: (fields['depth tier'] ?? '').toUpperCase(),
     created: fields['created'],
+    index: fields['index'],
   }
 }
 
@@ -1367,7 +1370,10 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
         // no single note, so those take the title — including when it currently holds just one.
         const shared = /^breadth\./.test(file)
         const slug = shared ? slugify(title) : agenticSlug(file)
-        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, stem: file.replace(/\.md$/, ''), number: item || fileNo, title, ...meta })
+        // A meta-line index (`Index 032a`) places shared-file entries too; same tenth-per-letter rule.
+        const indexNo = meta.index ? Number(/^(\d+)/.exec(meta.index)[1]) + ((/^\d+([a-z])$/.exec(meta.index)?.[1]?.charCodeAt(0) ?? 96) - 96) / 10 : 0
+        const { index: _index, ...metaFields } = meta
+        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, stem: file.replace(/\.md$/, ''), number: item || indexNo || fileNo, title, ...metaFields })
       }
     }
   }
@@ -1443,6 +1449,32 @@ const ingestNetworking = () =>
     route: NETWORKING_ROUTE,
     header: 'Networking Topic',
     prefix: 'networking',
+    mapHeader: 'Chapter Map',
+  })
+
+/* ---------------- Voice AI (01-System Design/08-voice-system) ---------------- */
+
+const VOICE_DIR = '01-System Design/08-voice-system'
+const VOICE_ROUTE = '/system-design/voice'
+const VOICE_CHAPTERS = {
+  '01-foundations': 'Foundations',
+  '02-media-transport': 'Media & transport',
+  '03-audio-cleanup': 'Audio cleanup',
+  '04-listening': 'Listening',
+  '05-turn-taking': 'Turn-taking',
+  '06-thinking': 'Thinking',
+  '07-speaking': 'Speaking',
+  '08-agent-runtime': 'Agent runtime',
+  '09-production': 'Production',
+}
+
+const ingestVoice = () =>
+  ingestNoteSeries({
+    dir: VOICE_DIR,
+    chapters: VOICE_CHAPTERS,
+    route: VOICE_ROUTE,
+    header: 'Voice Topic',
+    prefix: 'voice',
     mapHeader: 'Chapter Map',
   })
 
@@ -1561,7 +1593,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, python, practice) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, practice) {
   const practiceProblems = practice.families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   await write('manifest.json', {
     dsaPractice: { total: practiceProblems.length, l1: practiceProblems.filter((p) => p.l1).length },
@@ -1612,6 +1644,16 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
         sectionTitle: ch.title,
       })),
     ),
+    voice: voice.flatMap((ch) =>
+      ch.notes.map((n) => ({
+        slug: n.slug,
+        title: n.title,
+        tier: n.tier,
+        category: n.category,
+        section: ch.id,
+        sectionTitle: ch.title,
+      })),
+    ),
     python: python.flatMap((ch) =>
       ch.notes.map((n) => ({
         slug: n.slug,
@@ -1640,6 +1682,7 @@ const utils = []
 for (const u of UTILS) utils.push(await ingestUtils(u))
 const agentic = await ingestAgenticDecisions()
 const networking = await ingestNetworking()
+const voice = await ingestVoice()
 const python = await ingestPython()
 const dsa = await ingestColdRecall()
 await writeManifest(
@@ -1651,6 +1694,7 @@ await writeManifest(
   await ingestGameDay(),
   agentic,
   networking,
+  voice,
   python,
   await ingestPractice(dsa),
 )
