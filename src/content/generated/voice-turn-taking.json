@@ -52,6 +52,7 @@
     {
       "slug": "endpointing",
       "number": 23,
+      "order": "023",
       "title": "Endpointing — Deciding the Turn Is Over",
       "category": "Conversation",
       "tier": "CORE",
@@ -110,6 +111,7 @@
     {
       "slug": "semantic-turn-detection",
       "number": 24,
+      "order": "024",
       "title": "Semantic Turn Detection — Finished, or Pausing to Think?",
       "category": "Conversation",
       "tier": "CORE",
@@ -168,6 +170,7 @@
     {
       "slug": "barge-in",
       "number": 25,
+      "order": "025",
       "title": "Barge-in — Stopping When the Person Talks Over the Agent",
       "category": "Conversation",
       "tier": "CORE",
@@ -226,6 +229,7 @@
     {
       "slug": "backchannels-and-overlap",
       "number": 26,
+      "order": "026",
       "title": "Backchannels and Overlap — \"Mm-hm\" Is Not an Interruption",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -284,6 +288,7 @@
     {
       "slug": "preemptive-generation",
       "number": 27,
+      "order": "027",
       "title": "Preemptive Generation — Starting the Reply Before the Turn Is Confirmed",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -342,6 +347,7 @@
     {
       "slug": "silence-and-timeouts-when-the-person-says-nothing",
       "number": 28,
+      "order": "028",
       "title": "Silence and Timeouts — When the Person Says Nothing",
       "category": "Conversation",
       "tier": "BREADTH",

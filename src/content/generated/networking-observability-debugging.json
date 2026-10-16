@@ -5,6 +5,7 @@
     {
       "slug": "curl-mastery",
       "number": 159,
+      "order": "159",
       "title": "curl Mastery — Splitting a Latency Number Into Five",
       "category": "Networking — Observability & Debugging (Item 159)",
       "relevance": "High",
@@ -79,6 +80,7 @@
     {
       "slug": "dns-tools",
       "number": 160,
+      "order": "160",
       "title": "DNS Tools — dig, +trace, and Reading an Answer Honestly",
       "category": "Networking — Observability & Debugging (Item 160)",
       "relevance": "Medium",
@@ -123,6 +125,7 @@
     {
       "slug": "path-reachability",
       "number": 161,
+      "order": "161",
       "title": "Path & Reachability — ping, mtr, and Proving a Port Is Open",
       "category": "Networking — Observability & Debugging (Item 161)",
       "relevance": "Medium",
@@ -167,6 +170,7 @@
     {
       "slug": "socket-state",
       "number": 162,
+      "order": "162",
       "title": "Socket State — ss, and What Each State Is Accusing",
       "category": "Networking — Observability & Debugging (Item 162)",
       "relevance": "High",
@@ -224,6 +228,7 @@
     {
       "slug": "browser-devtools-network",
       "number": 164,
+      "order": "164",
       "title": "The Browser Network Panel — The Client curl Cannot Imitate",
       "category": "Networking — Observability & Debugging (Item 164)",
       "relevance": "Medium",
@@ -268,6 +273,7 @@
     {
       "slug": "distributed-tracing",
       "number": 165,
+      "order": "165",
       "title": "Distributed Tracing — One ID That Survives Every Hop",
       "category": "Networking — Observability & Debugging (Item 165)",
       "relevance": "High",
@@ -312,6 +318,7 @@
     {
       "slug": "metrics-that-matter",
       "number": 166,
+      "order": "166",
       "title": "The Metrics That Matter — RED at Every Hop, Plus What Runs Out",
       "category": "Networking — Observability & Debugging (Item 166)",
       "relevance": "High",
@@ -356,6 +363,7 @@
     {
       "slug": "triage-playbooks",
       "number": 167,
+      "order": "167",
       "title": "Triage Playbooks — Symptom → Three Checks → Owner",
       "category": "Networking — Observability & Debugging (Item 167)",
       "relevance": "High",

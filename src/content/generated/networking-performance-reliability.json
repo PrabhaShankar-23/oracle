@@ -5,6 +5,7 @@
     {
       "slug": "where-latency-goes",
       "number": 147,
+      "order": "147",
       "title": "Where Latency Actually Goes",
       "category": "Networking — Performance, Reliability & Failure (Item 147)",
       "relevance": "High",
@@ -79,6 +80,7 @@
     {
       "slug": "connection-pooling-keepalive",
       "number": 148,
+      "order": "148",
       "title": "Connection Pooling & Keep-Alive",
       "category": "Networking — Performance, Reliability & Failure (Item 148)",
       "relevance": "High",
@@ -168,6 +170,7 @@
     {
       "slug": "timeout-hierarchy",
       "number": 149,
+      "order": "149",
       "title": "Timeout Hierarchy",
       "category": "Networking — Performance, Reliability & Failure (Item 149)",
       "relevance": "High",
@@ -242,6 +245,7 @@
     {
       "slug": "retries-done-right",
       "number": 150,
+      "order": "150",
       "title": "Retries Done Right",
       "category": "Networking — Performance, Reliability & Failure (Item 150)",
       "relevance": "High",
@@ -316,6 +320,7 @@
     {
       "slug": "circuit-breakers-bulkheads",
       "number": 151,
+      "order": "151",
       "title": "Circuit Breakers, Bulkheads & Load Shedding",
       "category": "Networking — Performance, Reliability & Failure (Item 151)",
       "relevance": "High",
@@ -425,6 +430,7 @@
     {
       "slug": "queueing-theory",
       "number": 152,
+      "order": "152",
       "title": "Queueing Theory in One Page",
       "category": "Networking — Performance, Reliability & Failure (Item 152)",
       "relevance": "High",
@@ -469,6 +475,7 @@
     {
       "slug": "tail-latency",
       "number": 153,
+      "order": "153",
       "title": "Tail Latency",
       "category": "Networking — Performance, Reliability & Failure (Item 153)",
       "relevance": "High",
@@ -568,6 +575,7 @@
     {
       "slug": "head-of-line-blocking",
       "number": 154,
+      "order": "154",
       "title": "Head-of-Line Blocking — Four Places, One Idea",
       "category": "Networking — Performance, Reliability & Failure (Item 154)",
       "relevance": "High",
@@ -612,6 +620,7 @@
     {
       "slug": "idempotency-exactly-once",
       "number": 155,
+      "order": "155",
       "title": "Idempotency & the Exactly-Once Delusion",
       "category": "Networking — Performance, Reliability & Failure (Item 155)",
       "relevance": "High",
@@ -656,6 +665,7 @@
     {
       "slug": "graceful-degradation-backpressure",
       "number": 156,
+      "order": "156",
       "title": "Graceful Degradation & Backpressure",
       "category": "Networking — Performance, Reliability & Failure (Item 156)",
       "relevance": "High",
@@ -700,6 +710,7 @@
     {
       "slug": "cascading-failures",
       "number": 157,
+      "order": "157",
       "title": "Cascading Failures & Thundering Herds",
       "category": "Networking — Performance, Reliability & Failure (Item 157)",
       "relevance": "High",
@@ -744,6 +755,7 @@
     {
       "slug": "capacity-planning",
       "number": 158,
+      "order": "158",
       "title": "Capacity Planning",
       "category": "Networking — Performance, Reliability & Failure (Item 158)",
       "relevance": "High",

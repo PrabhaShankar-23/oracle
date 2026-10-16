@@ -5,6 +5,7 @@
     {
       "slug": "four-options",
       "number": 70,
+      "order": "070",
       "title": "The Four Real-Time Options — Polling, Long Polling, SSE, WebSocket",
       "category": "Networking — Real-Time & Streaming Protocols (Item 70)",
       "relevance": "High",
@@ -124,6 +125,7 @@
     {
       "slug": "server-sent-events",
       "number": 71,
+      "order": "071",
       "title": "Server-Sent Events (SSE)",
       "category": "Networking — Real-Time & Streaming Protocols (Item 71)",
       "relevance": "High",
@@ -253,6 +255,7 @@
     {
       "slug": "websocket",
       "number": 72,
+      "order": "072",
       "title": "WebSocket — Handshake, Frames, Full Duplex, Subprotocols",
       "category": "Networking — Real-Time & Streaming Protocols (Item 72)",
       "relevance": "High",
@@ -382,6 +385,7 @@
     {
       "slug": "websocket-operational-reality",
       "number": 73,
+      "order": "073",
       "title": "WebSocket Operational Reality — Stickiness, Timeouts, Heartbeats, Resume, Fan-out",
       "category": "Networking — Real-Time & Streaming Protocols (Item 73)",
       "relevance": "High",
@@ -501,6 +505,7 @@
     {
       "slug": "choosing-realtime-transport",
       "number": 74,
+      "order": "074",
       "title": "SSE vs WebSocket vs HTTP/2 Streaming vs gRPC Streaming — The Decision Framework",
       "category": "Networking — Real-Time & Streaming Protocols (Item 74)",
       "relevance": "High",
@@ -590,6 +595,7 @@
     {
       "slug": "backpressure",
       "number": 75,
+      "order": "075",
       "title": "Backpressure in Streaming Systems",
       "category": "Networking — Real-Time & Streaming Protocols (Item 75)",
       "relevance": "High",

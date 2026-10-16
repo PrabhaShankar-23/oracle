@@ -251,6 +251,8 @@ export type Manifest = {
 /** The row a note contributes to the manifest: enough for nav, search and the page header. */
 export type NoteSummary = {
   slug: string
+  /** The vault's number for this note (`023`, `032a`), shown before the title in the sidebar. */
+  order?: string
   title: string
   tier: DecisionTier
   relevance?: string

@@ -5,6 +5,7 @@
     {
       "slug": "dns-resolution",
       "number": 30,
+      "order": "030",
       "title": "What DNS Resolution Actually Does",
       "category": "Networking — DNS (Item 30)",
       "relevance": "High",
@@ -79,6 +80,7 @@
     {
       "slug": "record-types",
       "number": 31,
+      "order": "031",
       "title": "Record Types You'll Use",
       "category": "Networking — DNS (Item 31)",
       "relevance": "Medium",
@@ -123,6 +125,7 @@
     {
       "slug": "ttl-and-caching-layers",
       "number": 32,
+      "order": "032",
       "title": "TTL & Caching Layers",
       "category": "Networking — DNS (Item 32)",
       "relevance": "High",
@@ -222,6 +225,7 @@
     {
       "slug": "dns-load-balancing",
       "number": 33,
+      "order": "033",
       "title": "DNS-Based Load Balancing & Failover",
       "category": "Networking — DNS (Item 33)",
       "relevance": "High",
@@ -266,6 +270,7 @@
     {
       "slug": "private-dns-service-discovery",
       "number": 34,
+      "order": "034",
       "title": "Private DNS & Service Discovery",
       "category": "Networking — DNS (Item 34)",
       "relevance": "High",
@@ -310,6 +315,7 @@
     {
       "slug": "dns-as-an-outage-cause",
       "number": 35,
+      "order": "035",
       "title": "DNS as an Outage Cause",
       "category": "Networking — DNS (Item 35)",
       "relevance": "High",

@@ -47,6 +47,7 @@
     {
       "slug": "rest",
       "number": 89,
+      "order": "089",
       "title": "REST — Resources, Verbs, Statelessness, HATEOAS",
       "category": "Network",
       "relevance": "Architect",
@@ -116,6 +117,7 @@
     {
       "slug": "rest-api-design",
       "number": 90,
+      "order": "090",
       "title": "REST API Design — Naming, Pagination, Filtering, Versioning, Error Envelopes",
       "category": "Networking — API Protocols & Choosing Between Them (Item 90)",
       "relevance": "High",
@@ -240,6 +242,7 @@
     {
       "slug": "rpc-style-apis",
       "number": 91,
+      "order": "091",
       "title": "RPC-Style APIs & When They Beat REST",
       "category": "Networking — API Protocols & Choosing Between Them (Item 91)",
       "relevance": "Medium",
@@ -284,6 +287,7 @@
     {
       "slug": "grpc",
       "number": 92,
+      "order": "092",
       "title": "gRPC — Protocol Buffers, HTTP/2 Transport, Codegen, the Four Call Types",
       "category": "Networking — API Protocols & Choosing Between Them (Item 92)",
       "relevance": "High",
@@ -413,6 +417,7 @@
     {
       "slug": "grpc-in-production",
       "number": 93,
+      "order": "093",
       "title": "gRPC in Production — Deadlines, Interceptors, Load Balancing, gRPC-Web, Schema Evolution",
       "category": "Networking — API Protocols & Choosing Between Them (Item 93)",
       "relevance": "High",
@@ -467,6 +472,7 @@
     {
       "slug": "graphql",
       "number": 94,
+      "order": "094",
       "title": "GraphQL — Single Endpoint, Client-Specified Queries, N+1, Persisted Queries, Caching",
       "category": "Networking — API Protocols & Choosing Between Them (Item 94)",
       "relevance": "Medium",
@@ -521,6 +527,7 @@
     {
       "slug": "webhooks",
       "number": 95,
+      "order": "095",
       "title": "Webhooks — Signature Verification, Retries, Idempotency, Replay Protection",
       "category": "Networking — API Protocols & Choosing Between Them (Item 95)",
       "relevance": "High",
@@ -570,6 +577,7 @@
     {
       "slug": "queues-and-event-streams",
       "number": 96,
+      "order": "096",
       "title": "Message Queues & Event Streams — SQS/RabbitMQ vs Kafka, Delivery Semantics, Ordering, DLQs",
       "category": "Networking — API Protocols & Choosing Between Them (Item 96)",
       "relevance": "High",
@@ -624,6 +632,7 @@
     {
       "slug": "sync-vs-async",
       "number": 97,
+      "order": "097",
       "title": "Sync vs Async — Request/Response, Queue, Event-Driven",
       "category": "Networking — API Protocols & Choosing Between Them (Item 97)",
       "relevance": "High",
@@ -743,6 +752,7 @@
     {
       "slug": "long-running-jobs",
       "number": 98,
+      "order": "098",
       "title": "Long-Running Jobs over HTTP — 202 + Polling vs Callback vs Streaming",
       "category": "Networking — API Protocols & Choosing Between Them (Item 98)",
       "relevance": "High",
@@ -867,6 +877,7 @@
     {
       "slug": "ai-stack-protocols",
       "number": 99,
+      "order": "099",
       "title": "Server Protocols in the AI Stack — HTTP+SSE, MCP, A2A",
       "category": "Networking — API Protocols & Choosing Between Them (Item 99)",
       "relevance": "High",
@@ -916,6 +927,7 @@
     {
       "slug": "api-choice-framework",
       "number": 100,
+      "order": "100",
       "title": "The API Choice Framework — REST vs gRPC vs GraphQL vs WebSocket vs SSE vs Queue",
       "category": "Networking — API Protocols & Choosing Between Them (Item 100)",
       "relevance": "High",
@@ -1005,6 +1017,7 @@
     {
       "slug": "schema-contracts-compatibility",
       "number": 101,
+      "order": "101",
       "title": "Schema, Contracts & Compatibility — OpenAPI, Protobuf, Contract Testing",
       "category": "Networking — API Protocols & Choosing Between Them (Item 101)",
       "relevance": "High",
@@ -1059,6 +1072,7 @@
     {
       "slug": "api-authentication",
       "number": 102,
+      "order": "102",
       "title": "API Authentication — API Keys, OAuth2, JWT, mTLS, HMAC Signing",
       "category": "Networking — API Protocols & Choosing Between Them (Item 102)",
       "relevance": "High",
@@ -1108,6 +1122,7 @@
     {
       "slug": "api-versioning-deprecation",
       "number": 103,
+      "order": "103",
       "title": "API Versioning & Deprecation Strategy",
       "category": "Networking — API Protocols & Choosing Between Them (Item 103)",
       "relevance": "High",

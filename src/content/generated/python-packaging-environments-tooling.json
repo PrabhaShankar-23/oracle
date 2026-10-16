@@ -22,6 +22,7 @@
     {
       "slug": "import-system",
       "number": 63,
+      "order": "63",
       "title": "The Import System",
       "category": "Language Fundamentals",
       "relevance": "Architect",
@@ -81,6 +82,7 @@
     {
       "slug": "import-machinery-internals",
       "number": 64,
+      "order": "64",
       "title": "Import Machinery Internals",
       "category": "Language Fundamentals",
       "relevance": "Senior",
@@ -115,6 +117,7 @@
     {
       "slug": "virtual-environments-dependency-resolution",
       "number": 65,
+      "order": "65",
       "title": "Virtual Environments & Dependency Resolution",
       "category": "Production Python",
       "relevance": "Senior",
@@ -174,6 +177,7 @@
     {
       "slug": "packaging-distribution",
       "number": 66,
+      "order": "66",
       "title": "Packaging & Distribution",
       "category": "Production Python",
       "relevance": "Senior",
@@ -208,6 +212,7 @@
     {
       "slug": "testing-quality-tooling",
       "number": 67,
+      "order": "67",
       "title": "Testing & Quality Tooling",
       "category": "Production Python",
       "relevance": "Senior",

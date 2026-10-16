@@ -16,6 +16,7 @@
     {
       "slug": "pyobject-refcounts-object-header",
       "number": 20,
+      "order": "20",
       "title": "PyObject, Refcounts & the Object Header",
       "category": "Object Model, Memory & GC",
       "relevance": "Architect",
@@ -75,6 +76,7 @@
     {
       "slug": "dict-internals",
       "number": 21,
+      "order": "21",
       "title": "dict Internals",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Architect",
@@ -134,6 +136,7 @@
     {
       "slug": "set-frozenset-internals",
       "number": 21.1,
+      "order": "21a",
       "title": "set / frozenset Internals",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -168,6 +171,7 @@
     {
       "slug": "list-internals",
       "number": 22,
+      "order": "22",
       "title": "list Internals",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -227,6 +231,7 @@
     {
       "slug": "str-internals",
       "number": 23,
+      "order": "23",
       "title": "str Internals",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -286,6 +291,7 @@
     {
       "slug": "attribute-lookup-and-mro",
       "number": 24,
+      "order": "24",
       "title": "Attribute Lookup & the MRO",
       "category": "Advanced Python (Decorators, Closures, Descriptors, Metaclasses)",
       "relevance": "Architect",
@@ -345,6 +351,7 @@
     {
       "slug": "descriptors",
       "number": 25,
+      "order": "25",
       "title": "Descriptors",
       "category": "Advanced Python (Decorators, Closures, Descriptors, Metaclasses)",
       "relevance": "Architect",
@@ -404,6 +411,7 @@
     {
       "slug": "metaclasses-class-creation",
       "number": 26,
+      "order": "26",
       "title": "Metaclasses & Class Creation",
       "category": "Advanced Python (Decorators, Closures, Descriptors, Metaclasses)",
       "relevance": "Architect",
@@ -463,6 +471,7 @@
     {
       "slug": "bytecode-and-eval-loop",
       "number": 27,
+      "order": "27",
       "title": "Bytecode & the Evaluation Loop",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",

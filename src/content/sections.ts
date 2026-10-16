@@ -25,6 +25,12 @@ import type { Manifest } from './types'
 
 export const manifest = manifestJson as Manifest
 
+/** A chapter's label with its folder number, so the reading order is visible: `05 Turn-taking`. */
+const numbered = (section: string, title: string) => {
+  const n = /^(\d+)-/.exec(section)?.[1]
+  return n ? `${n} ${title}` : title
+}
+
 const UTILS_LABEL = { python: 'Python helpers', java: 'Java helpers' }
 
 export type NavPage = {
@@ -35,6 +41,8 @@ export type NavPage = {
   group?: string
   /** Optional second level inside a group, for groups large enough to need one. */
   subgroup?: string
+  /** Reading-order label shown before the title (`023`), from the vault's numbering. */
+  order?: string
 }
 
 export type Section = {
@@ -139,21 +147,24 @@ export const sections: Section[] = [
         path: `/system-design/agentic-design/${d.slug}`,
         description: `${d.tier} · ${d.relevance ?? 'Medium'} round relevance.`,
         group: 'Agentic system design',
-        subgroup: d.sectionTitle,
+        subgroup: numbered(d.section, d.sectionTitle),
+        order: d.order,
       })),
       ...manifest.networking.map((n) => ({
         title: n.title,
         path: `/system-design/networking/${n.slug}`,
         description: `${n.tier} · ${n.relevance ?? 'Medium'} architect relevance.`,
         group: 'Networking',
-        subgroup: n.sectionTitle,
+        subgroup: numbered(n.section, n.sectionTitle),
+        order: n.order,
       })),
       ...manifest.voice.map((n) => ({
         title: n.title,
         path: `/system-design/voice/${n.slug}`,
         description: [n.tier, n.category].filter(Boolean).join(' · '),
         group: 'Voice AI',
-        subgroup: n.sectionTitle,
+        subgroup: numbered(n.section, n.sectionTitle),
+        order: n.order,
       })),
       {
         title: 'WebRTC revision cards',
@@ -199,7 +210,8 @@ export const sections: Section[] = [
       title: n.title,
       path: `/python/${n.slug}`,
       description: n.tier === 'MAP' ? 'Concept map, reading order and how the notes connect.' : `${n.tier} · ${n.relevance ?? 'Senior'} level.`,
-      group: n.sectionTitle,
+      group: numbered(n.section, n.sectionTitle),
+      order: n.order,
     })),
   },
   { id: 'java', title: 'Java', path: '/java', description: 'Core Java, collections and concurrency.', icon: CoffeeOutlined, pages: [] },

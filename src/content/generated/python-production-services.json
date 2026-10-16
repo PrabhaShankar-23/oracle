@@ -27,6 +27,7 @@
     {
       "slug": "asgi-wsgi-worker-model",
       "number": 73,
+      "order": "73",
       "title": "ASGI vs WSGI & the Worker Model",
       "category": "Production Python",
       "relevance": "Architect",
@@ -86,6 +87,7 @@
     {
       "slug": "reliability-mechanics",
       "number": 74,
+      "order": "74",
       "title": "Reliability Mechanics (Retries · Timeouts · Backoff + Jitter · Circuit Breakers)",
       "category": "Production Python",
       "relevance": "Architect",
@@ -145,6 +147,7 @@
     {
       "slug": "idempotency",
       "number": 75,
+      "order": "75",
       "title": "Idempotency (Keys · At-Least-Once vs Exactly-Once · Safe Retries)",
       "category": "Production Python",
       "relevance": "Architect",
@@ -204,6 +207,7 @@
     {
       "slug": "rate-limiting",
       "number": 76,
+      "order": "76",
       "title": "Rate Limiting (Token Bucket · Sliding Window · Where to Enforce)",
       "category": "Production Python",
       "relevance": "Architect",
@@ -263,6 +267,7 @@
     {
       "slug": "streaming-transport",
       "number": 77,
+      "order": "77",
       "title": "Streaming Transport (SSE vs WebSocket · Async Generators as Producer · Backpressure · Mid-Stream Cancellation)",
       "category": "Python for AI/LLM Systems",
       "relevance": "Architect",
@@ -322,6 +327,7 @@
     {
       "slug": "connection-pooling-async",
       "number": 78,
+      "order": "78",
       "title": "Connection Pooling from Async Code",
       "category": "Production Python",
       "relevance": "Architect",
@@ -381,6 +387,7 @@
     {
       "slug": "caching-patterns",
       "number": 79,
+      "order": "79",
       "title": "Caching Patterns (lru_cache · TTL · Redis-backed · Stampedes)",
       "category": "Production Python",
       "relevance": "Architect",
@@ -440,6 +447,7 @@
     {
       "slug": "queues-background-workers",
       "number": 80,
+      "order": "80",
       "title": "Queues & Background Workers (SQS Consumers · Visibility Timeouts · acks_late · The Poison-Pill Pattern)",
       "category": "Production Python",
       "relevance": "Architect",
@@ -499,6 +507,7 @@
     {
       "slug": "structured-logging-context-propagation",
       "number": 81,
+      "order": "81",
       "title": "Structured Logging & Context Propagation (Structured Logs · contextvars · What Not To Log)",
       "category": "Production Python",
       "relevance": "Architect",
@@ -558,6 +567,7 @@
     {
       "slug": "observability-instrumentation",
       "number": 82,
+      "order": "82",
       "title": "Observability Instrumentation (OpenTelemetry Spans · Traces · Metrics)",
       "category": "Python for AI/LLM Systems",
       "relevance": "Senior",

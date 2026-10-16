@@ -16,6 +16,7 @@
     {
       "slug": "async-execution-model",
       "number": 40,
+      "order": "40",
       "title": "The Async Execution Model",
       "category": "Concurrency & Parallelism",
       "relevance": "Architect",
@@ -75,6 +76,7 @@
     {
       "slug": "async-await-coroutines",
       "number": 41,
+      "order": "41",
       "title": "async/await & Coroutine Objects",
       "category": "Concurrency & Parallelism",
       "relevance": "Senior",
@@ -134,6 +136,7 @@
     {
       "slug": "tasks-gather-cancellation",
       "number": 42,
+      "order": "42",
       "title": "Tasks, Gathering & Cancellation",
       "category": "Concurrency & Parallelism",
       "relevance": "Architect",
@@ -193,6 +196,7 @@
     {
       "slug": "bridging-sync-async",
       "number": 43,
+      "order": "43",
       "title": "Bridging Sync ↔ Async",
       "category": "Concurrency & Parallelism",
       "relevance": "Senior",
@@ -252,6 +256,7 @@
     {
       "slug": "async-primitives-patterns",
       "number": 44,
+      "order": "44",
       "title": "Async Primitives & Patterns",
       "category": "Concurrency & Parallelism",
       "relevance": "Senior",
@@ -311,6 +316,7 @@
     {
       "slug": "async-ecosystem-comparatives",
       "number": 45,
+      "order": "45",
       "title": "Async Ecosystem & Comparatives",
       "category": "Concurrency & Parallelism",
       "relevance": "Senior",

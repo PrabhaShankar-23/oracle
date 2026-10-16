@@ -37,6 +37,7 @@
     {
       "slug": "measuring-a-turn",
       "number": 48,
+      "order": "048",
       "title": "Measuring a Turn — Key Metrics, Traces, Logs, Alerts",
       "category": "Platform",
       "tier": "CORE",
@@ -95,6 +96,7 @@
     {
       "slug": "latency-optimization-playbook",
       "number": 48.1,
+      "order": "048a",
       "title": "Latency Optimization Playbook — The Levers, in Order",
       "category": "Platform",
       "tier": "SUPPORTING",
@@ -153,6 +155,7 @@
     {
       "slug": "evaluating-a-voice-agent",
       "number": 49,
+      "order": "049",
       "title": "Evaluating a Voice Agent — Goldens, Test Conditions, Simulations",
       "category": "Platform",
       "tier": "CORE",
@@ -211,6 +214,7 @@
     {
       "slug": "degradation-ladder",
       "number": 50,
+      "order": "050",
       "title": "The Degradation Ladder — Fallbacks, Circuit Breakers, the LLM Gateway",
       "category": "Platform",
       "tier": "CORE",
@@ -269,6 +273,7 @@
     {
       "slug": "scaling-to-1000-calls",
       "number": 51,
+      "order": "051",
       "title": "Scaling to 1,000 Concurrent Calls — Vendors Are the Ceiling",
       "category": "Platform",
       "tier": "CORE",
@@ -327,6 +332,7 @@
     {
       "slug": "cost-per-minute",
       "number": 52,
+      "order": "052",
       "title": "Cost per Minute — What a Voice Call Spends",
       "category": "Platform",
       "tier": "SUPPORTING",
@@ -385,6 +391,7 @@
     {
       "slug": "recording-transcripts-pii",
       "number": 53,
+      "order": "053",
       "title": "Recording, Transcripts and PII",
       "category": "Platform",
       "tier": "SUPPORTING",
@@ -443,6 +450,7 @@
     {
       "slug": "fairness-across-accents",
       "number": 54,
+      "order": "054",
       "title": "Fairness Across Accents — Per-Cohort Accuracy as a Release Gate",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -501,6 +509,7 @@
     {
       "slug": "region-placement-everything-near-the-caller",
       "number": 55,
+      "order": "055",
       "title": "Region Placement — Everything Near the Caller",
       "category": "Platform",
       "tier": "BREADTH",

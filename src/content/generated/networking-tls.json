@@ -5,6 +5,7 @@
     {
       "slug": "what-tls-gives-you",
       "number": 36,
+      "order": "036",
       "title": "What TLS Gives You — Encryption, Integrity, Identity",
       "category": "Networking — TLS & Transport Security (Item 36)",
       "relevance": "Medium",
@@ -49,6 +50,7 @@
     {
       "slug": "tls13-handshake",
       "number": 37,
+      "order": "037",
       "title": "The TLS 1.3 Handshake — 1-RTT, 0-RTT, and What 1.2 Cost",
       "category": "Networking — TLS & Transport Security (Item 37)",
       "relevance": "High",
@@ -138,6 +140,7 @@
     {
       "slug": "certificates-chains-of-trust",
       "number": 38,
+      "order": "038",
       "title": "Certificates & Chains of Trust",
       "category": "Networking — TLS & Transport Security (Item 38)",
       "relevance": "High",
@@ -182,6 +185,7 @@
     {
       "slug": "termination-passthrough-reencryption",
       "number": 40,
+      "order": "040",
       "title": "TLS Termination vs Pass-Through vs Re-encryption",
       "category": "Networking — TLS & Transport Security (Item 40)",
       "relevance": "High",
@@ -296,6 +300,7 @@
     {
       "slug": "mtls",
       "number": 41,
+      "order": "041",
       "title": "mTLS — Mutual Authentication and Service-Mesh Zero Trust",
       "category": "Networking — TLS & Transport Security (Item 41)",
       "relevance": "High",

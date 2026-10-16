@@ -22,6 +22,7 @@
     {
       "slug": "why-python-is-slow",
       "number": 58,
+      "order": "58",
       "title": "Why Python Is \"Slow\" — And Where It Isn't",
       "category": "Performance & Profiling",
       "relevance": "Architect",
@@ -81,6 +82,7 @@
     {
       "slug": "profiling-the-right-way",
       "number": 59,
+      "order": "59",
       "title": "Profiling the Right Way",
       "category": "Performance & Profiling",
       "relevance": "Architect",
@@ -140,6 +142,7 @@
     {
       "slug": "micro-optimization-traps",
       "number": 60,
+      "order": "60",
       "title": "Micro-Optimization Traps",
       "category": "Performance & Profiling",
       "relevance": "Senior",
@@ -199,6 +202,7 @@
     {
       "slug": "c-extension-native-boundary",
       "number": 61,
+      "order": "61",
       "title": "The C-Extension & Native Acceleration Boundary",
       "category": "Performance & Profiling",
       "relevance": "Senior",
@@ -258,6 +262,7 @@
     {
       "slug": "interpreter-level-speedups",
       "number": 62,
+      "order": "62",
       "title": "Interpreter-Level Speedups",
       "category": "Performance & Profiling",
       "relevance": "Senior",

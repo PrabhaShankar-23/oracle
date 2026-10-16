@@ -16,6 +16,7 @@
     {
       "slug": "reference-counting",
       "number": 28,
+      "order": "28",
       "title": "Reference Counting",
       "category": "Object Model, Memory & GC",
       "relevance": "Architect",
@@ -75,6 +76,7 @@
     {
       "slug": "cyclic-garbage-collector",
       "number": 29,
+      "order": "29",
       "title": "The Cyclic Garbage Collector",
       "category": "Object Model, Memory & GC",
       "relevance": "Architect",
@@ -134,6 +136,7 @@
     {
       "slug": "weakref-and-finalization",
       "number": 30,
+      "order": "30",
       "title": "weakref & Finalization",
       "category": "Object Model, Memory & GC",
       "relevance": "Senior",
@@ -193,6 +196,7 @@
     {
       "slug": "memory-allocators-arenas",
       "number": 31,
+      "order": "31",
       "title": "Memory Allocators & Arenas",
       "category": "Object Model, Memory & GC",
       "relevance": "Architect",
@@ -247,6 +251,7 @@
     {
       "slug": "diagnosing-memory",
       "number": 32,
+      "order": "32",
       "title": "Diagnosing Memory",
       "category": "Object Model, Memory & GC",
       "relevance": "Architect",

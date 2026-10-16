@@ -5,6 +5,7 @@
     {
       "slug": "http-as-a-protocol",
       "number": 44,
+      "order": "044",
       "title": "HTTP as a Protocol — Message Anatomy & Statelessness",
       "category": "Networking — HTTP Versions (Item 44)",
       "relevance": "Medium",
@@ -49,6 +50,7 @@
     {
       "slug": "http10-vs-11",
       "number": 45,
+      "order": "045",
       "title": "HTTP/1.0 vs HTTP/1.1 — Persistence, Host, and Chunked Encoding",
       "category": "Networking — HTTP Versions (Item 45)",
       "relevance": "Medium",
@@ -93,6 +95,7 @@
     {
       "slug": "http11-limits",
       "number": 46,
+      "order": "046",
       "title": "HTTP/1.1's Limits — One Request in Flight, and the 6-Connection Cap",
       "category": "Networking — HTTP Versions (Item 46)",
       "relevance": "High",
@@ -195,6 +198,7 @@
     {
       "slug": "http2-binary-framing",
       "number": 48,
+      "order": "048",
       "title": "HTTP/2 — Binary Framing, Streams & Multiplexing",
       "category": "Networking — HTTP Versions (Item 48)",
       "relevance": "High",
@@ -284,6 +288,7 @@
     {
       "slug": "hpack-priorities-push",
       "number": 49,
+      "order": "049",
       "title": "HPACK, Stream Priorities & Server Push",
       "category": "Networking — HTTP Versions (Item 49)",
       "relevance": "Medium",
@@ -328,6 +333,7 @@
     {
       "slug": "http2-remaining-flaw",
       "number": 50,
+      "order": "050",
       "title": "HTTP/2's Remaining Flaw — TCP Still Stalls Every Stream",
       "category": "Networking — HTTP Versions (Item 50)",
       "relevance": "High",
@@ -442,6 +448,7 @@
     {
       "slug": "quic",
       "number": 51,
+      "order": "051",
       "title": "QUIC — UDP Transport with Built-in TLS 1.3 and Per-Stream Recovery",
       "category": "Networking — HTTP Versions (Item 51)",
       "relevance": "High",
@@ -531,6 +538,7 @@
     {
       "slug": "quic-connection-migration",
       "number": 52,
+      "order": "052",
       "title": "Connection Migration in QUIC",
       "category": "Networking — HTTP Versions (Item 52)",
       "relevance": "Medium",
@@ -575,6 +583,7 @@
     {
       "slug": "http3-semantics-over-quic",
       "number": 53,
+      "order": "053",
       "title": "HTTP/3 — HTTP Semantics over QUIC",
       "category": "Networking — HTTP Versions (Item 53)",
       "relevance": "Medium",
@@ -619,6 +628,7 @@
     {
       "slug": "when-each-version-matters",
       "number": 54,
+      "order": "054",
       "title": "When Each HTTP Version Actually Matters",
       "category": "Networking — HTTP Versions (Item 54)",
       "relevance": "High",
@@ -733,6 +743,7 @@
     {
       "slug": "grpc-on-http2",
       "number": 55,
+      "order": "055",
       "title": "gRPC's Dependence on HTTP/2 — and the Load-Balancing Problem",
       "category": "Networking — HTTP Versions (Item 55)",
       "relevance": "High",

@@ -22,6 +22,7 @@
     {
       "slug": "encapsulation-public-api-boundary",
       "number": 88,
+      "order": "88",
       "title": "Encapsulation & the Public-API Boundary",
       "category": "OOP Design",
       "relevance": "Architect",
@@ -81,6 +82,7 @@
     {
       "slug": "classmethod-vs-staticmethod",
       "number": 89,
+      "order": "89",
       "title": "classmethod vs staticmethod — the Design Call",
       "category": "OOP Design",
       "relevance": "Architect",
@@ -140,6 +142,7 @@
     {
       "slug": "new-vs-init",
       "number": 90,
+      "order": "90",
       "title": "__new__ vs __init__ — When Construction Is the Problem",
       "category": "OOP Design",
       "relevance": "Senior",
@@ -199,6 +202,7 @@
     {
       "slug": "multiple-inheritance-mixins",
       "number": 91,
+      "order": "91",
       "title": "Multiple Inheritance & Mixin Design",
       "category": "OOP Design",
       "relevance": "Senior",
@@ -258,6 +262,7 @@
     {
       "slug": "composition-delegation-python",
       "number": 92,
+      "order": "92",
       "title": "Composition & Delegation in Python",
       "category": "OOP Design",
       "relevance": "Architect",
@@ -317,6 +322,7 @@
     {
       "slug": "patterns-solid-python-delta",
       "number": 94,
+      "order": "94",
       "title": "Patterns & SOLID — the Python Delta",
       "category": "OOP Design",
       "relevance": "Architect",

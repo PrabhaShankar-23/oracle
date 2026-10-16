@@ -16,6 +16,7 @@
     {
       "slug": "type-hints-typing",
       "number": 46,
+      "order": "46",
       "title": "Type Hints & typing",
       "category": "Type System",
       "relevance": "Architect",
@@ -75,6 +76,7 @@
     {
       "slug": "generics-variance",
       "number": 47,
+      "order": "47",
       "title": "Generics & Variance",
       "category": "Type System",
       "relevance": "Senior",
@@ -134,6 +136,7 @@
     {
       "slug": "protocols-structural-typing",
       "number": 48,
+      "order": "48",
       "title": "Protocols & Structural Typing",
       "category": "Type System",
       "relevance": "Architect",
@@ -193,6 +196,7 @@
     {
       "slug": "abcs-duck-typing",
       "number": 49,
+      "order": "49",
       "title": "ABCs & Duck Typing",
       "category": "Type System",
       "relevance": "Senior",
@@ -252,6 +256,7 @@
     {
       "slug": "runtime-introspection-types",
       "number": 50,
+      "order": "50",
       "title": "Runtime Introspection of Types",
       "category": "Type System",
       "relevance": "Senior",
@@ -286,6 +291,7 @@
     {
       "slug": "pydantic-validation-boundary",
       "number": 50.1,
+      "order": "50a",
       "title": "Pydantic v2 as a Validation Boundary",
       "category": "Python for AI/LLM Systems",
       "relevance": "Architect",
@@ -345,6 +351,7 @@
     {
       "slug": "structured-outputs-tool-schemas",
       "number": 50.2,
+      "order": "50b",
       "title": "Structured Outputs & Tool Schemas",
       "category": "Python for AI/LLM Systems",
       "relevance": "Architect",

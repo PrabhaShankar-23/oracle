@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useLocation, useParams } from 'react-router'
 import type { AgenticDecision, DecisionTier, NoteSummary } from '../../content/types'
 import { HEADER_HEIGHT, READING_MAX_WIDTH } from '../../theme/theme'
 import NotFoundPage from '../../pages/NotFoundPage'
@@ -45,6 +45,7 @@ type Props = {
  */
 export default function NotePage({ index, chunks, chunkKey, crumbs, relevanceLabel }: Props) {
   const { slug = '' } = useParams()
+  const { pathname } = useLocation()
   const theme = useTheme()
   const desktop = useMediaQuery(theme.breakpoints.up('lg'))
   // Keyed by slug so navigating between notes drops the previous payload during render,
@@ -70,9 +71,21 @@ export default function NotePage({ index, chunks, chunkKey, crumbs, relevanceLab
 
   const hasToc = !!note && note.headings.length > 1
 
+  // Every note in a series shares one route prefix (`/system-design/voice/<slug>`), so the series
+  // and chapter crumbs can link to pages of the same series: the series to its first page, the
+  // chapter to its chapter map (or its first note when it has none). The current page stays text.
+  const base = pathname.slice(0, pathname.lastIndexOf('/'))
+  const chapter = index.filter((d) => d.section === summary.section)
+  const chapterHome = chapter.find((d) => d.tier === 'MAP') ?? chapter[0]
+  const linkTo = (target?: NoteSummary) => (target && target.slug !== slug ? `${base}/${target.slug}` : undefined)
+  const pageCrumbs: Crumb[] = [
+    ...crumbs.map((c, i) => (c.to || i < crumbs.length - 1 ? c : { ...c, to: linkTo(index[0]) })),
+    { label: summary.sectionTitle, to: linkTo(chapterHome) },
+  ]
+
   return (
     <PageContainer>
-      <PageHeader crumbs={[...crumbs, { label: summary.sectionTitle }]} title={summary.title} subtitle={note?.category}>
+      <PageHeader crumbs={pageCrumbs} title={summary.title} subtitle={note?.category}>
         <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap', alignItems: 'center' }}>
           <Chip size="small" label={summary.tier} color={TIER_COLOR[summary.tier]} />
           {summary.relevance && <Chip size="small" variant="outlined" label={`${summary.relevance} ${relevanceLabel}`} />}

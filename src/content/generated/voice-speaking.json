@@ -57,6 +57,7 @@
     {
       "slug": "streaming-text-to-speech",
       "number": 36,
+      "order": "036",
       "title": "Streaming Text-to-Speech — Time to First Byte",
       "category": "Signal",
       "tier": "CORE",
@@ -115,6 +116,7 @@
     {
       "slug": "sentence-chunking-and-flushing",
       "number": 37,
+      "order": "037",
       "title": "Sentence Chunking and Flushing — Bounding the First Segment",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -173,6 +175,7 @@
     {
       "slug": "pronunciation",
       "number": 38,
+      "order": "038",
       "title": "Pronunciation — Saying Domain Terms Right",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -231,6 +234,7 @@
     {
       "slug": "choosing-a-voice",
       "number": 39,
+      "order": "039",
       "title": "Choosing a Voice — By Ear and by Goldens",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -289,6 +293,7 @@
     {
       "slug": "realtime-speech-to-speech",
       "number": 40,
+      "order": "040",
       "title": "Realtime Speech-to-Speech Models — When the Cascade Loses",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -347,6 +352,7 @@
     {
       "slug": "background-audio-and-thinking-sounds",
       "number": 41,
+      "order": "041",
       "title": "Background Audio and Thinking Sounds",
       "category": "Conversation",
       "tier": "BREADTH",

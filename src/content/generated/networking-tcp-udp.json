@@ -5,6 +5,7 @@
     {
       "slug": "tcp-vs-udp",
       "number": 19,
+      "order": "019",
       "title": "TCP vs UDP — The Decision Table",
       "category": "Networking — TCP & UDP (Item 19)",
       "relevance": "High",
@@ -89,6 +90,7 @@
     {
       "slug": "three-way-handshake",
       "number": 20,
+      "order": "020",
       "title": "The TCP 3-Way Handshake",
       "category": "Networking — TCP & UDP (Item 20)",
       "relevance": "High",
@@ -178,6 +180,7 @@
     {
       "slug": "connection-teardown",
       "number": 21,
+      "order": "021",
       "title": "Connection Teardown — FIN/ACK and TIME_WAIT",
       "category": "Networking — TCP & UDP (Item 21)",
       "relevance": "High",
@@ -222,6 +225,7 @@
     {
       "slug": "sequence-numbers-acks-retransmission",
       "number": 22,
+      "order": "022",
       "title": "Sequence Numbers, ACKs & Retransmission",
       "category": "Networking — TCP & UDP (Item 22)",
       "relevance": "Medium",
@@ -266,6 +270,7 @@
     {
       "slug": "flow-control",
       "number": 23,
+      "order": "023",
       "title": "Flow Control — The Receive Window & Zero-Window Stalls",
       "category": "Networking — TCP & UDP (Item 23)",
       "relevance": "Medium",
@@ -310,6 +315,7 @@
     {
       "slug": "congestion-control",
       "number": 24,
+      "order": "024",
       "title": "Congestion Control — Slow Start, CUBIC & BBR",
       "category": "Networking — TCP & UDP (Item 24)",
       "relevance": "Medium",
@@ -354,6 +360,7 @@
     {
       "slug": "tcp-head-of-line-blocking",
       "number": 25,
+      "order": "025",
       "title": "TCP Head-of-Line Blocking",
       "category": "Networking — TCP & UDP (Item 25)",
       "relevance": "High",
@@ -481,6 +488,7 @@
     {
       "slug": "keepalives-idle-timeouts",
       "number": 27,
+      "order": "027",
       "title": "Keepalives, Idle Timeouts & Half-Open Connections",
       "category": "Networking — TCP & UDP (Item 27)",
       "relevance": "High",
@@ -525,6 +533,7 @@
     {
       "slug": "sockets-ports-ephemeral-range",
       "number": 28,
+      "order": "028",
       "title": "Sockets, Ports & the Ephemeral Port Range",
       "category": "Networking — TCP & UDP (Item 28)",
       "relevance": "High",
@@ -569,6 +578,7 @@
     {
       "slug": "when-udp-is-right",
       "number": 29,
+      "order": "029",
       "title": "When UDP Is Right",
       "category": "Networking — TCP & UDP (Item 29)",
       "relevance": "Medium",

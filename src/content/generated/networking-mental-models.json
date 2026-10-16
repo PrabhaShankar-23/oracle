@@ -5,6 +5,7 @@
     {
       "slug": "osi-model",
       "number": 1,
+      "order": "001",
       "title": "The OSI 7-Layer Model",
       "category": "Networking — Mental Models (Item 1)",
       "relevance": "High",
@@ -79,6 +80,7 @@
     {
       "slug": "tcp-ip-model",
       "number": 2,
+      "order": "002",
       "title": "The TCP/IP (4-Layer) Model",
       "category": "Networking — Mental Models (Item 2)",
       "relevance": "Medium",
@@ -152,6 +154,7 @@
     {
       "slug": "l4-vs-l7",
       "number": 4,
+      "order": "004",
       "title": "L4 vs L7 — What the Distinction Actually Means",
       "category": "Networking — Mental Models (Item 4)",
       "relevance": "High",
@@ -251,6 +254,7 @@
     {
       "slug": "communication-shapes",
       "number": 5,
+      "order": "005",
       "title": "The Four Communication Shapes",
       "category": "Networking — Mental Models (Item 5)",
       "relevance": "High",
@@ -295,6 +299,7 @@
     {
       "slug": "latency-bandwidth-throughput",
       "number": 6,
+      "order": "006",
       "title": "Latency vs Bandwidth vs Throughput",
       "category": "Networking — Mental Models (Item 6)",
       "relevance": "High",
@@ -368,6 +373,7 @@
     {
       "slug": "speed-of-light-budget",
       "number": 8,
+      "order": "008",
       "title": "The Speed-of-Light Budget",
       "category": "Networking — Mental Models (Item 8)",
       "relevance": "High",
@@ -412,6 +418,7 @@
     {
       "slug": "the-number-line",
       "number": 9,
+      "order": "009",
       "title": "The Number Line That Matters (L1 → Cross-Continent)",
       "category": "Networking — Mental Models (Item 9)",
       "relevance": "High",

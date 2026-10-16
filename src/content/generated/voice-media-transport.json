@@ -47,6 +47,7 @@
     {
       "slug": "browser-capture",
       "number": 7,
+      "order": "007",
       "title": "Browser Capture — Microphone, Devices, Permissions",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -105,6 +106,7 @@
     {
       "slug": "rooms-participants-tracks",
       "number": 8,
+      "order": "008",
       "title": "Rooms, Participants and Tracks — A Call as LiveKit Models It",
       "category": "Platform",
       "tier": "CORE",
@@ -163,6 +165,7 @@
     {
       "slug": "tokens-grants-dispatch",
       "number": 9,
+      "order": "009",
       "title": "Tokens, Grants and Agent Dispatch",
       "category": "Platform",
       "tier": "SUPPORTING",
@@ -221,6 +224,7 @@
     {
       "slug": "side-channels",
       "number": 11,
+      "order": "011",
       "title": "Side Channels — Transcripts, State and RPC Beside the Audio",
       "category": "Platform",
       "tier": "SUPPORTING",
@@ -279,6 +283,7 @@
     {
       "slug": "telephony-and-sip-phone-callers-in-a-room",
       "number": 12,
+      "order": "012",
       "title": "Telephony and SIP — Phone Callers in a Room",
       "category": "Platform",
       "tier": "BREADTH",

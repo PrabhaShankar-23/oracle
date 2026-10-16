@@ -52,6 +52,7 @@
     {
       "slug": "what-a-voice-agent-is",
       "number": 1,
+      "order": "001",
       "title": "What a Voice Agent Is — One Turn, End to End",
       "category": "Conversation",
       "tier": "CORE",
@@ -110,6 +111,7 @@
     {
       "slug": "the-latency-budget",
       "number": 2,
+      "order": "002",
       "title": "The Latency Budget — End of Speech to First Audio",
       "category": "Platform",
       "tier": "CORE",
@@ -168,6 +170,7 @@
     {
       "slug": "pipeline-shapes",
       "number": 3,
+      "order": "003",
       "title": "Pipeline Shapes — Cascaded, Turn-Based Realtime, Full-Duplex",
       "category": "Conversation",
       "tier": "CORE",
@@ -226,6 +229,7 @@
     {
       "slug": "audio-for-engineers",
       "number": 4,
+      "order": "004",
       "title": "Audio for Engineers — Samples, Frames, Codecs",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -284,6 +288,7 @@
     {
       "slug": "how-people-take-turns",
       "number": 5,
+      "order": "005",
       "title": "How People Take Turns — Gaps, Pauses, Backchannels, Overlap",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -342,6 +347,7 @@
     {
       "slug": "the-voice-number-line",
       "number": 6,
+      "order": "006",
       "title": "The Voice Number Line",
       "category": "Platform",
       "tier": "BREADTH",

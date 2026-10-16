@@ -27,6 +27,7 @@
     {
       "slug": "the-gil",
       "number": 33,
+      "order": "33",
       "title": "The GIL — What It Actually Is",
       "category": "Concurrency & Parallelism",
       "relevance": "Architect",
@@ -86,6 +87,7 @@
     {
       "slug": "concurrency-vs-parallelism",
       "number": 33.1,
+      "order": "33a",
       "title": "Concurrency vs Parallelism",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",
@@ -145,6 +147,7 @@
     {
       "slug": "threading",
       "number": 34,
+      "order": "34",
       "title": "threading",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",
@@ -204,6 +207,7 @@
     {
       "slug": "multiprocessing",
       "number": 35,
+      "order": "35",
       "title": "multiprocessing",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",
@@ -263,6 +267,7 @@
     {
       "slug": "concurrent-futures",
       "number": 36,
+      "order": "36",
       "title": "concurrent.futures",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",
@@ -322,6 +327,7 @@
     {
       "slug": "synchronization-hazards",
       "number": 37,
+      "order": "37",
       "title": "Synchronization & Hazards",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",
@@ -376,6 +382,7 @@
     {
       "slug": "no-gil-free-threaded-cpython",
       "number": 38,
+      "order": "38",
       "title": "No-GIL / Free-Threaded CPython",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Architect",
@@ -435,6 +442,7 @@
     {
       "slug": "sub-interpreters",
       "number": 39,
+      "order": "39",
       "title": "Sub-Interpreters",
       "category": "Concurrency (Threading, Multiprocessing, Asyncio, GIL)",
       "relevance": "Senior",

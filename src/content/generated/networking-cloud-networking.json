@@ -5,6 +5,7 @@
     {
       "slug": "vpc-mental-model",
       "number": 122,
+      "order": "122",
       "title": "VPC — The Mental Model",
       "category": "Networking — Cloud Networking (Item 122)",
       "relevance": "High",
@@ -104,6 +105,7 @@
     {
       "slug": "subnets-azs-cidr-planning",
       "number": 123,
+      "order": "123",
       "title": "Subnets, AZs & CIDR Planning",
       "category": "Networking — Cloud Networking (Item 123)",
       "relevance": "High",
@@ -193,6 +195,7 @@
     {
       "slug": "igw-nat-egress",
       "number": 124,
+      "order": "124",
       "title": "Internet Gateway, NAT Gateway & Egress",
       "category": "Networking — Cloud Networking (Item 124)",
       "relevance": "High",
@@ -292,6 +295,7 @@
     {
       "slug": "route-tables",
       "number": 125,
+      "order": "125",
       "title": "Route Tables",
       "category": "Networking — Cloud Networking (Item 125)",
       "relevance": "High",
@@ -336,6 +340,7 @@
     {
       "slug": "security-groups-vs-nacls",
       "number": 126,
+      "order": "126",
       "title": "Security Groups vs Network ACLs",
       "category": "Networking — Cloud Networking (Item 126)",
       "relevance": "High",
@@ -425,6 +430,7 @@
     {
       "slug": "vpc-peering",
       "number": 127,
+      "order": "127",
       "title": "VPC Peering",
       "category": "Networking — Cloud Networking (Item 127)",
       "relevance": "Medium",
@@ -469,6 +475,7 @@
     {
       "slug": "transit-gateway",
       "number": 128,
+      "order": "128",
       "title": "Transit Gateway & Hub-and-Spoke",
       "category": "Networking — Cloud Networking (Item 128)",
       "relevance": "High",
@@ -513,6 +520,7 @@
     {
       "slug": "privatelink-vpc-endpoints",
       "number": 129,
+      "order": "129",
       "title": "PrivateLink & VPC Endpoints",
       "category": "Networking — Cloud Networking (Item 129)",
       "relevance": "High",
@@ -615,6 +623,7 @@
     {
       "slug": "cloud-load-balancer-types",
       "number": 132,
+      "order": "132",
       "title": "Load Balancer Types in Cloud",
       "category": "Networking — Cloud Networking (Item 132)",
       "relevance": "High",
@@ -659,6 +668,7 @@
     {
       "slug": "private-dns-cloud",
       "number": 133,
+      "order": "133",
       "title": "Private DNS in the Cloud",
       "category": "Networking — Cloud Networking (Item 133)",
       "relevance": "High",
@@ -703,6 +713,7 @@
     {
       "slug": "egress-cost-data-transfer",
       "number": 134,
+      "order": "134",
       "title": "Egress Cost & Data Transfer Pricing",
       "category": "Networking — Cloud Networking (Item 134)",
       "relevance": "High",
@@ -762,6 +773,7 @@
     {
       "slug": "multi-region-networking",
       "number": 135,
+      "order": "135",
       "title": "Multi-Region Networking",
       "category": "Networking — Cloud Networking (Item 135)",
       "relevance": "High",
@@ -806,6 +818,7 @@
     {
       "slug": "network-security-posture",
       "number": 136,
+      "order": "136",
       "title": "Network Security Posture",
       "category": "Networking — Cloud Networking (Item 136)",
       "relevance": "High",

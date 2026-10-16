@@ -57,6 +57,7 @@
     {
       "slug": "voice-activity-detection",
       "number": 17,
+      "order": "017",
       "title": "Voice Activity Detection — Is Someone Speaking Right Now?",
       "category": "Signal",
       "tier": "CORE",
@@ -115,6 +116,7 @@
     {
       "slug": "streaming-speech-to-text",
       "number": 18,
+      "order": "018",
       "title": "Streaming Speech-to-Text — Interim and Final Words, While They Speak",
       "category": "Signal",
       "tier": "CORE",
@@ -173,6 +175,7 @@
     {
       "slug": "vocabulary-keyterm-prompting",
       "number": 19,
+      "order": "019",
       "title": "Vocabulary — Keyterm Prompting and What It Buys",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -231,6 +234,7 @@
     {
       "slug": "accent-language-code-switching",
       "number": 20,
+      "order": "020",
       "title": "Accent, Language and Code-Switching",
       "category": "Signal",
       "tier": "SUPPORTING",
@@ -289,6 +293,7 @@
     {
       "slug": "diarization-who-spoke-as-a-signal",
       "number": 21,
+      "order": "021",
       "title": "Diarization — Who Spoke, as a Signal",
       "category": "Signal",
       "tier": "BREADTH",
@@ -322,6 +327,7 @@
     {
       "slug": "measuring-recognition",
       "number": 22,
+      "order": "022",
       "title": "Measuring Recognition — WER, Term Recall, Goldens",
       "category": "Signal",
       "tier": "SUPPORTING",

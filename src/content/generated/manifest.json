@@ -3037,6 +3037,7 @@
   "agenticDecisions": [
     {
       "slug": "do-we-need-an-agent",
+      "order": "1",
       "title": "Which rung of the ladder does this task need",
       "tier": "CORE",
       "relevance": "High",
@@ -3045,6 +3046,7 @@
     },
     {
       "slug": "clarifying-questions",
+      "order": "2",
       "title": "Which clarifying set governs the round",
       "tier": "CORE",
       "relevance": "High",
@@ -3053,6 +3055,7 @@
     },
     {
       "slug": "autonomy-level",
+      "order": "3",
       "title": "What sets the autonomy level — and at what granularity",
       "tier": "CORE",
       "relevance": "High",
@@ -3061,6 +3064,7 @@
     },
     {
       "slug": "metrics-before-boxes",
+      "order": "4",
       "title": "Which metrics you commit to before drawing a single box",
       "tier": "CORE",
       "relevance": "High",
@@ -3069,6 +3073,7 @@
     },
     {
       "slug": "is-there-a-verifier",
+      "order": "5",
       "title": "Is there a verifier — and what do you build when there isn't",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3077,6 +3082,7 @@
     },
     {
       "slug": "round-pacing",
+      "order": "6",
       "title": "How to spend the 45 minutes of an agent prompt",
       "tier": "BREADTH",
       "relevance": "Medium",
@@ -3085,6 +3091,7 @@
     },
     {
       "slug": "the-layers",
+      "order": "1",
       "title": "Which layers you draw, and which you name and skip",
       "tier": "CORE",
       "relevance": "High",
@@ -3093,6 +3100,7 @@
     },
     {
       "slug": "where-the-quality-lives",
+      "order": "2",
       "title": "Spend the next sprint on the model or on the harness",
       "tier": "CORE",
       "relevance": "High",
@@ -3101,6 +3109,7 @@
     },
     {
       "slug": "control-flow-vs-side-effects",
+      "order": "3",
       "title": "Where authority to act lives — in the loop or in the tool layer",
       "tier": "CORE",
       "relevance": "High",
@@ -3109,6 +3118,7 @@
     },
     {
       "slug": "sync-vs-async-runs",
+      "order": "4",
       "title": "Where the sync/async line falls, and what the client is promised",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3117,6 +3127,7 @@
     },
     {
       "slug": "deterministic-code-wrapping",
+      "order": "5",
       "title": "Who owns the flow — your code or the model",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3125,6 +3136,7 @@
     },
     {
       "slug": "managed-runtimes",
+      "order": "6",
       "title": "Managed agent runtime or your own",
       "tier": "BREADTH",
       "relevance": "Low",
@@ -3133,6 +3145,7 @@
     },
     {
       "slug": "which-workflow-pattern",
+      "order": "1",
       "title": "Which of the five workflow shapes before you reach for a loop",
       "tier": "CORE",
       "relevance": "High",
@@ -3141,6 +3154,7 @@
     },
     {
       "slug": "react-vs-plan-vs-rewoo",
+      "order": "2",
       "title": "Adaptive loop, upfront plan, or plan-then-execute-blind",
       "tier": "CORE",
       "relevance": "High",
@@ -3149,6 +3163,7 @@
     },
     {
       "slug": "graph-or-free-loop",
+      "order": "3",
       "title": "An explicit graph, or a free loop with a step cap",
       "tier": "CORE",
       "relevance": "High",
@@ -3157,6 +3172,7 @@
     },
     {
       "slug": "reflection-loops",
+      "order": "4",
       "title": "Whether a critic loop earns its second call",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3165,6 +3181,7 @@
     },
     {
       "slug": "framework-or-sdk",
+      "order": "5",
       "title": "Adopt an orchestration framework or stay on the plain SDK",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3173,6 +3190,7 @@
     },
     {
       "slug": "reasoning-models-as-planners",
+      "order": "6",
       "title": "A reasoning model for the planning step",
       "tier": "BREADTH",
       "relevance": "Low",
@@ -3181,6 +3199,7 @@
     },
     {
       "slug": "tool-granularity",
+      "order": "1",
       "title": "Task-level tools or a thin wrapper over your API",
       "tier": "CORE",
       "relevance": "High",
@@ -3189,6 +3208,7 @@
     },
     {
       "slug": "validate-at-the-boundary",
+      "order": "2",
       "title": "Constrain the output, or validate it after the fact",
       "tier": "CORE",
       "relevance": "High",
@@ -3197,6 +3217,7 @@
     },
     {
       "slug": "read-tools-vs-write-tools",
+      "order": "3",
       "title": "Read tools vs write tools — default-allow or default-deny",
       "tier": "CORE",
       "relevance": "High",
@@ -3205,6 +3226,7 @@
     },
     {
       "slug": "tool-selection-at-scale",
+      "order": "4",
       "title": "What to do when the catalogue outgrows the prompt",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3213,6 +3235,7 @@
     },
     {
       "slug": "parallel-tool-calls",
+      "order": "5",
       "title": "Which tool calls are safe to run in parallel",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3221,6 +3244,7 @@
     },
     {
       "slug": "mcp-adoption",
+      "order": "6",
       "title": "Adopt MCP, and build a server or consume one",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3229,6 +3253,7 @@
     },
     {
       "slug": "code-execution-and-computer-use",
+      "order": "7",
       "title": "Give the agent a shell, or keep the action space typed",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3237,6 +3262,7 @@
     },
     {
       "slug": "human-as-a-tool",
+      "order": "8",
       "title": "Escalation as a callable tool, or as a terminal state",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3245,6 +3271,7 @@
     },
     {
       "slug": "which-store-holds-this",
+      "order": "1",
       "title": "Which store holds this piece of state",
       "tier": "CORE",
       "relevance": "High",
@@ -3253,6 +3280,7 @@
     },
     {
       "slug": "context-budget",
+      "order": "2",
       "title": "What gets cut when the window fills — and in what order",
       "tier": "CORE",
       "relevance": "High",
@@ -3261,6 +3289,7 @@
     },
     {
       "slug": "context-rot",
+      "order": "3",
       "title": "Restart the context or keep compacting it",
       "tier": "CORE",
       "relevance": "High",
@@ -3269,6 +3298,7 @@
     },
     {
       "slug": "long-term-memory-pipeline",
+      "order": "4",
       "title": "Whether to build a long-term memory pipeline at all",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3277,6 +3307,7 @@
     },
     {
       "slug": "agentic-rag-or-fixed",
+      "order": "5",
       "title": "Retrieval as a tool, or a fixed pipeline before the model",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3285,6 +3316,7 @@
     },
     {
       "slug": "shared-state-across-agents",
+      "order": "6",
       "title": "Shared blackboard or message passing between agents",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3293,6 +3325,7 @@
     },
     {
       "slug": "memory-backends",
+      "order": "7",
       "title": "Which memory backend, and whether to adopt a framework",
       "tier": "BREADTH",
       "relevance": "Low",
@@ -3301,6 +3334,7 @@
     },
     {
       "slug": "single-vs-multi-agent",
+      "order": "1",
       "title": "What justifies a second agent",
       "tier": "CORE",
       "relevance": "High",
@@ -3309,6 +3343,7 @@
     },
     {
       "slug": "delegation-contract",
+      "order": "2",
       "title": "What goes in the delegation contract",
       "tier": "CORE",
       "relevance": "High",
@@ -3317,6 +3352,7 @@
     },
     {
       "slug": "cost-and-error-multiplication",
+      "order": "3",
       "title": "What you tell the room multi-agent will cost",
       "tier": "CORE",
       "relevance": "High",
@@ -3325,6 +3361,7 @@
     },
     {
       "slug": "which-topology",
+      "order": "4",
       "title": "Which topology, once you've accepted multi-agent",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3333,6 +3370,7 @@
     },
     {
       "slug": "coordination-failures",
+      "order": "5",
       "title": "Which coordination failure you design against first",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3341,6 +3379,7 @@
     },
     {
       "slug": "debate-ensembles",
+      "order": "6",
       "title": "Debate ensembles for quality",
       "tier": "BREADTH",
       "relevance": "Low",
@@ -3349,6 +3388,7 @@
     },
     {
       "slug": "checkpointing",
+      "order": "1",
       "title": "What a checkpoint contains, and how often you take one",
       "tier": "CORE",
       "relevance": "High",
@@ -3357,6 +3397,7 @@
     },
     {
       "slug": "partial-completion",
+      "order": "2",
       "title": "What happens to the effects a failed run already caused",
       "tier": "CORE",
       "relevance": "High",
@@ -3365,6 +3406,7 @@
     },
     {
       "slug": "hitl-durable-pause",
+      "order": "3",
       "title": "How a run waits for a human without holding anything",
       "tier": "CORE",
       "relevance": "High",
@@ -3373,6 +3415,7 @@
     },
     {
       "slug": "queues-and-backpressure",
+      "order": "4",
       "title": "What the queue does when it can't keep up",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3381,6 +3424,7 @@
     },
     {
       "slug": "cancellation-and-timeouts",
+      "order": "5",
       "title": "What a cancel actually reaches",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3389,6 +3433,7 @@
     },
     {
       "slug": "replay-and-time-travel",
+      "order": "6",
       "title": "Whether to support forking a run from step N",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3397,6 +3442,7 @@
     },
     {
       "slug": "fewer-steps-or-more-gates",
+      "order": "1",
       "title": "Buy reliability with fewer steps or with verification gates",
       "tier": "CORE",
       "relevance": "High",
@@ -3405,6 +3451,7 @@
     },
     {
       "slug": "hard-budgets",
+      "order": "2",
       "title": "Which budgets you set, and what happens when one trips",
       "tier": "CORE",
       "relevance": "High",
@@ -3413,6 +3460,7 @@
     },
     {
       "slug": "retries",
+      "order": "3",
       "title": "What is safe to retry, and at which layer",
       "tier": "CORE",
       "relevance": "High",
@@ -3421,6 +3469,7 @@
     },
     {
       "slug": "fallback-and-circuit-breakers",
+      "order": "4",
       "title": "What you fail over to, and what trips the breaker",
       "tier": "CORE",
       "relevance": "High",
@@ -3429,6 +3478,7 @@
     },
     {
       "slug": "verification-gates",
+      "order": "5",
       "title": "Where the gates go, and in what order they run",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3437,6 +3487,7 @@
     },
     {
       "slug": "graceful-degradation",
+      "order": "6",
       "title": "What the agent does when it can't do the whole job",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3445,6 +3496,7 @@
     },
     {
       "slug": "consistency-not-peak",
+      "order": "7",
       "title": "Optimising for the best run or for every run",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3453,6 +3505,7 @@
     },
     {
       "slug": "where-the-time-goes",
+      "order": "1",
       "title": "Which term in the latency sum you attack",
       "tier": "CORE",
       "relevance": "High",
@@ -3461,6 +3514,7 @@
     },
     {
       "slug": "what-each-second-costs",
+      "order": "2",
       "title": "What you give up for each second you save",
       "tier": "CORE",
       "relevance": "High",
@@ -3469,6 +3523,7 @@
     },
     {
       "slug": "stream-progress",
+      "order": "3",
       "title": "What you stream, and what it commits you to",
       "tier": "CORE",
       "relevance": "High",
@@ -3477,6 +3532,7 @@
     },
     {
       "slug": "voice-turn-budget",
+      "order": "4",
       "title": "How to spend a sub-second turn budget",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3485,6 +3541,7 @@
     },
     {
       "slug": "transport",
+      "order": "5",
       "title": "Which transport carries the agent's stream",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3493,6 +3550,7 @@
     },
     {
       "slug": "the-steps-squared-term",
+      "order": "1",
       "title": "Which factor of the steps² term you attack",
       "tier": "CORE",
       "relevance": "High",
@@ -3501,6 +3559,7 @@
     },
     {
       "slug": "model-routing",
+      "order": "2",
       "title": "Route by step, cascade on failure, or stay on one model",
       "tier": "CORE",
       "relevance": "High",
@@ -3509,6 +3568,7 @@
     },
     {
       "slug": "caching-tiers",
+      "order": "3",
       "title": "Which cache tier, and where each one stops being safe",
       "tier": "CORE",
       "relevance": "High",
@@ -3517,6 +3577,7 @@
     },
     {
       "slug": "spend-caps",
+      "order": "4",
       "title": "Where the spend cap is enforced, and at what scope",
       "tier": "CORE",
       "relevance": "High",
@@ -3525,6 +3586,7 @@
     },
     {
       "slug": "unit-economics",
+      "order": "5",
       "title": "Cost per call, per task, or per successful task",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3533,6 +3595,7 @@
     },
     {
       "slug": "batch-and-self-host",
+      "order": "6",
       "title": "Batch API, sync API, or your own weights",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3541,6 +3604,7 @@
     },
     {
       "slug": "break-a-leg",
+      "order": "1",
       "title": "Which leg of the trifecta you break",
       "tier": "CORE",
       "relevance": "High",
@@ -3549,6 +3613,7 @@
     },
     {
       "slug": "whose-authority",
+      "order": "2",
       "title": "Whose authority the tool call runs with",
       "tier": "CORE",
       "relevance": "High",
@@ -3557,6 +3622,7 @@
     },
     {
       "slug": "sandbox-boundary",
+      "order": "3",
       "title": "Which boundary untrusted code runs behind, and what egress it gets",
       "tier": "CORE",
       "relevance": "High",
@@ -3565,6 +3631,7 @@
     },
     {
       "slug": "approval-gates",
+      "order": "4",
       "title": "Where the approval gate sits, and how you prove nothing routes around it",
       "tier": "CORE",
       "relevance": "High",
@@ -3573,6 +3640,7 @@
     },
     {
       "slug": "guardrails",
+      "order": "5",
       "title": "Which rails you build, and whether policy runs in a model or in code",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3581,6 +3649,7 @@
     },
     {
       "slug": "audit-trail",
+      "order": "6",
       "title": "Whether the audit trail is logging or a record of decision",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3589,6 +3658,7 @@
     },
     {
       "slug": "tenant-isolation",
+      "order": "7",
       "title": "Isolation by filter or by construction, across all four surfaces",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3597,6 +3667,7 @@
     },
     {
       "slug": "owasp-threat-modelling",
+      "order": "8",
       "title": "OWASP LLM Top 10 as a checklist you run, or a framing you cite",
       "tier": "BREADTH",
       "relevance": "Low",
@@ -3605,6 +3676,7 @@
     },
     {
       "slug": "what-counts-as-the-score",
+      "order": "1",
       "title": "What counts as the score — the answer, the path, or the end state",
       "tier": "CORE",
       "relevance": "High",
@@ -3613,6 +3685,7 @@
     },
     {
       "slug": "which-layer-gates",
+      "order": "2",
       "title": "Which layer you gate on, and which you only diagnose with",
       "tier": "CORE",
       "relevance": "High",
@@ -3621,6 +3694,7 @@
     },
     {
       "slug": "what-a-span-carries",
+      "order": "3",
       "title": "What a span must carry, and whose backend holds it",
       "tier": "CORE",
       "relevance": "High",
@@ -3629,6 +3703,7 @@
     },
     {
       "slug": "what-blocks-the-merge",
+      "order": "4",
       "title": "What blocks the merge, and what only reports",
       "tier": "CORE",
       "relevance": "High",
@@ -3637,6 +3712,7 @@
     },
     {
       "slug": "llm-as-judge",
+      "order": "5",
       "title": "When a judge earns its call, and what you control for",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3645,6 +3721,7 @@
     },
     {
       "slug": "simulation-and-replay",
+      "order": "6",
       "title": "Recorded tool responses, a simulated world, or a live sandbox",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3653,6 +3730,7 @@
     },
     {
       "slug": "online-eval",
+      "order": "7",
       "title": "Which production signal you're willing to treat as a label",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3661,6 +3739,7 @@
     },
     {
       "slug": "benchmarks",
+      "order": "8",
       "title": "What a public benchmark tells you about your agent",
       "tier": "BREADTH",
       "relevance": "Low",
@@ -3669,6 +3748,7 @@
     },
     {
       "slug": "the-versioned-unit",
+      "order": "1",
       "title": "What the versioned unit is, and what breaks when it isn't pinned",
       "tier": "CORE",
       "relevance": "High",
@@ -3677,6 +3757,7 @@
     },
     {
       "slug": "how-a-rollout-knows",
+      "order": "2",
       "title": "How a rollout knows it's working, when the failure isn't an error",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3685,6 +3766,7 @@
     },
     {
       "slug": "what-you-scale-on",
+      "order": "3",
       "title": "What you scale on, when the worker is idle and saturated at once",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3693,6 +3775,7 @@
     },
     {
       "slug": "provider-rate-limits",
+      "order": "4",
       "title": "Which traffic gets the tokens when the provider says no",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3701,6 +3784,7 @@
     },
     {
       "slug": "where-the-seam-goes",
+      "order": "5",
       "title": "Where the seam goes, so the buy decision stays reversible",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3709,6 +3793,7 @@
     },
     {
       "slug": "coding-agent",
+      "order": "1",
       "title": "Coding agent",
       "tier": "CORE",
       "relevance": "High",
@@ -3717,6 +3802,7 @@
     },
     {
       "slug": "support-agent",
+      "order": "2",
       "title": "Support agent that takes actions",
       "tier": "CORE",
       "relevance": "High",
@@ -3725,6 +3811,7 @@
     },
     {
       "slug": "deep-research-agent",
+      "order": "3",
       "title": "Deep research agent",
       "tier": "CORE",
       "relevance": "High",
@@ -3733,6 +3820,7 @@
     },
     {
       "slug": "data-analyst-agent",
+      "order": "4",
       "title": "Data / SQL analyst agent",
       "tier": "CORE",
       "relevance": "High",
@@ -3741,6 +3829,7 @@
     },
     {
       "slug": "voice-agent",
+      "order": "5",
       "title": "Voice / interview agent",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3749,6 +3838,7 @@
     },
     {
       "slug": "back-office-automation",
+      "order": "6",
       "title": "Back-office workflow automation",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3757,6 +3847,7 @@
     },
     {
       "slug": "browser-agent",
+      "order": "7",
       "title": "Browser / computer-use agent",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3765,6 +3856,7 @@
     },
     {
       "slug": "internal-agent-platform",
+      "order": "8",
       "title": "Internal agent platform for many teams",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3773,6 +3865,7 @@
     },
     {
       "slug": "sixty-percent-and-too-expensive",
+      "order": "9",
       "title": "\"Our agent succeeds 60% of the time and costs too much — fix it\"",
       "tier": "CORE",
       "relevance": "High",
@@ -3781,6 +3874,7 @@
     },
     {
       "slug": "autonomy-is-the-dial",
+      "order": "1",
       "title": "Autonomy is the dial; reliability, cost and latency are the meters",
       "tier": "CORE",
       "relevance": "High",
@@ -3789,6 +3883,7 @@
     },
     {
       "slug": "four-buckets",
+      "order": "2",
       "title": "Which of the four buckets a failure goes in, and the evidence that puts it there",
       "tier": "CORE",
       "relevance": "High",
@@ -3797,6 +3892,7 @@
     },
     {
       "slug": "no-new-physics",
+      "order": "3",
       "title": "Lead with the backend framing, or with the agentic one",
       "tier": "CORE",
       "relevance": "High",
@@ -3805,6 +3901,7 @@
     },
     {
       "slug": "who-owns-what",
+      "order": "4",
       "title": "Who owns the tool contract, the eval set and the pager",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3813,6 +3910,7 @@
     },
     {
       "slug": "which-axis-is-growing",
+      "order": "5",
       "title": "Which axis is growing, because 10× tools and 10× tenants break different things",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3823,6 +3921,7 @@
   "networking": [
     {
       "slug": "osi-model",
+      "order": "001",
       "title": "The OSI 7-Layer Model",
       "tier": "CORE",
       "relevance": "High",
@@ -3831,6 +3930,7 @@
     },
     {
       "slug": "tcp-ip-model",
+      "order": "002",
       "title": "The TCP/IP (4-Layer) Model",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3847,6 +3947,7 @@
     },
     {
       "slug": "l4-vs-l7",
+      "order": "004",
       "title": "L4 vs L7 — What the Distinction Actually Means",
       "tier": "CORE",
       "relevance": "High",
@@ -3855,6 +3956,7 @@
     },
     {
       "slug": "communication-shapes",
+      "order": "005",
       "title": "The Four Communication Shapes",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3863,6 +3965,7 @@
     },
     {
       "slug": "latency-bandwidth-throughput",
+      "order": "006",
       "title": "Latency vs Bandwidth vs Throughput",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3879,6 +3982,7 @@
     },
     {
       "slug": "speed-of-light-budget",
+      "order": "008",
       "title": "The Speed-of-Light Budget",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3887,6 +3991,7 @@
     },
     {
       "slug": "the-number-line",
+      "order": "009",
       "title": "The Number Line That Matters (L1 → Cross-Continent)",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3895,6 +4000,7 @@
     },
     {
       "slug": "ip-addressing",
+      "order": "010",
       "title": "IP Addressing — IPv4, IPv6, and Why IPv6 Keeps Appearing in Cloud Defaults",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3903,6 +4009,7 @@
     },
     {
       "slug": "subnets-cidr",
+      "order": "011",
       "title": "Subnets & CIDR Notation",
       "tier": "CORE",
       "relevance": "High",
@@ -3911,6 +4018,7 @@
     },
     {
       "slug": "private-vs-public-ip",
+      "order": "012",
       "title": "Private vs Public IP Ranges",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3919,6 +4027,7 @@
     },
     {
       "slug": "mtu-fragmentation-pmtud",
+      "order": "013",
       "title": "Packets, MTU, Fragmentation & Path MTU Discovery",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3927,6 +4036,7 @@
     },
     {
       "slug": "routing-basics",
+      "order": "014",
       "title": "Routing Basics — Tables, Default Gateway, Next Hop",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3935,6 +4045,7 @@
     },
     {
       "slug": "nat",
+      "order": "015",
       "title": "NAT — Source NAT, Destination NAT & Port Exhaustion",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3967,6 +4078,7 @@
     },
     {
       "slug": "tcp-vs-udp",
+      "order": "019",
       "title": "TCP vs UDP — The Decision Table",
       "tier": "CORE",
       "relevance": "High",
@@ -3975,6 +4087,7 @@
     },
     {
       "slug": "three-way-handshake",
+      "order": "020",
       "title": "The TCP 3-Way Handshake",
       "tier": "CORE",
       "relevance": "High",
@@ -3983,6 +4096,7 @@
     },
     {
       "slug": "connection-teardown",
+      "order": "021",
       "title": "Connection Teardown — FIN/ACK and TIME_WAIT",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -3991,6 +4105,7 @@
     },
     {
       "slug": "sequence-numbers-acks-retransmission",
+      "order": "022",
       "title": "Sequence Numbers, ACKs & Retransmission",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -3999,6 +4114,7 @@
     },
     {
       "slug": "flow-control",
+      "order": "023",
       "title": "Flow Control — The Receive Window & Zero-Window Stalls",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4007,6 +4123,7 @@
     },
     {
       "slug": "congestion-control",
+      "order": "024",
       "title": "Congestion Control — Slow Start, CUBIC & BBR",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4015,6 +4132,7 @@
     },
     {
       "slug": "tcp-head-of-line-blocking",
+      "order": "025",
       "title": "TCP Head-of-Line Blocking",
       "tier": "CORE",
       "relevance": "High",
@@ -4031,6 +4149,7 @@
     },
     {
       "slug": "keepalives-idle-timeouts",
+      "order": "027",
       "title": "Keepalives, Idle Timeouts & Half-Open Connections",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4039,6 +4158,7 @@
     },
     {
       "slug": "sockets-ports-ephemeral-range",
+      "order": "028",
       "title": "Sockets, Ports & the Ephemeral Port Range",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4047,6 +4167,7 @@
     },
     {
       "slug": "when-udp-is-right",
+      "order": "029",
       "title": "When UDP Is Right",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4055,6 +4176,7 @@
     },
     {
       "slug": "dns-resolution",
+      "order": "030",
       "title": "What DNS Resolution Actually Does",
       "tier": "CORE",
       "relevance": "High",
@@ -4063,6 +4185,7 @@
     },
     {
       "slug": "record-types",
+      "order": "031",
       "title": "Record Types You'll Use",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4071,6 +4194,7 @@
     },
     {
       "slug": "ttl-and-caching-layers",
+      "order": "032",
       "title": "TTL & Caching Layers",
       "tier": "CORE",
       "relevance": "High",
@@ -4079,6 +4203,7 @@
     },
     {
       "slug": "dns-load-balancing",
+      "order": "033",
       "title": "DNS-Based Load Balancing & Failover",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4087,6 +4212,7 @@
     },
     {
       "slug": "private-dns-service-discovery",
+      "order": "034",
       "title": "Private DNS & Service Discovery",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4095,6 +4221,7 @@
     },
     {
       "slug": "dns-as-an-outage-cause",
+      "order": "035",
       "title": "DNS as an Outage Cause",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4103,6 +4230,7 @@
     },
     {
       "slug": "what-tls-gives-you",
+      "order": "036",
       "title": "What TLS Gives You — Encryption, Integrity, Identity",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4111,6 +4239,7 @@
     },
     {
       "slug": "tls13-handshake",
+      "order": "037",
       "title": "The TLS 1.3 Handshake — 1-RTT, 0-RTT, and What 1.2 Cost",
       "tier": "CORE",
       "relevance": "High",
@@ -4119,6 +4248,7 @@
     },
     {
       "slug": "certificates-chains-of-trust",
+      "order": "038",
       "title": "Certificates & Chains of Trust",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4127,6 +4257,7 @@
     },
     {
       "slug": "termination-passthrough-reencryption",
+      "order": "040",
       "title": "TLS Termination vs Pass-Through vs Re-encryption",
       "tier": "CORE",
       "relevance": "High",
@@ -4135,6 +4266,7 @@
     },
     {
       "slug": "mtls",
+      "order": "041",
       "title": "mTLS — Mutual Authentication and Service-Mesh Zero Trust",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4143,6 +4275,7 @@
     },
     {
       "slug": "http-as-a-protocol",
+      "order": "044",
       "title": "HTTP as a Protocol — Message Anatomy & Statelessness",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4151,6 +4284,7 @@
     },
     {
       "slug": "http10-vs-11",
+      "order": "045",
       "title": "HTTP/1.0 vs HTTP/1.1 — Persistence, Host, and Chunked Encoding",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4159,6 +4293,7 @@
     },
     {
       "slug": "http11-limits",
+      "order": "046",
       "title": "HTTP/1.1's Limits — One Request in Flight, and the 6-Connection Cap",
       "tier": "CORE",
       "relevance": "High",
@@ -4175,6 +4310,7 @@
     },
     {
       "slug": "http2-binary-framing",
+      "order": "048",
       "title": "HTTP/2 — Binary Framing, Streams & Multiplexing",
       "tier": "CORE",
       "relevance": "High",
@@ -4183,6 +4319,7 @@
     },
     {
       "slug": "hpack-priorities-push",
+      "order": "049",
       "title": "HPACK, Stream Priorities & Server Push",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4191,6 +4328,7 @@
     },
     {
       "slug": "http2-remaining-flaw",
+      "order": "050",
       "title": "HTTP/2's Remaining Flaw — TCP Still Stalls Every Stream",
       "tier": "CORE",
       "relevance": "High",
@@ -4199,6 +4337,7 @@
     },
     {
       "slug": "quic",
+      "order": "051",
       "title": "QUIC — UDP Transport with Built-in TLS 1.3 and Per-Stream Recovery",
       "tier": "CORE",
       "relevance": "High",
@@ -4207,6 +4346,7 @@
     },
     {
       "slug": "quic-connection-migration",
+      "order": "052",
       "title": "Connection Migration in QUIC",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4215,6 +4355,7 @@
     },
     {
       "slug": "http3-semantics-over-quic",
+      "order": "053",
       "title": "HTTP/3 — HTTP Semantics over QUIC",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4223,6 +4364,7 @@
     },
     {
       "slug": "when-each-version-matters",
+      "order": "054",
       "title": "When Each HTTP Version Actually Matters",
       "tier": "CORE",
       "relevance": "High",
@@ -4231,6 +4373,7 @@
     },
     {
       "slug": "grpc-on-http2",
+      "order": "055",
       "title": "gRPC's Dependence on HTTP/2 — and the Load-Balancing Problem",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4247,6 +4390,7 @@
     },
     {
       "slug": "methods",
+      "order": "057",
       "title": "HTTP Methods & Their Contracts",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4255,6 +4399,7 @@
     },
     {
       "slug": "safe-idempotent-cacheable",
+      "order": "058",
       "title": "Safe vs Idempotent vs Cacheable",
       "tier": "CORE",
       "relevance": "High",
@@ -4263,6 +4408,7 @@
     },
     {
       "slug": "status-codes",
+      "order": "059",
       "title": "Status Codes — the practical map",
       "tier": "CORE",
       "relevance": "High",
@@ -4271,6 +4417,7 @@
     },
     {
       "slug": "choosing-the-right-code",
+      "order": "060",
       "title": "Choosing the Right Status Code",
       "tier": "CORE",
       "relevance": "High",
@@ -4279,6 +4426,7 @@
     },
     {
       "slug": "headers",
+      "order": "061",
       "title": "Headers That Matter",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4287,6 +4435,7 @@
     },
     {
       "slug": "http-caching",
+      "order": "062",
       "title": "HTTP Caching",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4295,6 +4444,7 @@
     },
     {
       "slug": "cookies",
+      "order": "063",
       "title": "Cookies and Cookie Attributes",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4303,6 +4453,7 @@
     },
     {
       "slug": "cors",
+      "order": "064",
       "title": "CORS and Preflight Requests",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4327,6 +4478,7 @@
     },
     {
       "slug": "idempotency-keys",
+      "order": "067",
       "title": "Idempotency Keys",
       "tier": "CORE",
       "relevance": "High",
@@ -4335,6 +4487,7 @@
     },
     {
       "slug": "timeouts-retries-backoff",
+      "order": "068",
       "title": "Timeouts, Retries & Exponential Backoff with Jitter",
       "tier": "CORE",
       "relevance": "High",
@@ -4343,6 +4496,7 @@
     },
     {
       "slug": "rate-limiting",
+      "order": "069",
       "title": "Rate Limiting and 429",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4351,6 +4505,7 @@
     },
     {
       "slug": "four-options",
+      "order": "070",
       "title": "The Four Real-Time Options — Polling, Long Polling, SSE, WebSocket",
       "tier": "CORE",
       "relevance": "High",
@@ -4359,6 +4514,7 @@
     },
     {
       "slug": "server-sent-events",
+      "order": "071",
       "title": "Server-Sent Events (SSE)",
       "tier": "CORE",
       "relevance": "High",
@@ -4367,6 +4523,7 @@
     },
     {
       "slug": "websocket",
+      "order": "072",
       "title": "WebSocket — Handshake, Frames, Full Duplex, Subprotocols",
       "tier": "CORE",
       "relevance": "High",
@@ -4375,6 +4532,7 @@
     },
     {
       "slug": "websocket-operational-reality",
+      "order": "073",
       "title": "WebSocket Operational Reality — Stickiness, Timeouts, Heartbeats, Resume, Fan-out",
       "tier": "CORE",
       "relevance": "High",
@@ -4383,6 +4541,7 @@
     },
     {
       "slug": "choosing-realtime-transport",
+      "order": "074",
       "title": "SSE vs WebSocket vs HTTP/2 Streaming vs gRPC Streaming — The Decision Framework",
       "tier": "CORE",
       "relevance": "High",
@@ -4391,6 +4550,7 @@
     },
     {
       "slug": "backpressure",
+      "order": "075",
       "title": "Backpressure in Streaming Systems",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4407,6 +4567,7 @@
     },
     {
       "slug": "what-webrtc-is-for",
+      "order": "077",
       "title": "What WebRTC Is For",
       "tier": "CORE",
       "relevance": "High",
@@ -4415,6 +4576,7 @@
     },
     {
       "slug": "the-three-apis",
+      "order": "078",
       "title": "The Three WebRTC APIs",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4423,6 +4585,7 @@
     },
     {
       "slug": "signaling",
+      "order": "079",
       "title": "Signaling — The Part WebRTC Does Not Define",
       "tier": "CORE",
       "relevance": "High",
@@ -4431,6 +4594,7 @@
     },
     {
       "slug": "sdp-offer-answer",
+      "order": "080",
       "title": "SDP Offer/Answer",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4439,6 +4603,7 @@
     },
     {
       "slug": "ice-stun-turn",
+      "order": "081",
       "title": "ICE, STUN & TURN — NAT Traversal",
       "tier": "CORE",
       "relevance": "High",
@@ -4447,6 +4612,7 @@
     },
     {
       "slug": "nat-types-why-p2p-fails",
+      "order": "082",
       "title": "NAT Types & Why P2P Fails",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4471,6 +4637,7 @@
     },
     {
       "slug": "topologies-mesh-sfu-mcu",
+      "order": "085",
       "title": "Topologies — Mesh vs SFU vs MCU",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4487,6 +4654,7 @@
     },
     {
       "slug": "webrtc-for-voice-ai",
+      "order": "087",
       "title": "WebRTC for Voice AI",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4495,6 +4663,7 @@
     },
     {
       "slug": "webrtc-vs-websocket-for-audio",
+      "order": "088",
       "title": "WebRTC vs WebSocket for Audio",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4510,6 +4679,7 @@
     },
     {
       "slug": "rest",
+      "order": "089",
       "title": "REST — Resources, Verbs, Statelessness, HATEOAS",
       "tier": "CORE",
       "relevance": "Architect",
@@ -4518,6 +4688,7 @@
     },
     {
       "slug": "rest-api-design",
+      "order": "090",
       "title": "REST API Design — Naming, Pagination, Filtering, Versioning, Error Envelopes",
       "tier": "CORE",
       "relevance": "High",
@@ -4526,6 +4697,7 @@
     },
     {
       "slug": "rpc-style-apis",
+      "order": "091",
       "title": "RPC-Style APIs & When They Beat REST",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4534,6 +4706,7 @@
     },
     {
       "slug": "grpc",
+      "order": "092",
       "title": "gRPC — Protocol Buffers, HTTP/2 Transport, Codegen, the Four Call Types",
       "tier": "CORE",
       "relevance": "High",
@@ -4542,6 +4715,7 @@
     },
     {
       "slug": "grpc-in-production",
+      "order": "093",
       "title": "gRPC in Production — Deadlines, Interceptors, Load Balancing, gRPC-Web, Schema Evolution",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4550,6 +4724,7 @@
     },
     {
       "slug": "graphql",
+      "order": "094",
       "title": "GraphQL — Single Endpoint, Client-Specified Queries, N+1, Persisted Queries, Caching",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4558,6 +4733,7 @@
     },
     {
       "slug": "webhooks",
+      "order": "095",
       "title": "Webhooks — Signature Verification, Retries, Idempotency, Replay Protection",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4566,6 +4742,7 @@
     },
     {
       "slug": "queues-and-event-streams",
+      "order": "096",
       "title": "Message Queues & Event Streams — SQS/RabbitMQ vs Kafka, Delivery Semantics, Ordering, DLQs",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4574,6 +4751,7 @@
     },
     {
       "slug": "sync-vs-async",
+      "order": "097",
       "title": "Sync vs Async — Request/Response, Queue, Event-Driven",
       "tier": "CORE",
       "relevance": "High",
@@ -4582,6 +4760,7 @@
     },
     {
       "slug": "long-running-jobs",
+      "order": "098",
       "title": "Long-Running Jobs over HTTP — 202 + Polling vs Callback vs Streaming",
       "tier": "CORE",
       "relevance": "High",
@@ -4590,6 +4769,7 @@
     },
     {
       "slug": "ai-stack-protocols",
+      "order": "099",
       "title": "Server Protocols in the AI Stack — HTTP+SSE, MCP, A2A",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4598,6 +4778,7 @@
     },
     {
       "slug": "api-choice-framework",
+      "order": "100",
       "title": "The API Choice Framework — REST vs gRPC vs GraphQL vs WebSocket vs SSE vs Queue",
       "tier": "CORE",
       "relevance": "High",
@@ -4606,6 +4787,7 @@
     },
     {
       "slug": "schema-contracts-compatibility",
+      "order": "101",
       "title": "Schema, Contracts & Compatibility — OpenAPI, Protobuf, Contract Testing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4614,6 +4796,7 @@
     },
     {
       "slug": "api-authentication",
+      "order": "102",
       "title": "API Authentication — API Keys, OAuth2, JWT, mTLS, HMAC Signing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4622,6 +4805,7 @@
     },
     {
       "slug": "api-versioning-deprecation",
+      "order": "103",
       "title": "API Versioning & Deprecation Strategy",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4630,6 +4814,7 @@
     },
     {
       "slug": "forward-vs-reverse-proxy",
+      "order": "104",
       "title": "Forward Proxy vs Reverse Proxy",
       "tier": "CORE",
       "relevance": "High",
@@ -4638,6 +4823,7 @@
     },
     {
       "slug": "reverse-proxy-responsibilities",
+      "order": "105",
       "title": "Reverse Proxy Responsibilities",
       "tier": "CORE",
       "relevance": "High",
@@ -4646,6 +4832,7 @@
     },
     {
       "slug": "l4-load-balancing",
+      "order": "106",
       "title": "L4 (TCP/UDP) Load Balancing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4654,6 +4841,7 @@
     },
     {
       "slug": "l7-load-balancing",
+      "order": "107",
       "title": "L7 (HTTP) Load Balancing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4662,6 +4850,7 @@
     },
     {
       "slug": "proxies-load-balancers-l4-vs-l7",
+      "order": "108",
       "title": "L4 vs L7 Load Balancing — The Tradeoff Table",
       "tier": "CORE",
       "relevance": "High",
@@ -4670,6 +4859,7 @@
     },
     {
       "slug": "load-balancing-algorithms",
+      "order": "109",
       "title": "Load Balancing Algorithms",
       "tier": "CORE",
       "relevance": "High",
@@ -4678,6 +4868,7 @@
     },
     {
       "slug": "consistent-hashing",
+      "order": "110",
       "title": "Consistent Hashing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4686,6 +4877,7 @@
     },
     {
       "slug": "sticky-sessions",
+      "order": "111",
       "title": "Sticky Sessions / Session Affinity",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4694,6 +4886,7 @@
     },
     {
       "slug": "health-checks",
+      "order": "112",
       "title": "Health Checks",
       "tier": "CORE",
       "relevance": "High",
@@ -4702,6 +4895,7 @@
     },
     {
       "slug": "outlier-detection-circuit-breaking",
+      "order": "113",
       "title": "Outlier Detection, Circuit Breaking, Draining & Graceful Shutdown",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4710,6 +4904,7 @@
     },
     {
       "slug": "grpc-http2-load-balancing",
+      "order": "114",
       "title": "The gRPC / HTTP2 Load Balancing Problem",
       "tier": "CORE",
       "relevance": "High",
@@ -4718,6 +4913,7 @@
     },
     {
       "slug": "global-load-balancing",
+      "order": "115",
       "title": "Global Load Balancing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4726,6 +4922,7 @@
     },
     {
       "slug": "api-gateway",
+      "order": "116",
       "title": "API Gateway",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4734,6 +4931,7 @@
     },
     {
       "slug": "ingress-controllers",
+      "order": "117",
       "title": "Ingress Controllers & the Gateway API",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4742,6 +4940,7 @@
     },
     {
       "slug": "service-mesh",
+      "order": "118",
       "title": "Service Mesh",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4750,6 +4949,7 @@
     },
     {
       "slug": "cdn-and-edge",
+      "order": "119",
       "title": "CDN & Edge",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4766,6 +4966,7 @@
     },
     {
       "slug": "buffering-vs-streaming-proxies",
+      "order": "121",
       "title": "Buffering vs Streaming Proxies",
       "tier": "CORE",
       "relevance": "High",
@@ -4774,6 +4975,7 @@
     },
     {
       "slug": "vpc-mental-model",
+      "order": "122",
       "title": "VPC — The Mental Model",
       "tier": "CORE",
       "relevance": "High",
@@ -4782,6 +4984,7 @@
     },
     {
       "slug": "subnets-azs-cidr-planning",
+      "order": "123",
       "title": "Subnets, AZs & CIDR Planning",
       "tier": "CORE",
       "relevance": "High",
@@ -4790,6 +4993,7 @@
     },
     {
       "slug": "igw-nat-egress",
+      "order": "124",
       "title": "Internet Gateway, NAT Gateway & Egress",
       "tier": "CORE",
       "relevance": "High",
@@ -4798,6 +5002,7 @@
     },
     {
       "slug": "route-tables",
+      "order": "125",
       "title": "Route Tables",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4806,6 +5011,7 @@
     },
     {
       "slug": "security-groups-vs-nacls",
+      "order": "126",
       "title": "Security Groups vs Network ACLs",
       "tier": "CORE",
       "relevance": "High",
@@ -4814,6 +5020,7 @@
     },
     {
       "slug": "vpc-peering",
+      "order": "127",
       "title": "VPC Peering",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -4822,6 +5029,7 @@
     },
     {
       "slug": "transit-gateway",
+      "order": "128",
       "title": "Transit Gateway & Hub-and-Spoke",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4830,6 +5038,7 @@
     },
     {
       "slug": "privatelink-vpc-endpoints",
+      "order": "129",
       "title": "PrivateLink & VPC Endpoints",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4854,6 +5063,7 @@
     },
     {
       "slug": "cloud-load-balancer-types",
+      "order": "132",
       "title": "Load Balancer Types in Cloud",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4862,6 +5072,7 @@
     },
     {
       "slug": "private-dns-cloud",
+      "order": "133",
       "title": "Private DNS in the Cloud",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4870,6 +5081,7 @@
     },
     {
       "slug": "egress-cost-data-transfer",
+      "order": "134",
       "title": "Egress Cost & Data Transfer Pricing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4878,6 +5090,7 @@
     },
     {
       "slug": "multi-region-networking",
+      "order": "135",
       "title": "Multi-Region Networking",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4886,6 +5099,7 @@
     },
     {
       "slug": "network-security-posture",
+      "order": "136",
       "title": "Network Security Posture",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4894,6 +5108,7 @@
     },
     {
       "slug": "k8s-networking-model",
+      "order": "137",
       "title": "The Kubernetes Networking Model",
       "tier": "CORE",
       "relevance": "High",
@@ -4902,6 +5117,7 @@
     },
     {
       "slug": "cni-plugins",
+      "order": "138",
       "title": "CNI Plugins",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4910,6 +5126,7 @@
     },
     {
       "slug": "services-and-kube-proxy",
+      "order": "139",
       "title": "Services & kube-proxy",
       "tier": "CORE",
       "relevance": "High",
@@ -4918,6 +5135,7 @@
     },
     {
       "slug": "headless-services-statefulset-dns",
+      "order": "140",
       "title": "Headless Services & StatefulSet DNS",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4926,6 +5144,7 @@
     },
     {
       "slug": "ingress-gateway-mesh",
+      "order": "141",
       "title": "Ingress vs Gateway API vs Service Mesh",
       "tier": "CORE",
       "relevance": "High",
@@ -4934,6 +5153,7 @@
     },
     {
       "slug": "coredns-service-discovery",
+      "order": "142",
       "title": "CoreDNS & In-Cluster Service Discovery",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4942,6 +5162,7 @@
     },
     {
       "slug": "network-policies",
+      "order": "143",
       "title": "Network Policies",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4950,6 +5171,7 @@
     },
     {
       "slug": "probes-vs-lb-health-checks",
+      "order": "144",
       "title": "Probes vs Load Balancer Health Checks",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4958,6 +5180,7 @@
     },
     {
       "slug": "rollouts-connection-handling",
+      "order": "145",
       "title": "Rollouts & Connection Handling",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4966,6 +5189,7 @@
     },
     {
       "slug": "gpu-inference-load-balancing",
+      "order": "146",
       "title": "Load Balancing GPU & Inference Workloads",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -4974,6 +5198,7 @@
     },
     {
       "slug": "where-latency-goes",
+      "order": "147",
       "title": "Where Latency Actually Goes",
       "tier": "CORE",
       "relevance": "High",
@@ -4982,6 +5207,7 @@
     },
     {
       "slug": "connection-pooling-keepalive",
+      "order": "148",
       "title": "Connection Pooling & Keep-Alive",
       "tier": "CORE",
       "relevance": "High",
@@ -4990,6 +5216,7 @@
     },
     {
       "slug": "timeout-hierarchy",
+      "order": "149",
       "title": "Timeout Hierarchy",
       "tier": "CORE",
       "relevance": "High",
@@ -4998,6 +5225,7 @@
     },
     {
       "slug": "retries-done-right",
+      "order": "150",
       "title": "Retries Done Right",
       "tier": "CORE",
       "relevance": "High",
@@ -5006,6 +5234,7 @@
     },
     {
       "slug": "circuit-breakers-bulkheads",
+      "order": "151",
       "title": "Circuit Breakers, Bulkheads & Load Shedding",
       "tier": "CORE",
       "relevance": "High",
@@ -5014,6 +5243,7 @@
     },
     {
       "slug": "queueing-theory",
+      "order": "152",
       "title": "Queueing Theory in One Page",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5022,6 +5252,7 @@
     },
     {
       "slug": "tail-latency",
+      "order": "153",
       "title": "Tail Latency",
       "tier": "CORE",
       "relevance": "High",
@@ -5030,6 +5261,7 @@
     },
     {
       "slug": "head-of-line-blocking",
+      "order": "154",
       "title": "Head-of-Line Blocking — Four Places, One Idea",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5038,6 +5270,7 @@
     },
     {
       "slug": "idempotency-exactly-once",
+      "order": "155",
       "title": "Idempotency & the Exactly-Once Delusion",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5046,6 +5279,7 @@
     },
     {
       "slug": "graceful-degradation-backpressure",
+      "order": "156",
       "title": "Graceful Degradation & Backpressure",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5054,6 +5288,7 @@
     },
     {
       "slug": "cascading-failures",
+      "order": "157",
       "title": "Cascading Failures & Thundering Herds",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5062,6 +5297,7 @@
     },
     {
       "slug": "capacity-planning",
+      "order": "158",
       "title": "Capacity Planning",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5070,6 +5306,7 @@
     },
     {
       "slug": "curl-mastery",
+      "order": "159",
       "title": "curl Mastery — Splitting a Latency Number Into Five",
       "tier": "CORE",
       "relevance": "High",
@@ -5078,6 +5315,7 @@
     },
     {
       "slug": "dns-tools",
+      "order": "160",
       "title": "DNS Tools — dig, +trace, and Reading an Answer Honestly",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -5086,6 +5324,7 @@
     },
     {
       "slug": "path-reachability",
+      "order": "161",
       "title": "Path & Reachability — ping, mtr, and Proving a Port Is Open",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -5094,6 +5333,7 @@
     },
     {
       "slug": "socket-state",
+      "order": "162",
       "title": "Socket State — ss, and What Each State Is Accusing",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5110,6 +5350,7 @@
     },
     {
       "slug": "browser-devtools-network",
+      "order": "164",
       "title": "The Browser Network Panel — The Client curl Cannot Imitate",
       "tier": "SUPPORTING",
       "relevance": "Medium",
@@ -5118,6 +5359,7 @@
     },
     {
       "slug": "distributed-tracing",
+      "order": "165",
       "title": "Distributed Tracing — One ID That Survives Every Hop",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5126,6 +5368,7 @@
     },
     {
       "slug": "metrics-that-matter",
+      "order": "166",
       "title": "The Metrics That Matter — RED at Every Hop, Plus What Runs Out",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5134,6 +5377,7 @@
     },
     {
       "slug": "triage-playbooks",
+      "order": "167",
       "title": "Triage Playbooks — Symptom → Three Checks → Owner",
       "tier": "CORE",
       "relevance": "High",
@@ -5142,6 +5386,7 @@
     },
     {
       "slug": "streaming-llm-tokens",
+      "order": "168",
       "title": "Streaming LLM Tokens End-to-End — Every Hop Must Not Buffer",
       "tier": "CORE",
       "relevance": "High",
@@ -5150,6 +5395,7 @@
     },
     {
       "slug": "time-to-first-token",
+      "order": "169",
       "title": "Time-to-First-Token as a Network Problem",
       "tier": "CORE",
       "relevance": "High",
@@ -5158,6 +5404,7 @@
     },
     {
       "slug": "long-lived-connections-at-scale",
+      "order": "170",
       "title": "Long-Lived Connections at Scale — Idle Timeouts, Connection Limits, Heartbeats for Multi-Minute Generations",
       "tier": "CORE",
       "relevance": "High",
@@ -5166,6 +5413,7 @@
     },
     {
       "slug": "voice-agents",
+      "order": "171",
       "title": "Voice Agents — The Realtime Path and Its Latency Budget",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5174,6 +5422,7 @@
     },
     {
       "slug": "inference-load-balancing",
+      "order": "172",
       "title": "Inference Load Balancing — Least-Request, Queue-Depth, and Affinity for KV-Cache Reuse",
       "tier": "CORE",
       "relevance": "High",
@@ -5182,6 +5431,7 @@
     },
     {
       "slug": "provider-timeouts-and-retries",
+      "order": "173",
       "title": "Timeouts & Retries Against LLM Providers",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5190,6 +5440,7 @@
     },
     {
       "slug": "agent-tool-networking",
+      "order": "174",
       "title": "Agent & Tool Networking — MCP Transports, Egress, and SSRF Risk",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5198,6 +5449,7 @@
     },
     {
       "slug": "egress-security-for-agents",
+      "order": "175",
       "title": "Egress Security for Agents — Allowlists, Metadata Blocking, Sandbox Isolation",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5206,6 +5458,7 @@
     },
     {
       "slug": "cost-and-data-path",
+      "order": "176",
       "title": "Cost & Data-Path Design for AI Workloads",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5214,6 +5467,7 @@
     },
     {
       "slug": "multi-tenant-isolation",
+      "order": "177",
       "title": "Multi-Tenant Isolation on the Network Path",
       "tier": "SUPPORTING",
       "relevance": "High",
@@ -5232,6 +5486,7 @@
     },
     {
       "slug": "what-a-voice-agent-is",
+      "order": "001",
       "title": "What a Voice Agent Is — One Turn, End to End",
       "tier": "CORE",
       "category": "Conversation",
@@ -5240,6 +5495,7 @@
     },
     {
       "slug": "the-latency-budget",
+      "order": "002",
       "title": "The Latency Budget — End of Speech to First Audio",
       "tier": "CORE",
       "category": "Platform",
@@ -5248,6 +5504,7 @@
     },
     {
       "slug": "pipeline-shapes",
+      "order": "003",
       "title": "Pipeline Shapes — Cascaded, Turn-Based Realtime, Full-Duplex",
       "tier": "CORE",
       "category": "Conversation",
@@ -5256,6 +5513,7 @@
     },
     {
       "slug": "audio-for-engineers",
+      "order": "004",
       "title": "Audio for Engineers — Samples, Frames, Codecs",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5264,6 +5522,7 @@
     },
     {
       "slug": "how-people-take-turns",
+      "order": "005",
       "title": "How People Take Turns — Gaps, Pauses, Backchannels, Overlap",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5272,6 +5531,7 @@
     },
     {
       "slug": "the-voice-number-line",
+      "order": "006",
       "title": "The Voice Number Line",
       "tier": "BREADTH",
       "category": "Platform",
@@ -5288,6 +5548,7 @@
     },
     {
       "slug": "browser-capture",
+      "order": "007",
       "title": "Browser Capture — Microphone, Devices, Permissions",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5296,6 +5557,7 @@
     },
     {
       "slug": "rooms-participants-tracks",
+      "order": "008",
       "title": "Rooms, Participants and Tracks — A Call as LiveKit Models It",
       "tier": "CORE",
       "category": "Platform",
@@ -5304,6 +5566,7 @@
     },
     {
       "slug": "tokens-grants-dispatch",
+      "order": "009",
       "title": "Tokens, Grants and Agent Dispatch",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5312,6 +5575,7 @@
     },
     {
       "slug": "side-channels",
+      "order": "011",
       "title": "Side Channels — Transcripts, State and RPC Beside the Audio",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5320,6 +5584,7 @@
     },
     {
       "slug": "telephony-and-sip-phone-callers-in-a-room",
+      "order": "012",
       "title": "Telephony and SIP — Phone Callers in a Room",
       "tier": "BREADTH",
       "category": "Platform",
@@ -5336,6 +5601,7 @@
     },
     {
       "slug": "echo-cancellation",
+      "order": "013",
       "title": "Echo Cancellation — Why the Agent Hears Itself",
       "tier": "CORE",
       "category": "Signal",
@@ -5344,6 +5610,7 @@
     },
     {
       "slug": "noise-suppression",
+      "order": "014",
       "title": "Noise Suppression and Background-Voice Removal",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5352,6 +5619,7 @@
     },
     {
       "slug": "server-side-echo-guard",
+      "order": "015",
       "title": "The Server-Side Echo Guard — The Agent's Words Are Never Testimony",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5360,6 +5628,7 @@
     },
     {
       "slug": "agc-headphones-and-ducking-client-side-mitigations",
+      "order": "016",
       "title": "AGC, Headphones and Ducking — Client-Side Mitigations",
       "tier": "BREADTH",
       "category": "Signal",
@@ -5376,6 +5645,7 @@
     },
     {
       "slug": "voice-activity-detection",
+      "order": "017",
       "title": "Voice Activity Detection — Is Someone Speaking Right Now?",
       "tier": "CORE",
       "category": "Signal",
@@ -5384,6 +5654,7 @@
     },
     {
       "slug": "streaming-speech-to-text",
+      "order": "018",
       "title": "Streaming Speech-to-Text — Interim and Final Words, While They Speak",
       "tier": "CORE",
       "category": "Signal",
@@ -5392,6 +5663,7 @@
     },
     {
       "slug": "vocabulary-keyterm-prompting",
+      "order": "019",
       "title": "Vocabulary — Keyterm Prompting and What It Buys",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5400,6 +5672,7 @@
     },
     {
       "slug": "accent-language-code-switching",
+      "order": "020",
       "title": "Accent, Language and Code-Switching",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5408,6 +5681,7 @@
     },
     {
       "slug": "diarization-who-spoke-as-a-signal",
+      "order": "021",
       "title": "Diarization — Who Spoke, as a Signal",
       "tier": "BREADTH",
       "category": "Signal",
@@ -5416,6 +5690,7 @@
     },
     {
       "slug": "measuring-recognition",
+      "order": "022",
       "title": "Measuring Recognition — WER, Term Recall, Goldens",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5432,6 +5707,7 @@
     },
     {
       "slug": "endpointing",
+      "order": "023",
       "title": "Endpointing — Deciding the Turn Is Over",
       "tier": "CORE",
       "category": "Conversation",
@@ -5440,6 +5716,7 @@
     },
     {
       "slug": "semantic-turn-detection",
+      "order": "024",
       "title": "Semantic Turn Detection — Finished, or Pausing to Think?",
       "tier": "CORE",
       "category": "Conversation",
@@ -5448,6 +5725,7 @@
     },
     {
       "slug": "barge-in",
+      "order": "025",
       "title": "Barge-in — Stopping When the Person Talks Over the Agent",
       "tier": "CORE",
       "category": "Conversation",
@@ -5456,6 +5734,7 @@
     },
     {
       "slug": "backchannels-and-overlap",
+      "order": "026",
       "title": "Backchannels and Overlap — \"Mm-hm\" Is Not an Interruption",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5464,6 +5743,7 @@
     },
     {
       "slug": "preemptive-generation",
+      "order": "027",
       "title": "Preemptive Generation — Starting the Reply Before the Turn Is Confirmed",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5472,6 +5752,7 @@
     },
     {
       "slug": "silence-and-timeouts-when-the-person-says-nothing",
+      "order": "028",
       "title": "Silence and Timeouts — When the Person Says Nothing",
       "tier": "BREADTH",
       "category": "Conversation",
@@ -5488,6 +5769,7 @@
     },
     {
       "slug": "model-on-the-hot-path",
+      "order": "029",
       "title": "The Model on the Hot Path — Time to First Token in a Spoken Turn",
       "tier": "CORE",
       "category": "Platform",
@@ -5496,6 +5778,7 @@
     },
     {
       "slug": "speculative-pre-generation",
+      "order": "030",
       "title": "Speculative Pre-generation — The Reply Is Ready When the Turn Ends",
       "tier": "CORE",
       "category": "Conversation",
@@ -5504,6 +5787,7 @@
     },
     {
       "slug": "latency-tiered-agents",
+      "order": "031",
       "title": "Latency-Tiered Agents — In the Turn, Beside It, After the Call",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5512,6 +5796,7 @@
     },
     {
       "slug": "writing-for-the-ear",
+      "order": "032",
       "title": "Writing for the Ear — Prompts Whose Output Is Spoken",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5520,6 +5805,7 @@
     },
     {
       "slug": "persona-and-personality",
+      "order": "032a",
       "title": "Persona and Personality — Who the Agent Is, in Every Line",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5528,6 +5814,7 @@
     },
     {
       "slug": "guardrails-beside-the-reply",
+      "order": "033",
       "title": "Guardrails Beside the Reply — Draft and Hold",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5536,6 +5823,7 @@
     },
     {
       "slug": "tools-and-slow-work",
+      "order": "034",
       "title": "Tools and Slow Work in a Turn — Never Leave Silence",
       "tier": "SUPPORTING",
       "category": "Conversation",
@@ -5552,6 +5840,7 @@
     },
     {
       "slug": "streaming-text-to-speech",
+      "order": "036",
       "title": "Streaming Text-to-Speech — Time to First Byte",
       "tier": "CORE",
       "category": "Signal",
@@ -5560,6 +5849,7 @@
     },
     {
       "slug": "sentence-chunking-and-flushing",
+      "order": "037",
       "title": "Sentence Chunking and Flushing — Bounding the First Segment",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5568,6 +5858,7 @@
     },
     {
       "slug": "pronunciation",
+      "order": "038",
       "title": "Pronunciation — Saying Domain Terms Right",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5576,6 +5867,7 @@
     },
     {
       "slug": "choosing-a-voice",
+      "order": "039",
       "title": "Choosing a Voice — By Ear and by Goldens",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5584,6 +5876,7 @@
     },
     {
       "slug": "realtime-speech-to-speech",
+      "order": "040",
       "title": "Realtime Speech-to-Speech Models — When the Cascade Loses",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5592,6 +5885,7 @@
     },
     {
       "slug": "background-audio-and-thinking-sounds",
+      "order": "041",
       "title": "Background Audio and Thinking Sounds",
       "tier": "BREADTH",
       "category": "Conversation",
@@ -5608,6 +5902,7 @@
     },
     {
       "slug": "agent-server-jobs-isolation",
+      "order": "042",
       "title": "Agent Server, Jobs and Process Isolation",
       "tier": "CORE",
       "category": "Platform",
@@ -5616,6 +5911,7 @@
     },
     {
       "slug": "agent-session-and-pipeline",
+      "order": "043",
       "title": "The Agent Session and Its Pipeline — Session, Agent, Nodes, Hooks",
       "tier": "CORE",
       "category": "Platform",
@@ -5624,6 +5920,7 @@
     },
     {
       "slug": "handoffs-tasks-workflows",
+      "order": "044",
       "title": "Handoffs, Tasks and Workflows — LiveKit's Tools vs Owning the Graph",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5632,6 +5929,7 @@
     },
     {
       "slug": "event-loop-discipline",
+      "order": "045",
       "title": "Event-Loop Discipline — One Blocking Call Is Dead Air",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5640,6 +5938,7 @@
     },
     {
       "slug": "control-plane-vs-agent-runtime",
+      "order": "046",
       "title": "Control Plane vs Agent Runtime — Why the API Server Doesn't Run the Call",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5648,6 +5947,7 @@
     },
     {
       "slug": "livekit-cloud-vs-self-hosted",
+      "order": "047",
       "title": "LiveKit Cloud vs Self-Hosted",
       "tier": "BREADTH",
       "category": "Platform",
@@ -5664,6 +5964,7 @@
     },
     {
       "slug": "measuring-a-turn",
+      "order": "048",
       "title": "Measuring a Turn — Key Metrics, Traces, Logs, Alerts",
       "tier": "CORE",
       "category": "Platform",
@@ -5672,6 +5973,7 @@
     },
     {
       "slug": "latency-optimization-playbook",
+      "order": "048a",
       "title": "Latency Optimization Playbook — The Levers, in Order",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5680,6 +5982,7 @@
     },
     {
       "slug": "evaluating-a-voice-agent",
+      "order": "049",
       "title": "Evaluating a Voice Agent — Goldens, Test Conditions, Simulations",
       "tier": "CORE",
       "category": "Platform",
@@ -5688,6 +5991,7 @@
     },
     {
       "slug": "degradation-ladder",
+      "order": "050",
       "title": "The Degradation Ladder — Fallbacks, Circuit Breakers, the LLM Gateway",
       "tier": "CORE",
       "category": "Platform",
@@ -5696,6 +6000,7 @@
     },
     {
       "slug": "scaling-to-1000-calls",
+      "order": "051",
       "title": "Scaling to 1,000 Concurrent Calls — Vendors Are the Ceiling",
       "tier": "CORE",
       "category": "Platform",
@@ -5704,6 +6009,7 @@
     },
     {
       "slug": "cost-per-minute",
+      "order": "052",
       "title": "Cost per Minute — What a Voice Call Spends",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5712,6 +6018,7 @@
     },
     {
       "slug": "recording-transcripts-pii",
+      "order": "053",
       "title": "Recording, Transcripts and PII",
       "tier": "SUPPORTING",
       "category": "Platform",
@@ -5720,6 +6027,7 @@
     },
     {
       "slug": "fairness-across-accents",
+      "order": "054",
       "title": "Fairness Across Accents — Per-Cohort Accuracy as a Release Gate",
       "tier": "SUPPORTING",
       "category": "Signal",
@@ -5728,6 +6036,7 @@
     },
     {
       "slug": "region-placement-everything-near-the-caller",
+      "order": "055",
       "title": "Region Placement — Everything Near the Caller",
       "tier": "BREADTH",
       "category": "Platform",
@@ -5745,6 +6054,7 @@
     },
     {
       "slug": "fundamentals-refresher",
+      "order": "00",
       "title": "The CPython Execution Model",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5753,6 +6063,7 @@
     },
     {
       "slug": "names-binding-assignment",
+      "order": "01",
       "title": "Names, Binding & Assignment",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5761,6 +6072,7 @@
     },
     {
       "slug": "is-vs-equals-identity-interning",
+      "order": "02",
       "title": "is vs ==, Identity & Interning",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5769,6 +6081,7 @@
     },
     {
       "slug": "mutable-vs-immutable-default-trap",
+      "order": "03",
       "title": "Mutable vs Immutable & the Shared-Default Trap",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5777,6 +6090,7 @@
     },
     {
       "slug": "data-model-dunder-protocols",
+      "order": "04",
       "title": "The Data Model / Dunder Protocols",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5785,6 +6099,7 @@
     },
     {
       "slug": "eq-hash-contract",
+      "order": "04a",
       "title": "The __eq__ / __hash__ Contract",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5793,6 +6108,7 @@
     },
     {
       "slug": "slots-instance-layout",
+      "order": "05",
       "title": "__slots__ & Instance Layout",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5801,6 +6117,7 @@
     },
     {
       "slug": "copy-semantics",
+      "order": "06",
       "title": "Copy Semantics (assignment vs shallow vs deep)",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5809,6 +6126,7 @@
     },
     {
       "slug": "truthiness-operator-protocols",
+      "order": "07",
       "title": "Truthiness & Operator Protocols",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -5817,6 +6135,7 @@
     },
     {
       "slug": "equality-ordering-sorting",
+      "order": "08",
       "title": "Equality, Ordering & Sorting",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5832,6 +6151,7 @@
     },
     {
       "slug": "scope-legb-rule",
+      "order": "09",
       "title": "Scope & the LEGB Rule",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5840,6 +6160,7 @@
     },
     {
       "slug": "first-class-functions-closures",
+      "order": "10",
       "title": "First-Class Functions & Closures",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5848,6 +6169,7 @@
     },
     {
       "slug": "arguments-model",
+      "order": "11",
       "title": "The Arguments Model (/, *, *args, **kwargs)",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5856,6 +6178,7 @@
     },
     {
       "slug": "decorators",
+      "order": "12",
       "title": "Decorators",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5864,6 +6187,7 @@
     },
     {
       "slug": "functools-toolkit",
+      "order": "13",
       "title": "The functools Toolkit (lru_cache, partial, singledispatch, cached_property, reduce)",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5879,6 +6203,7 @@
     },
     {
       "slug": "iterator-protocol",
+      "order": "14",
       "title": "The Iterator Protocol",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5887,6 +6212,7 @@
     },
     {
       "slug": "generators-lazy-evaluation",
+      "order": "15",
       "title": "Generators & Lazy Evaluation",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5895,6 +6221,7 @@
     },
     {
       "slug": "yield-from-delegation",
+      "order": "16",
       "title": "yield from & Generator Delegation",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5903,6 +6230,7 @@
     },
     {
       "slug": "coroutine-style-generators",
+      "order": "17",
       "title": "Coroutine-Style Generators (.send() / .throw() / .close())",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -5911,6 +6239,7 @@
     },
     {
       "slug": "comprehensions-genexps",
+      "order": "18",
       "title": "Comprehensions & Generator Expressions",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -5919,6 +6248,7 @@
     },
     {
       "slug": "itertools-patterns",
+      "order": "19",
       "title": "itertools & functools.reduce Patterns",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -5934,6 +6264,7 @@
     },
     {
       "slug": "pyobject-refcounts-object-header",
+      "order": "20",
       "title": "PyObject, Refcounts & the Object Header",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5942,6 +6273,7 @@
     },
     {
       "slug": "dict-internals",
+      "order": "21",
       "title": "dict Internals",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5950,6 +6282,7 @@
     },
     {
       "slug": "set-frozenset-internals",
+      "order": "21a",
       "title": "set / frozenset Internals",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -5958,6 +6291,7 @@
     },
     {
       "slug": "list-internals",
+      "order": "22",
       "title": "list Internals",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5966,6 +6300,7 @@
     },
     {
       "slug": "str-internals",
+      "order": "23",
       "title": "str Internals",
       "tier": "CORE",
       "relevance": "Senior",
@@ -5974,6 +6309,7 @@
     },
     {
       "slug": "attribute-lookup-and-mro",
+      "order": "24",
       "title": "Attribute Lookup & the MRO",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5982,6 +6318,7 @@
     },
     {
       "slug": "descriptors",
+      "order": "25",
       "title": "Descriptors",
       "tier": "CORE",
       "relevance": "Architect",
@@ -5990,6 +6327,7 @@
     },
     {
       "slug": "metaclasses-class-creation",
+      "order": "26",
       "title": "Metaclasses & Class Creation",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -5998,6 +6336,7 @@
     },
     {
       "slug": "bytecode-and-eval-loop",
+      "order": "27",
       "title": "Bytecode & the Evaluation Loop",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6013,6 +6352,7 @@
     },
     {
       "slug": "reference-counting",
+      "order": "28",
       "title": "Reference Counting",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6021,6 +6361,7 @@
     },
     {
       "slug": "cyclic-garbage-collector",
+      "order": "29",
       "title": "The Cyclic Garbage Collector",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6029,6 +6370,7 @@
     },
     {
       "slug": "weakref-and-finalization",
+      "order": "30",
       "title": "weakref & Finalization",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6037,6 +6379,7 @@
     },
     {
       "slug": "memory-allocators-arenas",
+      "order": "31",
       "title": "Memory Allocators & Arenas",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6045,6 +6388,7 @@
     },
     {
       "slug": "diagnosing-memory",
+      "order": "32",
       "title": "Diagnosing Memory",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6060,6 +6404,7 @@
     },
     {
       "slug": "the-gil",
+      "order": "33",
       "title": "The GIL — What It Actually Is",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6068,6 +6413,7 @@
     },
     {
       "slug": "concurrency-vs-parallelism",
+      "order": "33a",
       "title": "Concurrency vs Parallelism",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6076,6 +6422,7 @@
     },
     {
       "slug": "threading",
+      "order": "34",
       "title": "threading",
       "tier": "CORE",
       "relevance": "Senior",
@@ -6084,6 +6431,7 @@
     },
     {
       "slug": "multiprocessing",
+      "order": "35",
       "title": "multiprocessing",
       "tier": "CORE",
       "relevance": "Senior",
@@ -6092,6 +6440,7 @@
     },
     {
       "slug": "concurrent-futures",
+      "order": "36",
       "title": "concurrent.futures",
       "tier": "CORE",
       "relevance": "Senior",
@@ -6100,6 +6449,7 @@
     },
     {
       "slug": "synchronization-hazards",
+      "order": "37",
       "title": "Synchronization & Hazards",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6108,6 +6458,7 @@
     },
     {
       "slug": "no-gil-free-threaded-cpython",
+      "order": "38",
       "title": "No-GIL / Free-Threaded CPython",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6116,6 +6467,7 @@
     },
     {
       "slug": "sub-interpreters",
+      "order": "39",
       "title": "Sub-Interpreters",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6131,6 +6483,7 @@
     },
     {
       "slug": "async-execution-model",
+      "order": "40",
       "title": "The Async Execution Model",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6139,6 +6492,7 @@
     },
     {
       "slug": "async-await-coroutines",
+      "order": "41",
       "title": "async/await & Coroutine Objects",
       "tier": "CORE",
       "relevance": "Senior",
@@ -6147,6 +6501,7 @@
     },
     {
       "slug": "tasks-gather-cancellation",
+      "order": "42",
       "title": "Tasks, Gathering & Cancellation",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6155,6 +6510,7 @@
     },
     {
       "slug": "bridging-sync-async",
+      "order": "43",
       "title": "Bridging Sync ↔ Async",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6163,6 +6519,7 @@
     },
     {
       "slug": "async-primitives-patterns",
+      "order": "44",
       "title": "Async Primitives & Patterns",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6171,6 +6528,7 @@
     },
     {
       "slug": "async-ecosystem-comparatives",
+      "order": "45",
       "title": "Async Ecosystem & Comparatives",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6186,6 +6544,7 @@
     },
     {
       "slug": "type-hints-typing",
+      "order": "46",
       "title": "Type Hints & typing",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6194,6 +6553,7 @@
     },
     {
       "slug": "generics-variance",
+      "order": "47",
       "title": "Generics & Variance",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6202,6 +6562,7 @@
     },
     {
       "slug": "protocols-structural-typing",
+      "order": "48",
       "title": "Protocols & Structural Typing",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6210,6 +6571,7 @@
     },
     {
       "slug": "abcs-duck-typing",
+      "order": "49",
       "title": "ABCs & Duck Typing",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6218,6 +6580,7 @@
     },
     {
       "slug": "runtime-introspection-types",
+      "order": "50",
       "title": "Runtime Introspection of Types",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6226,6 +6589,7 @@
     },
     {
       "slug": "pydantic-validation-boundary",
+      "order": "50a",
       "title": "Pydantic v2 as a Validation Boundary",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6234,6 +6598,7 @@
     },
     {
       "slug": "structured-outputs-tool-schemas",
+      "order": "50b",
       "title": "Structured Outputs & Tool Schemas",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6249,6 +6614,7 @@
     },
     {
       "slug": "context-managers",
+      "order": "51",
       "title": "Context Managers",
       "tier": "CORE",
       "relevance": "Senior",
@@ -6257,6 +6623,7 @@
     },
     {
       "slug": "dataclasses",
+      "order": "52",
       "title": "dataclasses",
       "tier": "CORE",
       "relevance": "Senior",
@@ -6265,6 +6632,7 @@
     },
     {
       "slug": "enum",
+      "order": "53",
       "title": "enum",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6273,6 +6641,7 @@
     },
     {
       "slug": "pattern-matching",
+      "order": "54",
       "title": "Pattern Matching (match / case)",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6281,6 +6650,7 @@
     },
     {
       "slug": "exception-model",
+      "order": "55",
       "title": "The Exception Model",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6289,6 +6659,7 @@
     },
     {
       "slug": "designing-custom-exceptions",
+      "order": "55a",
       "title": "Designing Custom Exceptions",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6297,6 +6668,7 @@
     },
     {
       "slug": "exception-groups",
+      "order": "56",
       "title": "Exception Groups (ExceptionGroup / except*)",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6305,6 +6677,7 @@
     },
     {
       "slug": "string-formatting-io",
+      "order": "57",
       "title": "String Formatting & I/O",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6313,6 +6686,7 @@
     },
     {
       "slug": "text-processing-unicode",
+      "order": "57a",
       "title": "Text Processing & Unicode",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6328,6 +6702,7 @@
     },
     {
       "slug": "why-python-is-slow",
+      "order": "58",
       "title": "Why Python Is \"Slow\" — And Where It Isn't",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6336,6 +6711,7 @@
     },
     {
       "slug": "profiling-the-right-way",
+      "order": "59",
       "title": "Profiling the Right Way",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6344,6 +6720,7 @@
     },
     {
       "slug": "micro-optimization-traps",
+      "order": "60",
       "title": "Micro-Optimization Traps",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6352,6 +6729,7 @@
     },
     {
       "slug": "c-extension-native-boundary",
+      "order": "61",
       "title": "The C-Extension & Native Acceleration Boundary",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6360,6 +6738,7 @@
     },
     {
       "slug": "interpreter-level-speedups",
+      "order": "62",
       "title": "Interpreter-Level Speedups",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6375,6 +6754,7 @@
     },
     {
       "slug": "import-system",
+      "order": "63",
       "title": "The Import System",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6383,6 +6763,7 @@
     },
     {
       "slug": "import-machinery-internals",
+      "order": "64",
       "title": "Import Machinery Internals",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6391,6 +6772,7 @@
     },
     {
       "slug": "virtual-environments-dependency-resolution",
+      "order": "65",
       "title": "Virtual Environments & Dependency Resolution",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6399,6 +6781,7 @@
     },
     {
       "slug": "packaging-distribution",
+      "order": "66",
       "title": "Packaging & Distribution",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6407,6 +6790,7 @@
     },
     {
       "slug": "testing-quality-tooling",
+      "order": "67",
       "title": "Testing & Quality Tooling",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6422,6 +6806,7 @@
     },
     {
       "slug": "collections-heapq",
+      "order": "68",
       "title": "collections & heapq",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6430,6 +6815,7 @@
     },
     {
       "slug": "serialization",
+      "order": "69",
       "title": "Serialization (pickle, json, marshal)",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6438,6 +6824,7 @@
     },
     {
       "slug": "filesystem-subprocess",
+      "order": "70",
       "title": "Filesystem & Subprocess",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6446,6 +6833,7 @@
     },
     {
       "slug": "logging",
+      "order": "71",
       "title": "Logging",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6454,6 +6842,7 @@
     },
     {
       "slug": "datetime-numerics-gotchas",
+      "order": "72",
       "title": "Datetime & Numerics Gotchas",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6469,6 +6858,7 @@
     },
     {
       "slug": "asgi-wsgi-worker-model",
+      "order": "73",
       "title": "ASGI vs WSGI & the Worker Model",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6477,6 +6867,7 @@
     },
     {
       "slug": "reliability-mechanics",
+      "order": "74",
       "title": "Reliability Mechanics (Retries · Timeouts · Backoff + Jitter · Circuit Breakers)",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6485,6 +6876,7 @@
     },
     {
       "slug": "idempotency",
+      "order": "75",
       "title": "Idempotency (Keys · At-Least-Once vs Exactly-Once · Safe Retries)",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6493,6 +6885,7 @@
     },
     {
       "slug": "rate-limiting",
+      "order": "76",
       "title": "Rate Limiting (Token Bucket · Sliding Window · Where to Enforce)",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6501,6 +6894,7 @@
     },
     {
       "slug": "streaming-transport",
+      "order": "77",
       "title": "Streaming Transport (SSE vs WebSocket · Async Generators as Producer · Backpressure · Mid-Stream Cancellation)",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6509,6 +6903,7 @@
     },
     {
       "slug": "connection-pooling-async",
+      "order": "78",
       "title": "Connection Pooling from Async Code",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6517,6 +6912,7 @@
     },
     {
       "slug": "caching-patterns",
+      "order": "79",
       "title": "Caching Patterns (lru_cache · TTL · Redis-backed · Stampedes)",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6525,6 +6921,7 @@
     },
     {
       "slug": "queues-background-workers",
+      "order": "80",
       "title": "Queues & Background Workers (SQS Consumers · Visibility Timeouts · acks_late · The Poison-Pill Pattern)",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6533,6 +6930,7 @@
     },
     {
       "slug": "structured-logging-context-propagation",
+      "order": "81",
       "title": "Structured Logging & Context Propagation (Structured Logs · contextvars · What Not To Log)",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6541,6 +6939,7 @@
     },
     {
       "slug": "observability-instrumentation",
+      "order": "82",
       "title": "Observability Instrumentation (OpenTelemetry Spans · Traces · Metrics)",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6556,6 +6955,7 @@
     },
     {
       "slug": "numpy-vectorization",
+      "order": "83",
       "title": "NumPy Vectorization",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6564,6 +6964,7 @@
     },
     {
       "slug": "pandas-memory-efficiency",
+      "order": "84",
       "title": "Pandas Memory Efficiency",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6572,6 +6973,7 @@
     },
     {
       "slug": "sqlalchemy-vs-raw-sql",
+      "order": "85",
       "title": "SQLAlchemy vs Raw SQL",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6580,6 +6982,7 @@
     },
     {
       "slug": "monkey-patching",
+      "order": "86",
       "title": "Monkey Patching",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6588,6 +6991,7 @@
     },
     {
       "slug": "docker-for-python",
+      "order": "87",
       "title": "Docker for Python",
       "tier": "BREADTH",
       "relevance": "Senior",
@@ -6603,6 +7007,7 @@
     },
     {
       "slug": "encapsulation-public-api-boundary",
+      "order": "88",
       "title": "Encapsulation & the Public-API Boundary",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6611,6 +7016,7 @@
     },
     {
       "slug": "classmethod-vs-staticmethod",
+      "order": "89",
       "title": "classmethod vs staticmethod — the Design Call",
       "tier": "CORE",
       "relevance": "Architect",
@@ -6619,6 +7025,7 @@
     },
     {
       "slug": "new-vs-init",
+      "order": "90",
       "title": "__new__ vs __init__ — When Construction Is the Problem",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6627,6 +7034,7 @@
     },
     {
       "slug": "multiple-inheritance-mixins",
+      "order": "91",
       "title": "Multiple Inheritance & Mixin Design",
       "tier": "SUPPORTING",
       "relevance": "Senior",
@@ -6635,6 +7043,7 @@
     },
     {
       "slug": "composition-delegation-python",
+      "order": "92",
       "title": "Composition & Delegation in Python",
       "tier": "SUPPORTING",
       "relevance": "Architect",
@@ -6643,6 +7052,7 @@
     },
     {
       "slug": "patterns-solid-python-delta",
+      "order": "94",
       "title": "Patterns & SOLID — the Python Delta",
       "tier": "CORE",
       "relevance": "Architect",

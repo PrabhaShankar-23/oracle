@@ -5,6 +5,7 @@
     {
       "slug": "k8s-networking-model",
       "number": 137,
+      "order": "137",
       "title": "The Kubernetes Networking Model",
       "category": "Networking — Kubernetes Networking (Item 137)",
       "relevance": "High",
@@ -119,6 +120,7 @@
     {
       "slug": "cni-plugins",
       "number": 138,
+      "order": "138",
       "title": "CNI Plugins",
       "category": "Networking — Kubernetes Networking (Item 138)",
       "relevance": "High",
@@ -163,6 +165,7 @@
     {
       "slug": "services-and-kube-proxy",
       "number": 139,
+      "order": "139",
       "title": "Services & kube-proxy",
       "category": "Networking — Kubernetes Networking (Item 139)",
       "relevance": "High",
@@ -262,6 +265,7 @@
     {
       "slug": "headless-services-statefulset-dns",
       "number": 140,
+      "order": "140",
       "title": "Headless Services & StatefulSet DNS",
       "category": "Networking — Kubernetes Networking (Item 140)",
       "relevance": "High",
@@ -306,6 +310,7 @@
     {
       "slug": "ingress-gateway-mesh",
       "number": 141,
+      "order": "141",
       "title": "Ingress vs Gateway API vs Service Mesh",
       "category": "Networking — Kubernetes Networking (Item 141)",
       "relevance": "High",
@@ -405,6 +410,7 @@
     {
       "slug": "coredns-service-discovery",
       "number": 142,
+      "order": "142",
       "title": "CoreDNS & In-Cluster Service Discovery",
       "category": "Networking — Kubernetes Networking (Item 142)",
       "relevance": "High",
@@ -449,6 +455,7 @@
     {
       "slug": "network-policies",
       "number": 143,
+      "order": "143",
       "title": "Network Policies",
       "category": "Networking — Kubernetes Networking (Item 143)",
       "relevance": "High",
@@ -493,6 +500,7 @@
     {
       "slug": "probes-vs-lb-health-checks",
       "number": 144,
+      "order": "144",
       "title": "Probes vs Load Balancer Health Checks",
       "category": "Networking — Kubernetes Networking (Item 144)",
       "relevance": "High",
@@ -537,6 +545,7 @@
     {
       "slug": "rollouts-connection-handling",
       "number": 145,
+      "order": "145",
       "title": "Rollouts & Connection Handling",
       "category": "Networking — Kubernetes Networking (Item 145)",
       "relevance": "High",
@@ -581,6 +590,7 @@
     {
       "slug": "gpu-inference-load-balancing",
       "number": 146,
+      "order": "146",
       "title": "Load Balancing GPU & Inference Workloads",
       "category": "Networking — Kubernetes Networking (Item 146)",
       "relevance": "High",

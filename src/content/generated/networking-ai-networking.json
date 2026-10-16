@@ -5,6 +5,7 @@
     {
       "slug": "streaming-llm-tokens",
       "number": 168,
+      "order": "168",
       "title": "Streaming LLM Tokens End-to-End — Every Hop Must Not Buffer",
       "category": "Networking — Networking for AI Systems (Item 168)",
       "relevance": "High",
@@ -134,6 +135,7 @@
     {
       "slug": "time-to-first-token",
       "number": 169,
+      "order": "169",
       "title": "Time-to-First-Token as a Network Problem",
       "category": "Networking — Networking for AI Systems (Item 169)",
       "relevance": "High",
@@ -268,6 +270,7 @@
     {
       "slug": "long-lived-connections-at-scale",
       "number": 170,
+      "order": "170",
       "title": "Long-Lived Connections at Scale — Idle Timeouts, Connection Limits, Heartbeats for Multi-Minute Generations",
       "category": "Networking — Networking for AI Systems (Item 170)",
       "relevance": "High",
@@ -397,6 +400,7 @@
     {
       "slug": "voice-agents",
       "number": 171,
+      "order": "171",
       "title": "Voice Agents — The Realtime Path and Its Latency Budget",
       "category": "Networking — Networking for AI Systems (Item 171)",
       "relevance": "High",
@@ -446,6 +450,7 @@
     {
       "slug": "inference-load-balancing",
       "number": 172,
+      "order": "172",
       "title": "Inference Load Balancing — Least-Request, Queue-Depth, and Affinity for KV-Cache Reuse",
       "category": "Networking — Networking for AI Systems (Item 172)",
       "relevance": "High",
@@ -575,6 +580,7 @@
     {
       "slug": "provider-timeouts-and-retries",
       "number": 173,
+      "order": "173",
       "title": "Timeouts & Retries Against LLM Providers",
       "category": "Networking — Networking for AI Systems (Item 173)",
       "relevance": "High",
@@ -624,6 +630,7 @@
     {
       "slug": "agent-tool-networking",
       "number": 174,
+      "order": "174",
       "title": "Agent & Tool Networking — MCP Transports, Egress, and SSRF Risk",
       "category": "Networking — Networking for AI Systems (Item 174)",
       "relevance": "High",
@@ -673,6 +680,7 @@
     {
       "slug": "egress-security-for-agents",
       "number": 175,
+      "order": "175",
       "title": "Egress Security for Agents — Allowlists, Metadata Blocking, Sandbox Isolation",
       "category": "Networking — Networking for AI Systems (Item 175)",
       "relevance": "High",
@@ -727,6 +735,7 @@
     {
       "slug": "cost-and-data-path",
       "number": 176,
+      "order": "176",
       "title": "Cost & Data-Path Design for AI Workloads",
       "category": "Networking — Networking for AI Systems (Item 176)",
       "relevance": "High",
@@ -776,6 +785,7 @@
     {
       "slug": "multi-tenant-isolation",
       "number": 177,
+      "order": "177",
       "title": "Multi-Tenant Isolation on the Network Path",
       "category": "Networking — Networking for AI Systems (Item 177)",
       "relevance": "High",

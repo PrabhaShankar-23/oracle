@@ -16,6 +16,7 @@
     {
       "slug": "numpy-vectorization",
       "number": 83,
+      "order": "83",
       "title": "NumPy Vectorization",
       "category": "Performance & Profiling",
       "relevance": "Senior",
@@ -50,6 +51,7 @@
     {
       "slug": "pandas-memory-efficiency",
       "number": 84,
+      "order": "84",
       "title": "Pandas Memory Efficiency",
       "category": "Performance & Profiling",
       "relevance": "Senior",
@@ -84,6 +86,7 @@
     {
       "slug": "sqlalchemy-vs-raw-sql",
       "number": 85,
+      "order": "85",
       "title": "SQLAlchemy vs Raw SQL",
       "category": "Production Python",
       "relevance": "Senior",
@@ -118,6 +121,7 @@
     {
       "slug": "monkey-patching",
       "number": 86,
+      "order": "86",
       "title": "Monkey Patching",
       "category": "Advanced Python",
       "relevance": "Senior",
@@ -152,6 +156,7 @@
     {
       "slug": "docker-for-python",
       "number": 87,
+      "order": "87",
       "title": "Docker for Python",
       "category": "Production Python",
       "relevance": "Senior",

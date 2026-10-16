@@ -22,6 +22,7 @@
     {
       "slug": "context-managers",
       "number": 51,
+      "order": "51",
       "title": "Context Managers",
       "category": "Production Python",
       "relevance": "Senior",
@@ -81,6 +82,7 @@
     {
       "slug": "dataclasses",
       "number": 52,
+      "order": "52",
       "title": "dataclasses",
       "category": "Language Fundamentals",
       "relevance": "Senior",
@@ -140,6 +142,7 @@
     {
       "slug": "enum",
       "number": 53,
+      "order": "53",
       "title": "enum",
       "category": "Language Fundamentals",
       "relevance": "Senior",
@@ -174,6 +177,7 @@
     {
       "slug": "pattern-matching",
       "number": 54,
+      "order": "54",
       "title": "Pattern Matching (match / case)",
       "category": "Language Fundamentals",
       "relevance": "Senior",
@@ -233,6 +237,7 @@
     {
       "slug": "exception-model",
       "number": 55,
+      "order": "55",
       "title": "The Exception Model",
       "category": "Production Python",
       "relevance": "Architect",
@@ -292,6 +297,7 @@
     {
       "slug": "designing-custom-exceptions",
       "number": 55.1,
+      "order": "55a",
       "title": "Designing Custom Exceptions",
       "category": "Production Python",
       "relevance": "Architect",
@@ -351,6 +357,7 @@
     {
       "slug": "exception-groups",
       "number": 56,
+      "order": "56",
       "title": "Exception Groups (ExceptionGroup / except*)",
       "category": "Concurrency & Async",
       "relevance": "Architect",
@@ -410,6 +417,7 @@
     {
       "slug": "string-formatting-io",
       "number": 57,
+      "order": "57",
       "title": "String Formatting & I/O",
       "category": "Language Fundamentals",
       "relevance": "Senior",
@@ -444,6 +452,7 @@
     {
       "slug": "text-processing-unicode",
       "number": 57.1,
+      "order": "57a",
       "title": "Text Processing & Unicode",
       "category": "Language Fundamentals",
       "relevance": "Senior",

@@ -16,6 +16,7 @@
     {
       "slug": "iterator-protocol",
       "number": 14,
+      "order": "14",
       "title": "The Iterator Protocol",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -75,6 +76,7 @@
     {
       "slug": "generators-lazy-evaluation",
       "number": 15,
+      "order": "15",
       "title": "Generators & Lazy Evaluation",
       "category": "Advanced Python (Decorators, Closures, Descriptors, Metaclasses)",
       "relevance": "Senior",
@@ -134,6 +136,7 @@
     {
       "slug": "yield-from-delegation",
       "number": 16,
+      "order": "16",
       "title": "yield from & Generator Delegation",
       "category": "Advanced Python (Decorators, Closures, Descriptors, Metaclasses)",
       "relevance": "Senior",
@@ -193,6 +196,7 @@
     {
       "slug": "coroutine-style-generators",
       "number": 17,
+      "order": "17",
       "title": "Coroutine-Style Generators (.send() / .throw() / .close())",
       "category": "Advanced Python (Decorators, Closures, Descriptors, Metaclasses)",
       "relevance": "Senior",
@@ -227,6 +231,7 @@
     {
       "slug": "comprehensions-genexps",
       "number": 18,
+      "order": "18",
       "title": "Comprehensions & Generator Expressions",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -286,6 +291,7 @@
     {
       "slug": "itertools-patterns",
       "number": 19,
+      "order": "19",
       "title": "itertools & functools.reduce Patterns",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",

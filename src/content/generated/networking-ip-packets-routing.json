@@ -5,6 +5,7 @@
     {
       "slug": "ip-addressing",
       "number": 10,
+      "order": "010",
       "title": "IP Addressing — IPv4, IPv6, and Why IPv6 Keeps Appearing in Cloud Defaults",
       "category": "Networking — IP, Packets & Routing (Item 10)",
       "relevance": "Medium",
@@ -49,6 +50,7 @@
     {
       "slug": "subnets-cidr",
       "number": 11,
+      "order": "011",
       "title": "Subnets & CIDR Notation",
       "category": "Networking — IP, Packets & Routing (Item 11)",
       "relevance": "High",
@@ -148,6 +150,7 @@
     {
       "slug": "private-vs-public-ip",
       "number": 12,
+      "order": "012",
       "title": "Private vs Public IP Ranges",
       "category": "Networking — IP, Packets & Routing (Item 12)",
       "relevance": "High",
@@ -192,6 +195,7 @@
     {
       "slug": "mtu-fragmentation-pmtud",
       "number": 13,
+      "order": "013",
       "title": "Packets, MTU, Fragmentation & Path MTU Discovery",
       "category": "Networking — IP, Packets & Routing (Item 13)",
       "relevance": "High",
@@ -236,6 +240,7 @@
     {
       "slug": "routing-basics",
       "number": 14,
+      "order": "014",
       "title": "Routing Basics — Tables, Default Gateway, Next Hop",
       "category": "Networking — IP, Packets & Routing (Item 14)",
       "relevance": "Medium",
@@ -280,6 +285,7 @@
     {
       "slug": "nat",
       "number": 15,
+      "order": "015",
       "title": "NAT — Source NAT, Destination NAT & Port Exhaustion",
       "category": "Networking — IP, Packets & Routing (Item 15)",
       "relevance": "High",

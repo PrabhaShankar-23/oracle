@@ -16,6 +16,7 @@
     {
       "slug": "fundamentals-refresher",
       "number": 0,
+      "order": "00",
       "title": "The CPython Execution Model",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -75,6 +76,7 @@
     {
       "slug": "names-binding-assignment",
       "number": 1,
+      "order": "01",
       "title": "Names, Binding & Assignment",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -134,6 +136,7 @@
     {
       "slug": "is-vs-equals-identity-interning",
       "number": 2,
+      "order": "02",
       "title": "is vs ==, Identity & Interning",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -193,6 +196,7 @@
     {
       "slug": "mutable-vs-immutable-default-trap",
       "number": 3,
+      "order": "03",
       "title": "Mutable vs Immutable & the Shared-Default Trap",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -252,6 +256,7 @@
     {
       "slug": "data-model-dunder-protocols",
       "number": 4,
+      "order": "04",
       "title": "The Data Model / Dunder Protocols",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Architect",
@@ -311,6 +316,7 @@
     {
       "slug": "eq-hash-contract",
       "number": 4.1,
+      "order": "04a",
       "title": "The __eq__ / __hash__ Contract",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Architect",
@@ -370,6 +376,7 @@
     {
       "slug": "slots-instance-layout",
       "number": 5,
+      "order": "05",
       "title": "__slots__ & Instance Layout",
       "category": "Object Model, Memory & GC",
       "relevance": "Senior",
@@ -429,6 +436,7 @@
     {
       "slug": "copy-semantics",
       "number": 6,
+      "order": "06",
       "title": "Copy Semantics (assignment vs shallow vs deep)",
       "category": "Object Model, Memory & GC",
       "relevance": "Senior",
@@ -488,6 +496,7 @@
     {
       "slug": "truthiness-operator-protocols",
       "number": 7,
+      "order": "07",
       "title": "Truthiness & Operator Protocols",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",
@@ -522,6 +531,7 @@
     {
       "slug": "equality-ordering-sorting",
       "number": 8,
+      "order": "08",
       "title": "Equality, Ordering & Sorting",
       "category": "Language Fundamentals & CPython Internals",
       "relevance": "Senior",

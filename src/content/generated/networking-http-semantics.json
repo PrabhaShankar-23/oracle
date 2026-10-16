@@ -5,6 +5,7 @@
     {
       "slug": "methods",
       "number": 57,
+      "order": "057",
       "title": "HTTP Methods & Their Contracts",
       "category": "Networking — HTTP Semantics (Item 57)",
       "relevance": "Medium",
@@ -49,6 +50,7 @@
     {
       "slug": "safe-idempotent-cacheable",
       "number": 58,
+      "order": "058",
       "title": "Safe vs Idempotent vs Cacheable",
       "category": "Networking — HTTP Semantics (Item 58)",
       "relevance": "High",
@@ -128,6 +130,7 @@
     {
       "slug": "status-codes",
       "number": 59,
+      "order": "059",
       "title": "Status Codes — the practical map",
       "category": "Networking — HTTP Semantics (Item 59)",
       "relevance": "High",
@@ -207,6 +210,7 @@
     {
       "slug": "choosing-the-right-code",
       "number": 60,
+      "order": "060",
       "title": "Choosing the Right Status Code",
       "category": "Networking — HTTP Semantics (Item 60)",
       "relevance": "High",
@@ -286,6 +290,7 @@
     {
       "slug": "headers",
       "number": 61,
+      "order": "061",
       "title": "Headers That Matter",
       "category": "Networking — HTTP Semantics (Item 61)",
       "relevance": "High",
@@ -330,6 +335,7 @@
     {
       "slug": "http-caching",
       "number": 62,
+      "order": "062",
       "title": "HTTP Caching",
       "category": "Networking — HTTP Semantics (Item 62)",
       "relevance": "High",
@@ -374,6 +380,7 @@
     {
       "slug": "cookies",
       "number": 63,
+      "order": "063",
       "title": "Cookies and Cookie Attributes",
       "category": "Networking — HTTP Semantics (Item 63)",
       "relevance": "Medium",
@@ -418,6 +425,7 @@
     {
       "slug": "cors",
       "number": 64,
+      "order": "064",
       "title": "CORS and Preflight Requests",
       "category": "Networking — HTTP Semantics (Item 64)",
       "relevance": "High",
@@ -520,6 +528,7 @@
     {
       "slug": "idempotency-keys",
       "number": 67,
+      "order": "067",
       "title": "Idempotency Keys",
       "category": "Networking — HTTP Semantics (Item 67)",
       "relevance": "High",
@@ -599,6 +608,7 @@
     {
       "slug": "timeouts-retries-backoff",
       "number": 68,
+      "order": "068",
       "title": "Timeouts, Retries & Exponential Backoff with Jitter",
       "category": "Networking — HTTP Semantics (Item 68)",
       "relevance": "High",
@@ -698,6 +708,7 @@
     {
       "slug": "rate-limiting",
       "number": 69,
+      "order": "069",
       "title": "Rate Limiting and 429",
       "category": "Networking — HTTP Semantics (Item 69)",
       "relevance": "High",

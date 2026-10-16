@@ -55,6 +55,15 @@ function CountChip({ count }: { count: number }) {
 function PageRow({ page, pathname, onNavigate }: { page: NavPage; pathname: string; onNavigate?: () => void }) {
   return (
     <ListItemButton component={Link} to={page.path} onClick={onNavigate} selected={pathname === page.path} sx={{ minHeight: 40 }}>
+      {page.order && (
+        <Typography
+          component="span"
+          variant="caption"
+          sx={{ minWidth: 34, mr: 1, color: 'text.secondary', fontVariantNumeric: 'tabular-nums', alignSelf: 'flex-start', mt: '3px' }}
+        >
+          {page.order}
+        </Typography>
+      )}
       <ListItemText
         primary={page.title}
         // Decision titles are whole sentences; two lines keeps the list scannable.

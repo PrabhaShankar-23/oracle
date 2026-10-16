@@ -57,6 +57,7 @@
     {
       "slug": "model-on-the-hot-path",
       "number": 29,
+      "order": "029",
       "title": "The Model on the Hot Path — Time to First Token in a Spoken Turn",
       "category": "Platform",
       "tier": "CORE",
@@ -115,6 +116,7 @@
     {
       "slug": "speculative-pre-generation",
       "number": 30,
+      "order": "030",
       "title": "Speculative Pre-generation — The Reply Is Ready When the Turn Ends",
       "category": "Conversation",
       "tier": "CORE",
@@ -173,6 +175,7 @@
     {
       "slug": "latency-tiered-agents",
       "number": 31,
+      "order": "031",
       "title": "Latency-Tiered Agents — In the Turn, Beside It, After the Call",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -231,6 +234,7 @@
     {
       "slug": "writing-for-the-ear",
       "number": 32,
+      "order": "032",
       "title": "Writing for the Ear — Prompts Whose Output Is Spoken",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -289,6 +293,7 @@
     {
       "slug": "persona-and-personality",
       "number": 32.1,
+      "order": "032a",
       "title": "Persona and Personality — Who the Agent Is, in Every Line",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -347,6 +352,7 @@
     {
       "slug": "guardrails-beside-the-reply",
       "number": 33,
+      "order": "033",
       "title": "Guardrails Beside the Reply — Draft and Hold",
       "category": "Conversation",
       "tier": "SUPPORTING",
@@ -405,6 +411,7 @@
     {
       "slug": "tools-and-slow-work",
       "number": 34,
+      "order": "034",
       "title": "Tools and Slow Work in a Turn — Never Leave Silence",
       "category": "Conversation",
       "tier": "SUPPORTING",

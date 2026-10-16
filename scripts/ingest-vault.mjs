@@ -1373,7 +1373,9 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
         // A meta-line index (`Index 032a`) places shared-file entries too; same tenth-per-letter rule.
         const indexNo = meta.index ? Number(/^(\d+)/.exec(meta.index)[1]) + ((/^\d+([a-z])$/.exec(meta.index)?.[1]?.charCodeAt(0) ?? 96) - 96) / 10 : 0
         const { index: _index, ...metaFields } = meta
-        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, stem: file.replace(/\.md$/, ''), number: item || indexNo || fileNo, title, ...metaFields })
+        // The label the sidebar shows before the title: the meta-line index, else the filename's number.
+        const order = meta.index ?? (shared ? undefined : /^(\d+[a-z]?)-/.exec(file)?.[1])
+        parsed.push({ $, body, dir: chapterDir, chapterTitle, slug, stem: file.replace(/\.md$/, ''), number: item || indexNo || fileNo, order, title, ...metaFields })
       }
     }
   }
@@ -1422,6 +1424,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
     chapter.notes.push({
       slug: note.slug,
       number: note.number,
+      order: note.order,
       title: note.title,
       category: note.category,
       relevance: note.relevance,
@@ -1627,6 +1630,7 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
     agenticDecisions: agentic.flatMap((sec) =>
       sec.notes.map((n) => ({
         slug: n.slug,
+        order: n.number > 0 ? String(n.number) : undefined,
         title: n.title,
         tier: n.tier,
         relevance: n.relevance,
@@ -1637,6 +1641,7 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
     networking: networking.flatMap((ch) =>
       ch.notes.map((n) => ({
         slug: n.slug,
+        order: n.order,
         title: n.title,
         tier: n.tier,
         relevance: n.relevance,
@@ -1647,6 +1652,7 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
     voice: voice.flatMap((ch) =>
       ch.notes.map((n) => ({
         slug: n.slug,
+        order: n.order,
         title: n.title,
         tier: n.tier,
         category: n.category,
@@ -1657,6 +1663,7 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
     python: python.flatMap((ch) =>
       ch.notes.map((n) => ({
         slug: n.slug,
+        order: n.order,
         title: n.title,
         tier: n.tier,
         relevance: n.relevance,

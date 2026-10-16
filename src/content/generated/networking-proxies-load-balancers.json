@@ -5,6 +5,7 @@
     {
       "slug": "forward-vs-reverse-proxy",
       "number": 104,
+      "order": "104",
       "title": "Forward Proxy vs Reverse Proxy",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 104)",
       "relevance": "High",
@@ -79,6 +80,7 @@
     {
       "slug": "reverse-proxy-responsibilities",
       "number": 105,
+      "order": "105",
       "title": "Reverse Proxy Responsibilities",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 105)",
       "relevance": "High",
@@ -178,6 +180,7 @@
     {
       "slug": "l4-load-balancing",
       "number": 106,
+      "order": "106",
       "title": "L4 (TCP/UDP) Load Balancing",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 106)",
       "relevance": "High",
@@ -222,6 +225,7 @@
     {
       "slug": "l7-load-balancing",
       "number": 107,
+      "order": "107",
       "title": "L7 (HTTP) Load Balancing",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 107)",
       "relevance": "High",
@@ -266,6 +270,7 @@
     {
       "slug": "proxies-load-balancers-l4-vs-l7",
       "number": 108,
+      "order": "108",
       "title": "L4 vs L7 Load Balancing — The Tradeoff Table",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 108)",
       "relevance": "High",
@@ -355,6 +360,7 @@
     {
       "slug": "load-balancing-algorithms",
       "number": 109,
+      "order": "109",
       "title": "Load Balancing Algorithms",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 109)",
       "relevance": "High",
@@ -439,6 +445,7 @@
     {
       "slug": "consistent-hashing",
       "number": 110,
+      "order": "110",
       "title": "Consistent Hashing",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 110)",
       "relevance": "High",
@@ -483,6 +490,7 @@
     {
       "slug": "sticky-sessions",
       "number": 111,
+      "order": "111",
       "title": "Sticky Sessions / Session Affinity",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 111)",
       "relevance": "Medium",
@@ -527,6 +535,7 @@
     {
       "slug": "health-checks",
       "number": 112,
+      "order": "112",
       "title": "Health Checks",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 112)",
       "relevance": "High",
@@ -626,6 +635,7 @@
     {
       "slug": "outlier-detection-circuit-breaking",
       "number": 113,
+      "order": "113",
       "title": "Outlier Detection, Circuit Breaking, Draining & Graceful Shutdown",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 113)",
       "relevance": "High",
@@ -670,6 +680,7 @@
     {
       "slug": "grpc-http2-load-balancing",
       "number": 114,
+      "order": "114",
       "title": "The gRPC / HTTP2 Load Balancing Problem",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 114)",
       "relevance": "High",
@@ -769,6 +780,7 @@
     {
       "slug": "global-load-balancing",
       "number": 115,
+      "order": "115",
       "title": "Global Load Balancing",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 115)",
       "relevance": "High",
@@ -813,6 +825,7 @@
     {
       "slug": "api-gateway",
       "number": 116,
+      "order": "116",
       "title": "API Gateway",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 116)",
       "relevance": "High",
@@ -857,6 +870,7 @@
     {
       "slug": "ingress-controllers",
       "number": 117,
+      "order": "117",
       "title": "Ingress Controllers & the Gateway API",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 117)",
       "relevance": "High",
@@ -901,6 +915,7 @@
     {
       "slug": "service-mesh",
       "number": 118,
+      "order": "118",
       "title": "Service Mesh",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 118)",
       "relevance": "High",
@@ -945,6 +960,7 @@
     {
       "slug": "cdn-and-edge",
       "number": 119,
+      "order": "119",
       "title": "CDN & Edge",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 119)",
       "relevance": "High",
@@ -1018,6 +1034,7 @@
     {
       "slug": "buffering-vs-streaming-proxies",
       "number": 121,
+      "order": "121",
       "title": "Buffering vs Streaming Proxies",
       "category": "Networking — Proxies, Load Balancers & Gateways (Item 121)",
       "relevance": "High",
