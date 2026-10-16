@@ -81,7 +81,7 @@
       },
       {
         "label": "speed of light budget",
-        "target": "01-mental-models/08-speed-of-light-budget"
+        "target": "01-mental-models/008-speed-of-light-budget"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The human number&lt;br/&gt;turn gaps and tolerance\"]):::calc\n        N2[\"2 · Budget is a chain&lt;br/&gt;every hop adds\"]:::step\n        N3(\"3 · Where it goes&lt;br/&gt;our budget\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The two levers&lt;br/&gt;endpointing and&lt;br/&gt;generation\"]:::step\n        N5([\"5 · How we set ours&lt;br/&gt;N1 as a product&lt;br/&gt;requirement\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -338,11 +338,11 @@
     "links": [
       {
         "label": "speed of light budget",
-        "target": "01-mental-models/08-speed-of-light-budget"
+        "target": "01-mental-models/008-speed-of-light-budget"
       },
       {
         "label": "latency bandwidth throughput",
-        "target": "01-mental-models/06-latency-bandwidth-throughput"
+        "target": "01-mental-models/006-latency-bandwidth-throughput"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;what no engineering&lt;br/&gt;removes\"]):::step\n        N2[\"2 · Physics: distance&lt;br/&gt;region is a latency&lt;br/&gt;decision\"]:::step\n        N3[\"3 · Framing and&lt;br/&gt;buffering&lt;br/&gt;inherent, small, tunable\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The avoidable&lt;br/&gt;'floor'&lt;br/&gt;cold starts\"]:::step\n        N5([\"5 · Where we placed&lt;br/&gt;things&lt;br/&gt;one Indian region\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -440,7 +440,7 @@
       },
       {
         "label": "webrtc for voice ai",
-        "target": "09-webrtc/87-webrtc-for-voice-ai"
+        "target": "09-webrtc/087-webrtc-for-voice-ai"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · It's a session,&lt;br/&gt;not a request&lt;br/&gt;state per call\"]):::step\n        N2[\"2 · The audio path, in&lt;br/&gt;order&lt;br/&gt;each stage streams\"]:::step\n        N3[\"3 · The two control&lt;br/&gt;loops&lt;br/&gt;interruption and turn&lt;br/&gt;state\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Who owns what&lt;br/&gt;the boundary\"]:::step\n        N5([\"5 · Per-turn&lt;br/&gt;observability&lt;br/&gt;the numbers per turn\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -940,7 +940,7 @@
     "links": [
       {
         "label": "webrtc vs websocket for audio",
-        "target": "09-webrtc/88-webrtc-vs-websocket-for-audio"
+        "target": "09-webrtc/088-webrtc-vs-websocket-for-audio"
       },
       {
         "label": "webRTC_flow",
@@ -1033,19 +1033,19 @@
     "links": [
       {
         "label": "signaling",
-        "target": "09-webrtc/79-signaling"
+        "target": "09-webrtc/079-signaling"
       },
       {
         "label": "sdp offer answer",
-        "target": "09-webrtc/80-sdp-offer-answer"
+        "target": "09-webrtc/080-sdp-offer-answer"
       },
       {
         "label": "ice stun turn",
-        "target": "09-webrtc/81-ice-stun-turn"
+        "target": "09-webrtc/081-ice-stun-turn"
       },
       {
         "label": "nat types why p2p fails",
-        "target": "09-webrtc/82-nat-types-why-p2p-fails"
+        "target": "09-webrtc/082-nat-types-why-p2p-fails"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Signalling&lt;br/&gt;your channel, not&lt;br/&gt;WebRTC's\"]):::step\n        N2[\"2 · ICE gathers&lt;br/&gt;candidates&lt;br/&gt;host, srflx, relay\"]:::step\n        N3(\"3 · Connectivity&lt;br/&gt;checks&lt;br/&gt;pick a pair\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · DTLS then SRTP&lt;br/&gt;keys, then media\"]:::step\n        N5[\"5 · Changes mid-call&lt;br/&gt;ICE restart,&lt;br/&gt;renegotiation\"]:::step\n        N6([\"6 · How it looks with&lt;br/&gt;an SFU&lt;br/&gt;negotiate with the&lt;br/&gt;server\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -1135,11 +1135,11 @@
     "links": [
       {
         "label": "ice stun turn",
-        "target": "09-webrtc/81-ice-stun-turn"
+        "target": "09-webrtc/081-ice-stun-turn"
       },
       {
         "label": "nat types why p2p fails",
-        "target": "09-webrtc/82-nat-types-why-p2p-fails"
+        "target": "09-webrtc/082-nat-types-why-p2p-fails"
       },
       {
         "label": "webRTC_flow",
@@ -1226,11 +1226,11 @@
     "links": [
       {
         "label": "latency bandwidth throughput",
-        "target": "01-mental-models/06-latency-bandwidth-throughput"
+        "target": "01-mental-models/006-latency-bandwidth-throughput"
       },
       {
         "label": "webrtc for voice ai",
-        "target": "09-webrtc/87-webrtc-for-voice-ai"
+        "target": "09-webrtc/087-webrtc-for-voice-ai"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Media absorbs it&lt;br/&gt;first&lt;br/&gt;owned by LiveKit\"]):::step\n        N2[\"2 · Then the&lt;br/&gt;transcript degrades&lt;br/&gt;confirm more\"]:::step\n        N3[\"3 · Then the interview&lt;br/&gt;adapts&lt;br/&gt;the degradation ladder\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Disconnect and&lt;br/&gt;resume&lt;br/&gt;state lives server-side\"]:::step\n        N5([\"5 · What we measure&lt;br/&gt;media and outcome\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2287,7 +2287,7 @@
       },
       {
         "label": "webrtc for voice ai",
-        "target": "09-webrtc/87-webrtc-for-voice-ai"
+        "target": "09-webrtc/087-webrtc-for-voice-ai"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The product&lt;br/&gt;constraint&lt;br/&gt;800 ms, endpoint to&lt;br/&gt;first audio\"]):::calc\n        N2[\"2 · Four tiers&lt;br/&gt;split by scaling axis\"]:::step\n        N3[\"3 · One turn through&lt;br/&gt;the system&lt;br/&gt;six stages, two vendor-&lt;br/&gt;bound\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The agents by&lt;br/&gt;latency tier&lt;br/&gt;select in the turn,&lt;br/&gt;think around it\"]:::step\n        N5[\"5 · After the call&lt;br/&gt;independent scoring,&lt;br/&gt;durable\"]:::step\n        N6([\"6 · What I'd defend&lt;br/&gt;and what's open&lt;br/&gt;say both\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2377,15 +2377,15 @@
     "links": [
       {
         "label": "topologies mesh sfu mcu",
-        "target": "09-webrtc/85-topologies-mesh-sfu-mcu"
+        "target": "09-webrtc/085-topologies-mesh-sfu-mcu"
       },
       {
         "label": "webrtc vs websocket for audio",
-        "target": "09-webrtc/88-webrtc-vs-websocket-for-audio"
+        "target": "09-webrtc/088-webrtc-vs-websocket-for-audio"
       },
       {
         "label": "webrtc for voice ai",
-        "target": "09-webrtc/87-webrtc-for-voice-ai"
+        "target": "09-webrtc/087-webrtc-for-voice-ai"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;self-hosted SFU plus&lt;br/&gt;Agents runtime\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;that forced it&lt;br/&gt;the criterion ranking\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;one reason each\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;say it before they find&lt;br/&gt;it\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;measurable triggers\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2474,15 +2474,15 @@
     "links": [
       {
         "label": "webrtc vs websocket for audio",
-        "target": "09-webrtc/88-webrtc-vs-websocket-for-audio"
+        "target": "09-webrtc/088-webrtc-vs-websocket-for-audio"
       },
       {
         "label": "signaling",
-        "target": "09-webrtc/79-signaling"
+        "target": "09-webrtc/079-signaling"
       },
       {
         "label": "webrtc for voice ai",
-        "target": "09-webrtc/87-webrtc-for-voice-ai"
+        "target": "09-webrtc/087-webrtc-for-voice-ai"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The rule&lt;br/&gt;lossy media, reliable&lt;br/&gt;control\"]):::step\n        N2[\"2 · The channel map&lt;br/&gt;one WebRTC path, four&lt;br/&gt;WebSockets\"]:::step\n        N3[\"3 · How the client&lt;br/&gt;learns state&lt;br/&gt;attributes and text&lt;br/&gt;streams\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The contract&lt;br/&gt;between repos&lt;br/&gt;small, versioned,&lt;br/&gt;mirrored\"]:::step\n        N5([\"5 · What breaks if&lt;br/&gt;mixed up&lt;br/&gt;two concrete failures\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2571,7 +2571,7 @@
     "links": [
       {
         "label": "signaling",
-        "target": "09-webrtc/79-signaling"
+        "target": "09-webrtc/079-signaling"
       },
       {
         "label": "voice agents",
@@ -3134,7 +3134,7 @@
       },
       {
         "label": "webrtc for voice ai",
-        "target": "09-webrtc/87-webrtc-for-voice-ai"
+        "target": "09-webrtc/087-webrtc-for-voice-ai"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Why echo is a&lt;br/&gt;scoring bug&lt;br/&gt;four stages misread it\"]):::ask\n        N2[\"2 · Layer 1, cancel it&lt;br/&gt;in the browser&lt;br/&gt;AEC with the far-end&lt;br/&gt;reference\"]:::step\n        N3[\"3 · Layer 2, drop it&lt;br/&gt;before the record&lt;br/&gt;a string check, not a&lt;br/&gt;classifier\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What the guard&lt;br/&gt;can't do&lt;br/&gt;prevent the interruption\"]:::step\n        N5([\"5 · The weak spots&lt;br/&gt;partial leaks, a caption&lt;br/&gt;flash\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4191,7 +4191,7 @@
       },
       {
         "label": "topologies mesh sfu mcu",
-        "target": "09-webrtc/85-topologies-mesh-sfu-mcu"
+        "target": "09-webrtc/085-topologies-mesh-sfu-mcu"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Vendors first&lt;br/&gt;the real ceiling\"]):::step\n        N2[\"2 · Four tiers, four&lt;br/&gt;scaling axes&lt;br/&gt;why they are separate\"]:::step\n        N3[\"3 · The numbers&lt;br/&gt;with their assumptions\"]:::calc\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What breaks in&lt;br/&gt;order&lt;br/&gt;vendors, SFU, loop lag,&lt;br/&gt;nodes\"]:::bad\n        N5[\"5 · Setup order&lt;br/&gt;contracts before&lt;br/&gt;clusters\"]:::step\n        N6([\"6 · What's unproven&lt;br/&gt;say it\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"

@@ -1443,6 +1443,7 @@ const ingestNetworking = () =>
     route: NETWORKING_ROUTE,
     header: 'Networking Topic',
     prefix: 'networking',
+    mapHeader: 'Chapter Map',
   })
 
 /* ---------------- Python (07-python) ---------------- */

@@ -4502,10 +4502,17 @@
       "sectionTitle": "WebRTC"
     },
     {
+      "slug": "api-protocols-map",
+      "title": "Chapter map: API protocols",
+      "tier": "MAP",
+      "section": "10-api-protocols",
+      "sectionTitle": "API protocols"
+    },
+    {
       "slug": "rest",
       "title": "REST — Resources, Verbs, Statelessness, HATEOAS",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
