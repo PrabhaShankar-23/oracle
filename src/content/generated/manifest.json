@@ -5831,6 +5831,15 @@
       "sectionTitle": "Thinking"
     },
     {
+      "slug": "external-tools-and-mcp",
+      "order": "034a",
+      "title": "External Tools and MCP in a Voice Agent",
+      "tier": "SUPPORTING",
+      "category": "Conversation",
+      "section": "06-thinking",
+      "sectionTitle": "Thinking"
+    },
+    {
       "slug": "speaking-map",
       "title": "Chapter map: Speaking",
       "tier": "MAP",
