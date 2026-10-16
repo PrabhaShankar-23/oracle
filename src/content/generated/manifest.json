@@ -5937,6 +5937,15 @@
       "sectionTitle": "Agent runtime"
     },
     {
+      "slug": "reference-production-flow",
+      "order": "044a",
+      "title": "Reference Production Flow — Consent, Triage, Specialist, Escalation, Human",
+      "tier": "CORE",
+      "category": "Conversation",
+      "section": "08-agent-runtime",
+      "sectionTitle": "Agent runtime"
+    },
+    {
       "slug": "event-loop-discipline",
       "order": "045",
       "title": "Event-Loop Discipline — One Blocking Call Is Dead Air",
