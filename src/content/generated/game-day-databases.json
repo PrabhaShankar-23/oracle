@@ -36,6 +36,7 @@
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "dense-rank by salary → filter rank = N → one row",
           "trap": "<code>LIMIT 1 OFFSET 1</code> with ties at the top",
+          "practice": "<a href=\"https://leetcode.com/problems/second-highest-salary/\" target=\"_blank\" rel=\"noopener noreferrer\">176 Second Highest Salary</a> · <a href=\"https://leetcode.com/problems/nth-highest-salary/\" target=\"_blank\" rel=\"noopener noreferrer\">177 Nth Highest Salary</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -71,6 +72,7 @@
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "partition → order → number → filter in the outer query",
           "trap": "filtering on a window function in the same <code>WHERE</code>",
+          "practice": "<a href=\"https://leetcode.com/problems/department-top-three-salaries/\" target=\"_blank\" rel=\"noopener noreferrer\">185 Department Top Three Salaries</a> · <a href=\"https://leetcode.com/problems/department-highest-salary/\" target=\"_blank\" rel=\"noopener noreferrer\">184 Department Highest Salary</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -105,6 +107,7 @@
           "prompt": "<pre><code class=\"language-sql\">users(id, email)\n</code></pre>",
           "flow": "group + having → keep min id → delete the rest → unique constraint",
           "trap": "cleaning up without fixing the write path",
+          "practice": "<a href=\"https://leetcode.com/problems/duplicate-emails/\" target=\"_blank\" rel=\"noopener noreferrer\">182 Duplicate Emails</a> · <a href=\"https://leetcode.com/problems/delete-duplicate-emails/\" target=\"_blank\" rel=\"noopener noreferrer\">196 Delete Duplicate Emails</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -138,6 +141,7 @@
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "order → choose frame (<code>ROWS</code>) → aggregate over it",
           "trap": "leaving the frame implicit when the sort key has ties",
+          "practice": "<a href=\"https://leetcode.com/problems/last-person-to-fit-in-the-bus/\" target=\"_blank\" rel=\"noopener noreferrer\">1204 Last Person to Fit in the Bus</a> · <a href=\"https://leetcode.com/problems/restaurant-growth/\" target=\"_blank\" rel=\"noopener noreferrer\">1321 Restaurant Growth</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -171,6 +175,7 @@
           "prompt": "<pre><code class=\"language-sql\">employees(id, name, dept_id, manager_id, salary, hired_on)\n</code></pre>",
           "flow": "alias employee + alias manager → join on manager_id → compare",
           "trap": "forgetting the top of the tree has no manager",
+          "practice": "<a href=\"https://leetcode.com/problems/employees-earning-more-than-their-managers/\" target=\"_blank\" rel=\"noopener noreferrer\">181 Employees Earning More Than Their Managers</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -211,6 +216,7 @@
           "prompt": "<pre><code class=\"language-sql\">customers(id, name)\norders(id, customer_id, amount, status, created_at)   -- customer_id can be NULL\n</code></pre>",
           "flow": "anti-join → <code>NOT EXISTS</code> → check the subquery column for NULLs",
           "trap": "<code>NOT IN</code> over a nullable column",
+          "practice": "<a href=\"https://leetcode.com/problems/customers-who-never-order/\" target=\"_blank\" rel=\"noopener noreferrer\">183 Customers Who Never Order</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -245,6 +251,7 @@
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "group by month → LAG previous → (cur − prev) / prev",
           "trap": "a month with no orders silently disappears from the series",
+          "practice": "<a href=\"https://leetcode.com/problems/rising-temperature/\" target=\"_blank\" rel=\"noopener noreferrer\">197 Rising Temperature</a> · <a href=\"https://leetcode.com/problems/monthly-transactions-i/\" target=\"_blank\" rel=\"noopener noreferrer\">1193 Monthly Transactions I</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -280,6 +287,7 @@
           "prompt": "<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>",
           "flow": "dedupe days → date − row_number = island id → count per island → max",
           "trap": "skipping the dedupe step",
+          "practice": "<a href=\"https://leetcode.com/problems/consecutive-numbers/\" target=\"_blank\" rel=\"noopener noreferrer\">180 Consecutive Numbers</a> · <a href=\"https://leetcode.com/problems/human-traffic-of-stadium/\" target=\"_blank\" rel=\"noopener noreferrer\">601 Human Traffic of Stadium</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -313,6 +321,7 @@
           "prompt": "<pre><code class=\"language-sql\">orders(id, customer_id, amount, status, created_at)\n</code></pre>",
           "flow": "group by the row key → one CASE-sum per output column",
           "trap": "<code>COUNT(CASE … ELSE 0 END)</code> counts every row",
+          "practice": "<a href=\"https://leetcode.com/problems/reformat-department-table/\" target=\"_blank\" rel=\"noopener noreferrer\">1179 Reformat Department Table</a> · <a href=\"https://leetcode.com/problems/count-salary-categories/\" target=\"_blank\" rel=\"noopener noreferrer\">1907 Count Salary Categories</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -380,6 +389,7 @@
           "prompt": "<pre><code class=\"language-sql\">profile_changes(user_id, city, updated_at)\n</code></pre>",
           "flow": "partition by key → order newest first → keep row 1",
           "trap": "<code>GROUP BY user_id</code> with <code>MAX(updated_at)</code> and a non-aggregated <code>city</code>",
+          "practice": "<a href=\"https://leetcode.com/problems/product-price-at-a-given-date/\" target=\"_blank\" rel=\"noopener noreferrer\">1164 Product Price at a Given Date</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [
@@ -514,6 +524,7 @@
           "prompt": "<pre><code class=\"language-sql\">logins(user_id, login_date)\n</code></pre>",
           "flow": "min date per user → cohort → exists on d0 + N → users back / cohort size",
           "trap": "counting logins, not distinct users",
+          "practice": "<a href=\"https://leetcode.com/problems/game-play-analysis-iv/\" target=\"_blank\" rel=\"noopener noreferrer\">550 Game Play Analysis IV</a>",
           "modelAnswer": {
             "type": "query",
             "spine": [

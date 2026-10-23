@@ -323,6 +323,8 @@ export type GameDayQuestion = {
   points: string[]
   flow?: string
   trap?: string
+  /** External practice links as HTML (`🧪 Run it on LeetCode`), e.g. a free LeetCode problem for a write-the-query entry. */
+  practice?: string
   oneLiner?: string
   links: GameDayLink[]
   drill?: GameDayDrill

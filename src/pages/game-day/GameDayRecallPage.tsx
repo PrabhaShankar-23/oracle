@@ -183,6 +183,7 @@ function QuestionCard({ topic, question: q }: { topic: string; question: GameDay
     q.points.length ? `<ul>${q.points.map((p) => `<li>${p}</li>`).join('')}</ul>` : '',
     q.flow ? `<p class="gd-line"><b>Flow:</b> ${q.flow}</p>` : '',
     q.trap ? `<p class="gd-line gd-trap"><b>Trap:</b> ${q.trap}</p>` : '',
+    q.practice ? `<p class="gd-line"><b>Run it:</b> ${q.practice}</p>` : '',
     q.oneLiner ? `<p class="gd-line"><b>One-liner:</b> “${q.oneLiner}”</p>` : '',
   ].join('')
 

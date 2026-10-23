@@ -1039,6 +1039,8 @@ async function ingestGameDay() {
               const [, key, value] = m
               if (/^Flow/i.test(key)) out.flow = value.trim()
               else if (/^Trap/i.test(key)) out.trap = value.trim()
+              // `🧪 Run it on LeetCode (free): [176 …](https://…)` — external practice links, opened in a new tab.
+              else if (/Run it/i.test(key)) out.practice = value.trim().replace(/<a href="(https?:[^"]+)"/g, '<a href="$1" target="_blank" rel="noopener noreferrer"')
               else if (/^One-liner/i.test(key)) out.oneLiner = value.trim().replace(/^["“”]+|["“”]+$/g, '')
               else if (/^Follow-up/i.test(key)) out.followUp = value.trim()
               else if (/Model answer/i.test(key)) out.modelAnswer = parseVaultLinks(value)[0]?.target
@@ -1055,6 +1057,7 @@ async function ingestGameDay() {
           q.links = primary.links
           if (primary.flow) q.flow = primary.flow
           if (primary.trap) q.trap = primary.trap
+          if (primary.practice) q.practice = primary.practice
           if (primary.oneLiner) q.oneLiner = primary.oneLiner
           if (primary.modelAnswer) q.modelAnswerTarget = primary.modelAnswer
         }
