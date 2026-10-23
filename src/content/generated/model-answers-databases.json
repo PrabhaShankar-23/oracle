@@ -5786,12 +5786,12 @@
     ],
     "links": [
       {
-        "label": "data and sql analyst agents",
-        "target": "12-Applied & Domain Patterns/108-data and sql analyst agents"
+        "label": "Data and SQL analyst agents",
+        "target": "12-Applied & Domain Patterns/07-Data and SQL analyst agents"
       },
       {
-        "label": "permissions and least privilege",
-        "target": "10-Safety, Security & Guardrails/85-permissions and least privilege"
+        "label": "Permissions and least privilege",
+        "target": "10-Safety, Security & Guardrails/05-Permissions and least privilege"
       },
       {
         "label": "knowledge graph vs vector",

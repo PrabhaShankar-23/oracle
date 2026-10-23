@@ -2471,7 +2471,7 @@
       "number": 4,
       "icon": "🧠",
       "title": "LLM Foundations",
-      "count": 45,
+      "count": 46,
       "bands": [
         {
           "id": "llm-foundations-mechanism-know-these-cold",
@@ -2496,6 +2496,12 @@
           "letter": null,
           "name": "More questions",
           "count": 20
+        },
+        {
+          "id": "llm-foundations-added-from-saved-linkedin-interview-posts-24-oct-2026",
+          "letter": null,
+          "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+          "count": 1
         }
       ]
     },
@@ -2504,7 +2510,7 @@
       "number": 5,
       "icon": "🔍",
       "title": "RAG",
-      "count": 62,
+      "count": 65,
       "bands": [
         {
           "id": "rag-a",
@@ -2553,6 +2559,12 @@
           "letter": null,
           "name": "More questions",
           "count": 15
+        },
+        {
+          "id": "rag-added-from-saved-linkedin-interview-posts-24-oct-2026",
+          "letter": null,
+          "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+          "count": 3
         }
       ]
     },
@@ -2561,7 +2573,7 @@
       "number": 6,
       "icon": "🤖",
       "title": "Agentic AI",
-      "count": 56,
+      "count": 59,
       "bands": [
         {
           "id": "agentic-ai-framing",
@@ -2616,6 +2628,12 @@
           "letter": null,
           "name": "Harness, evals & observability — added 11 Oct 2026",
           "count": 10
+        },
+        {
+          "id": "agentic-ai-added-from-saved-linkedin-interview-posts-24-oct-2026",
+          "letter": null,
+          "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+          "count": 3
         }
       ]
     },
@@ -2651,7 +2669,7 @@
       "number": 8,
       "icon": "🚀",
       "title": "LLM Serving & Inference",
-      "count": 30,
+      "count": 32,
       "bands": [
         {
           "id": "llm-serving-inference-mechanism-know-these-cold",
@@ -2688,6 +2706,12 @@
           "letter": null,
           "name": "More questions",
           "count": 5
+        },
+        {
+          "id": "llm-serving-inference-added-from-saved-linkedin-interview-posts-24-oct-2026",
+          "letter": null,
+          "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+          "count": 2
         }
       ]
     },
@@ -2696,7 +2720,7 @@
       "number": 11,
       "icon": "📐",
       "title": "Classical ML & Deep Learning",
-      "count": 72,
+      "count": 73,
       "bands": [
         {
           "id": "ml-dl-ml-generalisation-honest-validation",
@@ -2733,6 +2757,12 @@
           "letter": null,
           "name": "More questions",
           "count": 47
+        },
+        {
+          "id": "ml-dl-added-from-saved-linkedin-interview-posts-24-oct-2026",
+          "letter": null,
+          "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+          "count": 1
         }
       ]
     },
@@ -3543,6 +3573,15 @@
       "slug": "transport",
       "order": "5",
       "title": "Which transport carries the agent's stream",
+      "tier": "SUPPORTING",
+      "relevance": "Medium",
+      "section": "09-latency",
+      "sectionTitle": "Latency & streaming"
+    },
+    {
+      "slug": "decision-model-or-llm",
+      "order": "6",
+      "title": "Decision model or LLM at each gate",
       "tier": "SUPPORTING",
       "relevance": "Medium",
       "section": "09-latency",

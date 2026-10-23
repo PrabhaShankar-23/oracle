@@ -1498,6 +1498,35 @@
           }
         }
       ]
+    },
+    {
+      "id": "ml-dl-added-from-saved-linkedin-interview-posts-24-oct-2026",
+      "letter": null,
+      "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+      "questions": [
+        {
+          "id": "ml-dl-q73",
+          "number": 73,
+          "marks": [
+            "asked"
+          ],
+          "text": "Design real-time ETA prediction for a food-delivery app.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — reported from a Swiggy ML Engineer loop (LinkedIn, Oct 2026).",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify what \"ETA\" promises",
+              "Decompose the delivery",
+              "Features and freshness",
+              "Model and loss",
+              "Serving and updates",
+              "Evaluate and monitor"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

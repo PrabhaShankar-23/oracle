@@ -1215,6 +1215,77 @@
           }
         }
       ]
+    },
+    {
+      "id": "agentic-ai-added-from-saved-linkedin-interview-posts-24-oct-2026",
+      "letter": null,
+      "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+      "questions": [
+        {
+          "id": "agentic-ai-q57",
+          "number": 57,
+          "marks": [
+            "asked"
+          ],
+          "text": "A valid but stolen API token ran agent loops overnight and you woke up to a $140K bill. Redesign the trust model.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — a senior system-design question shared in May 2026 (LinkedIn).",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "The asset and the attacker",
+              "The attack path",
+              "Why \"valid token\" is the wrong check",
+              "Layered controls",
+              "Residual risk and what I monitor"
+            ]
+          }
+        },
+        {
+          "id": "agentic-ai-q58",
+          "number": 58,
+          "marks": [
+            "trending"
+          ],
+          "text": "Decision models like Jev are trending. Where would you use one instead of an LLM inside an agent, and where wouldn't you?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — TypeSafe's Jev (Sep 2026) and OpenAI's Decisions API (Oct 2026) were the most-discussed new model category in saved posts.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where a decision model wins",
+              "Where the LLM wins",
+              "The deciding question",
+              "What I'd pick here"
+            ]
+          }
+        },
+        {
+          "id": "agentic-ai-q59",
+          "number": 59,
+          "marks": [
+            "asked"
+          ],
+          "text": "Live coding: write a LangGraph agent that summarises a long document.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — reported from a TCS Agentic AI Engineer loop (LinkedIn, Oct 2026).",
+          "modelAnswer": {
+            "type": "query",
+            "spine": [
+              "Read the task",
+              "Name the pattern",
+              "Write it",
+              "Trace it",
+              "Variants and traps",
+              "How it performs"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

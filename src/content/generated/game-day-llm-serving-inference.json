@@ -1340,6 +1340,57 @@
           }
         }
       ]
+    },
+    {
+      "id": "llm-serving-inference-added-from-saved-linkedin-interview-posts-24-oct-2026",
+      "letter": null,
+      "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+      "questions": [
+        {
+          "id": "llm-serving-inference-q31",
+          "number": 31,
+          "marks": [
+            "asked"
+          ],
+          "text": "You serve an LLM on vLLM. Which serving parameters do you tune, and how do you manage the KV cache under memory pressure?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — reported from a TCS Agentic AI Engineer loop (LinkedIn, Oct 2026).",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "The KV budget, computed",
+              "The four knobs",
+              "What happens when memory runs out",
+              "Measure it",
+              "So what for the system"
+            ]
+          }
+        },
+        {
+          "id": "llm-serving-inference-q32",
+          "number": 32,
+          "marks": [
+            "asked"
+          ],
+          "text": "Your assistant answers the same ~200 questions all day and costs $24K a day. Design a cache that cuts the bill without serving wrong or stale answers.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — a senior system-design question shared in May 2026 (LinkedIn).",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify what repeats",
+              "Layer the caches",
+              "Match on meaning, guard on entities",
+              "Freshness and scope",
+              "Failure modes",
+              "Measure and evolve"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

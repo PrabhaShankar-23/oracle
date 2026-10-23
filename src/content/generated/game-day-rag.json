@@ -1277,6 +1277,81 @@
           }
         }
       ]
+    },
+    {
+      "id": "rag-added-from-saved-linkedin-interview-posts-24-oct-2026",
+      "letter": null,
+      "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+      "questions": [
+        {
+          "id": "rag-q63",
+          "number": 63,
+          "marks": [
+            "asked"
+          ],
+          "text": "(D) Design a multilingual RAG system for 20 languages across millions of documents. Accuracy and retrieval speed both matter.",
+          "points": [],
+          "links": [],
+          "badge": "Trending — reported as a senior RAG design question (LinkedIn, Jun 2026).",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify the language mix",
+              "Size it",
+              "One shared embedding space",
+              "Retrieval that survives scripts and names",
+              "Generate in the user's language",
+              "Failure modes per language",
+              "Evolve"
+            ]
+          }
+        },
+        {
+          "id": "rag-q64",
+          "number": 64,
+          "marks": [
+            "asked"
+          ],
+          "text": "(D) Design a fault-tolerant document ingestion pipeline for production RAG. How do you handle duplicate uploads, async processing, retries, failures and reliable indexing?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — reported from a senior AI engineer loop (LinkedIn, Jul 2026).",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Clarify the load and the promise",
+              "Accept fast, process later",
+              "Idempotent at every hop",
+              "The worker pipeline",
+              "Retries, DLQ and replay",
+              "Updates and deletes",
+              "What I monitor"
+            ]
+          }
+        },
+        {
+          "id": "rag-q65",
+          "number": 65,
+          "marks": [
+            "trending"
+          ],
+          "text": "(C) Do you even need a vector database? When would you use vectorless retrieval, cache-augmented generation or plain long context instead?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — vectorless RAG (PageIndex) and CAG were widely discussed in 2026 posts.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where long context and CAG win",
+              "Where reasoning over a tree index wins",
+              "Where vectors still win",
+              "The deciding questions",
+              "What I'd pick"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

@@ -3031,5 +3031,249 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Name it&lt;br/&gt;static batching wastes&lt;br/&gt;slots\"]):::step\n        N2(\"2 · Rule out the fakes&lt;br/&gt;other reasons a GPU&lt;br/&gt;idles\"):::ask\n        N3(\"3 · Confirm with&lt;br/&gt;evidence&lt;br/&gt;idle slot-steps\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Fix by experiment&lt;br/&gt;scheduler, then&lt;br/&gt;allocator\"]:::step\n        N5(\"5 · Validate&lt;br/&gt;throughput and both&lt;br/&gt;latency metrics\"):::ask\n        N6([\"6 · Productionise&lt;br/&gt;let the server schedule\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "llm-serving-inference-q31": {
+    "type": "mechanism",
+    "spine": [
+      "The one-line claim",
+      "The KV budget, computed",
+      "The four knobs",
+      "What happens when memory runs out",
+      "Measure it",
+      "So what for the system"
+    ],
+    "testing": "whether you can turn GPU memory into a concurrency number and know which knob trades latency for throughput, not just recite &quot;vLLM uses PagedAttention.&quot;",
+    "trap": "&quot;Raise max_num_seqs for more throughput.&quot; Past the KV budget that only causes preemption and worse latency.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>KV pool caps concurrency</td>\n<td>\"On vLLM, concurrency is capped by the KV cache pool, not compute. So I compute that pool before I touch any flag.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>every knob spends it</td>\n<td>\"Each serving parameter is a way of spending the same memory. If I set them past the budget, requests get preempted and recomputed, which users see as sudden latency spikes.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · budget</strong></td>\n<td>439K tokens in the pool</td>\n<td>\"For an 8B-class model on an 80 GB GPU at 0.92 utilisation, the pool holds about 439 thousand tokens. That's roughly 214 sequences at two thousand tokens each.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · knobs</strong></td>\n<td>seqs, batched tokens</td>\n<td>\"Then I set max-num-seqs from that budget, and max-num-batched-tokens by goal: about two thousand for smooth chat, above eight thousand for throughput.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · pressure</strong></td>\n<td>preempt, recompute</td>\n<td>\"When sequences outgrow the pool, vLLM preempts some and recomputes them later. I add room with fp8 KV cache, prefix caching or tensor parallelism.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch</strong></td>\n<td>preemptions, TTFT, ITL</td>\n<td>\"I load-test with real prompt and output lengths, and watch preemptions, KV usage, TTFT and inter-token latency together. The number I maximise is goodput.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>scale on queue and KV</td>\n<td>\"And I autoscale on waiting requests and KV cache usage, never on CPU, because the KV pool saturates long before the processor does.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The one-line claim",
+        "claim": "the KV cache, not compute, caps concurrency",
+        "html": "<p><strong>Weights are fixed; what's left of GPU memory is KV cache, and that pool decides how many sequences can decode at once.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Memory split:</strong></span><span class=\"flow-step\">GPU memory × utilisation</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">minus weights</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">minus activations</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>KV pool</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">tokens in flight</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">concurrent sequences</span></div>"
+      },
+      {
+        "number": 2,
+        "name": "The KV budget, computed",
+        "claim": "tokens of context the GPU can hold",
+        "html": "<p><strong>I'd compute the pool before touching a flag, because every knob is a way of spending it.</strong></p>\n<pre><code class=\"language-text\">per token (Llama-3-8B-class: 32 layers, 8 KV heads, head dim 128, fp16)\n  = 2 (K,V) × 32 × 8 × 128 × 2 B             = 131,072 B ≈ 128 KiB\npool (80 GB GPU, utilisation 0.92, weights 16 GB)\n  = 80 × 0.92 − 16                             ≈ 57.6 GB\ntokens in the pool = 57.6 GB ÷ 128 KiB        ≈ 439K tokens\nsequences at 8K context = 439K ÷ 8,192        ≈ 53     ← if all fill their window\nsequences at 2K average = 439K ÷ 2,048        ≈ 214\nfp8 KV cache                                  ≈ 879K tokens   ← twice the room\n</code></pre>\n<p>Computed from the stated assumptions; real pools are a little smaller after activations and CUDA graphs.</p>"
+      },
+      {
+        "number": 3,
+        "name": "The four knobs",
+        "claim": "each spends the pool differently",
+        "html": "<p><strong>I tune four engine arguments, and each one moves a different latency metric.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Knob (vLLM engine arg)</th>\n<th>Raises</th>\n<th>Costs</th>\n<th>Start at</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>--gpu-memory-utilization</code></td>\n<td>KV pool size</td>\n<td>OOM risk if other processes share the GPU</td>\n<td>default 0.92 (as of Oct 2026)</td>\n</tr>\n<tr>\n<td><code>--max-num-seqs</code></td>\n<td>concurrent sequences, throughput</td>\n<td>preemption once sequences outgrow the pool</td>\n<td>from the budget: pool ÷ typical sequence length</td>\n</tr>\n<tr>\n<td><code>--max-num-batched-tokens</code></td>\n<td>tokens per step</td>\n<td>larger = better TTFT, smaller = better inter-token latency</td>\n<td>2,048 for chat ITL; &gt;8,192 for throughput</td>\n</tr>\n<tr>\n<td><code>--max-model-len</code></td>\n<td>longest request</td>\n<td>each long request reserves more blocks</td>\n<td>the real p99 prompt + output, not the model's maximum</td>\n</tr>\n</tbody></table>\n<p>Plus two that change the budget itself: <code>--kv-cache-dtype fp8</code> (half the bytes per token) and <code>--enable-prefix-caching</code> (shared prefixes stored once).</p>"
+      },
+      {
+        "number": 4,
+        "name": "What happens when memory runs out",
+        "claim": "preemption by recompute",
+        "html": "<p><strong>When running sequences need more blocks than are free, the scheduler preempts some and recomputes them later.</strong></p>\n<figure><div class=\"mermaid\">flowchart TD\n    S([\"📈 sequences grow&lt;br/&gt;each decode step\"]):::in\n    Q{{\"🤔 free KV blocks&lt;br/&gt;for next step?\"}}:::ask\n    R[\"▶️ decode the batch\"]:::step\n    P[\"⏸️ preempt newest&lt;br/&gt;free its blocks\"]:::bad\n    C[\"🔁 re-prefill later&lt;br/&gt;(recompute)\"]:::calc\n    S --&gt; Q\n    Q --&gt;|\"yes\"| R\n    Q --&gt;|\"no\"| P\n    P --&gt; C\n    C --&gt; Q\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n</div></figure>\n<p>In vLLM V1 the default is recompute rather than swap to CPU. A preempted request pays a second prefill, so its TTFT and total latency jump. The fixes are more pool (utilisation, fp8 KV, tensor parallel), or fewer concurrent tokens (<code>max-num-seqs</code>, <code>max-num-batched-tokens</code>).</p>"
+      },
+      {
+        "number": 5,
+        "name": "Measure it",
+        "claim": "preemptions, KV usage and the two latencies",
+        "html": "<p><strong>I'd tune with a load test that replays real prompt and output lengths, and watch these together.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>Healthy</th>\n<th>Means if bad</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>preemption count</td>\n<td>~0 at target load</td>\n<td><code>max-num-seqs</code> too high for the pool</td>\n</tr>\n<tr>\n<td>KV cache usage</td>\n<td>70–90% at peak</td>\n<td>lower: room for more sequences</td>\n</tr>\n<tr>\n<td>TTFT p95</td>\n<td>under SLA</td>\n<td>prefill starved: raise batched tokens</td>\n</tr>\n<tr>\n<td>inter-token latency p95</td>\n<td>under SLA</td>\n<td>prefill chunks too big: lower batched tokens</td>\n</tr>\n<tr>\n<td>goodput</td>\n<td>requests meeting both SLAs per second</td>\n<td>the number to maximise</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "So what for the system",
+        "claim": "scale on queue and KV, not CPU",
+        "html": "<p><strong>The autoscaler should add replicas when waiting requests or KV usage climb, because that's where this engine saturates.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Scale signal:</strong></span><span class=\"flow-step\">waiting requests ↑ or KV usage &gt; 90%</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">add a replica</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">new requests routed there</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">preemption stays ~0</span></div>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not just set max-num-seqs to 1,024 for maximum throughput?",
+        "tag": "trap",
+        "html": "<p><strong>Because the pool holds about 214 average sequences here; beyond that, the extra sequences get preempted and recomputed.</strong></p>\n<pre><code class=\"language-text\">439K tokens ÷ 1,024 sequences ≈ 429 tokens each   ← less than one chat turn\n</code></pre>\n<p>Throughput rises only until the pool fills; after that, preemption wastes it.</p>"
+      },
+      {
+        "number": 2,
+        "question": "What does chunked prefill actually change?",
+        "tag": "probe",
+        "html": "<p><strong>A long prompt is split across steps, so decodes for other users keep running instead of stalling behind it.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Without:</strong></span><span class=\"flow-step\">30K-token prompt</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">one huge prefill step</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">everyone's next token waits</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>With:</strong></span><span class=\"flow-step\">decodes scheduled first</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">prefill fills the leftover token budget</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">steady inter-token latency</span></div>"
+      },
+      {
+        "number": 3,
+        "question": "How do you scale a GPU-bound LLM service with HPA?",
+        "tag": "senior",
+        "html": "<p><strong>Not on CPU. Scale on waiting requests or KV cache usage from the engine's metrics.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Signal</th>\n<th>Good scaler?</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>CPU %</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> the GPU is the bottleneck</td>\n</tr>\n<tr>\n<td>GPU utilisation</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> high even when healthy</td>\n</tr>\n<tr>\n<td>waiting requests / KV usage</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> rises right before latency breaks</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "🧪 You switch the KV cache to fp8. What changes?",
+        "tag": "edge",
+        "html": "<p><strong>The pool holds about twice the tokens, so roughly twice the sequences, at a small quality risk you must eval.</strong></p>\n<pre><code class=\"language-text\">bytes/token: 131,072 → 65,536\ntokens in pool: 439K → 879K\n2K-avg sequences: 214 → ~429\n</code></pre>"
+      },
+      {
+        "number": 5,
+        "question": "Some users send 100K-token prompts. What do you do?",
+        "tag": "edge",
+        "html": "<p><strong>Isolate them: a separate pool or replica with a larger max-model-len, so they can't preempt everyone else.</strong></p>\n<ul>\n<li><strong>Route by length:</strong> short and long requests to different replicas.</li>\n<li><strong>Cap max-model-len</strong> on the chat pool to the real p99.</li>\n<li><strong>Prefix caching</strong> if the long part is shared.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "question": "Swap or recompute on preemption?",
+        "tag": "probe",
+        "html": "<p><strong>Recompute is vLLM V1's default; swap copies KV to CPU and back, which costs PCIe bandwidth.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Recompute</th>\n<th>Swap</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Cost</td>\n<td>a second prefill</td>\n<td>CPU↔GPU copies</td>\n</tr>\n<tr>\n<td>Better when</td>\n<td>prompts are short</td>\n<td>prompts are long, PCIe is fast</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;More max-num-seqs means more throughput&quot; — not past the KV pool.",
+      "&quot;vLLM handles memory automatically&quot; — it handles allocation; you still size the pool.",
+      "&quot;Set max-model-len to the model&#39;s full window&quot; — every long request then reserves more blocks.",
+      "&quot;Scale on CPU&quot; — the GPU&#39;s KV pool saturates first."
+    ],
+    "links": [
+      {
+        "label": "Capacity & throughput math",
+        "target": "05-LLM-Production/07-Efficient Inference & Serving (core)/03-Capacity & throughput math"
+      },
+      {
+        "label": "Advanced scheduling",
+        "target": "05-LLM-Production/07-Efficient Inference & Serving (core)/02-Advanced scheduling"
+      },
+      {
+        "label": "Autoscaling LLM workloads",
+        "target": "05-LLM-Production/07-Efficient Inference & Serving (core)/04-Autoscaling LLM workloads"
+      },
+      {
+        "label": "kv cache limits concurrency",
+        "target": "model-answers/08-LLM-SERVING-INFERENCE/04-kv-cache-limits-concurrency"
+      },
+      {
+        "label": "continuous batching pagedattention",
+        "target": "model-answers/08-LLM-SERVING-INFERENCE/05-continuous-batching-pagedattention"
+      },
+      {
+        "label": "autoscaling not on cpu",
+        "target": "model-answers/08-LLM-SERVING-INFERENCE/19-autoscaling-not-on-cpu"
+      },
+      {
+        "label": "kv cache memory",
+        "target": "model-answers/04-LLM-FOUNDATIONS/03-kv-cache-memory"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;KV pool caps concurrency\"]:::in\n        N2[\"2 · Why&lt;br/&gt;every knob spends it\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Budget&lt;br/&gt;439K tokens in the pool\"]:::step\n        N4[\"4 · Knobs&lt;br/&gt;seqs, batched tokens\"]:::step\n        N5[\"5 · Pressure&lt;br/&gt;preempt, recompute\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Watch&lt;br/&gt;preemptions, TTFT, ITL\"]:::bad\n        NC([\"Close&lt;br/&gt;scale on queue and KV\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "llm-serving-inference-q32": {
+    "type": "design",
+    "spine": [
+      "Clarify what repeats",
+      "Layer the caches",
+      "Match on meaning, guard on entities",
+      "Freshness and scope",
+      "Failure modes",
+      "Measure and evolve"
+    ],
+    "testing": "whether you treat semantic caching as retrieval with a false-positive rate, freshness and tenancy, not as a dictionary keyed by text.",
+    "trap": "&quot;Cache responses by embedding with a 0.9 similarity threshold.&quot; That serves &quot;cancel my order&quot; to someone who asked to cancel a subscription.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>layered, guarded cache</td>\n<td>\"I'd put a layered cache in front of the model: exact match, then a semantic cache on intent, then provider prompt caching for the shared prefix.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>intents repeat</td>\n<td>\"Users ask the same two hundred things in different words, so exact matching barely helps. But a semantic match can return a confident wrong answer.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · match</strong></td>\n<td>similarity + entities</td>\n<td>\"A hit needs high similarity and matching entities. Cancel my order and cancel my subscription embed almost identically, so the entity check is what stops the wrong answer.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · tiers</strong></td>\n<td>serve, adapt, miss</td>\n<td>\"Above a high threshold I serve the cached answer. In a middle band a small model adapts it, and below that I call the main model.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · freshness</strong></td>\n<td>source, TTL, tenant</td>\n<td>\"Each entry stores its tenant, source document versions and a TTL by category. Pricing and account state are never cached, and a source change evicts its answers.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch</strong></td>\n<td>wrong-hit rate</td>\n<td>\"I measure the wrong-hit rate on labelled pairs and run in shadow mode first. That means computing hits but still calling the model and comparing answers.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>savings with correctness</td>\n<td>\"Done means savings and a wrong-hit rate under target together. Hit rate on its own proves nothing.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify what repeats",
+        "claim": "intents repeat, wording doesn&#39;t",
+        "html": "<p><strong>I'd first check what actually repeats: the same intent in different words, mostly general rather than personal.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Ask</th>\n<th>Why it matters</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Share of traffic in the top 200 intents</td>\n<td>the ceiling on savings</td>\n</tr>\n<tr>\n<td>General vs personalised answers</td>\n<td>personalised ones can't be shared</td>\n</tr>\n<tr>\n<td>How often source content changes</td>\n<td>sets TTL per category</td>\n</tr>\n<tr>\n<td>Tenants or user groups</td>\n<td>cache must be partitioned</td>\n</tr>\n</tbody></table>\n<p>Exact-string caching helps little here: \"reset my password\" and \"I forgot my login\" are one intent with no shared string.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Layer the caches",
+        "claim": "cheapest check first",
+        "html": "<p><strong>Each layer stops a request before the expensive one, and each matches on something different.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Key</th>\n<th>Saves</th>\n<th>Risk</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>exact response cache</td>\n<td>normalised text + tenant</td>\n<td>the whole call</td>\n<td>almost none</td>\n</tr>\n<tr>\n<td>semantic response cache</td>\n<td>intent embedding + tenant + entities</td>\n<td>the whole call</td>\n<td>wrong answer on a false hit</td>\n</tr>\n<tr>\n<td>provider prompt cache</td>\n<td>identical token prefix</td>\n<td>input cost of the shared prefix</td>\n<td>none (exact match)</td>\n</tr>\n<tr>\n<td>retrieval cache</td>\n<td>query embedding → chunk ids</td>\n<td>the retrieval step</td>\n<td>stale chunks</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Request path:</strong></span><span class=\"flow-step\">normalise</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">exact cache</span><span class=\"flow-arrow\" data-label=\"miss\"></span><span class=\"flow-step\">semantic cache</span><span class=\"flow-arrow\" data-label=\"miss\"></span><span class=\"flow-step\">retrieve</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LLM (cached prefix)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">store with metadata</span></div>"
+      },
+      {
+        "number": 3,
+        "name": "Match on meaning, guard on entities",
+        "claim": "similarity alone is not enough",
+        "html": "<p><strong>A hit needs high similarity <em>and</em> matching entities; a middle band adapts the cached answer instead of serving it.</strong></p>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — tiers plus an entity guard:</strong></p>\n<pre><code class=\"language-python\">import math\ndef cos(a, b): return sum(x*y for x, y in zip(a, b)) / (math.hypot(*a) * math.hypot(*b))\nCACHE = [(\"how do I reset my password\", [0.9, 0.1, 0.0], \"account\", \"Use 'Forgot password' on the login page.\"),\n         (\"can I cancel my order\",      [0.1, 0.9, 0.3], \"order\",   \"Orders can be cancelled before dispatch.\")]\ndef lookup(q_vec, q_entity, hi=0.95, lo=0.85):\n    text, vec, entity, ans = max(CACHE, key=lambda c: cos(q_vec, c[1]))\n    s = round(cos(q_vec, vec), 3)\n    if s &gt;= hi and entity == q_entity: return s, \"serve cached\", ans\n    if s &gt;= lo and entity == q_entity: return s, \"adapt with small model\", ans\n    return s, \"miss: call LLM\", None\nprint(lookup([0.88, 0.12, 0.02], \"account\"))       # paraphrase of the password question\nprint(lookup([0.12, 0.88, 0.40], \"subscription\"))  # \"cancel my subscription\": similar text, other entity\n# → (0.999, 'serve cached', \"Use 'Forgot password' on the login page.\")\n# → (0.994, 'miss: call LLM', None)\n</code></pre>\n<p>Toy vectors, run on Python 3. The second query scores 0.994, higher than many real paraphrases, and only the entity check stops the wrong answer.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Freshness and scope",
+        "claim": "every entry knows its source, age and audience",
+        "html": "<p><strong>Each cached answer stores what it was built from, so a source change or an expiry removes it.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Field</th>\n<th>Used for</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>tenant / audience</td>\n<td>partition: no cross-tenant hits</td>\n</tr>\n<tr>\n<td>intent + entities</td>\n<td>the hit guard</td>\n</tr>\n<tr>\n<td>source doc ids + versions</td>\n<td>invalidate when a source changes</td>\n</tr>\n<tr>\n<td>category TTL</td>\n<td>policy FAQ: days · pricing, stock, account state: never cached</td>\n</tr>\n<tr>\n<td>personalised flag</td>\n<td>never shared</td>\n</tr>\n<tr>\n<td>confidence at creation</td>\n<td>don't cache low-confidence answers</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "Failure modes",
+        "claim": "wrong hits, stale hits, leaky hits",
+        "html": "<p><strong>The cache fails silently: a wrong answer comes back with a 200 and nothing in the logs.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Signal</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>false hit (negation, other entity)</td>\n<td>thumbs-down on cached answers</td>\n<td>entity check, higher threshold, small-model verifier</td>\n</tr>\n<tr>\n<td>stale answer after a policy change</td>\n<td>cited doc version older than current</td>\n<td>invalidate on source change</td>\n</tr>\n<tr>\n<td>cross-tenant answer</td>\n<td>canary query from tenant A</td>\n<td>tenant in the key</td>\n</tr>\n<tr>\n<td>poisoned entry (a bad answer cached)</td>\n<td>spike of complaints on one entry</td>\n<td>cache only after checks pass; one-click evict</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Measure and evolve",
+        "claim": "hit rate is a means, correctness is the goal",
+        "html": "<p><strong>I'd track savings and wrong-hit rate together, and tune the threshold on labelled pairs.</strong></p>\n<pre><code class=\"language-text\">savings/day ≈ requests/day × hit rate × cost per full call         ← illustrative\nexample: if 60% of the $24K/day is answered from cache → ≈ $14K/day saved\nthreshold tuning: label 500 (query, cached query) pairs → pick the lowest threshold with wrong-hit rate &lt; 0.5%\n</code></pre>\n<p>Shadow mode first: compute hits, still call the LLM, and compare answers before serving any.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not an exact-match cache? It&#39;s safe.",
+        "tag": "trap",
+        "html": "<p><strong>Safe but nearly useless here: users rarely repeat the exact words.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Cache</th>\n<th>Hit rate on paraphrases</th>\n<th>Wrong-hit risk</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>exact</td>\n<td>low</td>\n<td>~0</td>\n</tr>\n<tr>\n<td>semantic + guards</td>\n<td>high</td>\n<td>small, measured</td>\n</tr>\n</tbody></table>\n<p>Keep the exact layer first anyway; it's free.</p>"
+      },
+      {
+        "number": 2,
+        "question": "How do you pick the similarity threshold?",
+        "tag": "probe",
+        "html": "<p><strong>From labelled pairs, not intuition: the lowest threshold whose wrong-hit rate stays under a target.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Tune:</strong></span><span class=\"flow-step\">sample query pairs</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">label same / different answer</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">sweep threshold</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">plot hit rate vs wrong-hit rate</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">pick</span></div>"
+      },
+      {
+        "number": 3,
+        "question": "&quot;Is the API rate limited&quot; vs &quot;is the API not rate limited&quot; — same embedding?",
+        "tag": "edge",
+        "html": "<p><strong>Nearly. Embeddings place a sentence and its negation close together, so negation needs a guard.</strong></p>\n<ul>\n<li><strong>Guard:</strong> a negation or polarity check, or a cross-encoder that compares the two queries.</li>\n<li><strong>Middle band:</strong> adapt with a small model instead of serving.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "Semantic cache vs prompt caching — which saves more?",
+        "tag": "probe",
+        "html": "<p><strong>They save different things, so use both.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Semantic cache</th>\n<th>Prompt caching</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Skips</td>\n<td>the whole model call</td>\n<td>re-processing an identical prefix</td>\n</tr>\n<tr>\n<td>Saves</td>\n<td>input + output tokens</td>\n<td>most of the shared prefix's input cost</td>\n</tr>\n<tr>\n<td>Risk</td>\n<td>wrong answer</td>\n<td>none</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "The return policy changed this morning. What happens to cached answers?",
+        "tag": "senior",
+        "html": "<p><strong>Every entry citing the old policy version is evicted when the new version is indexed.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Invalidate:</strong></span><span class=\"flow-step\">new doc version indexed</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">look up entries by source id</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">evict</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">next query rebuilds from fresh context</span></div>"
+      },
+      {
+        "number": 6,
+        "question": "Can a cached answer leak across tenants?",
+        "tag": "edge",
+        "html": "<p><strong>Only if the tenant isn't in the key; partition by tenant and test it with a canary.</strong></p>\n<ul>\n<li><strong>Key:</strong> tenant + intent + entities.</li>\n<li><strong>Canary:</strong> tenant A asks a question only tenant B's cache can answer → must miss.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Cache by embedding at 0.9 and serve it&quot; — negations and other entities score above 0.9.",
+      "&quot;Cache everything for 24 hours&quot; — prices, stock and account state go stale in minutes.",
+      "&quot;Hit rate went up, so it works&quot; — measure the wrong-hit rate with it.",
+      "&quot;One cache for all customers&quot; — a cached answer can leak across tenants."
+    ],
+    "links": [
+      {
+        "label": "Caching Layers — Embedding, Retrieval & Semantic Answer Cache",
+        "target": "04-RAG/12-Production RAG Systems (arch lens)/04-Caching Layers — Embedding, Retrieval & Semantic Answer Cache"
+      },
+      {
+        "label": "Cost optimization",
+        "target": "05-LLM-Production/12-LLMops & Production Systems (architect lens)/03-Cost optimization"
+      },
+      {
+        "label": "prefix caching",
+        "target": "model-answers/08-LLM-SERVING-INFERENCE/06-prefix-caching"
+      },
+      {
+        "label": "prompt caching and ordering",
+        "target": "model-answers/19-PROMPT-ENGINEERING/10-prompt-caching-and-ordering"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;layered, guarded cache\"]:::in\n        N2[\"2 · Why&lt;br/&gt;intents repeat\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Match&lt;br/&gt;similarity + entities\"]:::step\n        N4[\"4 · Tiers&lt;br/&gt;serve, adapt, miss\"]:::step\n        N5[\"5 · Freshness&lt;br/&gt;source, TTL, tenant\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Watch&lt;br/&gt;wrong-hit rate\"]:::bad\n        NC([\"Close&lt;br/&gt;savings with correctness\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   }
 }

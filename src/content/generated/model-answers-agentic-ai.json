@@ -389,8 +389,8 @@
         "target": "01-Foundations/07-Components of an agentic system"
       },
       {
-        "label": "agentic reference architecture",
-        "target": "11-Production Agentic Systems (architect lens)/91-agentic reference architecture"
+        "label": "Reference architecture",
+        "target": "11-Production Agentic Systems (architect lens)/01-Reference architecture"
       },
       {
         "label": "harness or model",
@@ -790,8 +790,8 @@
         "target": "03-Tool use-Function calling/06-Tool error handling"
       },
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       },
       {
         "label": "pod restarts mid run",
@@ -893,8 +893,8 @@
         "target": "02-Reasoning-planning/11-Task decomposition"
       },
       {
-        "label": "spend and rate limits",
-        "target": "10-Safety, Security & Guardrails/88-spend and rate limits"
+        "label": "Spend and rate limits",
+        "target": "10-Safety, Security & Guardrails/10-Spend and rate limits"
       },
       {
         "label": "agent loop",
@@ -1280,8 +1280,8 @@
         "target": "07-Frameworks & Orchestration/05-Durable Execution — Checkpointing, HITL Interrupts, Time Travel"
       },
       {
-        "label": "statefulness and persistence",
-        "target": "11-Production Agentic Systems (architect lens)/97-statefulness and persistence"
+        "label": "Statefulness and persistence",
+        "target": "11-Production Agentic Systems (architect lens)/07-Statefulness and persistence"
       },
       {
         "label": "State Management",
@@ -1371,10 +1371,6 @@
       "&quot;The agents discuss and agree.&quot; — who owns the decision?"
     ],
     "links": [
-      {
-        "label": "When Multi Agent Hurts",
-        "target": "06-Multi-Agent Systems/09-When Multi-Agent Hurts"
-      },
       {
         "label": "Single agent vs Multi agent",
         "target": "06-Multi-Agent Systems/01-Single-agent vs Multi-agent"
@@ -1575,8 +1571,8 @@
     ],
     "links": [
       {
-        "label": "human in the loop",
-        "target": "10-Safety, Security & Guardrails/86-human-in-the-loop"
+        "label": "Human in the loop",
+        "target": "10-Safety, Security & Guardrails/07-Human-in-the-loop"
       },
       {
         "label": "Human in the Loop (HITL)",
@@ -1675,16 +1671,16 @@
     ],
     "links": [
       {
-        "label": "excessive agency",
-        "target": "10-Safety, Security & Guardrails/83-excessive agency"
+        "label": "Excessive agency",
+        "target": "10-Safety, Security & Guardrails/03-Excessive agency"
       },
       {
-        "label": "permissions and least privilege",
-        "target": "10-Safety, Security & Guardrails/85-permissions and least privilege"
+        "label": "Permissions and least privilege",
+        "target": "10-Safety, Security & Guardrails/05-Permissions and least privilege"
       },
       {
-        "label": "auditability and traceability",
-        "target": "10-Safety, Security & Guardrails/89-auditability and traceability"
+        "label": "Auditability and traceability",
+        "target": "10-Safety, Security & Guardrails/11-Auditability and traceability"
       },
       {
         "label": "indirect prompt injection",
@@ -1775,16 +1771,16 @@
     ],
     "links": [
       {
-        "label": "prompt injection in agents",
-        "target": "10-Safety, Security & Guardrails/82-prompt injection in agents"
+        "label": "Prompt injection in agents",
+        "target": "10-Safety, Security & Guardrails/02-Prompt injection in agents"
       },
       {
-        "label": "the expanded attack surface",
-        "target": "10-Safety, Security & Guardrails/81-the expanded attack surface"
+        "label": "The expanded attack surface",
+        "target": "10-Safety, Security & Guardrails/01-The expanded attack surface"
       },
       {
-        "label": "owasp and agentic threat modeling",
-        "target": "10-Safety, Security & Guardrails/90-owasp and agentic threat modeling"
+        "label": "OWASP and agentic threat modelling",
+        "target": "10-Safety, Security & Guardrails/12-OWASP and agentic threat modelling"
       },
       {
         "label": "prompt injection vs jailbreak",
@@ -1875,8 +1871,8 @@
     ],
     "links": [
       {
-        "label": "sandboxing and isolation",
-        "target": "10-Safety, Security & Guardrails/84-sandboxing and isolation"
+        "label": "Sandboxing and isolation",
+        "target": "10-Safety, Security & Guardrails/04-Sandboxing and isolation"
       },
       {
         "label": "CodeAct",
@@ -1978,20 +1974,20 @@
     ],
     "links": [
       {
-        "label": "trajectory evaluation — judging the path",
-        "target": "09-Evaluation & Observability/73-trajectory evaluation — judging the path"
+        "label": "Trajectory evaluation",
+        "target": "09-Evaluation & Observability/02-Trajectory evaluation"
       },
       {
-        "label": "why agent eval is uniquely hard",
-        "target": "09-Evaluation & Observability/72-why agent eval is uniquely hard"
+        "label": "Why agent eval is hard",
+        "target": "09-Evaluation & Observability/01-Why agent eval is hard"
       },
       {
-        "label": "llm as judge for trajectories",
-        "target": "09-Evaluation & Observability/75-llm-as-judge for trajectories"
+        "label": "LLM as judge for trajectories",
+        "target": "09-Evaluation & Observability/04-LLM-as-judge for trajectories"
       },
       {
-        "label": "simulation & replay",
-        "target": "09-Evaluation & Observability/79-simulation & replay"
+        "label": "Simulation and replay",
+        "target": "09-Evaluation & Observability/08-Simulation and replay"
       },
       {
         "label": "build the first eval suite",
@@ -2089,16 +2085,16 @@
     ],
     "links": [
       {
-        "label": "the 95% problem",
-        "target": "09-Evaluation & Observability/78-the 95% problem"
+        "label": "The demo to production gap",
+        "target": "09-Evaluation & Observability/07-The demo-to-production gap"
       },
       {
         "label": "reliability problem",
         "target": "01-Foundations/08-reliability problem"
       },
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       },
       {
         "label": "agent wrong solution",
@@ -2189,16 +2185,16 @@
     ],
     "links": [
       {
-        "label": "cost modeling",
-        "target": "11-Production Agentic Systems (architect lens)/94-cost modeling"
+        "label": "Cost modelling",
+        "target": "11-Production Agentic Systems (architect lens)/04-Cost modelling"
       },
       {
-        "label": "caching in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/95-caching in agentic systems"
+        "label": "Caching",
+        "target": "11-Production Agentic Systems (architect lens)/05-Caching"
       },
       {
-        "label": "spend and rate limits",
-        "target": "10-Safety, Security & Guardrails/88-spend and rate limits"
+        "label": "Spend and rate limits",
+        "target": "10-Safety, Security & Guardrails/10-Spend and rate limits"
       },
       {
         "label": "cost model a million calls",
@@ -2296,12 +2292,12 @@
     ],
     "links": [
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       },
       {
-        "label": "concurrency and parallelism",
-        "target": "11-Production Agentic Systems (architect lens)/96-concurrency and parallelism"
+        "label": "Concurrency and parallelism",
+        "target": "11-Production Agentic Systems (architect lens)/06-Concurrency and parallelism"
       },
       {
         "label": "Streaming Agent Output",
@@ -2399,20 +2395,20 @@
     ],
     "links": [
       {
-        "label": "agentic reference architecture",
-        "target": "11-Production Agentic Systems (architect lens)/91-agentic reference architecture"
+        "label": "Reference architecture",
+        "target": "11-Production Agentic Systems (architect lens)/01-Reference architecture"
       },
       {
-        "label": "statefulness and persistence",
-        "target": "11-Production Agentic Systems (architect lens)/97-statefulness and persistence"
+        "label": "Statefulness and persistence",
+        "target": "11-Production Agentic Systems (architect lens)/07-Statefulness and persistence"
       },
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       },
       {
-        "label": "deployment and scaling",
-        "target": "11-Production Agentic Systems (architect lens)/98-deployment and scaling"
+        "label": "Deployment and scaling",
+        "target": "11-Production Agentic Systems (architect lens)/09-Deployment and scaling"
       },
       {
         "label": "pod restarts mid run",
@@ -2520,8 +2516,8 @@
         "target": "War-Stories"
       },
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       },
       {
         "label": "Debate and Critique Patterns",
@@ -2709,8 +2705,8 @@
         "target": "03-Tool use-Function calling/07-CodeAct"
       },
       {
-        "label": "sandboxing and isolation",
-        "target": "10-Safety, Security & Guardrails/84-sandboxing and isolation"
+        "label": "Sandboxing and isolation",
+        "target": "10-Safety, Security & Guardrails/04-Sandboxing and isolation"
       },
       {
         "label": "agent runs code",
@@ -3001,12 +2997,12 @@
         "target": "08-Agentic RAG & Knowledge/01-Agentic RAG — Retrieval as an Agent-Controlled Tool"
       },
       {
-        "label": "Iterative & Multi hop Retrieval Driven by the Agent",
-        "target": "08-Agentic RAG & Knowledge/02-Iterative & Multi-hop Retrieval Driven by the Agent"
+        "label": "Agentic RAG — Retrieval as an Agent Controlled Tool",
+        "target": "08-Agentic RAG & Knowledge/01-Agentic RAG — Retrieval as an Agent-Controlled Tool"
       },
       {
-        "label": "self correcting retrieval loops — agent grades and re retrieves",
-        "target": "08-Agentic RAG & Knowledge/71-self-correcting retrieval loops — agent grades and re-retrieves"
+        "label": "Agentic RAG — Retrieval as an Agent Controlled Tool",
+        "target": "08-Agentic RAG & Knowledge/01-Agentic RAG — Retrieval as an Agent-Controlled Tool"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision rule&lt;br/&gt;single-hop against&lt;br/&gt;compound questions\"]):::step\n        N2[\"2 · Option A's real&lt;br/&gt;cost&lt;br/&gt;no recovery\"]:::bad\n        N3[\"3 · Option B's real&lt;br/&gt;cost&lt;br/&gt;calls, latency, loops\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The tell&lt;br/&gt;what failed retrievals&lt;br/&gt;look like\"]:::step\n        N5([\"5 · What I'd pick&lt;br/&gt;a router in front of&lt;br/&gt;both\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3192,16 +3188,16 @@
     ],
     "links": [
       {
-        "label": "tracing & observability",
-        "target": "09-Evaluation & Observability/77-tracing & observability"
+        "label": "Tracing and observability",
+        "target": "09-Evaluation & Observability/06-Tracing and observability"
       },
       {
-        "label": "human feedback loops & online eval",
-        "target": "09-Evaluation & Observability/80-human feedback loops & online eval"
+        "label": "Human feedback and online eval",
+        "target": "09-Evaluation & Observability/09-Human feedback and online eval"
       },
       {
-        "label": "auditability and traceability",
-        "target": "10-Safety, Security & Guardrails/89-auditability and traceability"
+        "label": "Auditability and traceability",
+        "target": "10-Safety, Security & Guardrails/11-Auditability and traceability"
       },
       {
         "label": "debug from the trace",
@@ -3292,16 +3288,16 @@
     ],
     "links": [
       {
-        "label": "guardrails",
-        "target": "10-Safety, Security & Guardrails/87-guardrails"
+        "label": "Guardrails",
+        "target": "10-Safety, Security & Guardrails/09-Guardrails"
       },
       {
-        "label": "excessive agency",
-        "target": "10-Safety, Security & Guardrails/83-excessive agency"
+        "label": "Excessive agency",
+        "target": "10-Safety, Security & Guardrails/03-Excessive agency"
       },
       {
-        "label": "spend and rate limits",
-        "target": "10-Safety, Security & Guardrails/88-spend and rate limits"
+        "label": "Spend and rate limits",
+        "target": "10-Safety, Security & Guardrails/10-Spend and rate limits"
       },
       {
         "label": "excessive agency",
@@ -3399,12 +3395,12 @@
     ],
     "links": [
       {
-        "label": "versioning and rollout",
-        "target": "11-Production Agentic Systems (architect lens)/100-versioning and rollout"
+        "label": "Versioning and rollout",
+        "target": "11-Production Agentic Systems (architect lens)/12-Versioning and rollout"
       },
       {
-        "label": "deployment and scaling",
-        "target": "11-Production Agentic Systems (architect lens)/98-deployment and scaling"
+        "label": "Deployment and scaling",
+        "target": "11-Production Agentic Systems (architect lens)/09-Deployment and scaling"
       },
       {
         "label": "new model what changes",
@@ -3495,12 +3491,12 @@
     ],
     "links": [
       {
-        "label": "build vs buy",
-        "target": "11-Production Agentic Systems (architect lens)/101-build vs buy"
+        "label": "Build vs buy",
+        "target": "11-Production Agentic Systems (architect lens)/13-Build vs buy"
       },
       {
-        "label": "the architects framing",
-        "target": "11-Production Agentic Systems (architect lens)/102-the architects framing"
+        "label": "The architect's framing",
+        "target": "11-Production Agentic Systems (architect lens)/14-The architect's framing"
       },
       {
         "label": "framework or not",
@@ -3591,8 +3587,8 @@
     ],
     "links": [
       {
-        "label": "coding agents",
-        "target": "12-Applied & Domain Patterns/103-coding agents"
+        "label": "Coding agents",
+        "target": "12-Applied & Domain Patterns/01-Coding agents"
       },
       {
         "label": "when not build agent",
@@ -3694,16 +3690,16 @@
     ],
     "links": [
       {
-        "label": "customer support and rpa agents",
-        "target": "12-Applied & Domain Patterns/104-customer-support and rpa agents"
+        "label": "Customer support agents",
+        "target": "12-Applied & Domain Patterns/03-Customer-support agents"
       },
       {
-        "label": "workflow automation and rpa boundary",
-        "target": "12-Applied & Domain Patterns/109-workflow automation and rpa boundary"
+        "label": "Workflow automation and the RPA boundary",
+        "target": "12-Applied & Domain Patterns/08-Workflow automation and the RPA boundary"
       },
       {
-        "label": "human in the loop",
-        "target": "10-Safety, Security & Guardrails/86-human-in-the-loop"
+        "label": "Human in the loop",
+        "target": "10-Safety, Security & Guardrails/07-Human-in-the-loop"
       },
       {
         "label": "where the human goes",
@@ -3797,12 +3793,12 @@
     ],
     "links": [
       {
-        "label": "data and sql analyst agents",
-        "target": "12-Applied & Domain Patterns/108-data and sql analyst agents"
+        "label": "Data and SQL analyst agents",
+        "target": "12-Applied & Domain Patterns/07-Data and SQL analyst agents"
       },
       {
-        "label": "permissions and least privilege",
-        "target": "10-Safety, Security & Guardrails/85-permissions and least privilege"
+        "label": "Permissions and least privilege",
+        "target": "10-Safety, Security & Guardrails/05-Permissions and least privilege"
       },
       {
         "label": "knowledge graph vs vector",
@@ -3900,16 +3896,16 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       },
       {
-        "label": "streaming and real time agents",
-        "target": "11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+        "label": "Streaming and real time",
+        "target": "11-Production Agentic Systems (architect lens)/10-Streaming and real-time"
       },
       {
         "label": "forty second spinner",
@@ -4003,12 +3999,12 @@
     ],
     "links": [
       {
-        "label": "research and analysis agents",
-        "target": "12-Applied & Domain Patterns/105-research and analysis agents"
+        "label": "Research and analysis agents",
+        "target": "12-Applied & Domain Patterns/04-Research and analysis agents"
       },
       {
-        "label": "research agents — multi source gathering",
-        "target": "08-Agentic RAG & Knowledge/70-research agents — multi source gathering"
+        "label": "Research and analysis agents",
+        "target": "12-Applied & Domain Patterns/04-Research and analysis agents"
       },
       {
         "label": "Orchestrator Worker Pattern",
@@ -4107,12 +4103,12 @@
         "target": "07-Frameworks & Orchestration/09-LCEL"
       },
       {
-        "label": "LangChain — LCEL, create_agent, and the LangGraph Boundary",
-        "target": "07-Frameworks & Orchestration/03-LangChain — LCEL, create_agent, and the LangGraph Boundary"
+        "label": "LangChain — create_agent, Middleware, and the LangGraph Boundary",
+        "target": "07-Frameworks & Orchestration/03-LangChain — create_agent, Middleware, and the LangGraph Boundary"
       },
       {
-        "label": "LangGraph StateGraph basics",
-        "target": "07-Frameworks & Orchestration/19-LangGraph StateGraph basics"
+        "label": "LangGraph — Graph as State Machine",
+        "target": "07-Frameworks & Orchestration/02-LangGraph — Graph as State Machine"
       },
       {
         "label": "langgraph state machine",
@@ -4310,12 +4306,12 @@
         "target": "01-Foundations/05-Autonomy levels"
       },
       {
-        "label": "auditability and traceability",
-        "target": "10-Safety, Security & Guardrails/89-auditability and traceability"
+        "label": "Auditability and traceability",
+        "target": "10-Safety, Security & Guardrails/11-Auditability and traceability"
       },
       {
-        "label": "human in the loop",
-        "target": "10-Safety, Security & Guardrails/86-human-in-the-loop"
+        "label": "Human in the loop",
+        "target": "10-Safety, Security & Guardrails/07-Human-in-the-loop"
       },
       {
         "label": "where the human goes",
@@ -4421,8 +4417,8 @@
         "target": "06-Multi-Agent Systems/06-Agent Communication"
       },
       {
-        "label": "concurrency and parallelism",
-        "target": "11-Production Agentic Systems (architect lens)/96-concurrency and parallelism"
+        "label": "Concurrency and parallelism",
+        "target": "11-Production Agentic Systems (architect lens)/06-Concurrency and parallelism"
       },
       {
         "label": "multi agent worse",
@@ -4609,8 +4605,8 @@
     ],
     "links": [
       {
-        "label": "the architects framing",
-        "target": "11-Production Agentic Systems (architect lens)/102-the architects framing"
+        "label": "The architect's framing",
+        "target": "11-Production Agentic Systems (architect lens)/14-The architect's framing"
       },
       {
         "label": "when not build agent",
@@ -4937,8 +4933,8 @@
         "target": "05-LLM-Production/13-Evals-Practice/06-Harness Engineering — Agent = Model + Harness"
       },
       {
-        "label": "versioning and rollout",
-        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/100-versioning and rollout"
+        "label": "Versioning and rollout",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/12-Versioning and rollout"
       },
       {
         "label": "versioning rollout",
@@ -5043,16 +5039,16 @@
     ],
     "links": [
       {
-        "label": "why agent eval is uniquely hard",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/72-why agent eval is uniquely hard"
+        "label": "Why agent eval is hard",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/01-Why agent eval is hard"
       },
       {
-        "label": "trajectory evaluation — judging the path",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/73-trajectory evaluation — judging the path"
+        "label": "Trajectory evaluation",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/02-Trajectory evaluation"
       },
       {
-        "label": "simulation & replay",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/79-simulation & replay"
+        "label": "Simulation and replay",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/08-Simulation and replay"
       },
       {
         "label": "Reliability Metrics — pass@k vs pass^k",
@@ -5154,16 +5150,16 @@
     ],
     "links": [
       {
-        "label": "llm as judge for trajectories",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/75-llm-as-judge for trajectories"
+        "label": "LLM as judge for trajectories",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/04-LLM-as-judge for trajectories"
       },
       {
-        "label": "component vs end to end eval",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/74-component vs end-to-end eval"
+        "label": "Component vs end to end eval",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/03-Component vs end-to-end eval"
       },
       {
-        "label": "trajectory evaluation — judging the path",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/73-trajectory evaluation — judging the path"
+        "label": "Trajectory evaluation",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/02-Trajectory evaluation"
       },
       {
         "label": "llm as judge biases",
@@ -5268,16 +5264,16 @@
     ],
     "links": [
       {
-        "label": "tracing & observability",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/77-tracing & observability"
+        "label": "Tracing and observability",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/06-Tracing and observability"
       },
       {
-        "label": "simulation & replay",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/79-simulation & replay"
+        "label": "Simulation and replay",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/08-Simulation and replay"
       },
       {
-        "label": "reliability engineering",
-        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       },
       {
         "label": "agent observability",
@@ -5386,20 +5382,20 @@
     ],
     "links": [
       {
-        "label": "tracing & observability",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/77-tracing & observability"
+        "label": "Tracing and observability",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/06-Tracing and observability"
       },
       {
-        "label": "human feedback loops & online eval",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/80-human feedback loops & online eval"
+        "label": "Human feedback and online eval",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/09-Human feedback and online eval"
       },
       {
-        "label": "simulation & replay",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/79-simulation & replay"
+        "label": "Simulation and replay",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/08-Simulation and replay"
       },
       {
-        "label": "cost modeling",
-        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/94-cost modeling"
+        "label": "Cost modelling",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/04-Cost modelling"
       },
       {
         "label": "agent observability",
@@ -5493,12 +5489,12 @@
     ],
     "links": [
       {
-        "label": "agent benchmarks",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/76-agent benchmarks"
+        "label": "Agent benchmarks",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/05-Agent benchmarks"
       },
       {
-        "label": "why agent eval is uniquely hard",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/72-why agent eval is uniquely hard"
+        "label": "Why agent eval is hard",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/01-Why agent eval is hard"
       },
       {
         "label": "Reliability Metrics — pass@k vs pass^k",
@@ -5607,16 +5603,16 @@
     ],
     "links": [
       {
-        "label": "human feedback loops & online eval",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/80-human feedback loops & online eval"
+        "label": "Human feedback and online eval",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/09-Human feedback and online eval"
       },
       {
-        "label": "the 95% problem",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/78-the 95% problem"
+        "label": "The demo to production gap",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/07-The demo-to-production gap"
       },
       {
-        "label": "why agent eval is uniquely hard",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/72-why agent eval is uniquely hard"
+        "label": "Why agent eval is hard",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/01-Why agent eval is hard"
       },
       {
         "label": "Evals in CI — Gating, Thresholds & Flaky Evals",
@@ -5729,12 +5725,12 @@
         "target": "05-LLM-Production/13-Evals-Practice/06-Harness Engineering — Agent = Model + Harness"
       },
       {
-        "label": "coding agents",
-        "target": "03-Agentic-AI/12-Applied & Domain Patterns/103-coding agents"
+        "label": "Coding agents",
+        "target": "03-Agentic-AI/12-Applied & Domain Patterns/01-Coding agents"
       },
       {
-        "label": "human in the loop",
-        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/86-human-in-the-loop"
+        "label": "Human in the loop",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/07-Human-in-the-loop"
       },
       {
         "label": "coding agents",
@@ -5750,5 +5746,313 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify&lt;br/&gt;task shape, autonomy,&lt;br/&gt;test quality\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;context, cost, review\"]:::calc\n        N3[\"3 · Baseline design&lt;br/&gt;guides before, sensors&lt;br/&gt;after\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Deep-dive&lt;br/&gt;make the feedback fast&lt;br/&gt;and legible\"]:::step\n        N5[\"5 · Failure modes&lt;br/&gt;where coding agents go&lt;br/&gt;wrong\"]:::bad\n        N6([\"6 · Evolve&lt;br/&gt;review comments become&lt;br/&gt;rules\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "agentic-ai-q57": {
+    "type": "threat",
+    "spine": [
+      "The asset and the attacker",
+      "The attack path",
+      "Why \"valid token\" is the wrong check",
+      "Layered controls",
+      "Residual risk and what I monitor"
+    ],
+    "testing": "whether you treat spend as part of authorisation and give agents their own narrow, budgeted identity, instead of a developer&#39;s master key.",
+    "trap": "&quot;Rotate the key and add a billing alert.&quot; The alert arrives after the money is gone.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>budget is authorisation</td>\n<td>\"The token was valid, so the fix isn't stronger authentication. Spend has to be part of authorisation, checked before every model call.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>agent loops spend fast</td>\n<td>\"An agent loop can make thousands of calls overnight. Billing alerts arrive hours later, after the money is gone.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · actors</strong></td>\n<td>human, CI, agent tokens</td>\n<td>\"I'd give each actor type its own credential. Humans get short OIDC sessions, CI gets workload identity, and agents get delegated tokens scoped to tools and models.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · gate</strong></td>\n<td>$/hour checked per call</td>\n<td>\"The gateway checks the token's model allow-list and remaining dollar budget on every call. At the cap it returns 429 and pauses the run.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · anomaly</strong></td>\n<td>velocity vs baseline</td>\n<td>\"It also compares spend velocity with the token's normal rate, plus geography and time. Past three times baseline it throttles, downgrades or forces re-auth.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How · lifecycle</strong></td>\n<td>expiry, kill switch</td>\n<td>\"Agent tokens expire quickly, rotate automatically and have a per-agent kill switch, and sub-agents share the parent's budget.\"</td>\n</tr>\n<tr>\n<td><strong>7 · Watch</strong></td>\n<td>spend like logins</td>\n<td>\"I watch spend per token like failed logins: velocity, model mix, output size, new networks. I migrate old keys in phases so integrations don't break.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>loss capped by design</td>\n<td>\"The goal is that a stolen token can cost at most one hour's cap, not a night's bill.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The asset and the attacker",
+        "claim": "the asset is the spending power behind a token",
+        "html": "<p><strong>What was stolen is a key that can call expensive models without limit, and an agent loop turns that into a bill in hours.</strong></p>\n<pre><code class=\"language-text\">attacker loop: 1 call / 2 s × 3,600 s/h × 8 h      = 14,400 calls   (illustrative)\neach call ≈ 30K input + 4K output tokens on a frontier model\nspend scales with calls × tokens × price            ← nothing in the token limits any of the three\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Attacker</th>\n<th>How they get the token</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>outsider</td>\n<td>leaked in a repo, a CI log, a client app</td>\n</tr>\n<tr>\n<td>insider or a compromised agent</td>\n<td>reuses a broad key for work it wasn't meant to do</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "The attack path",
+        "claim": "every check said &quot;valid&quot;",
+        "html": "<p><strong>The token was genuine, so authentication passed; nothing asked who was using it, for what, or how fast it was spending.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Path:</strong></span><span class=\"flow-step\">leaked key</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">authenticated <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">any model <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">any volume <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">billing alert next morning</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">$140K</span></div>"
+      },
+      {
+        "number": 3,
+        "name": "Why \"valid token\" is the wrong check",
+        "claim": "one key type for three kinds of actor",
+        "html": "<p><strong>A human, a CI pipeline and an autonomous agent behave differently, so they need different credentials and limits.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Actor</th>\n<th>Credential</th>\n<th>Expected behaviour</th>\n<th>Limit</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>human</td>\n<td>OIDC session, short-lived token, MFA</td>\n<td>interactive, bursty</td>\n<td>per-user quota</td>\n</tr>\n<tr>\n<td>CI pipeline</td>\n<td>workload identity (OIDC federation), no static secret</td>\n<td>known environment, narrow scope</td>\n<td>per-pipeline scope</td>\n</tr>\n<tr>\n<td>agent</td>\n<td>delegated agent token: tools, models, $/hour, expiry</td>\n<td>loops, can spend fast</td>\n<td>budget enforced per call, kill switch</td>\n</tr>\n</tbody></table>\n<p>The agent's token is a sandboxed worker identity, never a copy of the developer's key.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Layered controls",
+        "claim": "budget checks before the model call, not billing alerts after",
+        "html": "<p><strong>The gateway checks actor, scope and remaining budget on every call, and pauses the run when the budget is gone.</strong></p>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — a budget in the authorisation path:</strong></p>\n<pre><code class=\"language-python\">TOKENS = {\"agt-42\": {\"actor\": \"agent\", \"models\": {\"small\"}, \"usd_per_hour\": 20, \"baseline_usd_h\": 4}}\nspent = {}\ndef authorize(tok, model, est_usd, hour):\n    t = TOKENS.get(tok)\n    if t is None: return \"401 unknown token\"\n    if model not in t[\"models\"]: return f\"403 model '{model}' not allowed for {t['actor']}\"\n    used = spent.get((tok, hour), 0) + est_usd\n    if used &gt; t[\"usd_per_hour\"]: return f\"429 budget: ${used:.0f} &gt; ${t['usd_per_hour']}/h, run paused\"\n    spent[(tok, hour)] = used\n    return \"ALERT anomaly\" if used &gt; 3 * t[\"baseline_usd_h\"] else \"200 ok\"\nprint(authorize(\"agt-42\", \"frontier\", 0.5, 2))                 # stolen token tries the big model\nresults = [authorize(\"agt-42\", \"small\", 0.9, 2) for _ in range(30)]  # overnight loop, 30 calls in an hour\nprint(results[12], \"|\", results[13], \"|\", results[22], \"| allowed:\", results.count(\"200 ok\") + results.count(\"ALERT anomaly\"))\n# → 403 model 'frontier' not allowed for agent\n# → 200 ok | ALERT anomaly | 429 budget: $21 &gt; $20/h, run paused | allowed: 22\n</code></pre>\n<p>Run on Python 3. The loop is stopped at the hour's cap ($19.80 spent), and the anomaly alert fires when spend passes three times the token's normal rate.</p>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Control</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>identity</td>\n<td>actor type, owner, project, environment carried in the token</td>\n</tr>\n<tr>\n<td>scope</td>\n<td>allowed models, tools, projects; no privilege escalation</td>\n</tr>\n<tr>\n<td>budget</td>\n<td>$/hour and $/day per token, checked before the call</td>\n</tr>\n<tr>\n<td>anomaly</td>\n<td>spend velocity vs the token's baseline, new geography, odd hours → throttle, downgrade, re-auth</td>\n</tr>\n<tr>\n<td>lifecycle</td>\n<td>short expiry, rotation, per-agent kill switch</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "Residual risk and what I monitor",
+        "claim": "spend velocity is a security signal",
+        "html": "<p><strong>A thief can still spend up to the cap, so caps are sized to the damage I can accept, and spend is watched like logins.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Monitor</th>\n<th>Alert when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>$/hour per token vs baseline</td>\n<td>&gt; 3× baseline</td>\n</tr>\n<tr>\n<td>model mix per token</td>\n<td>a small-model token asks for frontier models</td>\n</tr>\n<tr>\n<td>output tokens per call</td>\n<td>sudden jump (exfiltration or loops)</td>\n</tr>\n<tr>\n<td>calls from new networks or regions</td>\n<td>first seen</td>\n</tr>\n<tr>\n<td>tokens with no expiry</td>\n<td>any exist</td>\n</tr>\n</tbody></table>\n<p>Migration matters too: issue scoped tokens alongside old keys, warn, then enforce, so existing integrations don't all break on one day.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Isn&#39;t a billing alert enough?",
+        "tag": "trap",
+        "html": "<p><strong>No. Billing is reported after usage; inference spend happens in minutes.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Alert:</strong></span><span class=\"flow-step\">spend</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">billing pipeline (hours)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">alert</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">human</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">revoke</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Gate:</strong></span><span class=\"flow-step\">each call</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">budget check</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">429 at the cap</span></div>"
+      },
+      {
+        "number": 2,
+        "question": "How do you size the cap without breaking real agents?",
+        "tag": "probe",
+        "html": "<p><strong>From each agent's observed spend: cap at a few times its normal peak, with a request path for more.</strong></p>\n<pre><code class=\"language-text\">cap = p99 hourly spend × headroom     ← e.g. $6/h × 3 = $18/h  (illustrative)\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Why not give CI a static API key in its secrets?",
+        "tag": "edge",
+        "html": "<p><strong>Static secrets leak through logs and forks; workload identity issues a short-lived token only to that pipeline, at run time.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Static key</th>\n<th>Workload identity</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Lifetime</td>\n<td>until rotated</td>\n<td>minutes</td>\n</tr>\n<tr>\n<td>Usable elsewhere</td>\n<td>yes, if leaked</td>\n<td>no, bound to the workload</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "An agent spawns sub-agents. Whose budget do they spend?",
+        "tag": "edge",
+        "html": "<p><strong>The parent run's budget, split down the delegation chain, never a fresh budget per child.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Delegation:</strong></span><span class=\"flow-step\">run budget $20</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">child A gets $8</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">child B gets $8</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">parent keeps $4</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">any child over → paused</span></div>"
+      },
+      {
+        "number": 5,
+        "question": "You have 400,000 integrations on old keys. How do you migrate?",
+        "tag": "senior",
+        "html": "<p><strong>In phases: observe, warn, enforce, with the riskiest keys first.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Phase</th>\n<th>Action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>observe</td>\n<td>tag every key's actor, owner and normal spend</td>\n</tr>\n<tr>\n<td>warn</td>\n<td>soft caps that alert, deprecation notices</td>\n</tr>\n<tr>\n<td>enforce</td>\n<td>hard caps on agent and unattended keys first, then the rest</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The token was valid, so the request was fine&quot; — validity isn&#39;t authorisation for unlimited spend.",
+      "&quot;We&#39;ll set up a billing alert&quot; — it fires after the money is gone.",
+      "&quot;Agents use the developer&#39;s key&quot; — an agent needs its own narrow, budgeted identity.",
+      "&quot;Rotate keys every 90 days&quot; — a stolen key spends its damage in one night."
+    ],
+    "links": [
+      {
+        "label": "Agent identity and delegated authorisation",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/06-Agent identity and delegated authorisation"
+      },
+      {
+        "label": "Spend and rate limits",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/10-Spend and rate limits"
+      },
+      {
+        "label": "Permissions and least privilege",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/05-Permissions and least privilege"
+      },
+      {
+        "label": "rate limiting multi tenant",
+        "target": "model-answers/08-LLM-SERVING-INFERENCE/28-rate-limiting-multi-tenant"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;budget is authorisation\"]:::in\n        N2[\"2 · Why&lt;br/&gt;agent loops spend fast\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Actors&lt;br/&gt;human, CI, agent tokens\"]:::step\n        N4[\"4 · Gate&lt;br/&gt;$/hour checked per call\"]:::step\n        N5[\"5 · Anomaly&lt;br/&gt;velocity vs baseline\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Lifecycle&lt;br/&gt;expiry, kill switch\"]:::step\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Watch&lt;br/&gt;spend like logins\"]:::bad\n        NC([\"Close&lt;br/&gt;loss capped by design\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "agentic-ai-q58": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where a decision model wins",
+      "Where the LLM wins",
+      "The deciding question",
+      "What I'd pick here"
+    ],
+    "testing": "whether you can split an agent&#39;s work into fixed-option gates and open-ended generation, and keep the threshold in code.",
+    "trap": "&quot;Replace the LLM with the faster, cheaper model,&quot; or &quot;a confidence of 0.9 means it&#39;s right.&quot;",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>gates vs generation</td>\n<td>\"I'd use a decision model for the agent's fixed-option gates, and keep the LLM for anything it has to write or reason through.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>many small decisions</td>\n<td>\"An agent makes many small decisions per run, like routing, policy checks and is this done. On a frontier LLM each one costs seconds and returns text to parse.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · decision model</strong></td>\n<td>probabilities, one call</td>\n<td>\"A decision model like Jev returns probabilities over options I define. Several questions run in parallel in about a hundred milliseconds.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · thresholds</strong></td>\n<td>bands in code</td>\n<td>\"My code turns confidence into bands: act automatically, confirm, or send to a human. Approval still gates anything irreversible.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · LLM</strong></td>\n<td>plan, args, replies</td>\n<td>\"Planning, tool arguments and replies stay on the LLM, because a decision model writes no text.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch</strong></td>\n<td>labelled set per version</td>\n<td>\"I set thresholds on labelled examples and re-check them on every model version, because valid labels can still be wrong.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>split by step</td>\n<td>\"So in practice it's both, split by step: a decision model for the small gates, and the LLM for the real work.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "does the step have a fixed set of answers?",
+        "html": "<p><strong>The axis is the shape of the output: a choice among options I define, or words and arguments the model must write.</strong></p>\n<p>A decision model (TypeSafe's Jev, Sep 2026; OpenAI's Decisions API, GA Oct 2026) takes state and typed questions and returns probabilities: a <code>choice</code>, a yes/no <code>noul</code>, or a <code>score</code>, with a <code>confidence</code>. It writes no text and calls no tools.</p>\n<table>\n<thead>\n<tr>\n<th>Agent step</th>\n<th>Output shape</th>\n<th>Fits</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>route to a sub-agent</td>\n<td>one of N names</td>\n<td>decision model</td>\n</tr>\n<tr>\n<td>\"does this need approval?\"</td>\n<td>yes/no</td>\n<td>decision model</td>\n</tr>\n<tr>\n<td>\"did the tool answer it?\"</td>\n<td>yes/no</td>\n<td>decision model</td>\n</tr>\n<tr>\n<td>plan the next steps</td>\n<td>free text</td>\n<td>LLM</td>\n</tr>\n<tr>\n<td>fill tool arguments</td>\n<td>structured, open values</td>\n<td>LLM</td>\n</tr>\n<tr>\n<td>reply to the user</td>\n<td>free text</td>\n<td>LLM</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where a decision model wins",
+        "claim": "many small gates, fast and calibrated",
+        "html": "<p><strong>On fixed-option gates it is faster, always parseable and gives a probability I can threshold.</strong></p>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — choice confidence and bands (Jev's documented formula):</strong></p>\n<pre><code class=\"language-python\">def confidence(probs):                       # choice: (p_max - 1/n) / (1 - 1/n)\n    n, p = len(probs), max(probs.values())\n    return (p - 1 / n) / (1 - 1 / n)\n\ndef gate(probs, auto=0.8, floor=0.5):\n    c = confidence(probs)\n    label = max(probs, key=probs.get)\n    return f\"{label}: {c:.2f} -&gt; \" + (\"auto\" if c &gt;= auto else \"confirm\" if c &gt;= floor else \"human\")\n\nprint(gate({\"billing\": 0.90, \"technical\": 0.07, \"other\": 0.03}))\nprint(gate({\"billing\": 0.62, \"technical\": 0.30, \"other\": 0.08}))\n# → billing: 0.85 -&gt; auto\n# → billing: 0.43 -&gt; human\n</code></pre>\n<p>Run on Python 3. All questions in one request run in parallel on the same state, in about 100 ms (vendor-quoted, as of Oct 2026), so five gates cost about one call.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Where the LLM wins",
+        "claim": "anything that must be written or reasoned",
+        "html": "<p><strong>Planning, tool arguments, explanations and replies need generation, which a decision model doesn't do.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Need</th>\n<th>Decision model</th>\n<th>LLM</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>free text or code</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>reasoning across several facts</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> split into narrow questions</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>arithmetic, counting, dates</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> do in code</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> better in code too</td>\n</tr>\n<tr>\n<td>labels that change per call</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> define per request</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>an explanation for the audit log</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "can I write the options down and test a threshold?",
+        "html": "<p><strong>If I can list the answers and label a few hundred examples, the gate goes to a decision model; if not, it stays on the LLM.</strong></p>\n<figure><div class=\"mermaid\">flowchart TD\n    Q1{{\"🤔 Answer is one of&lt;br/&gt;options I can list?\"}}:::ask\n    Q2{{\"🤔 Can I label examples&lt;br/&gt;to set a threshold?\"}}:::ask\n    D([\"🎚️ decision model,&lt;br/&gt;threshold in code\"]):::ok\n    L([\"🧠 LLM, structured&lt;br/&gt;output + validation\"]):::ok\n    Q1 --&gt;|\"yes\"| Q2\n    Q1 --&gt;|\"no\"| L\n    Q2 --&gt;|\"yes\"| D\n    Q2 --&gt;|\"no\"| L\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick here",
+        "claim": "both, split by step",
+        "html": "<p><strong>In a support agent I'd move triage, refund intent and policy checks to a decision model, and keep planning and replies on the LLM.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Run:</strong></span><span class=\"flow-step\">ticket</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">decision model: team? refund? risky? (one request)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">bands in code</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LLM plans + calls tools</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LLM replies</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">approval gate before money moves</span></div>\n<p>Thresholds live in code, are tied to a pinned model version, and are re-checked on every upgrade.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "The output is always a valid label. Doesn&#39;t that make it reliable?",
+        "tag": "trap",
+        "html": "<p><strong>No. Valid isn't right; it removes parse errors, not wrong judgements.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Removes</th>\n<th>Doesn't remove</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>malformed JSON, retries</td>\n<td>a confident wrong label</td>\n</tr>\n<tr>\n<td>free-text parsing</td>\n<td>a vague question's blended answer</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "Why is confidence lower than the top probability?",
+        "tag": "probe",
+        "html": "<p><strong>Confidence measures how far the top probability is above an even split.</strong></p>\n<pre><code class=\"language-text\">confidence = (p_max − 1/n) / (1 − 1/n)\n           = (0.62 − 0.333) / (1 − 0.333) ≈ 0.43     ← 3 options\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "The vendor ships a new version. What breaks?",
+        "tag": "edge",
+        "html": "<p><strong>Your thresholds: probabilities shift between versions, so a 0.8 cut-off can mean a different error rate.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Upgrade:</strong></span><span class=\"flow-step\">pin version</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">replay labelled set on the new one</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">re-fit thresholds</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">move the pin</span></div>"
+      },
+      {
+        "number": 4,
+        "question": "Can a decision model be your guardrail?",
+        "tag": "edge",
+        "html": "<p><strong>It can be the detector, not the enforcement.</strong></p>\n<ul>\n<li><strong>Detector:</strong> <code>noul</code> \"asks to bypass policy?\" → probability.</li>\n<li><strong>Enforcement:</strong> code blocks the tool call or asks a human.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "Is it worth adding another vendor for this?",
+        "tag": "senior",
+        "html": "<p><strong>Only if gates are a large share of your LLM calls or latency; measure that first.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Measure first</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>share of calls that are fixed-option gates</td>\n<td>the size of the win</td>\n</tr>\n<tr>\n<td>p95 latency spent in gates</td>\n<td>the user-visible win</td>\n</tr>\n<tr>\n<td>accuracy per band on labelled data</td>\n<td>the risk</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Replace the LLM with Jev&quot; — it doesn&#39;t write text or call tools.",
+      "&quot;0.9 confidence means 90% right&quot; — only after you check it on labelled data.",
+      "&quot;One question: is this a good, safe, on-policy reply?&quot; — split it into narrow questions.",
+      "&quot;Thresholds are set once&quot; — they move with every model version."
+    ],
+    "links": [
+      {
+        "label": "Decision models",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/15-Decision models"
+      },
+      {
+        "label": "decision model or llm",
+        "target": "agentic-design/09-latency/06-decision-model-or-llm"
+      },
+      {
+        "label": "Model choice for agents",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/11-Model choice for agents"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;gates vs generation\"]:::in\n        N2[\"2 · Why&lt;br/&gt;many small decisions\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Decision model&lt;br/&gt;probabilities, one call\"]:::step\n        N4[\"4 · Thresholds&lt;br/&gt;bands in code\"]:::step\n        N5[\"5 · LLM&lt;br/&gt;plan, args, replies\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Watch&lt;br/&gt;labelled set per version\"]:::bad\n        NC([\"Close&lt;br/&gt;split by step\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "agentic-ai-q59": {
+    "type": "query",
+    "spine": [
+      "Read the task",
+      "Name the pattern",
+      "Write it",
+      "Trace it",
+      "Variants and traps",
+      "How it performs"
+    ],
+    "testing": "whether you can turn &quot;summarise&quot; into a graph with typed state, a reducer for parallel writes, and a stop condition, live, in a few minutes.",
+    "trap": "one node that sends the whole document to the model, or a &quot;refine until good&quot; loop with no bound.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>map-reduce graph</td>\n<td>\"I'd write a map-reduce graph: split the document, summarise chunks in parallel, join them, and shrink once if it's still too long.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>too big for one call</td>\n<td>\"A long document doesn't fit one prompt, and parallel chunks cut latency. The round cap stops a refine loop from running forever.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · state</strong></td>\n<td>reducer on summaries</td>\n<td>\"State is a TypedDict, and summaries has an operator.add reducer so parallel map nodes append instead of colliding.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · fan-out</strong></td>\n<td>Send per chunk</td>\n<td>\"A conditional edge from START returns one Send per chunk, so each chunk runs the map node in parallel.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · stop</strong></td>\n<td>check, shrink, END</td>\n<td>\"The reduce node joins and counts rounds. A check routes to END when it's short enough or the cap is hit, otherwise one shrink step.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch</strong></td>\n<td>fake model, assert state</td>\n<td>\"I test with a fake model and assert on state: fan-out count, the reducer and the cap. Then a small faithfulness eval with the real model.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>a bounded workflow</td>\n<td>\"It's a bounded workflow, not an agent: the path is in code, and only the summaries come from the model.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Read the task",
+        "claim": "ask the size, the target length and the failure budget",
+        "html": "<p><strong>Before typing, I'd ask three things, because they pick the graph.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Ask</th>\n<th>Changes</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Does the document fit one context window?</td>\n<td>single call vs map-reduce</td>\n</tr>\n<tr>\n<td>Target length or format</td>\n<td>the stop check</td>\n</tr>\n<tr>\n<td>Latency and cost budget</td>\n<td>parallel map, round cap, model per step</td>\n</tr>\n</tbody></table>\n<p>Assume it doesn't fit, so I'll split it.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Name the pattern",
+        "claim": "map-reduce with a bounded shrink step",
+        "html": "<p><strong>Split into chunks, summarise each in parallel, join, and shrink only if it's still too long, at most a fixed number of rounds.</strong></p>\n<figure><div class=\"mermaid\">flowchart TD\n    S([\"📄 START: doc\"]):::in\n    M[\"🗺️ map: summarise&lt;br/&gt;each chunk (Send)\"]:::step\n    R[\"🧩 reduce: join&lt;br/&gt;summaries\"]:::step\n    C{{\"🤔 short enough or&lt;br/&gt;round cap hit?\"}}:::ask\n    K[\"✂️ shrink once\"]:::step\n    E([\"✅ END: final\"]):::ok\n    S --&gt;|\"fan out\"| M\n    M --&gt; R\n    R --&gt; C\n    C --&gt;|\"yes\"| E\n    C --&gt;|\"no\"| K\n    K --&gt; E\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>"
+      },
+      {
+        "number": 3,
+        "name": "Write it",
+        "claim": "typed state, a reducer, Send for the fan-out",
+        "html": "<p><strong>The reducer on <code>summaries</code> is what lets parallel map nodes write without overwriting each other.</strong></p>\n<pre><code class=\"language-python\"># langgraph 1.2.16, as of Oct 2026; summarise() stands in for an LLM call\nimport operator\nfrom typing import Annotated, TypedDict\nfrom langgraph.graph import StateGraph, START, END\nfrom langgraph.types import Send\n\ndef summarise(text: str) -&gt; str:                      # fake LLM: keep the first sentence\n    return text.split(\". \")[0].rstrip(\".\") + \".\"\n\nclass State(TypedDict):\n    doc: str\n    max_words: int\n    summaries: Annotated[list[str], operator.add]     # reducer: parallel writes are appended\n    final: str\n    rounds: int\n\ndef fan_out(s: State):                                 # one Send per chunk → map in parallel\n    chunks = [p for p in s[\"doc\"].split(\"\\n\\n\") if p.strip()]\n    return [Send(\"map\", {\"chunk\": c}) for c in chunks]\n\ndef map_node(s: dict): return {\"summaries\": [summarise(s[\"chunk\"])]}\ndef reduce_node(s: State):\n    joined = \" \".join(s[\"summaries\"])\n    return {\"final\": joined, \"rounds\": s.get(\"rounds\", 0) + 1}\ndef check(s: State):                                    # bounded: stop when short enough or after 2 rounds\n    return END if len(s[\"final\"].split()) &lt;= s[\"max_words\"] or s[\"rounds\"] &gt;= 2 else \"shrink\"\ndef shrink(s: State): return {\"final\": summarise(s[\"final\"])}\n\ng = StateGraph(State)\ng.add_node(\"map\", map_node); g.add_node(\"reduce\", reduce_node); g.add_node(\"shrink\", shrink)\ng.add_conditional_edges(START, fan_out, [\"map\"])\ng.add_edge(\"map\", \"reduce\")\ng.add_conditional_edges(\"reduce\", check, [\"shrink\", END])\ng.add_edge(\"shrink\", END)\napp = g.compile()\n\ndoc = (\"Refunds are issued within 5 days. Card refunds may take longer.\\n\\n\"\n       \"Orders ship in 48 hours. Remote areas take a week.\\n\\n\"\n       \"Returns need the original box. Opened items are inspected.\")\nout = app.invoke({\"doc\": doc, \"max_words\": 20, \"summaries\": [], \"final\": \"\", \"rounds\": 0})\nprint(out[\"summaries\"])\nprint(out[\"final\"], \"| rounds:\", out[\"rounds\"])\nshort = app.invoke({\"doc\": doc, \"max_words\": 8, \"summaries\": [], \"final\": \"\", \"rounds\": 0})\nprint(short[\"final\"], \"| rounds:\", short[\"rounds\"])\n# → ['Refunds are issued within 5 days.', 'Orders ship in 48 hours.', 'Returns need the original box.']\n# → Refunds are issued within 5 days. Orders ship in 48 hours. Returns need the original box. | rounds: 1\n# → Refunds are issued within 5 days. | rounds: 1\n</code></pre>\n<p>Run with <code>uv run --with langgraph==1.2.16</code>, offline. In the interview, <code>summarise</code> becomes <code>model.invoke(prompt)</code>.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Trace it",
+        "claim": "what each node wrote",
+        "html": "<p><strong>Three chunks fan out, three summaries append through the reducer, and the check routes to END or to one shrink.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>Node</th>\n<th>Writes</th>\n<th>State after</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1</td>\n<td>START → 3 × <code>map</code></td>\n<td>one summary each, in parallel</td>\n<td><code>summaries</code> = 3 items (appended)</td>\n</tr>\n<tr>\n<td>2</td>\n<td><code>reduce</code></td>\n<td><code>final</code> = joined, <code>rounds</code> = 1</td>\n<td>17 words</td>\n</tr>\n<tr>\n<td>3a</td>\n<td><code>check</code> (max 20)</td>\n<td>→ END</td>\n<td>done</td>\n</tr>\n<tr>\n<td><strong>3b</strong></td>\n<td><strong><code>check</code> (max 8)</strong></td>\n<td><strong>→ <code>shrink</code> → END</strong></td>\n<td><strong>\"Refunds are issued within 5 days.\"</strong></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "Variants and traps",
+        "claim": "what the interviewer changes next",
+        "html": "<p><strong>Each follow-up changes one part of the graph; the state and reducer stay.</strong></p>\n<table>\n<thead>\n<tr>\n<th>They ask</th>\n<th>Change</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>\"Keep the summary faithful\"</td>\n<td>add a check node: every claim must appear in a chunk</td>\n</tr>\n<tr>\n<td>\"It must survive a crash\"</td>\n<td>compile with a checkpointer, pass a <code>thread_id</code></td>\n</tr>\n<tr>\n<td>\"Let a human approve it\"</td>\n<td><code>interrupt()</code> before END</td>\n</tr>\n<tr>\n<td>\"Chunks have headings\"</td>\n<td>split on headings, carry the heading into each summary</td>\n</tr>\n<tr>\n<td>\"Drop the reducer\"</td>\n<td>parallel writes to one key raise <code>InvalidUpdateError</code></td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "How it performs",
+        "claim": "map calls dominate, rounds are capped",
+        "html": "<p><strong>Cost is roughly one call per chunk plus one or two reduce calls, and latency is one map round in parallel.</strong></p>\n<pre><code class=\"language-text\">calls ≈ chunks + reduce + shrink rounds   = 3 + 0 + ≤1          (summarise is the only model call)\nlatency ≈ slowest map call + shrink       ← map runs in parallel\ncap: rounds ≤ 2                           ← the loop can't run away\n</code></pre>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not send the whole document in one call?",
+        "tag": "trap",
+        "html": "<p><strong>If it fits, do that; the graph is for documents larger than the window, or when you need parallelism.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Document</th>\n<th>Pick</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>fits comfortably</td>\n<td>one call</td>\n</tr>\n<tr>\n<td>larger than the window</td>\n<td>map-reduce</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "What does <code>Annotated[list, operator.add]</code> do here?",
+        "tag": "probe",
+        "html": "<p><strong>It's the reducer: writes from parallel map nodes are concatenated instead of the last one winning.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Without:</strong></span><span class=\"flow-step\">3 parallel writes to <code>summaries</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>InvalidUpdateError</code></span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>With:</strong></span><span class=\"flow-step\">3 writes</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>[s1] + [s2] + [s3]</code></span></div>"
+      },
+      {
+        "number": 3,
+        "question": "How do you stop a &quot;refine until good&quot; loop running forever?",
+        "tag": "edge",
+        "html": "<p><strong>A round counter in state and a check that ends the run at the cap, whatever the quality.</strong></p>\n<ul>\n<li><strong>State:</strong> <code>rounds: int</code>, incremented by the node that loops.</li>\n<li><strong>Check:</strong> <code>rounds &gt;= cap → END</code>, with the best summary so far.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "Is this an agent or a workflow?",
+        "tag": "probe",
+        "html": "<p><strong>A workflow: the path is fixed in code, and only the summaries come from the model.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>This graph</th>\n<th>An agent</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Who picks the next step</td>\n<td>code</td>\n<td>the model</td>\n</tr>\n<tr>\n<td>Loops</td>\n<td>bounded by a counter</td>\n<td>until the model stops</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "How would you test it?",
+        "tag": "senior",
+        "html": "<p><strong>Swap the model for a fake, as above, and assert on state; then a small eval for faithfulness.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Test</th>\n<th>Asserts</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>unit, fake model</td>\n<td>fan-out count, reducer order, the cap</td>\n</tr>\n<tr>\n<td>eval, real model</td>\n<td>every summary claim is supported by its chunk</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;I&#39;ll loop until the summary is good&quot; — say what stops it.",
+      "&quot;Parallel nodes just write the list&quot; — without a reducer they collide.",
+      "&quot;It&#39;s an agent&quot; — the path is fixed; call it a workflow.",
+      "&quot;Summarise the whole doc in one prompt&quot; — not when it doesn&#39;t fit."
+    ],
+    "links": [
+      {
+        "label": "LangGraph — Graph as State Machine",
+        "target": "03-Agentic-AI/07-Frameworks & Orchestration/02-LangGraph — Graph as State Machine"
+      },
+      {
+        "label": "chapter map",
+        "target": "03-Agentic-AI/07-Frameworks & Orchestration/00-chapter-map"
+      },
+      {
+        "label": "langgraph state machine",
+        "target": "model-answers/06-AGENTIC-AI/28-langgraph-state-machine"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;map-reduce graph\"]:::in\n        N2[\"2 · Why&lt;br/&gt;too big for one call\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · State&lt;br/&gt;reducer on summaries\"]:::step\n        N4[\"4 · Fan-out&lt;br/&gt;Send per chunk\"]:::step\n        N5[\"5 · Stop&lt;br/&gt;check, shrink, END\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Watch&lt;br/&gt;fake model, assert state\"]:::bad\n        NC([\"Close&lt;br/&gt;a bounded workflow\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   }
 }

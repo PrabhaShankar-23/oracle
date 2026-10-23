@@ -76,8 +76,8 @@
     ],
     "links": [
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       },
       {
         "label": "speed of light budget",
@@ -162,8 +162,8 @@
     ],
     "links": [
       {
-        "label": "streaming and real time agents",
-        "target": "11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+        "label": "Streaming and real time",
+        "target": "11-Production Agentic Systems (architect lens)/10-Streaming and real-time"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;the silence after they&lt;br/&gt;stop\"]):::step\n        N2(\"2 · Why first audio,&lt;br/&gt;not completion&lt;br/&gt;they hear the start\"):::ask\n        N3[\"3 · How to shape it&lt;br/&gt;stream, chunk, bridge\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What to measure&lt;br/&gt;p95 per turn\"]:::calc\n        N5([\"5 · Where it bites&lt;br/&gt;the first turn and the&lt;br/&gt;tail\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -255,8 +255,8 @@
         "target": "08-AI systems & serving Architecture/02-Token Streaming Mechanics"
       },
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The one-line claim&lt;br/&gt;move work before the&lt;br/&gt;endpoint\"]):::step\n        N2[\"2 · Work during speech&lt;br/&gt;analysis on final&lt;br/&gt;phrases\"]:::step\n        N3[\"3 · Speculate on&lt;br/&gt;partials&lt;br/&gt;draft, then select\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Stream into TTS&lt;br/&gt;sentence chunks, one&lt;br/&gt;stream each\"]:::step\n        N5[\"5 · Keep everything&lt;br/&gt;warm&lt;br/&gt;no cold starts on the&lt;br/&gt;clock\"]:::step\n        N6([\"6 · What it costs&lt;br/&gt;compute for latency\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -435,8 +435,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
         "label": "webrtc for voice ai",
@@ -521,8 +521,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Three different&lt;br/&gt;questions&lt;br/&gt;speech, utterance end,&lt;br/&gt;turn end\"]):::ask\n        N2[\"2 · Why a silence&lt;br/&gt;timer fails&lt;br/&gt;one number, two failure&lt;br/&gt;modes\"]:::bad\n        N3[\"3 · How a semantic&lt;br/&gt;model decides&lt;br/&gt;words plus silence\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Tuning it&lt;br/&gt;measure cut-offs, not&lt;br/&gt;feel\"]:::step\n        N5([\"5 · Where it breaks&lt;br/&gt;noise, accent, code-&lt;br/&gt;switching\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -610,8 +610,8 @@
     ],
     "links": [
       {
-        "label": "streaming and real time agents",
-        "target": "11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+        "label": "Streaming and real time",
+        "target": "11-Production Agentic Systems (architect lens)/10-Streaming and real-time"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The one-line claim&lt;br/&gt;yield on sound, record&lt;br/&gt;what's heard\"]):::step\n        N2[\"2 · Detect on sound&lt;br/&gt;VAD, not transcript\"]:::step\n        N3[\"3 · Stop everything&lt;br/&gt;upstream&lt;br/&gt;three buffers and the&lt;br/&gt;generator\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Record what was&lt;br/&gt;heard&lt;br/&gt;history and plan\"]:::step\n        N5[\"5 · Not every sound is&lt;br/&gt;a turn&lt;br/&gt;backchannels, noise,&lt;br/&gt;echo\"]:::step\n        N6([\"6 · So what for the&lt;br/&gt;system&lt;br/&gt;metrics\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -692,8 +692,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · What each one is&lt;br/&gt;revisable vs stable\"]):::step\n        N2[\"2 · Partials for&lt;br/&gt;responsiveness&lt;br/&gt;discardable work only\"]:::step\n        N3[\"3 · Finals for&lt;br/&gt;commitment&lt;br/&gt;and one level above them\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Confidence gates&lt;br/&gt;action&lt;br/&gt;confirm, don't act\"]:::step\n        N5([\"5 · How we use them&lt;br/&gt;what we don't pass on\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -857,8 +857,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The honest answer&lt;br/&gt;not yet, for a specific&lt;br/&gt;reason\"]):::step\n        N2[\"2 · What speech-to-&lt;br/&gt;speech wins&lt;br/&gt;latency and&lt;br/&gt;paralinguistics\"]:::step\n        N3[\"3 · What the cascade&lt;br/&gt;keeps&lt;br/&gt;our product's needs\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · Where the line&lt;br/&gt;falls for us&lt;br/&gt;hybrid by path\"):::ask\n        N5([\"5 · What would change&lt;br/&gt;my mind&lt;br/&gt;measured triggers\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -1487,8 +1487,8 @@
     ],
     "links": [
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Detect it&lt;br/&gt;slow or bad\"]):::step\n        N2[\"2 · Don't hang the&lt;br/&gt;turn&lt;br/&gt;timeout, breaker, bridge\"]:::step\n        N3[\"3 · Fail over or&lt;br/&gt;degrade&lt;br/&gt;the options\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Say something&lt;br/&gt;honest&lt;br/&gt;never silence\"]:::step\n        N5([\"5 · Protect the record&lt;br/&gt;committed turns are safe\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -1569,8 +1569,8 @@
     ],
     "links": [
       {
-        "label": "cost modeling",
-        "target": "11-Production Agentic Systems (architect lens)/94-cost modeling"
+        "label": "Cost modelling",
+        "target": "11-Production Agentic Systems (architect lens)/04-Cost modelling"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The meters&lt;br/&gt;five of them\"]):::step\n        N2(\"2 · Why it grows&lt;br/&gt;within a call&lt;br/&gt;context re-sent every&lt;br/&gt;turn\"):::ask\n        N3[\"3 · Our shape of the&lt;br/&gt;bill&lt;br/&gt;three tiers\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The levers&lt;br/&gt;and budgets\"]:::step\n        N5([\"5 · Model the tail&lt;br/&gt;p99 per interview\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -1658,8 +1658,8 @@
     ],
     "links": [
       {
-        "label": "tracing & observability",
-        "target": "09-Evaluation & Observability/77-tracing & observability"
+        "label": "Tracing and observability",
+        "target": "09-Evaluation & Observability/06-Tracing and observability"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Layers, evaluated&lt;br/&gt;separately&lt;br/&gt;speech, conversation,&lt;br/&gt;outcome\"]):::step\n        N2[\"2 · Speech layer&lt;br/&gt;goldens\"]:::step\n        N3[\"3 · Conversation layer&lt;br/&gt;per-turn metrics and&lt;br/&gt;live cases\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Outcome layer&lt;br/&gt;the scorer against&lt;br/&gt;labels\"]:::step\n        N5[\"5 · Regression, not&lt;br/&gt;demos&lt;br/&gt;the loop\"]:::step\n        N6([\"6 · What ours has and&lt;br/&gt;lacks&lt;br/&gt;synthetic inputs,&lt;br/&gt;provisional labels\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -1740,8 +1740,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Errors propagate&lt;br/&gt;silently&lt;br/&gt;the trust boundary\"]):::step\n        N2[\"2 · Reduce the error&lt;br/&gt;at the source&lt;br/&gt;vocabulary and&lt;br/&gt;formatting\"]:::step\n        N3(\"3 · Validate against&lt;br/&gt;the format&lt;br/&gt;checksum and lookup\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · Confirm high-&lt;br/&gt;stakes slots&lt;br/&gt;read back\"):::ask\n        N5([\"5 · Act only on&lt;br/&gt;confirmed values&lt;br/&gt;never on a partial\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -1912,8 +1912,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
         "label": "Privacy — memorization, PII extraction & data governance",
@@ -2174,8 +2174,8 @@
         "target": "War-Stories"
       },
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "warning": "Built on <strong>S1 · VhAIre</strong> in <span class=\"vault-ref\" title=\"16-PROJECT-STORIES\">PROJECT-STORIES</span> and the Utkarsh architecture (ADD + ADRs) and prototype (<code>convo_agentic</code>). The design, the prototype and its measured numbers come from those; production figures from the live deployment (p50/p95 turn latency, concurrency, what broke in production) are <code>&lt;fill&gt;</code>. Keep designed, built and measured separate when you speak.",
@@ -2278,12 +2278,12 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       },
       {
         "label": "webrtc for voice ai",
@@ -2574,8 +2574,8 @@
         "target": "09-webrtc/079-signaling"
       },
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The one-line flow&lt;br/&gt;five hops, one of them&lt;br/&gt;HTTP\"]):::step\n        N2[\"2 · The token carries&lt;br/&gt;the dispatch&lt;br/&gt;signed, scoped, short-&lt;br/&gt;lived\"]:::step\n        N3[\"3 · The worker and the&lt;br/&gt;job&lt;br/&gt;one subprocess per&lt;br/&gt;interview\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What's ready&lt;br/&gt;before the first word&lt;br/&gt;plan, vocabulary,&lt;br/&gt;budgets\"]:::step\n        N5([\"5 · Why it's built&lt;br/&gt;this way&lt;br/&gt;three failure modes&lt;br/&gt;avoided\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2657,12 +2657,12 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
-        "label": "streaming and real time agents",
-        "target": "11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+        "label": "Streaming and real time",
+        "target": "11-Production Agentic Systems (architect lens)/10-Streaming and real-time"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;three runtime shapes,&lt;br/&gt;one is FastAPI\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;one event loop per&lt;br/&gt;worker\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;two tempting shortcuts\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;three processes and a&lt;br/&gt;scope rule\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;a platform-level&lt;br/&gt;decision\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2750,12 +2750,12 @@
     ],
     "links": [
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       },
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Where the clock&lt;br/&gt;starts&lt;br/&gt;the endpoint, not the&lt;br/&gt;speech\"]):::ask\n        N2[\"2 · What already&lt;br/&gt;happened during speech&lt;br/&gt;interims feed the warm&lt;br/&gt;tier\"]:::step\n        N3[\"3 · The six stages&lt;br/&gt;after the endpoint&lt;br/&gt;a budget with owners\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4(\"4 · Where the&lt;br/&gt;prototype differs&lt;br/&gt;one LLM call still in&lt;br/&gt;the turn\"):::ask\n        N5([\"5 · How I measure it&lt;br/&gt;per turn, per stage\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2843,12 +2843,12 @@
     ],
     "links": [
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       },
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Concede it&lt;br/&gt;one streamed LLM call&lt;br/&gt;per turn\"]):::step\n        N2(\"2 · Why the design&lt;br/&gt;forbids it&lt;br/&gt;the budget can't fit&lt;br/&gt;generation\"):::ask\n        N3[\"3 · What the prototype&lt;br/&gt;does instead&lt;br/&gt;constrain, overlap,&lt;br/&gt;chunk\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it costs&lt;br/&gt;today&lt;br/&gt;named, not hidden\"]:::bad\n        N5([\"5 · The path out&lt;br/&gt;speculation, hit metric&lt;br/&gt;first\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -2936,12 +2936,12 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;a semantic model, one&lt;br/&gt;authority\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;no fixed hangover works\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;a guessed heuristic, two&lt;br/&gt;authorities\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;English-only, slower&lt;br/&gt;replies\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;a per-cohort cut-off&lt;br/&gt;rate\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3036,12 +3036,12 @@
     ],
     "links": [
       {
-        "label": "streaming and real time agents",
-        "target": "11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+        "label": "Streaming and real time",
+        "target": "11-Production Agentic Systems (architect lens)/10-Streaming and real-time"
       },
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Detect on sound&lt;br/&gt;VAD, 0.4 s, while the&lt;br/&gt;agent speaks\"]):::step\n        N2[\"2 · Stop the audio&lt;br/&gt;three buffers, owned by&lt;br/&gt;LiveKit\"]:::step\n        N3[\"3 · Record what was&lt;br/&gt;heard&lt;br/&gt;truncated text, marked&lt;br/&gt;interrupted\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Decide what the&lt;br/&gt;move was worth&lt;br/&gt;delivered moves only\"]:::step\n        N5[\"5 · Treat the answer&lt;br/&gt;as one answer&lt;br/&gt;merge since the last&lt;br/&gt;heard move\"]:::step\n        N6([\"6 · Tell noise from&lt;br/&gt;interruption&lt;br/&gt;resume on no words\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3129,8 +3129,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       },
       {
         "label": "webrtc for voice ai",
@@ -3223,8 +3223,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Why a wrong term&lt;br/&gt;is unfair&lt;br/&gt;it changes the evidence\"]):::bad\n        N2[\"2 · Listening: keyterm&lt;br/&gt;prompting&lt;br/&gt;contextual biasing, no&lt;br/&gt;weights\"]:::step\n        N3(\"3 · Which 100 terms&lt;br/&gt;the cap cuts from the&lt;br/&gt;end\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Speaking: the&lt;br/&gt;pronunciation lexicon&lt;br/&gt;reviewed, versioned,&lt;br/&gt;pinned\"]:::step\n        N5[\"5 · The last line of&lt;br/&gt;defence&lt;br/&gt;the LLM reads past slips\"]:::step\n        N6([\"6 · What we measured&lt;br/&gt;and what is still&lt;br/&gt;synthetic\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3306,8 +3306,8 @@
     ],
     "links": [
       {
-        "label": "voice agents",
-        "target": "12-Applied & Domain Patterns/106-voice agents"
+        "label": "Voice agents",
+        "target": "12-Applied & Domain Patterns/05-Voice agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;en-IN, English, stated&lt;br/&gt;up front\"]):::step\n        N2[\"2 · The measurement&lt;br/&gt;that forced it&lt;br/&gt;term recall and script&lt;br/&gt;mixing\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;two ways to support&lt;br/&gt;Hinglish\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;silent loss for code-&lt;br/&gt;switchers\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;two triggers\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3389,8 +3389,8 @@
     ],
     "links": [
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Trust the&lt;br/&gt;measurement first&lt;br/&gt;the harness bug that&lt;br/&gt;read 1.3 s\"]):::calc\n        N2[\"2 · Is 19 ms the real&lt;br/&gt;problem?&lt;br/&gt;the gate against the&lt;br/&gt;budget\"]:::step\n        N3[\"3 · What's already&lt;br/&gt;optimised&lt;br/&gt;chunking, pipelining,&lt;br/&gt;warm pools\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The options&lt;br/&gt;region, engine or&lt;br/&gt;rebalance\"]:::step\n        N5([\"5 · The decision rule&lt;br/&gt;p95 at target&lt;br/&gt;concurrency\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3492,12 +3492,12 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       },
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Why the naive&lt;br/&gt;design fails&lt;br/&gt;a supervisor on the&lt;br/&gt;clock\"]):::bad\n        N2[\"2 · Split by latency&lt;br/&gt;tier&lt;br/&gt;three budgets, three&lt;br/&gt;runtimes\"]:::step\n        N3[\"3 · T0, the turn&lt;br/&gt;rules pick, one node&lt;br/&gt;speaks\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · T1, while they&lt;br/&gt;speak&lt;br/&gt;fan out, never block\"]:::step\n        N5[\"5 · T2, after the call&lt;br/&gt;independent branches\"]:::step\n        N6[\"6 · The seam with&lt;br/&gt;LiveKit&lt;br/&gt;loop against decision\"]:::step\n        N4 --&gt; N5 --&gt; N6\n    end\n    subgraph R2[\" \"]\n        direction LR\n        N7([\"7 · The invariants&lt;br/&gt;six rules that keep it&lt;br/&gt;working\"]):::ok\n    end\n    R0 --&gt; R1\n    R1 --&gt; R2\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n    style R2 fill:none,stroke:none\n</div></figure>"
@@ -3579,8 +3579,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;ordered rules, first&lt;br/&gt;match wins\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;on the clock, enforcing&lt;br/&gt;invariants\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;an LLM supervisor, in&lt;br/&gt;two forms\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;rigidity, and rule order\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;evidence a rule is the&lt;br/&gt;bottleneck\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3669,8 +3669,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · What the Prober is&lt;br/&gt;for&lt;br/&gt;find the gap, never&lt;br/&gt;score\"]):::step\n        N2[\"2 · What it looks for&lt;br/&gt;a verdict and a short&lt;br/&gt;hint\"]:::step\n        N3(\"3 · When it runs&lt;br/&gt;on final phrases,&lt;br/&gt;restarted\"):::ask\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How Chair uses it&lt;br/&gt;input, not authority\"]:::step\n        N5(\"5 · When it's late&lt;br/&gt;a heuristic, never a&lt;br/&gt;wait\"):::ask\n        N6([\"6 · What it doesn't do&lt;br/&gt;generate, block, judge&lt;br/&gt;integrity\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3752,8 +3752,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Two layers, two&lt;br/&gt;budgets&lt;br/&gt;act now, or flag for&lt;br/&gt;later\"]):::step\n        N2[\"2 · Intent on the&lt;br/&gt;clock&lt;br/&gt;the guard, in order\"]:::step\n        N3[\"3 · Behaviour off the&lt;br/&gt;clock&lt;br/&gt;Sentinel and diarization\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Signals, never&lt;br/&gt;verdicts&lt;br/&gt;the injection defence is&lt;br/&gt;structural\"]:::step\n        N5([\"5 · What's weak&lt;br/&gt;regex recall, untested&lt;br/&gt;signals\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3841,8 +3841,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;separate roles,&lt;br/&gt;independent judges\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;bias, latency and&lt;br/&gt;durability\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;one scorer, sequential&lt;br/&gt;judges, live\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;unmeasured consensus,&lt;br/&gt;generous scores\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;human-labelled agreement\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -3924,8 +3924,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · What it's for&lt;br/&gt;feedback, not the score\"]):::step\n        N2[\"2 · What it returns&lt;br/&gt;a schema, not prose\"]:::step\n        N3[\"3 · Reading past ASR&lt;br/&gt;slips&lt;br/&gt;context rebuilds the&lt;br/&gt;term\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Independent of the&lt;br/&gt;Panel&lt;br/&gt;no anchoring, no&lt;br/&gt;coupling\"]:::step\n        N5([\"5 · Its limits&lt;br/&gt;the record keeps the&lt;br/&gt;slip\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4007,8 +4007,8 @@
     ],
     "links": [
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;three gateways, three&lt;br/&gt;jobs\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;no hop in the turn\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;a central LLM proxy\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;per-pod breakers, a&lt;br/&gt;growing edge\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;central policy needs\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4090,8 +4090,8 @@
     ],
     "links": [
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The rule&lt;br/&gt;never silence, never&lt;br/&gt;lose the scorecard\"]):::step\n        N2[\"2 · Fail fast&lt;br/&gt;a breaker per dependency\"]:::bad\n        N3[\"3 · Per vendor, the&lt;br/&gt;ladder&lt;br/&gt;what the candidate hears\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The floor&lt;br/&gt;scripted mode and text&lt;br/&gt;fallback\"]:::step\n        N5([\"5 · Make sure the&lt;br/&gt;scorecard survives&lt;br/&gt;queue, idempotency, dead&lt;br/&gt;letters\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4186,8 +4186,8 @@
     ],
     "links": [
       {
-        "label": "cost modeling",
-        "target": "11-Production Agentic Systems (architect lens)/94-cost modeling"
+        "label": "Cost modelling",
+        "target": "11-Production Agentic Systems (architect lens)/04-Cost modelling"
       },
       {
         "label": "topologies mesh sfu mcu",
@@ -4279,12 +4279,12 @@
     ],
     "links": [
       {
-        "label": "reliability engineering",
-        "target": "11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       },
       {
-        "label": "streaming and real time agents",
-        "target": "11-Production Agentic Systems (architect lens)/99-streaming and real-time agents"
+        "label": "Streaming and real time",
+        "target": "11-Production Agentic Systems (architect lens)/10-Streaming and real-time"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The failure mode&lt;br/&gt;one loop, one blocking&lt;br/&gt;call\"]):::bad\n        N2[\"2 · Isolation by&lt;br/&gt;process&lt;br/&gt;the blast radius is one&lt;br/&gt;interview\"]:::step\n        N3[\"3 · Discipline inside&lt;br/&gt;the process&lt;br/&gt;deadlines, off-loop&lt;br/&gt;work, warm pools\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Budgets per run&lt;br/&gt;nothing spends without&lt;br/&gt;limit\"]:::step\n        N5([\"5 · The metric that&lt;br/&gt;watches it&lt;br/&gt;loop lag per process\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4366,8 +4366,8 @@
     ],
     "links": [
       {
-        "label": "tracing & observability",
-        "target": "09-Evaluation & Observability/77-tracing & observability"
+        "label": "Tracing and observability",
+        "target": "09-Evaluation & Observability/06-Tracing and observability"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Why voice fails&lt;br/&gt;silently&lt;br/&gt;the errors are plausible\"]):::bad\n        N2(\"2 · Three suites,&lt;br/&gt;three questions&lt;br/&gt;words, calls, scores\"):::ask\n        N3[\"3 · The metrics and&lt;br/&gt;gates&lt;br/&gt;gate only what you claim\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The improvement&lt;br/&gt;loop&lt;br/&gt;one change, side by&lt;br/&gt;side, pinned\"]:::step\n        N5([\"5 · What's still&lt;br/&gt;synthetic&lt;br/&gt;and what isn't measured&lt;br/&gt;at all\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4449,8 +4449,8 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision&lt;br/&gt;no direct signal,&lt;br/&gt;measured proxies\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;three paths from accent&lt;br/&gt;to score\"]:::calc\n        N3[\"3 · What we rejected&lt;br/&gt;blind scoring as the&lt;br/&gt;whole answer\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What it cost&lt;br/&gt;built controls, owed&lt;br/&gt;measurement\"]:::bad\n        N5([\"5 · What would reopen&lt;br/&gt;it&lt;br/&gt;cohort data\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
@@ -4532,12 +4532,12 @@
     ],
     "links": [
       {
-        "label": "conversational and interview agents",
-        "target": "12-Applied & Domain Patterns/107-conversational and interview agents"
+        "label": "Conversational and interview agents",
+        "target": "12-Applied & Domain Patterns/06-Conversational and interview agents"
       },
       {
-        "label": "latency in agentic systems",
-        "target": "11-Production Agentic Systems (architect lens)/93-latency in agentic systems"
+        "label": "Latency",
+        "target": "11-Production Agentic Systems (architect lens)/03-Latency"
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The pattern behind&lt;br/&gt;the gaps&lt;br/&gt;boundaries defined,&lt;br/&gt;algorithms not\"]):::step\n        N2[\"2 · The three I'd name&lt;br/&gt;first&lt;br/&gt;latency, fairness,&lt;br/&gt;scoring\"]:::step\n        N3[\"3 · What's built vs&lt;br/&gt;designed&lt;br/&gt;keep them apart\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What I'd do next,&lt;br/&gt;in order&lt;br/&gt;by what could invalidate&lt;br/&gt;the design\"]:::step\n        N5([\"5 · Why the gaps are&lt;br/&gt;where they are&lt;br/&gt;honest about sequencing\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"

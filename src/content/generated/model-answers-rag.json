@@ -3441,6 +3441,12 @@
         "question": "A regulated customer asks for proof of isolation. What do you show?",
         "tag": "senior",
         "html": "<p><strong>Five pieces of evidence, and an option.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Evidence</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The isolation model, and where the filter is enforced</strong></td>\n</tr>\n<tr>\n<td><strong>Canary test results in CI</strong></td>\n</tr>\n<tr>\n<td><strong>Audit logs of served chunks</strong></td>\n</tr>\n<tr>\n<td><strong>ACL sync SLAs</strong></td>\n</tr>\n</tbody></table>\n<p>Optionally, a dedicated index or deployment for them.</p>"
+      },
+      {
+        "number": 6,
+        "question": "Every retrieval call has the tenant filter. Where can a leak still happen?",
+        "tag": "edge",
+        "html": "<p><strong>In the paths around the main query: fallbacks, a second retriever, caches and prompt examples.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Leak path</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>zero results → retry <strong>without</strong> the filter</td>\n<td>a fallback may widen the query, never drop the filter</td>\n</tr>\n<tr>\n<td>vector search filtered, <strong>BM25 not</strong></td>\n<td>build the filter once, pass it to every retriever</td>\n</tr>\n<tr>\n<td>answer cache keyed by question only</td>\n<td>key by tenant + question</td>\n</tr>\n<tr>\n<td>one tenant's trace reused as a few-shot example</td>\n<td>scrub or scope examples per tenant</td>\n</tr>\n</tbody></table>\n<p>The canary in stage 4 catches these because it goes through the same path a user takes.</p>"
       }
     ],
     "dontSay": [
@@ -6153,5 +6159,361 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;four things drift\"]:::in\n        N2[\"2 · Why&lt;br/&gt;right then, wrong now\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Corpus&lt;br/&gt;formats, stale versions\"]:::step\n        N4[\"4 · Queries, truth&lt;br/&gt;new topics, new facts\"]:::step\n        N5[\"5 · Dependencies&lt;br/&gt;silent model updates\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Confirm&lt;br/&gt;then vs now\"]:::ask\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Monitoring&lt;br/&gt;sampled scores, alerts\"]:::ask\n        NC([\"Close&lt;br/&gt;scheduled golden runs\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>"
+  },
+  "rag-q63": {
+    "type": "design",
+    "spine": [
+      "Clarify the language mix",
+      "Size it",
+      "One shared embedding space",
+      "Retrieval that survives scripts and names",
+      "Generate in the user's language",
+      "Failure modes per language",
+      "Evolve"
+    ],
+    "testing": "whether you design for cross-lingual retrieval and measure each language on its own, or ship twenty English pipelines.",
+    "trap": "&quot;Translate everything to English first,&quot; or one index per language with no cross-language search.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>one multilingual space</td>\n<td>\"I'd build one multilingual index, not twenty, so a question in any language can find a document in any other. Every chunk carries a language tag.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>query ≠ doc language</td>\n<td>\"Users ask in one language about documents written in another. Twenty English-style pipelines would miss those, and an average score would hide the language that broke.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · size</strong></td>\n<td>100M chunks, quantise</td>\n<td>\"At five million documents that's about a hundred million chunks, roughly 400 gigabytes in fp32. So I shard by tenant or time and quantise to int8.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · retrieve</strong></td>\n<td>dense ‖ BM25 → RRF</td>\n<td>\"I run dense ANN and BM25 with a per-language analyser in parallel, fuse them with RRF, and rerank with a multilingual cross-encoder.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · weak langs</strong></td>\n<td>translate as extra query</td>\n<td>\"For low-resource languages I add a translated query as a second leg and fuse it, rather than replacing the original.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How · answer</strong></td>\n<td>reply in user's language</td>\n<td>\"The model answers in the query's language and cites the original passage, so a citation can still be checked.\"</td>\n</tr>\n<tr>\n<td><strong>7 · Watch</strong></td>\n<td>metrics per language</td>\n<td>\"I report recall, cross-lingual recall, faithfulness and p95 per language on a native-speaker golden set, because one weak language disappears inside the mean.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>fix the lagging language</td>\n<td>\"Then I improve only where a language lags: its analyser, a translation leg, or a fine-tuned embedding.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify the language mix",
+        "claim": "query language and document language are separate axes",
+        "html": "<p><strong>Before drawing anything, I'd ask which languages the questions come in and which the documents are in, because those are two different distributions.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Ask</th>\n<th>Why it changes the design</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Query languages vs document languages</td>\n<td>a Hindi question about an English policy needs <strong>cross-lingual</strong> retrieval</td>\n</tr>\n<tr>\n<td>Share per language (traffic and corpus)</td>\n<td>long-tail languages decide the embedding model</td>\n</tr>\n<tr>\n<td>Scripts and mixing (Hinglish, romanised text)</td>\n<td>tokenisers and BM25 analysers break here</td>\n</tr>\n<tr>\n<td>Must the answer be in the query's language?</td>\n<td>almost always yes; it sets the generation step</td>\n</tr>\n</tbody></table>\n<p><strong>Example:</strong> a bank's policies are in English and Hindi, while customers ask in eight Indian languages plus English.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Size it",
+        "claim": "100M chunks makes the index a memory decision",
+        "html": "<p><strong>I'd size before choosing a store, because one shared index at this scale is hundreds of gigabytes.</strong></p>\n<pre><code class=\"language-text\">docs = 5M, chunks/doc = 20       → 100M chunks              (illustrative)\nfp32, 1,024 dims  = 100M × 1,024 × 4 B   ≈ 410 GB           ← too big for one node's RAM\nint8 quantised    = 100M × 1,024 × 1 B   ≈ 102 GB           ← plus a graph overhead for HNSW\nlatency budget    = embed 30 ms + ANN 40 ms + rerank 150 ms + LLM ≥ 1 s   (illustrative)\n</code></pre>\n<p>So I shard the index and quantise the vectors (int8 or PQ), and keep full-precision vectors only for re-scoring the top candidates.</p>"
+      },
+      {
+        "number": 3,
+        "name": "One shared embedding space",
+        "claim": "a multilingual model, not twenty indexes",
+        "html": "<p><strong>I'd use one multilingual embedding model so all languages land in one vector space, and tag every chunk with its language.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Option</th>\n<th>Cross-lingual?</th>\n<th>Ops</th>\n<th>Pick when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>One multilingual model, one index</strong> (e.g. BGE-M3, multilingual-e5)</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> a Hindi query finds an English doc</td>\n<td>one pipeline</td>\n<td>default</td>\n</tr>\n<tr>\n<td>One index per language</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> only same-language hits</td>\n<td>20 pipelines, 20 evals</td>\n<td>languages never mix</td>\n</tr>\n<tr>\n<td>Translate everything to English</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg>, at the cost of translation errors</td>\n<td>translation cost on every doc and query</td>\n<td>the domain model is English-only</td>\n</tr>\n</tbody></table>\n<ul>\n<li><code>language</code> metadata on each chunk lets me filter when the user wants same-language sources only.</li>\n<li>I'd shard by tenant or recency. I wouldn't shard by language, because that kills cross-lingual recall.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Retrieval that survives scripts and names",
+        "claim": "hybrid with per-language analysers",
+        "html": "<p><strong>Dense vectors carry meaning across languages; BM25 still catches names, IDs and codes, so I fuse both.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Query path:</strong></span><span class=\"flow-step\">detect language</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">dense ANN top-100 ‖ BM25 (language analyser) top-100</span><span class=\"flow-arrow\" data-label=\"RRF\"></span><span class=\"flow-step\">multilingual cross-encoder</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">top-5</span></div>\n<ul>\n<li><strong>BM25 per language:</strong> stemming and stop words are language-specific; a default English analyser breaks Hindi and Tamil matching.</li>\n<li><strong>Low-resource languages:</strong> add query translation as a <em>second</em> query, not a replacement, and fuse the results.</li>\n<li><strong>Reranker must be multilingual</strong> too, or it silently reorders non-English results by noise.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "Generate in the user's language",
+        "claim": "cite the source in its own language",
+        "html": "<p><strong>The model answers in the query's language, and citations point at the original passage, even when it's in another language.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Generation:</strong></span><span class=\"flow-step\">query language tag</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">prompt \"answer in {lang}\"</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">multilingual LLM</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">citations to original chunks</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">optional translated snippet</span></div>\n<p>Untranslated source spans keep the citation checkable; a translated quote can drift from what the document says.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Failure modes per language",
+        "claim": "an average hides the language that broke",
+        "html": "<p><strong>I'd report every metric per language, because one weak language disappears inside a 20-language average.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Watch</th>\n<th>Per-language metric</th>\n<th>Fix it in</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>retrieval quality</td>\n<td>recall@10, MRR on a labelled set per language</td>\n<td>embedding model, analysers</td>\n</tr>\n<tr>\n<td>cross-lingual hits</td>\n<td>recall when query and doc languages differ</td>\n<td>model choice, query translation</td>\n</tr>\n<tr>\n<td>answer language</td>\n<td>share of answers in the wrong language</td>\n<td>prompt, model</td>\n</tr>\n<tr>\n<td>faithfulness</td>\n<td>grounded-claim rate per language</td>\n<td>reranker, generation</td>\n</tr>\n<tr>\n<td>latency</td>\n<td>p95 per language (scripts tokenise to more tokens)</td>\n<td>context budget</td>\n</tr>\n</tbody></table>\n<p>Cells are <code>measure</code> on a golden set built with native speakers, at least 50–100 questions per major language.</p>"
+      },
+      {
+        "number": 7,
+        "name": "Evolve",
+        "claim": "add only what a per-language gap justifies",
+        "html": "<p><strong>Start with one multilingual model; add per-language fine-tuning or a translation leg only where its metric lags.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Order:</strong></span><span class=\"flow-step\">shared multilingual index</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">per-language BM25</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">multilingual reranker</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">query translation for weak languages</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">fine-tune embeddings on the weakest language</span></div>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not translate every document to English and run English RAG?",
+        "tag": "trap",
+        "html": "<p><strong>Translation adds an error step on every document and every query, and loses names, legal terms and tone.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Translate-all</th>\n<th>Multilingual embeddings</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Index cost</td>\n<td>translate 5M docs, again on every change</td>\n<td>embed once</td>\n</tr>\n<tr>\n<td>Error source</td>\n<td>translation mistakes become retrieval mistakes</td>\n<td>model coverage per language</td>\n</tr>\n<tr>\n<td>Citations</td>\n<td>point at translated text</td>\n<td>point at the original</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "A query in Hindi should find an English document. How does that happen?",
+        "tag": "probe",
+        "html": "<p><strong>A multilingual embedding model is trained so that translations of the same sentence land close together.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Cross-lingual retrieval:</strong></span><span class=\"flow-step\">Hindi query</span><span class=\"flow-arrow\" data-label=\"embed\"></span><span class=\"flow-step\">shared space</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">nearest neighbours include English chunks</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">multilingual rerank</span></div>\n<p>Check it on a set where query and document languages differ; that's the number that proves it.</p>"
+      },
+      {
+        "number": 3,
+        "question": "One language&#39;s quality is far below the rest. What do you check?",
+        "tag": "edge",
+        "html": "<p><strong>Locate the stage for that language only: tokenisation, embedding coverage, analyser, reranker, then generation.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Evidence</th>\n<th>Likely cause</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>BM25 recall low, dense fine</td>\n<td>wrong analyser or no stemming</td>\n</tr>\n<tr>\n<td>Dense recall low</td>\n<td>embedding model weak on that language</td>\n</tr>\n<tr>\n<td>Retrieval fine, answers wrong</td>\n<td>reranker or LLM weak on that language</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "How do you handle code-mixed queries like Hinglish?",
+        "tag": "edge",
+        "html": "<p><strong>Treat code-mixing as its own test slice; normalise transliteration where you can and fuse dense with BM25.</strong></p>\n<ul>\n<li><strong>Normalise:</strong> transliterate romanised Hindi to Devanagari as an extra query.</li>\n<li><strong>Fuse:</strong> keep the raw query too; RRF the two.</li>\n<li><strong>Measure:</strong> a Hinglish slice in the golden set.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "How do you shard 100M chunks without hurting cross-lingual recall?",
+        "tag": "probe",
+        "html": "<p><strong>Shard by tenant, time or hash, never by language, and scatter-gather across shards.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Shard query:</strong></span><span class=\"flow-step\">fan out to N shards</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">top-k each</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">merge</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">rerank once</span></div>\n<p>Sharding by language would turn every cross-lingual query into a miss.</p>"
+      },
+      {
+        "number": 6,
+        "question": "What does this cost to run, and where do you cut first?",
+        "tag": "senior",
+        "html": "<p><strong>The reranker and the LLM dominate per query; the index dominates at rest.</strong></p>\n<ul>\n<li><strong>At rest:</strong> quantise vectors (int8 ≈ 4× smaller than fp32).</li>\n<li><strong>Per query:</strong> rerank top-50, not top-100; route easy queries to a smaller model.</li>\n<li><strong>Translation leg:</strong> only for languages whose recall lags.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We&#39;ll translate everything to English&quot; — it hides errors inside retrieval.",
+      "&quot;One index per language&quot; — it removes cross-lingual search.",
+      "&quot;Accuracy is 91% overall&quot; — an average across 20 languages hides the weak one.",
+      "&quot;The English BM25 analyser is fine&quot; — it breaks stemming and stop words for other languages."
+    ],
+    "links": [
+      {
+        "label": "Choosing an Embedding Model",
+        "target": "04-RAG/04-Embeddings/03-Choosing an Embedding Model"
+      },
+      {
+        "label": "Embedding Models Landscape",
+        "target": "04-RAG/04-Embeddings/02-Embedding Models Landscape"
+      },
+      {
+        "label": "chapter map",
+        "target": "04-RAG/06-Retrieval/00-chapter-map"
+      },
+      {
+        "label": "Scaling — Index Size, QPS, GPU & Autoscaling",
+        "target": "04-RAG/12-Production RAG Systems (arch lens)/11-Scaling — Index Size, QPS, GPU & Autoscaling"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;one multilingual space\"]:::in\n        N2[\"2 · Why&lt;br/&gt;query ≠ doc language\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Size&lt;br/&gt;100M chunks, quantise\"]:::step\n        N4[\"4 · Retrieve&lt;br/&gt;dense ‖ BM25 → RRF\"]:::step\n        N5[\"5 · Weak langs&lt;br/&gt;translate as extra query\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Answer&lt;br/&gt;reply in user's language\"]:::step\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Watch&lt;br/&gt;metrics per language\"]:::bad\n        NC([\"Close&lt;br/&gt;fix the lagging language\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "rag-q64": {
+    "type": "design",
+    "spine": [
+      "Clarify the load and the promise",
+      "Accept fast, process later",
+      "Idempotent at every hop",
+      "The worker pipeline",
+      "Retries, DLQ and replay",
+      "Updates and deletes",
+      "What I monitor"
+    ],
+    "testing": "whether you treat ingestion as a distributed system with at-least-once delivery, or as a script that calls an embedding API.",
+    "trap": "&quot;Upload, parse, chunk, embed, store&quot; in one synchronous request, with no idempotency and no failure path.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>202, then workers</td>\n<td>\"I'd split ingestion from the upload. The API validates, stores the original, publishes an event and returns 202 with a document id.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>queues deliver twice</td>\n<td>\"Parsing and embedding take seconds to minutes, and queues are at-least-once. So every step must survive retries and duplicates.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · dedupe</strong></td>\n<td>content hash + tenant</td>\n<td>\"Duplicate uploads are caught by a content hash within the tenant, which returns the existing document id.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · worker</strong></td>\n<td>stage status, upsert</td>\n<td>\"A worker parses, chunks, embeds in batches and upserts by stable chunk ids, advancing a status record after each stage. It acks the event last.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · failures</strong></td>\n<td>backoff, then DLQ</td>\n<td>\"Transient errors retry with backoff and jitter. Permanent ones go to a dead-letter queue with the reason, and I can replay it after a fix.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How · versions</strong></td>\n<td>swap, tombstone</td>\n<td>\"An update builds the new version and flips a current pointer. A delete tombstones first and purges vectors, BM25 and cached answers after.\"</td>\n</tr>\n<tr>\n<td><strong>7 · Watch</strong></td>\n<td>upload → searchable p95</td>\n<td>\"I monitor time from upload to searchable, queue lag, failure rate by stage and DLQ age. A nightly job reconciles the store against the index.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>replay from originals</td>\n<td>\"Because originals are stored first, any stage can be replayed, including a full re-index when the chunker changes.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify the load and the promise",
+        "claim": "what &quot;indexed&quot; has to mean",
+        "html": "<p><strong>I'd ask for the upload rate, the document sizes and the freshness promise, because those decide sync or async and how big the worker pool is.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Ask</th>\n<th>Example answer <code>(illustrative)</code></th>\n<th>Consequence</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Uploads per hour, peak</td>\n<td>20K/h, bursts at month-end</td>\n<td>queue absorbs bursts</td>\n</tr>\n<tr>\n<td>Size range</td>\n<td>1 page to 2,000-page scans</td>\n<td>OCR path, per-page chunking</td>\n</tr>\n<tr>\n<td>Freshness promise</td>\n<td>searchable within 5 min</td>\n<td>worker count, priority lanes</td>\n</tr>\n<tr>\n<td>Who reads status</td>\n<td>uploader UI polls</td>\n<td>a status record per document</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Accept fast, process later",
+        "claim": "202 Accepted and an event",
+        "html": "<p><strong>The upload API only validates, stores the original and publishes an event; parsing happens in workers.</strong></p>\n<figure><div class=\"mermaid\">flowchart TD\n    C([\"📤 client upload\"]):::in --&gt; V[\"✅ validate type, size\"]:::step\n    V --&gt; K{{\"🤔 content hash seen?\"}}:::ask\n    K --&gt;|\"yes\"| D([\"↩️ return existing doc id\"]):::ok\n    K --&gt;|\"no\"| S[(\"🗄️ object store original\")]:::calc\n    S --&gt; E[\"📨 publish ingest event\"]:::step\n    E --&gt; R([\"202 Accepted + doc id\"]):::ok\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>\n<p>Storing the original first means any later step can be replayed from durable input.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Idempotent at every hop",
+        "claim": "the queue will deliver twice",
+        "html": "<p><strong>Queues are at-least-once, so the worker checks again before doing work, and every write is an upsert keyed by stable IDs.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Hop</th>\n<th>Duplicate comes from</th>\n<th>Guard</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>upload</td>\n<td>user retries, double click</td>\n<td>content hash (+ tenant) → existing doc id</td>\n</tr>\n<tr>\n<td>event</td>\n<td>redelivery after a crash or rebalance</td>\n<td>status check: already <code>indexed</code> for this version? skip</td>\n</tr>\n<tr>\n<td>chunk write</td>\n<td>partial retry</td>\n<td>chunk id = <code>doc_id:version:chunk_no</code>, upsert</td>\n</tr>\n<tr>\n<td>vector write</td>\n<td>retry after a timeout</td>\n<td>same id, upsert; never \"insert\"</td>\n</tr>\n</tbody></table>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — hash-keyed idempotency, retries and a DLQ:</strong></p>\n<pre><code class=\"language-python\">import hashlib\nindexed, dlq, attempts = {}, [], {}\ndef ingest(doc: bytes, fail_times=0, max_retries=3):\n    key = hashlib.sha256(doc).hexdigest()[:8]           # idempotency key = content hash\n    if key in indexed: return f\"{key}: duplicate, skipped\"\n    for attempt in range(1, max_retries + 1):\n        attempts[key] = attempt\n        if attempt &gt; fail_times:                        # parser/embedder succeeds\n            indexed[key] = \"chunks+vectors\"; return f\"{key}: indexed on try {attempt}\"\n    dlq.append(key); return f\"{key}: to DLQ after {max_retries} tries\"\nprint(ingest(b\"policy v1\"))\nprint(ingest(b\"policy v1\"))                             # duplicate upload or redelivered event\nprint(ingest(b\"scan.pdf\", fail_times=1))                # transient failure, then success\nprint(ingest(b\"corrupt.pdf\", fail_times=9))             # permanent failure\nprint(len(indexed), \"indexed,\", dlq)\n# → 1346d3d6: indexed on try 1\n# → 1346d3d6: duplicate, skipped\n# → 900db3ec: indexed on try 2\n# → 4439edc4: to DLQ after 3 tries\n# → 2 indexed, ['4439edc4']\n</code></pre>\n<p>Run on Python 3 (standard library). In production the retries are re-queued with backoff, not a loop in one process.</p>"
+      },
+      {
+        "number": 4,
+        "name": "The worker pipeline",
+        "claim": "stages that can each fail and resume",
+        "html": "<p><strong>Each stage writes its output and advances a status, so a crash resumes from the last finished stage.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Worker:</strong></span><span class=\"flow-step\">consume event</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">fetch original</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">parse (OCR if scanned)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">chunk</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">embed in batches</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">upsert vectors + BM25</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">status <code>indexed</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">ack</span></div>\n<ul>\n<li><strong>Status record per doc version:</strong> <code>received → parsed → chunked → embedded → indexed</code> (or <code>failed</code>).</li>\n<li><strong>Embedding batches</strong> are the throughput lever; rate-limit to the provider's quota.</li>\n<li><strong>Ack the event last</strong>, after the status write.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "name": "Retries, DLQ and replay",
+        "claim": "transient vs permanent failures",
+        "html": "<p><strong>Transient failures retry with exponential backoff and jitter; permanent ones go to a dead-letter queue with the reason, and stay replayable.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Failure</th>\n<th>Class</th>\n<th>Action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>embedding API 429 / 5xx</td>\n<td>transient</td>\n<td>backoff + jitter, then retry</td>\n</tr>\n<tr>\n<td>parser timeout on a huge scan</td>\n<td>transient, maybe</td>\n<td>retry on a large-doc lane</td>\n</tr>\n<tr>\n<td>encrypted or corrupt PDF</td>\n<td>permanent</td>\n<td>DLQ with reason; show \"failed\" to the uploader</td>\n</tr>\n<tr>\n<td>bug in the chunker</td>\n<td>systemic</td>\n<td>fix, then replay the DLQ</td>\n</tr>\n</tbody></table>\n<p>A DLQ that nobody reads is data loss; it needs an owner, an alert and a replay tool.</p>"
+      },
+      {
+        "number": 6,
+        "name": "Updates and deletes",
+        "claim": "a new version replaces, a delete propagates",
+        "html": "<p><strong>A changed document is a new version that swaps in atomically; a delete removes chunks, vectors, BM25 entries and cached answers.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Update:</strong></span><span class=\"flow-step\">index v2 chunks</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">flip \"current\" pointer to v2</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">delete v1 chunks</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Delete:</strong></span><span class=\"flow-step\">tombstone doc</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">filter at query time</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">purge vectors + BM25</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">purge answer cache</span></div>\n<p>Retrieval filters on <code>current=true</code>, so a half-indexed v2 never shows.</p>"
+      },
+      {
+        "number": 7,
+        "name": "What I monitor",
+        "claim": "lag, failure rate and the DLQ",
+        "html": "<p><strong>I'd watch time from upload to searchable, because that's the promise the user sees.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>Alert when</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>upload → <code>indexed</code> p95</td>\n<td>over the freshness promise</td>\n</tr>\n<tr>\n<td>queue lag / consumer lag</td>\n<td>growing for 10 min</td>\n</tr>\n<tr>\n<td>failure rate by stage</td>\n<td>parser failures spike after a deploy</td>\n</tr>\n<tr>\n<td>DLQ size and age</td>\n<td>anything older than a day</td>\n</tr>\n<tr>\n<td>docs in object store but not indexed</td>\n<td>reconciliation finds a gap</td>\n</tr>\n</tbody></table>\n<p>A nightly reconciliation job compares the object store with the index and re-queues what's missing.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not do it all inside the upload request?",
+        "tag": "trap",
+        "html": "<p><strong>Parsing and embedding take seconds to minutes, so one slow scan or a provider outage would fail the upload.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Sync:</strong></span><span class=\"flow-step\">upload</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">wait for OCR + embed</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">timeout</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">user retries</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">duplicate work</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Async:</strong></span><span class=\"flow-step\">upload</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">202 + id</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">workers</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">status updates</span></div>"
+      },
+      {
+        "number": 2,
+        "question": "The same file is uploaded twice with a different name. Do you index it twice?",
+        "tag": "probe",
+        "html": "<p><strong>No. The idempotency key is the content hash within the tenant, not the filename.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Key</th>\n<th>Catches</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>filename</td>\n<td>nothing reliable</td>\n</tr>\n<tr>\n<td>content hash + tenant</td>\n<td>exact re-uploads</td>\n</tr>\n<tr>\n<td>near-duplicate (MinHash)</td>\n<td>re-saved PDFs with tiny changes, if needed</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "question": "A worker crashes after writing vectors but before acking. What happens?",
+        "tag": "edge",
+        "html": "<p><strong>The event is redelivered, the status check or the upsert makes the retry harmless, and the doc ends up indexed once.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Redelivery:</strong></span><span class=\"flow-step\">event again</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">status says <code>embedded</code></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">resume at upsert</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">same chunk ids overwrite</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">ack</span></div>"
+      },
+      {
+        "number": 4,
+        "question": "You change the chunker. How do you re-index 10M documents safely?",
+        "tag": "senior",
+        "html": "<p><strong>Build a new index version in the background from the stored originals, evaluate it, then switch the alias.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Re-index:</strong></span><span class=\"flow-step\">replay originals to v2 workers</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">build index v2</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">golden-set eval v1 vs v2</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">flip alias</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">keep v1 for rollback</span></div>"
+      },
+      {
+        "number": 5,
+        "question": "How do you make a deleted document disappear right away?",
+        "tag": "probe",
+        "html": "<p><strong>Tombstone it first so retrieval filters it at once; the physical purge can follow.</strong></p>\n<ul>\n<li><strong>At once:</strong> a deleted-id filter in every retrieval path, including BM25 and caches.</li>\n<li><strong>Then:</strong> delete vectors, compact, purge cached answers that cited it.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "question": "Month-end, uploads jump 10×. What breaks first?",
+        "tag": "senior",
+        "html": "<p><strong>The embedding provider's rate limit, so the queue grows; that's the design working, as long as lag is visible.</strong></p>\n<ul>\n<li><strong>Priority lanes:</strong> small docs and paying tenants first.</li>\n<li><strong>Autoscale workers on queue lag</strong>, capped by provider quota.</li>\n<li><strong>Tell the uploader:</strong> status shows \"queued\".</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We call the embedding API in the upload handler&quot; — one outage fails every upload.",
+      "&quot;Kafka guarantees exactly once, so duplicates can&#39;t happen&quot; — consumers still see redeliveries.",
+      "&quot;Failed documents are logged&quot; — a log is not a retry path; use a DLQ with replay.",
+      "&quot;We insert the new vectors&quot; — insert duplicates on retry; upsert by stable id."
+    ],
+    "links": [
+      {
+        "label": "The Two Pipelines — Offline Index Build vs Online Query Serving",
+        "target": "04-RAG/12-Production RAG Systems (arch lens)/02-The Two Pipelines — Offline Index Build vs Online Query Serving"
+      },
+      {
+        "label": "Incremental Indexing & Re Indexing Strategy",
+        "target": "04-RAG/12-Production RAG Systems (arch lens)/07-Incremental Indexing & Re-Indexing Strategy"
+      },
+      {
+        "label": "Data Freshness & Sync",
+        "target": "04-RAG/02- Ingestion & Parsing/07-Data Freshness & Sync"
+      },
+      {
+        "label": "idempotency exactly once",
+        "target": "01-System Design/01-Networking/14-performance-reliability/155-idempotency-exactly-once"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;202, then workers\"]:::in\n        N2[\"2 · Why&lt;br/&gt;queues deliver twice\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Dedupe&lt;br/&gt;content hash + tenant\"]:::step\n        N4[\"4 · Worker&lt;br/&gt;stage status, upsert\"]:::step\n        N5[\"5 · Failures&lt;br/&gt;backoff, then DLQ\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Versions&lt;br/&gt;swap, tombstone\"]:::step\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Watch&lt;br/&gt;upload → searchable p95\"]:::bad\n        NC([\"Close&lt;br/&gt;replay from originals\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "rag-q65": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where long context and CAG win",
+      "Where reasoning over a tree index wins",
+      "Where vectors still win",
+      "The deciding questions",
+      "What I'd pick"
+    ],
+    "testing": "whether you pick retrieval by corpus size, change rate, structure and access control, instead of by fashion.",
+    "trap": "&quot;Vector databases are obsolete&quot; or &quot;every RAG needs a vector DB.&quot; Both skip the questions that decide it.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>pick by the corpus</td>\n<td>\"Not always. I pick the retrieval approach by four properties of the corpus: its size against the window, how often it changes, its structure and its permissions.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>each fails differently</td>\n<td>\"Long context breaks at scale and with per-user permissions. Vector search finds text that sounds relevant, which can miss the exact clause in a long contract.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · small</strong></td>\n<td>long context + cache</td>\n<td>\"If the corpus fits the window, changes rarely and has one audience, I put it in a cached prompt. That's cache-augmented generation.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · structured</strong></td>\n<td>LLM walks the tree</td>\n<td>\"For a few long, structured documents, an LLM can navigate the section tree and cite pages, at the cost of several calls per query.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · large</strong></td>\n<td>hybrid + filters</td>\n<td>\"For millions of short documents with daily changes and ACLs, hybrid vector plus BM25 search with filters is still the right tool.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch</strong></td>\n<td>same golden set</td>\n<td>\"I'd score every option on the same golden set: accuracy, citation correctness, p95 latency and cost per query. A vendor benchmark number doesn't decide it for my data.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>simplest that passes</td>\n<td>\"So I start with the simplest option that fits the corpus, and I switch only when the eval shows it losing.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "size, change rate, structure and permissions decide it",
+        "html": "<p><strong>The choice turns on four properties of the corpus, not on which technique is new.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Property</th>\n<th>Small, static</th>\n<th>Large, changing</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Size vs context window</td>\n<td>fits → put it in context</td>\n<td>doesn't fit → retrieve</td>\n</tr>\n<tr>\n<td>Change rate</td>\n<td>rare → cache it</td>\n<td>daily → index incrementally</td>\n</tr>\n<tr>\n<td>Structure</td>\n<td>long docs with a real table of contents → navigate it</td>\n<td>many short, flat docs → similarity search</td>\n</tr>\n<tr>\n<td>Permissions</td>\n<td>one audience → shared cache is fine</td>\n<td>per-user ACLs → filter per query</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Where long context and CAG win",
+        "claim": "a small, stable corpus everyone can read",
+        "html": "<p><strong>When the whole knowledge base fits in the window and rarely changes, I'd load it into the prompt and let prompt caching make it cheap.</strong></p>\n<p>Cache-augmented generation (CAG) preloads the corpus into a long-context model and reuses the cached state instead of retrieving (Chan et al., 2024, WWW '25). With provider prompt caching, the same idea needs no special serving.</p>\n<pre><code class=\"language-text\">corpus = 300 pages × 500 tokens      = 150K tokens          (illustrative)\nfits a 200K window?                  yes, with room for the question\ncached prefix read ≈ 0.1× input price (provider prompt caching, 2026)\nper query ≈ 150K × 0.1 + question     ≈ the cost of ~15K uncached tokens\n</code></pre>\n<ul>\n<li><strong>Wins:</strong> no chunking errors, no retrieval misses, simple to build.</li>\n<li><strong>Loses:</strong> stale on change (rebuild the cache), and one shared cache can't enforce per-user permissions.</li>\n</ul>"
+      },
+      {
+        "number": 3,
+        "name": "Where reasoning over a tree index wins",
+        "claim": "long documents with real structure",
+        "html": "<p><strong>For long filings, contracts and manuals, an LLM can navigate the document's own hierarchy instead of matching chunks.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Vectorless retrieval:</strong></span><span class=\"flow-step\">parse doc into a section tree</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LLM reads the table of contents</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">picks a branch</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">reads deeper</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">answers with page and section refs</span></div>\n<ul>\n<li><strong>Example:</strong> PageIndex (VectifyAI) builds such a tree; its authors report 98.7% on FinanceBench for a system built on it (vendor-reported, not independently reproduced).</li>\n<li><strong>Costs:</strong> several LLM calls per query, seconds of latency, a costlier index build.</li>\n<li><strong>Fits:</strong> a few long documents per query, where similarity finds text that sounds relevant rather than the clause that is.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Where vectors still win",
+        "claim": "large, flat, changing, permissioned corpora",
+        "html": "<p><strong>For millions of short documents that change daily and carry per-user ACLs, ANN search with filters is still the right tool.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Need</th>\n<th>Why vectors (plus BM25)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>1M+ chunks</td>\n<td>sub-100 ms ANN, no LLM call to find candidates</td>\n</tr>\n<tr>\n<td>daily changes</td>\n<td>upsert a chunk; no cache rebuild</td>\n</tr>\n<tr>\n<td>per-user ACLs</td>\n<td>filter inside the query</td>\n</tr>\n<tr>\n<td>meaning across wording or languages</td>\n<td>embeddings match paraphrases</td>\n</tr>\n</tbody></table>\n<p>Most real systems route: BM25 for IDs, vectors for meaning, SQL for tables, a tree for long documents.</p>"
+      },
+      {
+        "number": 5,
+        "name": "The deciding questions",
+        "claim": "four checks, in order",
+        "html": "<p><strong>I'd ask these in order; the first \"no\" picks the approach.</strong></p>\n<figure><div class=\"mermaid\">flowchart TD\n    Q1{{\"🤔 Fits the window&lt;br/&gt;with room to spare?\"}}:::ask\n    Q2{{\"🤔 Changes rarely, one&lt;br/&gt;audience?\"}}:::ask\n    Q3{{\"🤔 Few long docs with&lt;br/&gt;real structure?\"}}:::ask\n    A1([\"📄 long context&lt;br/&gt;+ prompt cache\"]):::ok\n    A2([\"🌲 tree index,&lt;br/&gt;LLM navigates\"]):::ok\n    A3([\"🔎 hybrid vector + BM25&lt;br/&gt;with filters\"]):::ok\n    Q1 --&gt;|\"yes\"| Q2\n    Q1 --&gt;|\"no\"| Q3\n    Q2 --&gt;|\"yes\"| A1\n    Q2 --&gt;|\"no\"| A3\n    Q3 --&gt;|\"yes\"| A2\n    Q3 --&gt;|\"no\"| A3\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>"
+      },
+      {
+        "number": 6,
+        "name": "What I'd pick",
+        "claim": "measure the simplest option first",
+        "html": "<p><strong>Start with the simplest approach that fits, and switch only when an eval shows it losing.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Order:</strong></span><span class=\"flow-step\">long context + cache</span><span class=\"flow-arrow\" data-label=\"if too big\"></span><span class=\"flow-step\">hybrid vector + BM25 ─if long structured docs fail</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">add a tree-navigation tool</span></div>\n<p>Whatever I pick, the same golden set scores all of them: answer accuracy, citation correctness, latency and cost per query.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Million-token windows made vector databases obsolete.&quot; Agree?",
+        "tag": "trap",
+        "html": "<p><strong>No. Long context removes retrieval for small corpora; it doesn't scale to millions of documents, daily changes or per-user permissions.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Long context</th>\n<th>Retrieval</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>10M docs</td>\n<td>doesn't fit</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td>Doc changed this morning</td>\n<td>rebuild cache</td>\n<td>upsert</td>\n</tr>\n<tr>\n<td>Per-user ACL</td>\n<td>can't filter a shared prompt</td>\n<td>filter in query</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "What does CAG get wrong with access control?",
+        "tag": "edge",
+        "html": "<p><strong>Everything in the cached prefix is visible to every query that uses it, so per-user permissions need one cache per role.</strong></p>\n<pre><code class=\"language-text\">caches to keep fresh = roles × corpus versions      ← one cached prefix per audience\n5 roles × 2 live versions    = 10 caches                  (illustrative)\n</code></pre>\n<p>Past a few roles, filtered retrieval is cheaper and safer.</p>"
+      },
+      {
+        "number": 3,
+        "question": "How is the tree index different from hierarchical chunking?",
+        "tag": "probe",
+        "html": "<p><strong>Hierarchical chunking still retrieves by similarity; a tree index lets the model choose branches by reading section titles and summaries.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Hierarchical chunks</th>\n<th>Tree navigation</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Finds candidates by</td>\n<td>vector similarity</td>\n<td>LLM reasoning over headings</td>\n</tr>\n<tr>\n<td>LLM calls per query</td>\n<td>1</td>\n<td>several</td>\n</tr>\n<tr>\n<td>Best on</td>\n<td>many docs</td>\n<td>a few long, structured docs</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "How would you prove the vectorless approach is better for your data?",
+        "tag": "senior",
+        "html": "<p><strong>Run both on the same golden set and compare quality against cost and latency per query.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>Vector RAG</th>\n<th>Tree navigation</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>answer accuracy</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>citation correct</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>p95 latency</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n<tr>\n<td>cost per query</td>\n<td>measure</td>\n<td>measure</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Can you combine them?",
+        "tag": "probe",
+        "html": "<p><strong>Yes: route each query to the retriever that fits it, and let an agent call several.</strong></p>\n<ul>\n<li><strong>IDs and codes →</strong> BM25.</li>\n<li><strong>Meaning →</strong> vectors.</li>\n<li><strong>Long contract →</strong> tree navigation tool.</li>\n<li><strong>Tables →</strong> SQL.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Vector DBs are dead&quot; — scale, freshness and ACLs still need retrieval.",
+      "&quot;We always need a vector DB&quot; — a 150K-token corpus fits in a cached prompt.",
+      "&quot;PageIndex scores 98.7%, so it&#39;s better&quot; — that&#39;s a vendor-reported number on one benchmark.",
+      "&quot;CAG is safe for multi-tenant data&quot; — a shared cached prefix leaks across users."
+    ],
+    "links": [
+      {
+        "label": "Provider Prompt Caching × RAG",
+        "target": "04-RAG/12-Production RAG Systems (arch lens)/05-Provider Prompt Caching × RAG"
+      },
+      {
+        "label": "chapter map",
+        "target": "04-RAG/10-Advanced & Modular RAG Patterns/00-chapter-map"
+      },
+      {
+        "label": "rag finetune or long context",
+        "target": "model-answers/05-RAG/02-rag-finetune-or-long-context"
+      },
+      {
+        "label": "million token rag obsolete",
+        "target": "model-answers/05-RAG/03-million-token-rag-obsolete"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;pick by the corpus\"]:::in\n        N2[\"2 · Why&lt;br/&gt;each fails differently\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Small&lt;br/&gt;long context + cache\"]:::step\n        N4[\"4 · Structured&lt;br/&gt;LLM walks the tree\"]:::step\n        N5[\"5 · Large&lt;br/&gt;hybrid + filters\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Watch&lt;br/&gt;same golden set\"]:::bad\n        NC([\"Close&lt;br/&gt;simplest that passes\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   }
 }

@@ -7394,5 +7394,115 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Localise in depth:&lt;br/&gt;logit lens&lt;br/&gt;where the answer appears\"]):::step\n        N2[\"2 · Localise causally:&lt;br/&gt;activation patching&lt;br/&gt;which component matters\"]:::step\n        N3[\"3 · The working&lt;br/&gt;picture: MLPs store…&lt;br/&gt;a model of recall\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · Editing as surgery&lt;br/&gt;ROME-class methods\"]:::step\n        N5[\"5 · Caveats&lt;br/&gt;what can mislead you\"]:::step\n        N6([\"6 · What you'd&lt;br/&gt;actually ship&lt;br/&gt;production judgement\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "ml-dl-q73": {
+    "type": "design",
+    "spine": [
+      "Clarify what \"ETA\" promises",
+      "Decompose the delivery",
+      "Features and freshness",
+      "Model and loss",
+      "Serving and updates",
+      "Evaluate and monitor"
+    ],
+    "testing": "whether you pick the loss from the business cost of being late vs early, split the problem into legs, and serve fresh features in real time.",
+    "trap": "&quot;Train an XGBoost regressor with MSE on historical delivery times.&quot; That predicts the mean, so about half of orders arrive late.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>legs, quantile, fresh</td>\n<td>\"I'd predict ETA per leg with quantile models fed by real-time features, and add the legs up into one promised time.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>late costs more</td>\n<td>\"A late delivery hurts trust far more than an early one. So predicting the mean, which is late about half the time, is the wrong target.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · legs</strong></td>\n<td>prep, pickup, drive</td>\n<td>\"I split the trip into prep, rider to restaurant, wait, drive and hand-over, because each has different signals and owners.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · features</strong></td>\n<td>streaming feature store</td>\n<td>\"Restaurant backlog and nearby riders change by the second, so they come from a streaming feature store, with point-in-time joins at training.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · loss</strong></td>\n<td>pinball at p80</td>\n<td>\"Each leg model uses pinball loss at the quantile the business picks, say p80, which makes being late cost four times being early.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How · serving</strong></td>\n<td>re-predict on events</td>\n<td>\"I predict at checkout, then re-predict the remaining legs on events like pickup, smoothing so the number doesn't jump.\"</td>\n</tr>\n<tr>\n<td><strong>7 · Watch</strong></td>\n<td>on-time rate by segment</td>\n<td>\"I check the promise is met about eighty percent of the time in every city and hour, and A/B test conversion and cancellations.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>a calibrated promise</td>\n<td>\"Done means a calibrated promise users can trust in every city, not the lowest MAE on a dashboard.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Clarify what \"ETA\" promises",
+        "claim": "lateness costs more than earliness",
+        "html": "<p><strong>I'd start with what the number is used for, because a promised time that is often exceeded hurts trust more than one that's a few minutes cautious.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Ask</th>\n<th>Why it changes the design</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>shown before ordering, after ordering, or both?</td>\n<td>pre-order ETA has less information</td>\n</tr>\n<tr>\n<td>cost of late vs early</td>\n<td>picks the quantile to predict</td>\n</tr>\n<tr>\n<td>update during the trip?</td>\n<td>needs a streaming path</td>\n</tr>\n<tr>\n<td>range or a single time?</td>\n<td>two quantiles vs one</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Decompose the delivery",
+        "claim": "predict legs, not one number",
+        "html": "<p><strong>Total time is a sum of legs with different drivers, so I model the legs and add them.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>ETA:</strong></span><span class=\"flow-step\">order placed</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">restaurant accepts</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>prep time</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">rider assigned + travel to restaurant</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">wait at pickup</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>drive to customer</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">hand-over</span></div>\n<table>\n<thead>\n<tr>\n<th>Leg</th>\n<th>Main signals</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>prep</td>\n<td>restaurant, items, current queue, time of day</td>\n</tr>\n<tr>\n<td>rider to restaurant</td>\n<td>rider supply nearby, distance, traffic</td>\n</tr>\n<tr>\n<td>drive</td>\n<td>route distance, live traffic, weather, rider history</td>\n</tr>\n<tr>\n<td>hand-over</td>\n<td>building type, gated society, floor</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Features and freshness",
+        "claim": "real-time load decides most of the error",
+        "html": "<p><strong>The features that move ETA most change by the minute, so they come from a streaming feature store, with the same values at training and at serving.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Feature family</th>\n<th>Freshness</th>\n<th>Store</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>restaurant open-order count, prep backlog</td>\n<td>seconds</td>\n<td>streaming → online store</td>\n</tr>\n<tr>\n<td>riders available in the zone</td>\n<td>seconds</td>\n<td>streaming</td>\n</tr>\n<tr>\n<td>traffic and weather</td>\n<td>minutes</td>\n<td>external API, cached</td>\n</tr>\n<tr>\n<td>restaurant's historical prep by dish</td>\n<td>daily</td>\n<td>batch</td>\n</tr>\n<tr>\n<td>customer address hand-over time</td>\n<td>daily</td>\n<td>batch</td>\n</tr>\n</tbody></table>\n<p>Point-in-time joins at training stop leakage: no feature computed after the order time.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Model and loss",
+        "claim": "predict a quantile, not the mean",
+        "html": "<p><strong>I'd train gradient-boosted trees per leg with a quantile (pinball) loss at the percentile the business picks, say p80.</strong></p>\n<pre><code class=\"language-text\">pinball_q(y, ŷ) = q·(y − ŷ)        if y ≥ ŷ     ← under-prediction (late) costs q\n                = (1 − q)·(ŷ − y)  if y &lt; ŷ     ← over-prediction (early) costs 1 − q\nq = 0.8  →  being late costs 4× being early\n</code></pre>\n<p><strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6z\"></path></svg> Prove it — the mean promises too little:</strong></p>\n<pre><code class=\"language-python\">actual = [28, 30, 31, 33, 35, 36, 38, 41, 45, 55]        # minutes, one busy evening (illustrative)\ndef report(name, promise):\n    late = sum(a &gt; promise for a in actual) / len(actual)\n    mae = sum(abs(a - promise) for a in actual) / len(actual)\n    return f\"{name:&gt;11}: promise {promise} min, late {late:.0%}, MAE {mae:.1f}\"\ndef pinball(q, pred): return sum(max(q * (a - pred), (q - 1) * (a - pred)) for a in actual) / len(actual)\nmean = round(sum(actual) / len(actual))\nbest_p80 = min(range(25, 60), key=lambda p: pinball(0.8, p))\nprint(report(\"mean (MSE)\", mean))\nprint(report(\"p80 (q=0.8)\", best_p80))\n# →  mean (MSE): promise 37 min, late 40%, MAE 6.0\n# → p80 (q=0.8): promise 41 min, late 20%, MAE 7.4\n</code></pre>\n<p>Run on Python 3. MAE gets worse, and lateness halves: the metric you report must match the promise.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Serving and updates",
+        "claim": "predict at order time, then re-predict on events",
+        "html": "<p><strong>The first ETA comes from a low-latency model call at checkout; later ETAs update on trip events.</strong></p>\n<figure><div class=\"mermaid\">flowchart TD\n    O([\"🛒 order placed\"]):::in\n    F[(\"⚡ online feature store\")]:::calc\n    M[\"🤖 leg models, p80\"]:::step\n    S[\"📱 show ETA\"]:::ok\n    E[\"📍 events: accepted,&lt;br/&gt;picked up, GPS\"]:::in\n    U[\"🔁 re-predict&lt;br/&gt;remaining legs\"]:::step\n    O --&gt; M\n    F --&gt; M\n    M --&gt; S\n    E --&gt; U\n    F --&gt; U\n    U --&gt; S\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>\n<ul>\n<li><strong>Latency budget:</strong> tens of milliseconds per prediction <code>(illustrative)</code>.</li>\n<li><strong>Smoothing:</strong> don't let the shown ETA jump back and forth on every GPS ping.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "Evaluate and monitor",
+        "claim": "calibration of the promise, by segment",
+        "html": "<p><strong>I'd check that a p80 promise is met about 80% of the time, in every city, hour and restaurant tier.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>Healthy</th>\n<th>Tells you</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>on-time rate vs promise</td>\n<td>≈ the chosen quantile</td>\n<td>calibration</td>\n</tr>\n<tr>\n<td>MAE / p90 absolute error</td>\n<td>stable</td>\n<td>accuracy</td>\n</tr>\n<tr>\n<td>late by &gt; 10 min</td>\n<td>small, falling</td>\n<td>the painful tail</td>\n</tr>\n<tr>\n<td>on-time rate by segment</td>\n<td>no segment far below</td>\n<td>hidden failures</td>\n</tr>\n<tr>\n<td>A/B: conversion, cancellations, CSAT</td>\n<td>not worse</td>\n<td>business effect</td>\n</tr>\n</tbody></table>\n<p>Drift alarms on feature distributions (rider supply, prep backlog) catch monsoon nights and festival peaks.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not minimise MSE and add a fixed buffer?",
+        "tag": "trap",
+        "html": "<p><strong>A fixed buffer is too much on quiet nights and too little at peak; a quantile model widens with uncertainty.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Mean + 5 min</th>\n<th>p80 model</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>quiet Tuesday</td>\n<td>over-promises the wait</td>\n<td>tight</td>\n</tr>\n<tr>\n<td>rainy Friday peak</td>\n<td>late often</td>\n<td>widens automatically</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "How do you avoid leakage in training data?",
+        "tag": "probe",
+        "html": "<p><strong>Point-in-time joins: every feature is taken as it was at the prediction time.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Wrong:</strong></span><span class=\"flow-step\">order</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">join today's restaurant average</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">train</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Right:</strong></span><span class=\"flow-step\">order at 19:42</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">join features as of 19:42</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">train</span></div>"
+      },
+      {
+        "number": 3,
+        "question": "A new restaurant has no history. What&#39;s its prep time?",
+        "tag": "edge",
+        "html": "<p><strong>Back off to similar restaurants: cuisine, area and menu size, then update fast as orders come in.</strong></p>\n<ul>\n<li><strong>Cold start:</strong> cuisine × area prior.</li>\n<li><strong>Shrinkage:</strong> blend prior and own mean by order count.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "One model or one per leg?",
+        "tag": "probe",
+        "html": "<p><strong>Per leg, because each leg has different signals and different owners, and errors become explainable.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>One model</th>\n<th>Per leg</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>explains a miss</td>\n<td>hard</td>\n<td>\"prep ran 12 min over\"</td>\n</tr>\n<tr>\n<td>re-predicts mid-trip</td>\n<td>from scratch</td>\n<td>only the remaining legs</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "How do you know the new model is better for the business?",
+        "tag": "senior",
+        "html": "<p><strong>A/B test on on-time rate and cancellations, not offline MAE alone.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Guardrail</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>conversion at checkout</td>\n<td>a longer promise can lose orders</td>\n</tr>\n<tr>\n<td>cancellations, complaints</td>\n<td>late orders</td>\n</tr>\n<tr>\n<td>rider idle time</td>\n<td>a model that changes dispatch</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Minimise MSE&quot; — it predicts the mean, so about half the orders run late.",
+      "&quot;One overall MAE number&quot; — calibration by city and hour is what users feel.",
+      "&quot;Use yesterday&#39;s averages as features&quot; — they leak future information at training time.",
+      "&quot;Recompute ETA on every GPS ping and show it&quot; — the number jumps; smooth it."
+    ],
+    "links": [
+      {
+        "label": "Robust & Quantile Losses — Huber, Log Cosh, Pinball",
+        "target": "01-ML/07-Loss Functions/02-Robust & Quantile Losses — Huber, Log-Cosh, Pinball"
+      },
+      {
+        "label": "ML System Design Framework",
+        "target": "01-ML/15-System & Architecture/01-ML System Design Framework"
+      },
+      {
+        "label": "Feature Stores — Feast, Tecton",
+        "target": "01-ML/15-System & Architecture/03-Feature Stores — Feast, Tecton"
+      },
+      {
+        "label": "Online vs Batch vs Streaming Inference",
+        "target": "01-ML/15-System & Architecture/04-Online vs Batch vs Streaming Inference"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;legs, quantile, fresh\"]:::in\n        N2[\"2 · Why&lt;br/&gt;late costs more\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Legs&lt;br/&gt;prep, pickup, drive\"]:::step\n        N4[\"4 · Features&lt;br/&gt;streaming feature store\"]:::step\n        N5[\"5 · Loss&lt;br/&gt;pinball at p80\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Serving&lt;br/&gt;re-predict on events\"]:::step\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Watch&lt;br/&gt;on-time rate by segment\"]:::bad\n        NC([\"Close&lt;br/&gt;a calibrated promise\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   }
 }

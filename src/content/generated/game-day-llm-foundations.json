@@ -946,6 +946,35 @@
           }
         }
       ]
+    },
+    {
+      "id": "llm-foundations-added-from-saved-linkedin-interview-posts-24-oct-2026",
+      "letter": null,
+      "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
+      "questions": [
+        {
+          "id": "llm-foundations-q46",
+          "number": 46,
+          "marks": [
+            "asked"
+          ],
+          "text": "Why do LLMs repeat themselves, and how do you stop it in production?",
+          "points": [],
+          "links": [],
+          "badge": "Trending — reported from a TCS Agentic AI Engineer loop (LinkedIn, Oct 2026).",
+          "modelAnswer": {
+            "type": "mechanism",
+            "spine": [
+              "The one-line claim",
+              "How the loop forms",
+              "Prove it",
+              "What makes it worse",
+              "The fixes, by layer",
+              "So what for the system"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

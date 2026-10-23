@@ -4492,5 +4492,115 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Clarify the need&lt;br/&gt;what must be in context&lt;br/&gt;at once, and for whom\"]):::ask\n        N2[\"2 · Constraints and&lt;br/&gt;numbers&lt;br/&gt;~122 GiB of KV cache per&lt;br/&gt;conversation\"]:::calc\n        N3[\"3 · What breaks first&lt;br/&gt;memory, then prefill,&lt;br/&gt;then positions\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · The levers&lt;br/&gt;a lever for each&lt;br/&gt;bottleneck\"]:::step\n        N5(\"5 · Is it actually&lt;br/&gt;used?&lt;br/&gt;needle tests pass long&lt;br/&gt;before reasoning does\"):::ask\n        N6([\"6 · What I'd propose&lt;br/&gt;retrieval by default, 1M&lt;br/&gt;as a measured tier\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "llm-foundations-q46": {
+    "type": "mechanism",
+    "spine": [
+      "The one-line claim",
+      "How the loop forms",
+      "Prove it",
+      "What makes it worse",
+      "The fixes, by layer",
+      "So what for the system"
+    ],
+    "testing": "whether you can explain repetition as a decoding feedback loop and name a fix at the right layer, instead of blaming &quot;the model.&quot;",
+    "trap": "&quot;Just raise the temperature.&quot; That trades loops for gibberish and breaks tool calls and JSON.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>a decoding feedback loop</td>\n<td>\"Repetition is a feedback loop in decoding, not a broken model. Each emitted token becomes context for the next step, and a repeated phrase makes itself more likely to repeat.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>argmax plus copying</td>\n<td>\"Greedy decoding always takes the top token, the model readily copies earlier spans, and if end-of-sequence never wins, the cycle runs to the token limit.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · decoding</strong></td>\n<td>min-p, penalties</td>\n<td>\"First I fix decoding: moderate temperature with top-p or min-p, and a repetition or frequency penalty on open-ended routes.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · bounds</strong></td>\n<td>max tokens, stops</td>\n<td>\"Then I bound it server-side with max tokens and stop sequences, so a loop that still happens costs little.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Watch</strong></td>\n<td>repeated n-gram rate</td>\n<td>\"I watch the repeated n-gram rate and the share of responses hitting max tokens, per route. Penalties stay off for JSON, tool calls and code, where repeating a key or a name is correct.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>cheapest layer first</td>\n<td>\"So I fix it at the cheapest layer that works: decoding first, then bounds and context, and only then a bigger or less-quantised model.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "The one-line claim",
+        "claim": "repetition is a self-reinforcing decoding loop",
+        "html": "<p><strong>Each token the model emits becomes context for the next step, and a repeated phrase makes itself more likely to repeat.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Loop:</strong></span><span class=\"flow-step\">phrase appears</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">attention finds the earlier copy</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">next token copies it</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">phrase appears again</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">probability of repeating rises</span></div>\n<p>Greedy and beam search maximise likelihood, and a repeated span is often the highest-likelihood continuation (Holtzman et al., 2019, <em>The Curious Case of Neural Text Degeneration</em>).</p>"
+      },
+      {
+        "number": 2,
+        "name": "How the loop forms",
+        "claim": "likelihood, copying and a weak stop signal",
+        "html": "<p><strong>Three things line up: argmax decoding, the model's learned copying behaviour, and an end-of-sequence token that never wins.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Ingredient</th>\n<th>Effect</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>greedy or low-temperature decoding</td>\n<td>always takes the top token, so one high-probability cycle never breaks</td>\n</tr>\n<tr>\n<td>copying from context (induction-style attention)</td>\n<td>repeating an earlier span is a cheap, high-probability move</td>\n</tr>\n<tr>\n<td>weak end-of-sequence probability</td>\n<td>nothing ends the cycle, so it runs to <code>max_tokens</code></td>\n</tr>\n<tr>\n<td>long outputs, small models, heavy quantisation</td>\n<td>the distribution is flatter or less calibrated, so loops start sooner</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Prove it",
+        "claim": "a greedy loop, broken by a repetition penalty",
+        "html": "<p><strong>On a toy next-token table, greedy decoding cycles forever; down-weighting tokens already in the output breaks the cycle.</strong></p>\n<pre><code class=\"language-python\">NEXT = {\"the\": {\"cat\": 2.0, \"end\": 1.0}, \"cat\": {\"sat\": 2.0, \"ran\": 0.5},   # toy logits: next-token scores\n        \"sat\": {\"on\": 2.0, \"down\": 1.0}, \"on\": {\"the\": 2.0, \"a\": 0.8},\n        \"ran\": {\"home\": 1.5}, \"down\": {\"end\": 1.0}, \"a\": {\"mat\": 1.5}, \"mat\": {\"end\": 2.0}, \"home\": {\"end\": 2.0}}\ndef generate(start, steps=9, penalty=1.0):\n    out = [start]\n    for _ in range(steps):\n        scores = {t: (s / penalty if t in out else s) for t, s in NEXT.get(out[-1], {}).items()}\n        if not scores: break\n        out.append(max(scores, key=scores.get))                 # greedy: highest score wins\n        if out[-1] == \"end\": break\n    return \" \".join(out)\nprint(generate(\"the\"))\nprint(generate(\"the\", penalty=3.0))\n# → the cat sat on the cat sat on the cat\n# → the cat sat on a mat end\n</code></pre>\n<p>Run on Python 3. The penalty divides a positive score by <code>penalty</code> for tokens already present, which is how a multiplicative repetition penalty works on logits.</p>"
+      },
+      {
+        "number": 4,
+        "name": "What makes it worse",
+        "claim": "settings and inputs that invite loops",
+        "html": "<p><strong>Loops show up most with greedy decoding, long generations, repetitive prompts and models squeezed hard.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Trigger</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>temperature 0 on open-ended text</td>\n<td>summaries that restate one sentence</td>\n</tr>\n<tr>\n<td>no <code>max_tokens</code> or stop sequence</td>\n<td>a loop runs until the token limit, and you pay for all of it</td>\n</tr>\n<tr>\n<td>repetitive input or few-shot examples</td>\n<td>the model continues the pattern</td>\n</tr>\n<tr>\n<td>aggressive quantisation or a small model</td>\n<td>flatter, less calibrated next-token distribution</td>\n</tr>\n<tr>\n<td>a long agent transcript</td>\n<td>the model re-issues the same tool call it sees above</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "The fixes, by layer",
+        "claim": "decoding first, then prompt, then model",
+        "html": "<p><strong>I fix it at the cheapest layer that works: decoding knobs, then bounds, then prompt and context, and only then the model.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Fix</th>\n<th>Watch out</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>decoding</td>\n<td>moderate temperature with top-p or min-p; repetition, frequency or presence penalty</td>\n<td>penalties also punish legitimate repeats (JSON keys, code names)</td>\n</tr>\n<tr>\n<td>bounds</td>\n<td><code>max_tokens</code>, stop sequences</td>\n<td>caps the cost of a loop that still happens</td>\n</tr>\n<tr>\n<td>prompt and context</td>\n<td>remove repetitive examples; summarise long transcripts</td>\n<td>in agents, a repeated tool call is often a context problem</td>\n</tr>\n<tr>\n<td>detection</td>\n<td>n-gram repeat check on the stream; cut and retry</td>\n<td>needs a cheap check per chunk</td>\n</tr>\n<tr>\n<td>model</td>\n<td>larger or less-quantised model; fine-tune on clean long outputs</td>\n<td>the expensive layer</td>\n</tr>\n</tbody></table>\n<p>For structured output (JSON, tool calls) I keep temperature low and use constrained decoding instead of penalties.</p>"
+      },
+      {
+        "number": 6,
+        "name": "So what for the system",
+        "claim": "presets, bounds and a loop detector",
+        "html": "<p><strong>In production I'd expose named decoding presets per route, enforce token bounds server-side and alert on repetition rate.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Guard:</strong></span><span class=\"flow-step\">route preset (<code>extract</code> / <code>chat</code> / <code>creative</code>)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">server-side <code>max_tokens</code> + stops</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">stream n-gram check</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">cut, retry once</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">log repetition rate per route</span></div>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not just raise the temperature?",
+        "tag": "trap",
+        "html": "<p><strong>Higher temperature breaks loops by sampling the tail, which also brings in wrong and malformed tokens.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Temperature</th>\n<th>Open-ended chat</th>\n<th>JSON / tool call</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>0</td>\n<td>loops</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> stable</td>\n</tr>\n<tr>\n<td>1.2</td>\n<td>fewer loops, more nonsense</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> invalid output</td>\n</tr>\n</tbody></table>\n<p>Fix loops with penalties, min-p and bounds; keep structured routes cold.</p>"
+      },
+      {
+        "number": 2,
+        "question": "Repetition, frequency and presence penalty — what&#39;s the difference?",
+        "tag": "probe",
+        "html": "<p><strong>All three lower scores of tokens already seen; they differ in how they count.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Penalty</th>\n<th>Applied as</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>repetition (multiplicative)</td>\n<td>divide a positive logit by <code>p</code> if the token appeared</td>\n</tr>\n<tr>\n<td>presence</td>\n<td>subtract a fixed amount if the token appeared at all</td>\n</tr>\n<tr>\n<td>frequency</td>\n<td>subtract an amount that grows with how many times it appeared</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "question": "An agent calls the same tool with the same input again and again. Same problem?",
+        "tag": "edge",
+        "html": "<p><strong>Partly; the model copies its own earlier call, but the fix is in the harness, not the sampler.</strong></p>\n<ul>\n<li><strong>Block repeats:</strong> same tool and arguments twice in a row → stop or ask.</li>\n<li><strong>Return typed errors:</strong> an empty list looks like \"try again\".</li>\n<li><strong>Step budget:</strong> a hard cap per run.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "question": "Would a repetition penalty hurt code generation?",
+        "tag": "edge",
+        "html": "<p><strong>Yes. Code repeats identifiers and keywords on purpose, so penalties corrupt it.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Code route:</strong></span><span class=\"flow-step\">low temperature</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">no repetition penalty</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">stop sequences</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">tests catch loops</span></div>"
+      },
+      {
+        "number": 5,
+        "question": "How would you know repetition is hurting users?",
+        "tag": "senior",
+        "html": "<p><strong>Measure it per route: share of responses with a repeated n-gram span, and tokens spent past the first repeat.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>repeated 4-gram rate</td>\n<td>the loop itself</td>\n</tr>\n<tr>\n<td>responses hitting <code>max_tokens</code></td>\n<td>loops that never ended</td>\n</tr>\n<tr>\n<td>tokens after first repeat</td>\n<td>the money wasted</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The model is broken&quot; — it&#39;s a decoding feedback loop you can bound.",
+      "&quot;Raise the temperature&quot; — that swaps loops for errors on structured routes.",
+      "&quot;Add a repetition penalty everywhere&quot; — it corrupts JSON keys and code.",
+      "&quot;Beam search will fix it&quot; — beam search makes open-ended repetition worse."
+    ],
+    "links": [
+      {
+        "label": "Decoding & sampling",
+        "target": "05-LLM-Production/06-Inference & Decoding/01-Decoding & sampling"
+      },
+      {
+        "label": "Structured & constrained decoding",
+        "target": "05-LLM-Production/06-Inference & Decoding/02-Structured & constrained decoding"
+      },
+      {
+        "label": "temperature top p top k",
+        "target": "model-answers/04-LLM-FOUNDATIONS/09-temperature-top-p-top-k"
+      },
+      {
+        "label": "agent wont stop",
+        "target": "model-answers/06-AGENTIC-AI/09-agent-wont-stop"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;a decoding feedback loop\"]:::in\n        N2[\"2 · Why&lt;br/&gt;argmax plus copying\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Decoding&lt;br/&gt;min-p, penalties\"]:::step\n        N4[\"4 · Bounds&lt;br/&gt;max tokens, stops\"]:::step\n        N3 --&gt; N4\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N5[\"5 · Watch&lt;br/&gt;repeated n-gram rate\"]:::bad\n        NC([\"Close&lt;br/&gt;cheapest layer first\"]):::ok\n        N5 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   }
 }

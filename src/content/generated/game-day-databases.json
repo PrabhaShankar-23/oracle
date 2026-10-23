@@ -1843,8 +1843,8 @@
           ],
           "links": [
             {
-              "label": "data and sql analyst agents",
-              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/108-data and sql analyst agents"
+              "label": "Data and SQL analyst agents",
+              "target": "03-Agentic-AI/12-Applied &amp; Domain Patterns/07-Data and SQL analyst agents"
             }
           ],
           "flow": "question → retrieve relevant schema → generate over curated views → limits → check result",

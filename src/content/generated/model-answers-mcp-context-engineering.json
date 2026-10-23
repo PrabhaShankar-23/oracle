@@ -298,8 +298,8 @@
         "target": "03-Agentic-AI/04-Protocols&-Interoperability/04-MCP Authorization — OAuth for Remote Servers"
       },
       {
-        "label": "reliability engineering",
-        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/92-reliability engineering"
+        "label": "Reliability engineering",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/02-Reliability engineering"
       },
       {
         "label": "tool call fails",
@@ -805,8 +805,8 @@
         "target": "03-Agentic-AI/04-Protocols&-Interoperability/08-MCP at Scale — Gateways, Registries & Supply Chain"
       },
       {
-        "label": "permissions and least privilege",
-        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/85-permissions and least privilege"
+        "label": "Permissions and least privilege",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/05-Permissions and least privilege"
       },
       {
         "label": "indirect prompt injection",
@@ -1245,16 +1245,16 @@
     ],
     "links": [
       {
-        "label": "versioning and rollout",
-        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/100-versioning and rollout"
+        "label": "Versioning and rollout",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/12-Versioning and rollout"
       },
       {
         "label": "Building vs Consuming MCP Servers",
         "target": "03-Agentic-AI/04-Protocols&-Interoperability/07-Building vs Consuming MCP Servers"
       },
       {
-        "label": "simulation & replay",
-        "target": "03-Agentic-AI/09-Evaluation & Observability/79-simulation & replay"
+        "label": "Simulation and replay",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/08-Simulation and replay"
       },
       {
         "label": "versioning rollout",
@@ -2121,8 +2121,8 @@
     ],
     "links": [
       {
-        "label": "caching in agentic systems",
-        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/95-caching in agentic systems"
+        "label": "Caching",
+        "target": "03-Agentic-AI/11-Production Agentic Systems (architect lens)/05-Caching"
       },
       {
         "label": "Context ordering for prompt cache hit rate",
@@ -2228,8 +2228,8 @@
         "target": "04-RAG/12-Production RAG Systems (arch lens)/08-Access Control & Security — Per-Tenant Retrieval"
       },
       {
-        "label": "permissions and least privilege",
-        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/85-permissions and least privilege"
+        "label": "Permissions and least privilege",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/05-Permissions and least privilege"
       },
       {
         "label": "Caching strategy",

@@ -1239,6 +1239,13 @@
     "band": "More questions"
   },
   {
+    "id": "llm-foundations-q46",
+    "text": "Why do LLMs repeat themselves, and how do you stop it in production?",
+    "topic": "llm-foundations",
+    "topicTitle": "LLM Foundations",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
     "id": "rag-q1",
     "text": "Walk me through a production RAG pipeline.",
     "topic": "rag",
@@ -1673,6 +1680,27 @@
     "band": "More questions"
   },
   {
+    "id": "rag-q63",
+    "text": "(D) Design a multilingual RAG system for 20 languages across millions of documents. Accuracy and retrieval speed both matter.",
+    "topic": "rag",
+    "topicTitle": "RAG",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
+    "id": "rag-q64",
+    "text": "(D) Design a fault-tolerant document ingestion pipeline for production RAG. How do you handle duplicate uploads, async processing, retries, failures and reliable indexing?",
+    "topic": "rag",
+    "topicTitle": "RAG",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
+    "id": "rag-q65",
+    "text": "(C) Do you even need a vector database? When would you use vectorless retrieval, cache-augmented generation or plain long context instead?",
+    "topic": "rag",
+    "topicTitle": "RAG",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
     "id": "agentic-ai-q1",
     "text": "What makes a system agentic?",
     "topic": "agentic-ai",
@@ -2065,6 +2093,27 @@
     "band": "Harness, evals & observability — added 11 Oct 2026"
   },
   {
+    "id": "agentic-ai-q57",
+    "text": "A valid but stolen API token ran agent loops overnight and you woke up to a $140K bill. Redesign the trust model.",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q58",
+    "text": "Decision models like Jev are trending. Where would you use one instead of an LLM inside an agent, and where wouldn't you?",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
+    "id": "agentic-ai-q59",
+    "text": "Live coding: write a LangGraph agent that summarises a long document.",
+    "topic": "agentic-ai",
+    "topicTitle": "Agentic AI",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
     "id": "mcp-context-engineering-q1",
     "text": "What is MCP and what problem does it actually solve?",
     "topic": "mcp-context-engineering",
@@ -2448,6 +2497,20 @@
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
     "band": "More questions"
+  },
+  {
+    "id": "llm-serving-inference-q31",
+    "text": "You serve an LLM on vLLM. Which serving parameters do you tune, and how do you manage the KV cache under memory pressure?",
+    "topic": "llm-serving-inference",
+    "topicTitle": "LLM Serving & Inference",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
+  },
+  {
+    "id": "llm-serving-inference-q32",
+    "text": "Your assistant answers the same ~200 questions all day and costs $24K a day. Design a cache that cuts the bill without serving wrong or stale answers.",
+    "topic": "llm-serving-inference",
+    "topicTitle": "LLM Serving & Inference",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
   },
   {
     "id": "ml-dl-q1",
@@ -2952,6 +3015,13 @@
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
     "band": "More questions"
+  },
+  {
+    "id": "ml-dl-q73",
+    "text": "Design real-time ETA prediction for a food-delivery app.",
+    "topic": "ml-dl",
+    "topicTitle": "Classical ML & Deep Learning",
+    "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
   },
   {
     "id": "databases-q1",
