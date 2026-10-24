@@ -27,7 +27,7 @@ scripts/deploy-aws.sh          # build, upload, invalidate
 scripts/deploy-aws.sh --no-build
 ```
 
-Live at **https://dypp4lw2iurly.cloudfront.net**. Uses the `resodesk-admin` AWS profile (account 822940159660, override with `AWS_PROFILE`).
+Live at **https://oracle.resodesk.com** (CNAME at Namecheap → `dypp4lw2iurly.cloudfront.net`; certificate: the existing `*.resodesk.com` ACM cert in us-east-1). Uses the `resodesk-admin` AWS profile (account 822940159660, override with `AWS_PROFILE`).
 
 - Bucket `oracle-site-822940159660` (ap-south-1) is private; CloudFront distribution `ERFSFT6EXOJIH` reads it through Origin Access Control.
 - `assets/*` (hashed) are cached for a year; `index.html` and other files are `no-cache`; every deploy invalidates `/*`.

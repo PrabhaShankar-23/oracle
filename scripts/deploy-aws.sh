@@ -10,4 +10,4 @@ cd "$(dirname "$0")/.."
 aws s3 sync dist/assets "s3://$BUCKET/assets" --delete --cache-control "public,max-age=31536000,immutable"
 aws s3 sync dist "s3://$BUCKET" --delete --exclude "assets/*" --cache-control "no-cache"
 aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*" --query Invalidation.Id --output text
-echo "Deployed: https://dypp4lw2iurly.cloudfront.net"
+echo "Deployed: https://oracle.resodesk.com (also https://dypp4lw2iurly.cloudfront.net)"
