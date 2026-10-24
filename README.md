@@ -32,7 +32,6 @@ Live at **https://dypp4lw2iurly.cloudfront.net**. Uses the `resodesk-admin` AWS 
 - Bucket `oracle-site-822940159660` (ap-south-1) is private; CloudFront distribution `ERFSFT6EXOJIH` reads it through Origin Access Control.
 - `assets/*` (hashed) are cached for a year; `index.html` and other files are `no-cache`; every deploy invalidates `/*`.
 - CloudFront answers 403/404 with `/index.html` (status 200), so refreshes and shared deep links work.
-- `netlify.toml` is kept but no longer used.
 
 ## Where things are
 
