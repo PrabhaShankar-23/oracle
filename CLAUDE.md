@@ -9,7 +9,7 @@ A React site that publishes the **AlgoHandbook** notes vault
 by a script and committed as JSON. The vault is only written by `npm run vault:walkthroughs`
 (cold recall walkthroughs, see below); everything else in it is read-only from here.
 
-Deploy: `npm run build`, then drag the `dist/` folder onto Netlify (manual deploy).
+Deploy: `scripts/deploy-aws.sh` (build → S3 `oracle-site-822940159660` → CloudFront `ERFSFT6EXOJIH` invalidation; live at https://dypp4lw2iurly.cloudfront.net, profile `resodesk-admin`).
 `public/_redirects` is copied into `dist/` so deep links work.
 
 ## Commands

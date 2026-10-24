@@ -20,16 +20,19 @@ VAULT_DIR=/path/to/vault npm run ingest
 
 This rewrites `src/content/generated/*.json`. Commit the result.
 
-## Deploy to Netlify (free tier, manual)
+## Deploy to S3 + CloudFront
 
 ```bash
-npm run build
+scripts/deploy-aws.sh          # build, upload, invalidate
+scripts/deploy-aws.sh --no-build
 ```
 
-Then on app.netlify.com: **Add new project → Deploy manually**, and drag the `dist/` folder in.
-To update, open the project's **Deploys** tab and drag the new `dist/` folder in again.
+Live at **https://dypp4lw2iurly.cloudfront.net**. Uses the `resodesk-admin` AWS profile (account 822940159660, override with `AWS_PROFILE`).
 
-`dist/_redirects` makes page refreshes and shared deep links work.
+- Bucket `oracle-site-822940159660` (ap-south-1) is private; CloudFront distribution `ERFSFT6EXOJIH` reads it through Origin Access Control.
+- `assets/*` (hashed) are cached for a year; `index.html` and other files are `no-cache`; every deploy invalidates `/*`.
+- CloudFront answers 403/404 with `/index.html` (status 200), so refreshes and shared deep links work.
+- `netlify.toml` is kept but no longer used.
 
 ## Where things are
 
