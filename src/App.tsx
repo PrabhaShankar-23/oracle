@@ -20,6 +20,7 @@ const AgenticDecisionPage = lazy(() => import('./pages/system-design/AgenticDeci
 const NetworkingNotePage = lazy(() => import('./pages/system-design/NetworkingNotePage'))
 const VoiceNotePage = lazy(() => import('./pages/system-design/VoiceNotePage'))
 const PythonNotePage = lazy(() => import('./pages/python/PythonNotePage'))
+const PromptNotePage = lazy(() => import('./pages/ai-ml/PromptNotePage'))
 const GameDayRecallPage = lazy(() => import('./pages/game-day/GameDayRecallPage'))
 const GameDayDocPage = lazy(() => import('./pages/game-day/GameDayDocPage'))
 
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="system-design/networking/:slug" element={<NetworkingNotePage />} />
           <Route path="system-design/voice/:slug" element={<VoiceNotePage />} />
           <Route path="python/:slug" element={<PythonNotePage />} />
+          <Route path="ai-ml/prompt-engineering/:slug" element={<PromptNotePage />} />
           <Route path="game-day/recall/:slug" element={<GameDayRecallPage />} />
           <Route path="game-day/:slug" element={<GameDayDocPage />} />
           <Route path="*" element={<NotFoundPage />} />

@@ -246,6 +246,7 @@ export type Manifest = {
   networking: NoteSummary[]
   voice: (NoteSummary & { category?: string })[]
   python: NoteSummary[]
+  promptEngineering: NoteSummary[]
 }
 
 /** The row a note contributes to the manifest: enough for nav, search and the page header. */
@@ -487,4 +488,11 @@ export type PythonChapter = {
   id: string
   title: string
   notes: PythonNote[]
+}
+
+/** One prompt-engineering note: the same series shape, from `05-AI-ML/08-Prompt-engineering`. */
+export type PromptChapter = {
+  id: string
+  title: string
+  notes: AgenticDecision[]
 }

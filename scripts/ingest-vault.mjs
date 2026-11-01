@@ -1317,7 +1317,7 @@ const NETWORKING_CHAPTERS = {
 }
 
 /** A vault series is one folder of chapters, each holding notes that share a header prefix. */
-async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeader }) {
+async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeader, chapterId = (d) => d, strictRefs = false }) {
   const { readdir } = await import('node:fs/promises')
   const headerRe = new RegExp(`^# ${header}: `)
   const stripRe = new RegExp(`^${header}:\\s*`, 'i')
@@ -1344,7 +1344,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
         body.find('blockquote').first().remove()
         parsed.push({
           $, body, dir: chapterDir, chapterTitle,
-          slug: `${chapterDir.replace(/^\d+-/, '')}-map`, stem: '00-chapter-map', number: -1,
+          slug: `${chapterId(chapterDir).replace(/^\d+-/, '')}-map`, stem: '00-chapter-map', number: -1,
           title: `Chapter map: ${chapterTitle}`, tier: 'MAP', category: 'Concept map & reading order',
         })
         continue
@@ -1387,7 +1387,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
   // every note keeps a stable, unique URL.
   const seen = new Set()
   for (const n of parsed) {
-    if (seen.has(n.slug)) n.slug = `${n.dir.replace(/^\d+-/, '')}-${n.slug}`
+    if (seen.has(n.slug)) n.slug = `${chapterId(n.dir).replace(/^\d+-/, '')}-${n.slug}`
     seen.add(n.slug)
   }
   const dupes = parsed.map((n) => n.slug).filter((x, i, a) => a.indexOf(x) !== i)
@@ -1399,7 +1399,11 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
   const byStem = new Map(parsed.map((n) => [`${n.dir}/${n.stem}`, n.slug]))
   const resolveNote = (ref, fromDir) => {
     const leaf = decodeURIComponent(ref.split('/').pop() ?? '').replace(/\.md$/, '').trim()
-    const dir = /(?:^|\/)(\d{2}-[a-z-]+)\/[^/]*$/.exec(ref)?.[1] ?? fromDir
+    // Folder names with capitals and spaces can't match the pattern below, so they're looked up.
+    // In a strict series a folder outside it is another pillar, never a same-numbered note here.
+    const parent = decodeURIComponent(ref.split('/').slice(-2, -1)[0] ?? '')
+    if (strictRefs && parent && !(parent in chapters)) return null
+    const dir = (parent in chapters ? parent : /(?:^|\/)(\d{2}-[a-z-]+)\/[^/]*$/.exec(ref)?.[1]) ?? fromDir
     const n = /^(\d+)[a-z]?-/.exec(leaf)
     const slug = byStem.get(`${dir}/${leaf}`) ?? (n ? byFile.get(`${dir}/${Number(n[1])}`) : undefined)
     return slug && published.has(slug) ? slug : null
@@ -1422,7 +1426,8 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
       return slug ? `${route}/${slug}` : null
     })
 
-    const chapter = out.find((c) => c.id === note.dir) ?? { id: note.dir, title: note.chapterTitle, notes: [] }
+    const id = chapterId(note.dir)
+    const chapter = out.find((c) => c.id === id) ?? { id, title: note.chapterTitle, notes: [] }
     if (!out.includes(chapter)) out.push(chapter)
     chapter.notes.push({
       slug: note.slug,
@@ -1433,7 +1438,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
       relevance: note.relevance,
       tier: note.tier,
       created: note.created,
-      section: note.dir,
+      section: id,
       sectionTitle: note.chapterTitle,
       headings: collectHeadings($, body),
       html: inner(body),
@@ -1514,6 +1519,37 @@ const ingestPython = () =>
     header: 'Python Topic',
     prefix: 'python',
     mapHeader: 'Chapter Map',
+  })
+
+/* ---------------- Prompt engineering (05-AI-ML/08-Prompt-engineering) ---------------- */
+
+const PROMPT_DIR = '05-AI-ML/08-Prompt-engineering'
+const PROMPT_ROUTE = '/ai-ml/prompt-engineering'
+const PROMPT_CHAPTERS = {
+  '01-Foundations & Mental Model': 'Foundations & mental model',
+  '02-Core Prompt Anatomy & Techniques': 'Core prompt anatomy & techniques',
+  '03-Reasoning & Decomposition Prompting': 'Reasoning & decomposition',
+  '04-Structured Output & Control': 'Structured output & control',
+  '05-Context Engineering': 'Context engineering',
+  '06-System Prompts & Agent Instructions': 'System prompts & agent instructions',
+  '07-Automatic Prompt Optimization': 'Automatic prompt optimization',
+  '08-Evaluation & Testing Prompts': 'Evaluation & testing prompts',
+  '09-Prompt Ops': 'Prompt ops',
+  '10-Safety, Security & Adversarial Prompting': 'Safety, security & adversarial prompting',
+  '11-Modality & Model-Specific Prompting': 'Modality & model-specific prompting',
+  '12-Production Prompt Systems': 'Production prompt systems',
+}
+
+const ingestPrompt = () =>
+  ingestNoteSeries({
+    dir: PROMPT_DIR,
+    chapters: PROMPT_CHAPTERS,
+    route: PROMPT_ROUTE,
+    header: 'AI Topic',
+    prefix: 'prompt',
+    mapHeader: 'Chapter Map',
+    chapterId: slugify, // these folders hold capitals, spaces and `&`, which don't belong in a URL or a file name
+    strictRefs: true,
   })
 
 async function ingestAgenticDecisions() {
@@ -1599,7 +1635,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, practice) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice) {
   const practiceProblems = practice.families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   await write('manifest.json', {
     dsaPractice: { total: practiceProblems.length, l1: practiceProblems.filter((p) => p.l1).length },
@@ -1663,6 +1699,17 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
         sectionTitle: ch.title,
       })),
     ),
+    promptEngineering: prompt.flatMap((ch) =>
+      ch.notes.map((n) => ({
+        slug: n.slug,
+        order: n.order,
+        title: n.title,
+        tier: n.tier,
+        relevance: n.relevance,
+        section: ch.id,
+        sectionTitle: ch.title,
+      })),
+    ),
     python: python.flatMap((ch) =>
       ch.notes.map((n) => ({
         slug: n.slug,
@@ -1694,6 +1741,7 @@ const agentic = await ingestAgenticDecisions()
 const networking = await ingestNetworking()
 const voice = await ingestVoice()
 const python = await ingestPython()
+const prompt = await ingestPrompt()
 const dsa = await ingestColdRecall()
 await writeManifest(
   dsa,
@@ -1706,5 +1754,6 @@ await writeManifest(
   networking,
   voice,
   python,
+  prompt,
   await ingestPractice(dsa),
 )

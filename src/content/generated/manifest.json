@@ -6101,6 +6101,1172 @@
       "sectionTitle": "Production"
     }
   ],
+  "promptEngineering": [
+    {
+      "slug": "foundations-mental-model-map",
+      "title": "Chapter map: Foundations & mental model",
+      "tier": "MAP",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "what-prompting-actually-is",
+      "order": "01",
+      "title": "What Prompting Actually Is — Conditioning a Distribution, Not Giving an Order",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "in-context-learning",
+      "order": "02",
+      "title": "In-Context Learning — What the Examples in a Prompt Actually Carry",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "prompting-vs-fine-tuning-vs-rag-vs-tool-use",
+      "order": "03",
+      "title": "Prompting vs Fine-tuning vs RAG vs Tool-use — Name the Gap, Then Pick the Lever",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "when-prompting-is-the-wrong-tool",
+      "order": "04",
+      "title": "When Prompting Is the Wrong Tool — Three Ceilings and the Oracle Test",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "prompt-sensitivity-brittleness",
+      "order": "05",
+      "title": "Prompt Sensitivity & Brittleness — A Prompt's Score Is a Spread, Not a Number",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "instruction-tuned-vs-base-model-distinction",
+      "order": "06",
+      "title": "Instruction-Tuned vs Base Model — Why the Prompt's Shape Depends on the Training",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "alignment-tax-refusal-behavior",
+      "order": "07",
+      "title": "Alignment Tax & Refusal Behaviour — What Safety Training Costs a Prompt",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "prompt-engineering-failure-taxonomy",
+      "order": "08",
+      "title": "Prompt Failure Taxonomy — Five Classes, Each With Its Own Fix",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "the-prompt-as-a-coupled-system",
+      "order": "09",
+      "title": "The Prompt as a Coupled System — What Ships Is a Tuple, Not a String",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "01-foundations-mental-model",
+      "sectionTitle": "Foundations & mental model"
+    },
+    {
+      "slug": "core-prompt-anatomy-techniques-map",
+      "title": "Chapter map: Core prompt anatomy & techniques",
+      "tier": "MAP",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "anatomy-of-a-production-prompt",
+      "order": "10",
+      "title": "Anatomy of a Production Prompt — Six Regions, in an Order Set by Two Boundaries",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "zero-shot-prompting",
+      "order": "11",
+      "title": "Zero-Shot Prompting — Describe the Task, Give No Examples",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "one-shot-few-shot-prompting",
+      "order": "12",
+      "title": "One-Shot & Few-Shot Prompting — How Many Examples, and When the Answer Is Zero",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "few-shot-example-selection",
+      "order": "13",
+      "title": "Few-Shot Example Selection — Which Examples, and in What Order",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "dynamic-retrieved-few-shot-knn-example-selection",
+      "order": "14",
+      "title": "Dynamic Retrieved Few-Shot — Choosing the Examples per Request",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "instruction-writing",
+      "order": "15",
+      "title": "Instruction Writing — Say the Behaviour, the Threshold and the Fallback",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "delimiters-structure",
+      "order": "16",
+      "title": "Delimiters & Structure — Making a Boundary Visible, Not Enforced",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "role-persona-prompting",
+      "order": "17",
+      "title": "Role & Persona Prompting — It Sets the Voice, Not the Accuracy",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "system-prompt-vs-user-prompt-vs-assistant-prefill",
+      "order": "18",
+      "title": "System Prompt vs User Prompt vs Assistant Prefill — Three Roles, One Token Stream",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "output-format-specification",
+      "order": "19",
+      "title": "Output-Format Specification — Ask in the Prompt, Enforce in Code, Count the Failures",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "prompt-chaining",
+      "order": "20",
+      "title": "Prompt Chaining — Splitting One Overloaded Prompt into Staged Calls",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "prompt-patterns-catalog",
+      "order": "21",
+      "title": "Prompt Patterns Catalogue — Names for Structures People Already Used",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "anti-patterns",
+      "order": "22",
+      "title": "Prompt Anti-Patterns — Four Ways a Prompt Rots",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "02-core-prompt-anatomy-techniques",
+      "sectionTitle": "Core prompt anatomy & techniques"
+    },
+    {
+      "slug": "reasoning-decomposition-prompting-map",
+      "title": "Chapter map: Reasoning & decomposition",
+      "tier": "MAP",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "chain-of-thought",
+      "order": "23",
+      "title": "Chain-of-Thought — Asking for the Working Before the Answer",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "why-cot-works",
+      "order": "24",
+      "title": "Why Chain-of-Thought Works — Written Steps, Not Extra Compute",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "self-consistency",
+      "order": "25",
+      "title": "Self-Consistency — Sampling Many Chains and Voting on the Answers",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "least-to-most-prompting",
+      "order": "26",
+      "title": "Least-to-Most Prompting — Decompose, Then Solve in Order",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "plan-and-solve-prompting",
+      "order": "27",
+      "title": "Plan-and-Solve Prompting — Write the Plan, Then Follow It",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "step-back-prompting",
+      "order": "28",
+      "title": "Step-Back Prompting — Name the Principle, Then Answer",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "tree-of-thoughts-graph-of-thoughts",
+      "order": "29",
+      "title": "Tree of Thoughts & Graph of Thoughts — Search Over Partial Answers",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "self-refine-self-critique-loops",
+      "order": "30",
+      "title": "Self-Refine — Draft, Critique, Rewrite, and Keep the Best",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "reflexion",
+      "order": "31",
+      "title": "Reflexion — A Written Lesson Carried to the Next Attempt",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "reasoning-models-test-time-compute",
+      "order": "32",
+      "title": "Reasoning Models — How the Prompt Changes When the Model Thinks by Itself",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "when-cot-hurts",
+      "order": "33",
+      "title": "When Chain-of-Thought Hurts — Narrow Gains, Real Costs, False Explanations",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "extended-thinking-thinking-budgets",
+      "order": "34",
+      "title": "Thinking Controls — Effort, Caps, and the Reply That Ran Out",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "03-reasoning-decomposition-prompting",
+      "sectionTitle": "Reasoning & decomposition"
+    },
+    {
+      "slug": "structured-output-control-map",
+      "title": "Chapter map: Structured output & control",
+      "tier": "MAP",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "why-structured-output-is-a-systems-problem",
+      "order": "35",
+      "title": "Structured Output Is a Systems Problem — A Guarantee of Shape Is Not a Guarantee of Meaning",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "json-mode-schema-constrained-prompting",
+      "order": "36",
+      "title": "JSON Mode & Schema-Enforced Output — What Each Provider Mechanism Guarantees",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "constrained-decoding-grammar-based-generation",
+      "order": "37",
+      "title": "Your Own Grammar — When a Schema Can't Say It, and What Owning the Decoder Costs",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "function-tool-call-prompting",
+      "order": "38",
+      "title": "Function & Tool-Call Prompting — A Tool Definition Is Prompt Text With a Schema Attached",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "parsing-repair-loops",
+      "order": "39",
+      "title": "Parsing & Repair Loops — Classify the Failure, Feed the Error Back, Fail Where It Shows",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "output-length-verbosity-control",
+      "order": "40",
+      "title": "Output Length & Verbosity Control — A Token Cap Is a Cut, Not a Request",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "prefill-assistant-turn-priming",
+      "order": "41",
+      "title": "Prefill & Assistant-Turn Priming — What Replaced Each Use of It",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "classification-scoring-prompts",
+      "order": "42",
+      "title": "Classification & Scoring Prompts — One Token per Label, a Threshold You Fitted",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "deterministic-prompting",
+      "order": "43",
+      "title": "Deterministic Prompting — Temperature Zero Is Not Reproducibility",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "04-structured-output-control",
+      "sectionTitle": "Structured output & control"
+    },
+    {
+      "slug": "context-engineering-map",
+      "title": "Chapter map: Context engineering",
+      "tier": "MAP",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "context-engineering-vs-prompt-engineering",
+      "order": "44",
+      "title": "Context Engineering vs Prompt Engineering — Writing the String vs Deciding What Fills the Window",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "context-window-budgeting",
+      "order": "45",
+      "title": "Context Window Budgeting — A Subtraction in Priority Order",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "lost-in-the-middle",
+      "order": "46",
+      "title": "Lost in the Middle — Being in the Window Is Not Being Used",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "instruction-placement",
+      "order": "47",
+      "title": "Instruction Placement — Framing at the Top, the Task at the Bottom",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "context-ordering-for-prompt-cache-hit-rate",
+      "order": "48",
+      "title": "Context Ordering for Prompt-Cache Hit Rate — Stable First, One Byte Can Cost the Prefix",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "provider-prompt-caching",
+      "order": "49",
+      "title": "Provider Prompt Caching — Paying Once for a Prefix You Send Every Time",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "context-compression",
+      "order": "50",
+      "title": "Context Compression — Five Ways to Shrink the Window, and What Each One Loses",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "conversation-history-management",
+      "order": "51",
+      "title": "Conversation History Management — Pin the Goal, Keep the Recent, Compact Rarely",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "context-rot-context-pollution",
+      "order": "52",
+      "title": "Context Rot & Context Pollution — When What Is Already in the Window Works Against You",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "multi-turn-prompt-design",
+      "order": "53",
+      "title": "Multi-Turn Prompt Design — Keep State as an Object, Not as a Transcript to Re-read",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "long-context-prompting",
+      "order": "54",
+      "title": "Long-Context Prompting — More Context Helps Until It Doesn't; Find Your Own Cliff",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "05-context-engineering",
+      "sectionTitle": "Context engineering"
+    },
+    {
+      "slug": "system-prompts-agent-instructions-map",
+      "title": "Chapter map: System prompts & agent instructions",
+      "tier": "MAP",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "system-prompt-design-at-scale",
+      "order": "55",
+      "title": "System Prompt Design at Scale — A Composed, Owned, Tested Artifact, Not a String",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "layered-instruction-hierarchy",
+      "order": "56",
+      "title": "Layered Instruction Hierarchy — Who Outranks Whom, Trained In and Never Enforced",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "behavioral-specs",
+      "order": "57",
+      "title": "Behavioural Specs — Tone, Refusal, Escalation and the When-Unsure Clause",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "tool-descriptions-as-prompts",
+      "order": "58",
+      "title": "Tool Descriptions as Prompts — The Text the Model Reads at the Moment It Chooses",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "skill-instruction-files-progressive-disclosure",
+      "order": "59",
+      "title": "Skill and Instruction Files — Instructions That Load When They're Needed",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "meta-prompting",
+      "order": "60",
+      "title": "Meta-Prompting — A Model Writes the Prompt, and Only a Score Says It Helped",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "prompt-templating",
+      "order": "61",
+      "title": "Prompt Templating — A Value Is Data, a Template Is Code",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "multi-agent-prompt-design",
+      "order": "62",
+      "title": "Multi-Agent Prompt Design — The Brief Is the Whole Interface",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "06-system-prompts-agent-instructions",
+      "sectionTitle": "System prompts & agent instructions"
+    },
+    {
+      "slug": "automatic-prompt-optimization-map",
+      "title": "Chapter map: Automatic prompt optimization",
+      "tier": "MAP",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "why-hand-tuning-doesnt-scale",
+      "order": "63",
+      "title": "Why Hand-Tuning Doesn't Scale — You Can Propose a Better Prompt, You Can't See That It Is Better",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "ape",
+      "order": "64",
+      "title": "APE — Infer the Instruction, Score Every Candidate, Keep the Best",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "opro",
+      "order": "65",
+      "title": "OPRO — The Scores So Far Become the Optimiser's Prompt",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "dspy",
+      "order": "66",
+      "title": "DSPy — Program the Pipeline, Compile the Prompts Against a Metric",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "textgrad-natural-language-gradients",
+      "order": "67",
+      "title": "TextGrad — A Written Critique Passed Back Through the Pipeline",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "evolutionary-genetic-prompt-search",
+      "order": "68",
+      "title": "Evolutionary Prompt Search — EvoPrompt and GEPA",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "automatic-few-shot-selection-bootstrapping",
+      "order": "69",
+      "title": "Automatic Few-Shot Bootstrapping — Harvest Demonstrations From Runs That Passed",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "prompt-distillation",
+      "order": "70",
+      "title": "Prompt Distillation — Move a Long Prompt Into Fewer Tokens or Into the Weights",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "cost-benefit-of-auto-optimization",
+      "order": "71",
+      "title": "Cost-Benefit of Auto-Optimisation — Price the Run Against How Long the Gain Lasts",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "portability-of-optimized-prompts",
+      "order": "72",
+      "title": "Portability of Optimised Prompts — The Winner Was Fitted to One Model",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "07-automatic-prompt-optimization",
+      "sectionTitle": "Automatic prompt optimization"
+    },
+    {
+      "slug": "evaluation-testing-prompts-map",
+      "title": "Chapter map: Evaluation & testing prompts",
+      "tier": "MAP",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "why-prompt-eval-is-the-whole-discipline",
+      "order": "73",
+      "title": "Why Prompt Eval Is the Whole Discipline — A Change You Can't Measure Is a Change You Can't Defend",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "golden-datasets-for-prompts",
+      "order": "74",
+      "title": "Golden Datasets for Prompts — The Cases Are the Specification",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "assertion-based-testing",
+      "order": "75",
+      "title": "Assertion-Based Testing — Check in Code Everything Code Can Check",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "llm-as-judge-for-prompt-quality",
+      "order": "76",
+      "title": "LLM-as-Judge for Prompt Quality — The Judge Is a Prompt, and It Is Tested Before It Tests",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "judge-biases",
+      "order": "77",
+      "title": "Judge Biases — Position, Verbosity, Self-Preference, and the Swap That Exposes Them",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "regression-suites-ci-for-prompts",
+      "order": "78",
+      "title": "Regression Suites & CI for Prompts — Contracts Block Exactly, Measurements Block Outside the Noise",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "a-b-testing-prompts-in-production",
+      "order": "79",
+      "title": "A/B Testing Prompts in Production — What Users Did, Against What the Suite Scored",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "measuring-prompt-sensitivity",
+      "order": "80",
+      "title": "Measuring Prompt Sensitivity — The Noise Floor Under Every Comparison",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "component-vs-end-to-end-eval",
+      "order": "81",
+      "title": "Component vs End-to-End Eval — Gate on the Whole, Diagnose by the Part",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "eval-driven-prompt-development",
+      "order": "82",
+      "title": "Eval-Driven Prompt Development — Write the Failing Case, Then the Prompt That Passes It",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "08-evaluation-testing-prompts",
+      "sectionTitle": "Evaluation & testing prompts"
+    },
+    {
+      "slug": "prompt-ops-map",
+      "title": "Chapter map: Prompt ops",
+      "tier": "MAP",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "prompts-as-code-vs-prompts-as-config",
+      "order": "83",
+      "title": "Prompts as Code vs Prompts as Config — Who Holds the Pen, and What CI Actually Tested",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "prompt-versioning",
+      "order": "84",
+      "title": "Prompt Versioning — An Immutable Id the Trace Carries, a Movable Label the Service Reads",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "prompt-registries-and-tooling",
+      "order": "85",
+      "title": "Prompt Registries & Tooling — Same Primitives, Different Starting Point",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "decoupling-prompt-release-from-code-release",
+      "order": "86",
+      "title": "Decoupling Prompt Release from Code Release — Rollback Is a Pointer Move Plus Propagation",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "model-upgrade-migration",
+      "order": "87",
+      "title": "Model-Upgrade Migration — Make the Request Valid, Hold the Prompt, Measure, Then Tune",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "multi-tenant-and-localized-prompts",
+      "order": "88",
+      "title": "Multi-tenant & Localised Prompts — One Template, N Validated Config Rows",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "observability",
+      "order": "89",
+      "title": "Prompt Observability — One Cheap Record per Call, Joined on the Version",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "governance",
+      "order": "90",
+      "title": "Prompt Governance — Anyone May Draft, Few May Promote, Every Move Leaves a Record",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "09-prompt-ops",
+      "sectionTitle": "Prompt ops"
+    },
+    {
+      "slug": "safety-security-adversarial-prompting-map",
+      "title": "Chapter map: Safety, security & adversarial prompting",
+      "tier": "MAP",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "prompt-injection",
+      "order": "91",
+      "title": "Prompt Injection — Instructions and Data Share One Channel",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "indirect-prompt-injection",
+      "order": "92",
+      "title": "Indirect Prompt Injection — The Attacker Only Has to Write Something You Will Read",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "jailbreaks",
+      "order": "93",
+      "title": "Jailbreaks — The Model's Policy Is the Target, Not Your Application",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "system-prompt-extraction-prompt-leaking",
+      "order": "94",
+      "title": "System-Prompt Extraction — Treat the Prompt as Public and Make the Leak Boring",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "data-exfiltration-via-prompts",
+      "order": "95",
+      "title": "Data Exfiltration via Prompts — The Rendering Surface Is a Way Out",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "defense-in-depth",
+      "order": "96",
+      "title": "Defence in Depth for LLM Applications — Assume the Injection Works, Make It Not Matter",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "spotlighting-data-marking",
+      "order": "97",
+      "title": "Spotlighting & Data Marking — A Mark the Attacker Can't Step Outside",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "guardrail-models-classifiers",
+      "order": "98",
+      "title": "Guardrail Models & Classifiers — A Second Opinion With a Miss Rate",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "the-lethal-trifecta",
+      "order": "99",
+      "title": "The Lethal Trifecta — Private Data, Untrusted Content and a Way Out",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "pii-handling-in-prompts",
+      "order": "100",
+      "title": "PII Handling in Prompts — What You Send, What You Log, How Long Each Lives",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "red-teaming-prompts",
+      "order": "101",
+      "title": "Red-Teaming Prompts — Every Attack That Landed Becomes a Permanent Test",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "10-safety-security-adversarial-prompting",
+      "sectionTitle": "Safety, security & adversarial prompting"
+    },
+    {
+      "slug": "modality-model-specific-prompting-map",
+      "title": "Chapter map: Modality & model-specific prompting",
+      "tier": "MAP",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "model-family-differences",
+      "order": "102",
+      "title": "Model-Family Differences — One Task Spine, a Rendering per Family",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "small-model-prompting",
+      "order": "103",
+      "title": "Small-Model Prompting — Which \"Small\" Do You Mean?",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "multimodal-prompting",
+      "order": "104",
+      "title": "Multimodal Prompting — Label the Images, Budget the Pixels, Test the Order",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "code-generation-prompting",
+      "order": "105",
+      "title": "Code-Generation Prompting — A Symptom, a Pattern to Copy, a Check It Can Run",
+      "tier": "SUPPORTING",
+      "relevance": "Senior",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "prompting-for-extraction-structured-data",
+      "order": "106",
+      "title": "Prompting for Extraction — Make Absence Legal, Make Every Value Point at Its Source",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "prompting-for-summarization",
+      "order": "107",
+      "title": "Prompting for Summarisation — Faithful First, Short Second",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "prompting-for-classification-at-scale",
+      "order": "108",
+      "title": "Classification at Scale — Closed Labels, a Way Out, the Smallest Output",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "non-english-cross-lingual-prompting",
+      "order": "109",
+      "title": "Cross-Lingual Prompting — Three Languages, Chosen Separately",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-modality-model-specific-prompting",
+      "sectionTitle": "Modality & model-specific prompting"
+    },
+    {
+      "slug": "production-prompt-systems-map",
+      "title": "Chapter map: Production prompt systems",
+      "tier": "MAP",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "prompt-layer-reference-architecture",
+      "order": "110",
+      "title": "The Prompt Layer Reference Architecture — Six Stages and What Each Arrow Carries",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "the-llm-gateway",
+      "order": "111",
+      "title": "The LLM Gateway — It Routes a Rendered Prompt and Never Writes One",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "cost-modeling",
+      "order": "112",
+      "title": "Cost Modelling — Four Token Prices, One Hit Rate and the Right Denominator",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "latency-budget",
+      "order": "113",
+      "title": "Latency Budget — Time to First Token Plus Generation, and Where Each Millisecond Goes",
+      "tier": "CORE",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "caching-strategy",
+      "order": "114",
+      "title": "Caching Strategy — Choosing Between a Cheaper Call and No Call",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "model-routing-by-difficulty",
+      "order": "115",
+      "title": "Model Routing by Difficulty — A Rich Prompt on a Small Model Against a Thin One on a Big Model",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "degradation-fallback",
+      "order": "116",
+      "title": "Degradation & Fallback — Make the Absence Visible to the Prompt",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "batch-offline-prompting",
+      "order": "117",
+      "title": "Batch & Offline Prompting — Half Price for Anything No One Is Waiting For",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "reliability-engineering",
+      "order": "118",
+      "title": "Reliability Engineering — Which Failure Gets Which Response",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "compliance-auditability",
+      "order": "119",
+      "title": "Compliance & Auditability — Reproduce the Inputs, Store the Output",
+      "tier": "BREADTH",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    },
+    {
+      "slug": "build-vs-buy-for-prompt-tooling",
+      "order": "120",
+      "title": "Build vs Buy for Prompt Tooling — Decide by Who Edits the Prompts",
+      "tier": "BREADTH",
+      "relevance": "Architect",
+      "section": "12-production-prompt-systems",
+      "sectionTitle": "Production prompt systems"
+    }
+  ],
   "python": [
     {
       "slug": "data-model-object-semantics-map",

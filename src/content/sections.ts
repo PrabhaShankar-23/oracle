@@ -198,7 +198,21 @@ export const sections: Section[] = [
       })),
     ],
   },
-  { id: 'ai-ml', title: 'AI / ML', path: '/ai-ml', description: 'ML, deep learning, RAG, agents and LLM production.', icon: PsychologyOutlined, pages: [] },
+  {
+    id: 'ai-ml',
+    title: 'AI / ML',
+    path: '/ai-ml',
+    description: 'ML, deep learning, RAG, agents and LLM production.',
+    icon: PsychologyOutlined,
+    pages: manifest.promptEngineering.map((n) => ({
+      title: n.title,
+      path: `/ai-ml/prompt-engineering/${n.slug}`,
+      description: n.tier === 'MAP' ? 'Concept map, reading order and how the notes connect.' : `${n.tier} · ${n.relevance ?? 'Senior'} level.`,
+      group: 'Prompt engineering',
+      subgroup: numbered(n.section, n.sectionTitle),
+      order: n.order,
+    })),
+  },
   { id: 'ai-coding', title: 'AI Coding Patterns', path: '/ai-coding', description: 'Patterns for building with coding agents.', icon: AutoAwesomeOutlined, pages: [] },
   {
     id: 'python',
@@ -324,6 +338,13 @@ export const searchIndex: SearchItem[] = [
     secondary: `Python · ${n.sectionTitle} · ${n.tier}`,
     path: `/python/${n.slug}`,
     group: 'Python',
+  })),
+  ...manifest.promptEngineering.map((n) => ({
+    key: `prompt:${n.slug}`,
+    label: n.title,
+    secondary: `Prompt engineering · ${n.sectionTitle} · ${n.tier}`,
+    path: `/ai-ml/prompt-engineering/${n.slug}`,
+    group: 'Prompt engineering',
   })),
   ...manifest.networking.map((n) => ({
     key: `net:${n.slug}`,
