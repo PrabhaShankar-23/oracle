@@ -8,7 +8,7 @@
  *
  * Colour roles follow M3 (https://m3.material.io/styles/color/roles).
  */
-import { chatgptDark } from './schemes/chatgptDark'
+import { charcoalDark } from './schemes/charcoalDark'
 import { deepforestDark } from './schemes/deepforestDark'
 import { everforestLight } from './schemes/everforestLight'
 import type { Scheme } from './schemes/types'
@@ -81,7 +81,7 @@ declare module '@mui/material/Chip' {
 // Colour schemes live in ./schemes, one file each. Pick the dark one here; everything else
 // (MUI palette, Mermaid, charts, code highlighting) follows from it.
 const light: Scheme = everforestLight
-const dark: Scheme = chatgptDark // alternatives: everforestDark, deepforestDark
+const dark: Scheme = charcoalDark // alternatives: chatgptDark (pure black), everforestDark, deepforestDark
 
 /**
  * Every scheme the app can show. `forest` is a second dark scheme, offered by the forest button in
