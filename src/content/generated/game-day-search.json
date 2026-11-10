@@ -2513,6 +2513,90 @@
     "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
   },
   {
+    "id": "ai-safety-security-quality-q1",
+    "text": "How do you evaluate an LLM feature before and after it ships?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "A"
+  },
+  {
+    "id": "ai-safety-security-quality-q2",
+    "text": "How do you make LLM-as-judge trustworthy?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "A"
+  },
+  {
+    "id": "ai-safety-security-quality-q3",
+    "text": "How do you gate prompt or model changes in CI?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "A"
+  },
+  {
+    "id": "ai-safety-security-quality-q4",
+    "text": "What do you trace and measure for an LLM system in production?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "B"
+  },
+  {
+    "id": "ai-safety-security-quality-q5",
+    "text": "Walk me through guardrails in a production assistant.",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "B"
+  },
+  {
+    "id": "ai-safety-security-quality-q6",
+    "text": "Safety, security and quality — what's the difference?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "B"
+  },
+  {
+    "id": "ai-safety-security-quality-q7",
+    "text": "What is prompt injection — direct vs indirect — and how do you defend against it?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "C"
+  },
+  {
+    "id": "ai-safety-security-quality-q8",
+    "text": "What's the lethal trifecta, and how do you use it?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "C"
+  },
+  {
+    "id": "ai-safety-security-quality-q9",
+    "text": "How do you decide which tools an agent can use, and with what rights?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "C"
+  },
+  {
+    "id": "ai-safety-security-quality-q10",
+    "text": "How do you stop an agent running away — loops, cost, damage?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "C"
+  },
+  {
+    "id": "ai-safety-security-quality-q11",
+    "text": "How do you keep PII or PHI from leaking through an LLM system?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "D"
+  },
+  {
+    "id": "ai-safety-security-quality-q12",
+    "text": "How do you red-team an LLM application?",
+    "topic": "ai-safety-security-quality",
+    "topicTitle": "AI Safety, Security & Quality",
+    "band": "D"
+  },
+  {
     "id": "ml-dl-q1",
     "text": "99% train accuracy, 72% test. Walk me through what you do.",
     "topic": "ml-dl",

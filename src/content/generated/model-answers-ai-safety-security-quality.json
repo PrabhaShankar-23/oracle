@@ -1,0 +1,477 @@
+{
+  "ai-safety-security-quality-q1": {
+    "type": "design",
+    "spine": [
+      "Define success",
+      "Golden set",
+      "Graders",
+      "Gate",
+      "Online loop"
+    ],
+    "testing": "that you treat evals as a release gate with slices and a feedback loop, not a one-off demo.",
+    "trap": "answering with a benchmark score (MMLU) instead of task-specific evals.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Define success</strong></td>\n<td>\"First I write down what good means for this feature as checkable outcomes: right intent, right tool, right fields, no unsafe content.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Golden set</strong></td>\n<td>\"Then a golden set of a few hundred real-shaped cases with expected outcomes, sliced by language, intent and edge case, versioned next to the prompt.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Graders</strong></td>\n<td>\"Each check uses the cheapest grader that's reliable: exact match and schema checks first, rules next, an LLM judge only for open-ended quality, humans to calibrate the judge.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Gate</strong></td>\n<td>\"A prompt or model change ships only if every slice stays above its bar. In ResoDesk the understanding prompt has to hit 95% on four sets before it's promoted.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Online loop</strong></td>\n<td>\"After release I score a sample of live traces, watch user signals, and every failure I find becomes a new eval case.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Evals are the spec: if a behaviour isn't in the set, I can't claim it works.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "How big should the golden set be?",
+        "tag": "probe",
+        "html": "<p><strong>Big enough that one case is a small step.</strong> ~200–500 cases per feature; per slice at least ~30 so a pass rate has a usable error bar. Grow it from incidents.</p>"
+      },
+      {
+        "number": 2,
+        "question": "Offline looks great, users complain. Why?",
+        "tag": "trap",
+        "html": "<p><strong>The set doesn't match real traffic.</strong> Re-sample from production traces, add the complaint cases, check slice coverage (language, length, noise).</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We use a benchmark score.&quot; — benchmarks don&#39;t test your task.",
+      "&quot;Average accuracy is 92%.&quot; — say which slices fail."
+    ],
+    "links": [
+      {
+        "label": "Eval Driven Development & EDDOps",
+        "target": "05-LLM-Production/13-Evals-Practice/01-Eval-Driven Development & EDDOps"
+      },
+      {
+        "label": "Production eval",
+        "target": "05-LLM-Production/10-Evaluation/06-Production eval"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q2": {
+    "type": "concept",
+    "spine": [
+      "Judge is a model",
+      "Narrow rubric",
+      "Bias controls",
+      "Calibrate",
+      "Keep it honest"
+    ],
+    "testing": "that you validate the judge against humans and know its biases.",
+    "trap": "trusting judge scores without ever measuring agreement with people.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Judge is a model</strong></td>\n<td>\"An LLM judge is just another model, so I evaluate it before I trust it.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Narrow rubric</strong></td>\n<td>\"One criterion per call, a binary or three-point scale, and the judge writes its reason before the score. 'Is every claim supported by the passages: yes or no' beats 'rate quality 1 to 10'.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Bias controls</strong></td>\n<td>\"Judges prefer the first option, longer answers and their own model family, so I swap order, control for length and judge with a different family.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Calibrate</strong></td>\n<td>\"I hand-label about a hundred cases and measure agreement. If it's below about 80% or kappa is weak, I fix the rubric before using the scores.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Keep it honest</strong></td>\n<td>\"When the judge model or rubric changes I re-run the agreement check, and people keep reviewing a small sample. In ResoDesk this is how I'll score RAG faithfulness and whether the agent read details back before booking.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"The judge scales human judgment; it doesn't replace it.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Pairwise or absolute scoring?",
+        "tag": "probe",
+        "html": "<p><strong>Pairwise for comparing two versions, absolute for a gate.</strong> Pairwise is more stable but needs order swapping; absolute needs a tight rubric.</p>"
+      },
+      {
+        "number": 2,
+        "question": "Can the judge be the same model as the one being judged?",
+        "tag": "trap",
+        "html": "<p><strong>Avoid it.</strong> Self-preference inflates scores; use another family or at least another model.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The judge is objective.&quot; — it has measurable biases.",
+      "&quot;We score 1–10.&quot; — wide scales are noisy; use binary or 1–3."
+    ],
+    "links": [
+      {
+        "label": "LLM as a Judge",
+        "target": "05-LLM-Production/10-Evaluation/03-LLM-as-a-Judge"
+      },
+      {
+        "label": "LLM as judge for trajectories",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/04-LLM-as-judge for trajectories"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q3": {
+    "type": "design",
+    "spine": [
+      "What triggers",
+      "Two tiers",
+      "Thresholds",
+      "Flakiness",
+      "Cost"
+    ],
+    "testing": "that you can make non-deterministic tests a reliable release gate.",
+    "trap": "a gate that&#39;s so flaky people learn to override it.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What triggers</strong></td>\n<td>\"Prompts and model choices live in versioned files, so a change to either is a code change that triggers evals.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Two tiers</strong></td>\n<td>\"Cheap deterministic checks and a small smoke set run on every pull request; the full LLM-graded suite runs when a prompt or model changes and before a release.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Thresholds</strong></td>\n<td>\"The gate is per slice, plus no regression against main beyond noise, comparing paired runs on the same cases.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Flakiness</strong></td>\n<td>\"I run at temperature zero, repeat key cases and track pass-to-the-k, so 'works once' isn't counted as reliable.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Cost</strong></td>\n<td>\"Unchanged cases are cached and the big suite is batched, so the gate stays cheap enough that nobody wants to skip it.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"A gate people trust is one that's stable; I spend effort on noise before adding cases.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "pass@k vs pass^k?",
+        "tag": "probe",
+        "html": "<p><strong>pass@k = at least one of k tries passes (capability). pass^k = all k pass (reliability).</strong> Production agents need pass^k.</p>"
+      },
+      {
+        "number": 2,
+        "question": "The eval fails but the change is clearly better. Ship?",
+        "tag": "senior",
+        "html": "<p><strong>Look at the failing cases first.</strong> If the expected outputs are stale, fix the set in the same PR, with review; never just lower the bar.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We re-run until it&#39;s green.&quot; — that hides real regressions."
+    ],
+    "links": [
+      {
+        "label": "Evals in CI — Gating, Thresholds & Flaky Evals",
+        "target": "05-LLM-Production/13-Evals-Practice/05-Evals in CI — Gating, Thresholds & Flaky Evals"
+      },
+      {
+        "label": "Reliability Metrics — pass@k vs pass^k",
+        "target": "05-LLM-Production/13-Evals-Practice/02-Reliability Metrics — pass@k vs pass^k"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q4": {
+    "type": "design",
+    "spine": [
+      "Trace shape",
+      "What's on a span",
+      "Quality signals",
+      "Dashboards",
+      "Hygiene"
+    ],
+    "testing": "that you watch quality and cost, not just uptime.",
+    "trap": "only tracking latency and errors while quality silently drops.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Trace shape</strong></td>\n<td>\"Every request is one trace with a span per step: retrieval, each model call, each tool call and each guardrail decision.\"</td>\n</tr>\n<tr>\n<td><strong>2 · What's on a span</strong></td>\n<td>\"On a model span: which model, which prompt version, tokens in and out, time to first token, cost and finish reason.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Quality signals</strong></td>\n<td>\"Latency alone lies, so I attach sampled judge scores and track escalations and user corrections.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Dashboards</strong></td>\n<td>\"Cost and p95 latency by tenant, task and model, plus fallback and error rates. In ResoDesk the voice budget is 800 ms p95 from end of speech to first audio, and it's a release gate.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Hygiene</strong></td>\n<td>\"Personal data is redacted before anything is exported, metric labels stay bounded, and alerts fire on regressions.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"If I can't say which prompt version produced a bad answer, I can't fix it.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "What&#39;s TTFT and why care?",
+        "tag": "probe",
+        "html": "<p><strong>Time to first token.</strong> For chat and voice it's what users feel; total time matters for batch.</p>"
+      },
+      {
+        "number": 2,
+        "question": "Logs vs traces vs metrics?",
+        "tag": "probe",
+        "html": "<p><strong>Metrics tell you something's wrong, traces tell you where, logs tell you why.</strong></p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We log every prompt in full.&quot; — that&#39;s a privacy problem."
+    ],
+    "links": [
+      {
+        "label": "Observability",
+        "target": "05-LLM-Production/12-LLMops & Production Systems (architect lens)/04-Observability"
+      },
+      {
+        "label": "Tracing and observability",
+        "target": "03-Agentic-AI/09-Evaluation & Observability/06-Tracing and observability"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q5": {
+    "type": "design",
+    "spine": [
+      "Outside the model",
+      "Input",
+      "Output",
+      "Actions",
+      "Failure mode"
+    ],
+    "testing": "that you layer deterministic checks around the model and know their cost.",
+    "trap": "relying on instructions in the prompt as the safety mechanism.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Outside the model</strong></td>\n<td>\"Guardrails are checks the model can't talk its way past: code that runs on the input, the output and every action.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Input</strong></td>\n<td>\"Before the model: strip what it doesn't need, enforce limits, catch abuse, off-topic and emergencies. In ResoDesk an emergency ends the call with a fixed line before any model output is used.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Output</strong></td>\n<td>\"After the model: no medical advice, every factual answer cites a source above a threshold, the format is valid, no other patient's data.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Actions</strong></td>\n<td>\"Tools are allow-listed per step and the model only proposes; core-engine rules decide identity, booking and eligibility.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Failure mode</strong></td>\n<td>\"When a check fails, the user gets a safe line and a human, and I track both the catch rate and the false-block rate, inside the latency budget.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"The prompt asks nicely; guardrails enforce.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Guardrails add latency. How do you keep voice fast?",
+        "tag": "senior",
+        "html": "<p><strong>Regex and rules on the fast path, model checks in parallel with generation, fixed lines cached.</strong> Only block on what must block.</p>"
+      },
+      {
+        "number": 2,
+        "question": "How do you measure a guardrail?",
+        "tag": "probe",
+        "html": "<p><strong>Catch rate on a bad set, false-block rate on a good set.</strong> Both, or you'll over-block.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We rely on the model&#39;s safety training.&quot; — necessary, not sufficient."
+    ],
+    "links": [
+      {
+        "label": "Guardrails",
+        "target": "05-LLM-Production/11-Hallucination, Safety & Guardrails/03-Guardrails"
+      },
+      {
+        "label": "Guardrails",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/09-Guardrails"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q6": {
+    "type": "concept",
+    "spine": [
+      "Three questions",
+      "Overlaps",
+      "Owners and tools",
+      "How I'd show it"
+    ],
+    "testing": "that you can structure the space and name the standard frameworks.",
+    "trap": "lumping everything under &#39;responsible AI&#39; with no owners or measures.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Three questions</strong></td>\n<td>\"Quality asks: is the answer right and useful. Safety asks: can the system harm someone through its own behaviour. Security asks: can an attacker make it harm someone.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Overlaps</strong></td>\n<td>\"They overlap. A made-up appointment time is a quality failure that becomes a safety one; a leaked patient record is security and safety.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Owners and tools</strong></td>\n<td>\"Quality is evals and monitoring. Safety is policy, guardrails and human handoff. Security is threat modelling against OWASP's LLM Top 10: injection, sensitive data disclosure, excessive agency, unbounded consumption.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd show it</strong></td>\n<td>\"In ResoDesk each control is mapped to the code that enforces it and the eval that proves it.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Three questions, three kinds of evidence.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Name a few OWASP LLM Top 10 items.",
+        "tag": "probe",
+        "html": "<p><strong>LLM01 Prompt Injection, LLM02 Sensitive Information Disclosure, LLM06 Excessive Agency, LLM10 Unbounded Consumption</strong> (2025 list).</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Safety is the model provider&#39;s job.&quot; — the application owns most of it."
+    ],
+    "links": [
+      {
+        "label": "OWASP and agentic threat modelling",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/12-OWASP and agentic threat modelling"
+      },
+      {
+        "label": "Hallucination causes & factuality vs faithfulness",
+        "target": "05-LLM-Production/11-Hallucination, Safety & Guardrails/01-Hallucination causes & factuality vs faithfulness"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q7": {
+    "type": "threat",
+    "spine": [
+      "Why it exists",
+      "Direct vs indirect",
+      "Why prompts don't fix it",
+      "Layered defence",
+      "Test"
+    ],
+    "testing": "that you design for injection succeeding, not for preventing it in the prompt.",
+    "trap": "claiming a classifier or a stronger system prompt solves it.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Why it exists</strong></td>\n<td>\"The model reads instructions and data in one stream, so any text it reads can behave like an instruction.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Direct vs indirect</strong></td>\n<td>\"Direct is the user typing 'ignore your rules'. Indirect is worse: the instruction hides in something the model reads, like an uploaded document, a web page, a tool result or a stored memory.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Why prompts don't fix it</strong></td>\n<td>\"Delimiters and detectors reduce how often it works, but an attacker only needs one success, so I assume it will work eventually.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Layered defence</strong></td>\n<td>\"So I make obeying it useless: least-privilege tools, deterministic rules for anything that matters, confirmation before irreversible actions, no unrestricted way to send data out. In ResoDesk a caller saying 'book me as someone else' can change the wording, but identity is checked by core-engine, not the model.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Test</strong></td>\n<td>\"I keep an injection eval set across every input channel and assert no unauthorised tool call happens.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"I can't stop the model reading it; I make sure following it achieves nothing.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Injection vs jailbreak?",
+        "tag": "probe",
+        "html": "<p><strong>Jailbreak attacks the model's safety training; injection attacks the application's trust in its inputs.</strong> Different owners, different fixes.</p>"
+      },
+      {
+        "number": 2,
+        "question": "What about images?",
+        "tag": "edge",
+        "html": "<p><strong>Text in a screenshot is untrusted input too.</strong> Treat vision extractions as data, typed fields only.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We filter for &#39;ignore previous instructions&#39;.&quot; — attackers paraphrase."
+    ],
+    "links": [
+      {
+        "label": "Prompt injection & indirect injection",
+        "target": "05-LLM-Production/11-Hallucination, Safety & Guardrails/04-Prompt injection & indirect injection"
+      },
+      {
+        "label": "Prompt injection in agents",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/02-Prompt injection in agents"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q8": {
+    "type": "threat",
+    "spine": [
+      "The three legs",
+      "Why all three",
+      "Hidden channels",
+      "Break a leg",
+      "My system"
+    ],
+    "testing": "that you can threat-model an agent quickly and find the leg to cut.",
+    "trap": "missing an outbound channel such as a rendered image link.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · The three legs</strong></td>\n<td>\"Simon Willison's lethal trifecta: access to private data, exposure to untrusted content, and a way to communicate externally.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why all three</strong></td>\n<td>\"With all three, injected text can read the data and send it out; with any one missing, that attack fails.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Hidden channels</strong></td>\n<td>\"Outbound channels hide: a rendered markdown image is a web request, so is a link preview or a webhook.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Break a leg</strong></td>\n<td>\"So per run I cut one leg: a quarantined model reads untrusted text with no tools, recipients are allow-listed, or sending needs a human.\"</td>\n</tr>\n<tr>\n<td><strong>5 · My system</strong></td>\n<td>\"In ResoDesk the assistant sees patient data and caller speech, and the system sends emails. The recipient always comes from the patient record in core-engine, never from model text, so the outbound leg is fixed by code.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Find the three legs, then cut the cheapest one.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "What&#39;s the dual-LLM pattern?",
+        "tag": "probe",
+        "html": "<p><strong>A quarantined model reads untrusted text and returns typed values; a privileged model with tools never sees the raw text.</strong></p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We trust our documents.&quot; — anyone who can write to them can inject."
+    ],
+    "links": [
+      {
+        "label": "The expanded attack surface",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/01-The expanded attack surface"
+      },
+      {
+        "label": "OWASP and agentic threat modelling",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/12-OWASP and agentic threat modelling"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q9": {
+    "type": "design",
+    "spine": [
+      "Least privilege",
+      "Scoped identity",
+      "Typed tools",
+      "Irreversible actions",
+      "Audit"
+    ],
+    "testing": "that you treat tools as the attack surface and constrain them.",
+    "trap": "broad generic tools with the agent&#39;s own admin credentials.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Least privilege</strong></td>\n<td>\"Each step gets only the tools it needs, and reading is separate from changing.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Scoped identity</strong></td>\n<td>\"Tools run with credentials scoped to the tenant and user, short-lived, never an admin key.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Typed tools</strong></td>\n<td>\"Every tool has a typed input and output and validates on the server side. In ResoDesk each tool wraps exactly one core-engine method, so the model can't invent a query.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Irreversible actions</strong></td>\n<td>\"Booking, sending or paying needs a read-back and a yes, or a rule decides.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Audit</strong></td>\n<td>\"Every call is logged with who, what and the rule id, which is OWASP's 'excessive agency' covered.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"The model chooses among safe options; it never gets a blank cheque.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Who checks permissions — the agent or the tool?",
+        "tag": "trap",
+        "html": "<p><strong>The tool/server, always.</strong> The agent's view is advisory.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;The model knows not to call delete.&quot; — enforce it, don&#39;t hope."
+    ],
+    "links": [
+      {
+        "label": "Permissions and least privilege",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/05-Permissions and least privilege"
+      },
+      {
+        "label": "Excessive agency",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/03-Excessive agency"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q10": {
+    "type": "design",
+    "spine": [
+      "Budgets",
+      "Loops",
+      "Kill switch",
+      "Sandbox",
+      "Recover"
+    ],
+    "testing": "that you bound autonomy with hard, code-level limits.",
+    "trap": "letting the model&#39;s own judgement be the only stop condition.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Budgets</strong></td>\n<td>\"Every run has hard limits on steps, tokens, cost and time, checked in code each step, and it fails closed.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Loops</strong></td>\n<td>\"Repeating the same tool with the same arguments trips a detector and escalates.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Kill switch</strong></td>\n<td>\"A per-tenant switch and per-user rate limits cap damage and cost; that's OWASP's unbounded consumption.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Sandbox</strong></td>\n<td>\"Anything that runs code is sandboxed with no network unless it needs it.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Recover</strong></td>\n<td>\"State and an audit trail let someone see what happened and resume safely. In ResoDesk a call has a time limit and abuse gets two cautions before the call ends.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Autonomy is a budget I set, not one the model spends.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "What do you show the user when a limit hits?",
+        "tag": "probe",
+        "html": "<p><strong>A clear, safe line and a human route</strong>, never a silent failure.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;It usually finishes in a few steps.&quot; — usually isn&#39;t a limit."
+    ],
+    "links": [
+      {
+        "label": "Spend and rate limits",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/10-Spend and rate limits"
+      },
+      {
+        "label": "Sandboxing and isolation",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/04-Sandboxing and isolation"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q11": {
+    "type": "threat",
+    "spine": [
+      "Map the flows",
+      "Minimise",
+      "Scope retrieval",
+      "Vendors",
+      "Retention + proof"
+    ],
+    "testing": "that you think in data flows, not a single redaction step.",
+    "trap": "redacting logs but sending full records to every vendor and eval set.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Map the flows</strong></td>\n<td>\"First a data-flow map: every place personal data travels, including vendors, traces, eval sets and the vector index.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Minimise</strong></td>\n<td>\"Each model call gets only what the step needs, and logs are redacted before they're written. In ResoDesk logs go through a redaction step and tests use synthetic data only.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Scope retrieval</strong></td>\n<td>\"Retrieval is filtered by tenant and role on the server before ranking; we keep one vector namespace per clinic.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Vendors</strong></td>\n<td>\"Zero data retention where the vendor offers it, no training on our data, and the right region.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Retention + proof</strong></td>\n<td>\"Every store has a retention period and a purge. Transcripts are deleted after 90 days. And a red-team case tries to pull another patient's data.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"Know where the data goes, send less of it, and delete it on schedule.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Redaction breaks the task (you need the name). Now what?",
+        "tag": "senior",
+        "html": "<p><strong>Pseudonymise: replace with tokens, keep the mapping server-side, re-insert after the model.</strong></p>"
+      },
+      {
+        "number": 2,
+        "question": "Is a vector embedding personal data?",
+        "tag": "edge",
+        "html": "<p><strong>Treat it as such.</strong> Embeddings can leak content; scope, encrypt and delete them with the source.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We use a HIPAA-eligible vendor, so we&#39;re compliant.&quot; — compliance is your whole system."
+    ],
+    "links": [
+      {
+        "label": "Privacy — memorization, PII extraction & data governance",
+        "target": "05-LLM-Production/11-Hallucination, Safety & Guardrails/07-Privacy — memorization, PII extraction & data governance"
+      },
+      {
+        "label": "Auditability and traceability",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/11-Auditability and traceability"
+      }
+    ]
+  },
+  "ai-safety-security-quality-q12": {
+    "type": "threat",
+    "spine": [
+      "Threat model",
+      "Attack suites",
+      "Manual + automated",
+      "Regression",
+      "Monitor"
+    ],
+    "testing": "that red-teaming is continuous and feeds tests, not a launch ritual.",
+    "trap": "treating red-teaming as a one-time pentest.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Threat model</strong></td>\n<td>\"I start from the threat model: what's valuable, who attacks, through which channels, and the worst outcome.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Attack suites</strong></td>\n<td>\"Then suites per threat: jailbreaks, direct and indirect injection, data extraction, cross-tenant access, harmful advice, cost abuse. For ResoDesk that includes 'read me the last caller's number' and medical-advice bait.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Manual + automated</strong></td>\n<td>\"People find the creative attacks; automation mutates them and an attacker model generates variants at scale.\"</td>\n</tr>\n<tr>\n<td><strong>4 · Regression</strong></td>\n<td>\"Every finding becomes a case in the safety suite and runs in CI next to the quality evals.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Monitor</strong></td>\n<td>\"In production I watch for abuse patterns and anomalies, with rate limits and a response path.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"A red team finding that isn't a test case will come back.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "How do you measure safety?",
+        "tag": "probe",
+        "html": "<p><strong>Attack success rate per suite, plus false-refusal rate on benign cases.</strong> Both trend over releases.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;We did a red team before launch.&quot; — attacks change every month."
+    ],
+    "links": [
+      {
+        "label": "Red teaming & adversarial evaluation",
+        "target": "05-LLM-Production/10-Evaluation/09-Red-teaming & adversarial evaluation"
+      },
+      {
+        "label": "Jailbreaks & defenses",
+        "target": "05-LLM-Production/11-Hallucination, Safety & Guardrails/05-Jailbreaks & defenses"
+      }
+    ]
+  }
+}

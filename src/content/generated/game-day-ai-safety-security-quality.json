@@ -1,0 +1,485 @@
+{
+  "slug": "ai-safety-security-quality",
+  "number": 9,
+  "icon": "🛡️",
+  "title": "AI Safety, Security & Quality",
+  "meta": [
+    "<strong>This is a trigger file, not study material.</strong> Question visible → answer OUT LOUD → <em>then</em> expand → grade what you missed.",
+    "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m12 17.27 4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08z\"></path></svg> = decides the round. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg> = trending 2026. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2\"></path></svg> = <em>you</em> were asked this. <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M3 10h11v2H3zm0-2h11V6H3zm0 8h7v-2H3zm15.01-3.13.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71zm-.71.71-5.3 5.3V21h2.12l5.3-5.3z\"></path></svg> = no vault note yet.",
+    "<strong>Created:</strong> 10 Nov 2026 (brief edition: 12 questions, short model answers) · <strong>Depth:</strong> <code>05-AI-ML/05-LLM-Production/10, 11, 12, 13</code> and <code>05-AI-ML/03-Agentic-AI/09, 10</code>",
+    "<strong>Built in ResoDesk:</strong> each answer carries a <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> line, tracker C-11..C-18 (AI safety, security &amp; quality). Not trend-scanned yet: no <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m16 6-.44.55c-.42.52-.98.75-1.54.75C13 7.3 12 6.52 12 5.3V2S4 6 4 13c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.96-1.61-5.62-4-7m-4 13c-1.1 0-2-.87-2-1.94 0-.51.2-.99.58-1.36L12 14.3l1.43 1.4c.37.37.57.85.57 1.36 0 1.07-.9 1.94-2 1.94m3.96-1.5c.04-.36.22-1.89-1.13-3.22L12 11.5l-2.83 2.78C7.81 15.62 8 17.16 8.04 17.5 6.79 16.4 6 14.79 6 13c0-3.16 2.13-5.65 4.03-7.25.23 1.99 1.93 3.55 3.99 3.55.78 0 1.54-.23 2.18-.66C17.34 9.78 18 11.35 18 13c0 1.79-.79 3.4-2.04 4.5\"></path></svg>."
+  ],
+  "bands": [
+    {
+      "id": "ai-safety-security-quality-a",
+      "letter": "A",
+      "name": "Quality: evals and LLM-as-judge",
+      "questions": [
+        {
+          "id": "ai-safety-security-quality-q1",
+          "number": 1,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you evaluate an LLM feature before and after it ships?",
+          "points": [
+            "Offline first: a <strong>golden set</strong> of real-shaped cases with expected outcomes, versioned with the prompt",
+            "Score with the <strong>cheapest reliable grader</strong>: exact match / schema → rules → LLM-as-judge → humans",
+            "Gate a release on <strong>pass rate per slice</strong>, not one average (language, intent, edge cases)",
+            "Online after ship: <strong>sampled traces scored</strong>, user signals, A/B or shadow for big changes",
+            "Every production failure becomes a <strong>new eval case</strong> (the set grows from incidents)",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> golden sets for understanding v5–v8 + Hinglish, 95% gate, run by script; CI gate + judge is tracker C-12"
+          ],
+          "links": [
+            {
+              "label": "Eval Driven Development &amp; EDDOps",
+              "target": "05-LLM-Production/13-Evals-Practice/01-Eval-Driven Development &amp; EDDOps"
+            },
+            {
+              "label": "Production eval",
+              "target": "05-LLM-Production/10-Evaluation/06-Production eval"
+            }
+          ],
+          "flow": "golden set → graders → slice gate → ship → sample + score live → failures back into the set",
+          "trap": "\"We tried it on a few prompts and it looked good\"",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Define success",
+              "Golden set",
+              "Graders",
+              "Gate",
+              "Online loop"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q2",
+          "number": 2,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you make LLM-as-judge trustworthy?",
+          "points": [
+            "A judge is <strong>a model you must evaluate</strong>: label ~100 cases by hand, measure agreement (% / Cohen's kappa)",
+            "Narrow rubric: <strong>one criterion per call</strong>, binary or 1–3 scale, with the reason before the score",
+            "Known biases: <strong>position, verbosity, self-preference</strong> → swap order, length-control, use a different model family",
+            "Give it <strong>references</strong>: the source passages, the expected answer, the tool result",
+            "Re-check agreement when the judge <strong>model or rubric changes</strong>; keep humans on a sample",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> planned: RAG faithfulness + citation judge and a conversation judge (right tool, read-back done), calibrated on hand labels (C-12)"
+          ],
+          "links": [
+            {
+              "label": "LLM as a Judge",
+              "target": "05-LLM-Production/10-Evaluation/03-LLM-as-a-Judge"
+            },
+            {
+              "label": "LLM as judge for trajectories",
+              "target": "03-Agentic-AI/09-Evaluation &amp; Observability/04-LLM-as-judge for trajectories"
+            }
+          ],
+          "flow": "hand labels → rubric → judge → agreement check → use at scale → re-calibrate on change",
+          "trap": "\"GPT-4 grades it, so it's objective\"",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Judge is a model",
+              "Narrow rubric",
+              "Bias controls",
+              "Calibrate",
+              "Keep it honest"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q3",
+          "number": 3,
+          "marks": [],
+          "text": "How do you gate prompt or model changes in CI?",
+          "points": [
+            "Prompts and model ids are <strong>versioned files</strong>; a change to one triggers the eval job",
+            "Fast deterministic checks on every PR; <strong>LLM-graded suite</strong> on prompt/model change or nightly",
+            "Thresholds <strong>per slice</strong> + no regression vs main beyond noise (compare paired runs)",
+            "Handle flakiness: temperature 0, <strong>repeat runs, pass^k</strong> for reliability, error bars",
+            "Cap cost: small smoke set on PR, full set before release; <strong>cache</strong> unchanged cases",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> prompts are versioned files under agent/prompts; eval sets are run by hand today; a CI gate is C-12"
+          ],
+          "links": [
+            {
+              "label": "Evals in CI — Gating, Thresholds &amp; Flaky Evals",
+              "target": "05-LLM-Production/13-Evals-Practice/05-Evals in CI — Gating, Thresholds &amp; Flaky Evals"
+            },
+            {
+              "label": "Reliability Metrics — pass@k vs pass^k",
+              "target": "05-LLM-Production/13-Evals-Practice/02-Reliability Metrics — pass@k vs pass^k"
+            }
+          ],
+          "flow": "change prompt → smoke evals on PR → full suite before release → compare to main → block or ship",
+          "trap": "running the full LLM suite on every commit and then ignoring red because it's flaky",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "What triggers",
+              "Two tiers",
+              "Thresholds",
+              "Flakiness",
+              "Cost"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-safety-security-quality-b",
+      "letter": "B",
+      "name": "Observability and guardrails",
+      "questions": [
+        {
+          "id": "ai-safety-security-quality-q4",
+          "number": 4,
+          "marks": [],
+          "text": "What do you trace and measure for an LLM system in production?",
+          "points": [
+            "A <strong>trace per request, span per step</strong>: retrieval, each LLM call, each tool call, guardrail decisions",
+            "On each LLM span: <strong>model, prompt version, tokens, latency (TTFT), cost, finish reason</strong>",
+            "Quality next to latency: <strong>sampled judge scores</strong>, user signals, escalation rate",
+            "Dashboards by <strong>tenant / task / model</strong>: cost, p95 latency, error and fallback rates",
+            "Redact before export; <strong>bounded metric labels</strong>; alerts on regressions, not just errors",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> OTel traces to Langfuse, usage event per LLM call, Grafana metrics, p95 800 ms latency gate; judge scores on traces is C-18"
+          ],
+          "links": [
+            {
+              "label": "Observability",
+              "target": "05-LLM-Production/12-LLMops &amp; Production Systems (architect lens)/04-Observability"
+            },
+            {
+              "label": "Tracing and observability",
+              "target": "03-Agentic-AI/09-Evaluation &amp; Observability/06-Tracing and observability"
+            }
+          ],
+          "flow": "request → trace → spans (retrieve, LLM, tool, guard) → metrics + sampled scores → dashboards + alerts",
+          "trap": "logging the full prompt and answer for everything (PII) and calling that observability",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Trace shape",
+              "What's on a span",
+              "Quality signals",
+              "Dashboards",
+              "Hygiene"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q5",
+          "number": 5,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk me through guardrails in a production assistant.",
+          "points": [
+            "Guardrails = <strong>checks outside the model</strong> on input, output and actions; the prompt is not a guardrail",
+            "<strong>Input:</strong> PII minimising, length/language limits, abuse and off-topic, injection signals",
+            "<strong>Output:</strong> policy (e.g. no medical advice), grounding/citation present, schema valid, no other user's data",
+            "<strong>Action:</strong> tool allowlist, confirmation before irreversible steps, rules engine decides",
+            "On failure: <strong>safe fallback + human handoff</strong>; measure pass and false-block rates; mind latency",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> turn guardrails as a chain (emergency, abuse, medical, off-topic…) before any step; rules in core-engine decide identity and booking; output checks are C-13"
+          ],
+          "links": [
+            {
+              "label": "Guardrails",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/03-Guardrails"
+            },
+            {
+              "label": "Guardrails",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/09-Guardrails"
+            }
+          ],
+          "flow": "input checks → model → output checks → action checks → speak / act, else fallback + handoff",
+          "trap": "\"The system prompt tells it not to\"",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Outside the model",
+              "Input",
+              "Output",
+              "Actions",
+              "Failure mode"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q6",
+          "number": 6,
+          "marks": [],
+          "text": "Safety, security and quality — what's the difference?",
+          "points": [
+            "<strong>Quality:</strong> is it right and useful? → evals, judges, monitoring",
+            "<strong>Safety:</strong> does the system cause harm by its own behaviour? → policy, guardrails, refusals, handoff",
+            "<strong>Security:</strong> can an attacker make it do harm? → injection, data exfiltration, excessive agency, abuse of cost",
+            "They overlap: a hallucinated dose is quality <strong>and</strong> safety; a leaked record is security <strong>and</strong> safety",
+            "Map to a standard: <strong>OWASP Top 10 for LLM Apps 2025</strong> for security, a harm policy for safety, an eval suite for quality",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> tracker area 'AI safety, security &amp; quality' C-11..C-18 maps every control to code"
+          ],
+          "links": [
+            {
+              "label": "OWASP and agentic threat modelling",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/12-OWASP and agentic threat modelling"
+            },
+            {
+              "label": "Hallucination causes &amp; factuality vs faithfulness",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/01-Hallucination causes &amp; factuality vs faithfulness"
+            }
+          ],
+          "flow": "quality = right · safety = no harm by itself · security = no harm by an attacker",
+          "trap": "treating them as one checkbox called 'responsible AI'",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Three questions",
+              "Overlaps",
+              "Owners and tools",
+              "How I'd show it"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-safety-security-quality-c",
+      "letter": "C",
+      "name": "Security: injection, tools and agents",
+      "questions": [
+        {
+          "id": "ai-safety-security-quality-q7",
+          "number": 7,
+          "marks": [
+            "decides"
+          ],
+          "text": "What is prompt injection — direct vs indirect — and how do you defend against it?",
+          "points": [
+            "Instructions and data share <strong>one channel</strong>, so text can act as an instruction",
+            "<strong>Direct:</strong> the user types it. <strong>Indirect:</strong> it arrives in content the model reads (docs, web, email, tool output, images, memory)",
+            "No prompt-level fix: delimiters and classifiers <strong>lower frequency, not possibility</strong>",
+            "Contain the blast radius: <strong>least-privilege tools, rules decide, confirmation, no free outbound channel</strong>",
+            "Test it: an <strong>injection eval set</strong> across every input channel, asserting no unauthorised action",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> the LLM proposes, core-engine rules decide identity and booking, so injected text can change words, not who gets booked; indirect channels (documents, memory, screenshots) are C-14"
+          ],
+          "links": [
+            {
+              "label": "Prompt injection &amp; indirect injection",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/04-Prompt injection &amp; indirect injection"
+            },
+            {
+              "label": "Prompt injection in agents",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/02-Prompt injection in agents"
+            }
+          ],
+          "flow": "untrusted text → same context as instructions → model obeys → action; cut it at the action",
+          "trap": "\"Our system prompt says to ignore instructions in documents\"",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "Why it exists",
+              "Direct vs indirect",
+              "Why prompts don't fix it",
+              "Layered defence",
+              "Test"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q8",
+          "number": 8,
+          "marks": [
+            "decides"
+          ],
+          "text": "What's the lethal trifecta, and how do you use it?",
+          "points": [
+            "Three capabilities together let an attacker steal data: <strong>private data + untrusted content + external communication</strong>",
+            "Term from <strong>Simon Willison (Jun 2025)</strong>; it's a threat-modelling checklist per agent run",
+            "Remove <strong>any one leg</strong> for a run and exfiltration by injection fails",
+            "Hidden outbound channels: <strong>rendered image URLs, links, webhooks, emails, tool calls</strong>",
+            "Patterns: <strong>quarantined reader</strong> (dual-LLM), allow-listed recipients, human approval on send",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> patient data + clinic documents/caller speech + email/SMS confirmations: recipients come from the patient record in core-engine, never from model text (C-14 review)"
+          ],
+          "links": [
+            {
+              "label": "The expanded attack surface",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/01-The expanded attack surface"
+            },
+            {
+              "label": "OWASP and agentic threat modelling",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/12-OWASP and agentic threat modelling"
+            }
+          ],
+          "flow": "private data ∧ untrusted content ∧ outbound channel → exfiltration; break one leg",
+          "trap": "\"It's read-only, so it's safe\"",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "The three legs",
+              "Why all three",
+              "Hidden channels",
+              "Break a leg",
+              "My system"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q9",
+          "number": 9,
+          "marks": [],
+          "text": "How do you decide which tools an agent can use, and with what rights?",
+          "points": [
+            "<strong>Least privilege:</strong> only the tools this step needs; read and write tools separated",
+            "Credentials <strong>scoped to the user/tenant</strong>, short-lived; the agent never holds admin keys",
+            "Each tool = <strong>typed in/out</strong>, validates its own inputs; the model can't pass raw SQL or URLs",
+            "<strong>Irreversible actions</strong> (pay, send, delete, book) need confirmation or a rule check",
+            "Every call <strong>audited</strong> with who, what, why (rule id) — OWASP LLM06 Excessive Agency",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> each tool wraps one core-engine gRPC method with typed input/output and a service JWT; booking is read back and confirmed; per-step allowlist is C-15"
+          ],
+          "links": [
+            {
+              "label": "Permissions and least privilege",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/05-Permissions and least privilege"
+            },
+            {
+              "label": "Excessive agency",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/03-Excessive agency"
+            }
+          ],
+          "flow": "step → allowed tools → typed call → server-side check → confirm if irreversible → audit",
+          "trap": "giving the agent one powerful generic tool (\"run SQL\", \"call any API\")",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Least privilege",
+              "Scoped identity",
+              "Typed tools",
+              "Irreversible actions",
+              "Audit"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q10",
+          "number": 10,
+          "marks": [],
+          "text": "How do you stop an agent running away — loops, cost, damage?",
+          "points": [
+            "<strong>Budgets per run:</strong> max steps, tokens, cost, wall-clock time; fail closed when hit",
+            "<strong>Loop detection:</strong> same tool + same args repeated → stop and escalate",
+            "<strong>Kill switch</strong> per tenant / feature, rate limits per user (OWASP LLM10 Unbounded Consumption)",
+            "<strong>Sandbox</strong> anything that executes code; no network unless needed",
+            "Durable state + audit so a stopped run can be <strong>inspected and resumed</strong> safely",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> calls have a time limit and bounded guard ladders (two cautions, then end); cost budget and per-tenant kill switch are C-15"
+          ],
+          "links": [
+            {
+              "label": "Spend and rate limits",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/10-Spend and rate limits"
+            },
+            {
+              "label": "Sandboxing and isolation",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/04-Sandboxing and isolation"
+            }
+          ],
+          "flow": "run → check budgets each step → loop detector → limit hit → stop, safe line, escalate",
+          "trap": "relying on the model to decide when to stop",
+          "modelAnswer": {
+            "type": "design",
+            "spine": [
+              "Budgets",
+              "Loops",
+              "Kill switch",
+              "Sandbox",
+              "Recover"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-safety-security-quality-d",
+      "letter": "D",
+      "name": "Data protection and red-teaming",
+      "questions": [
+        {
+          "id": "ai-safety-security-quality-q11",
+          "number": 11,
+          "marks": [
+            "decides"
+          ],
+          "text": "How do you keep PII or PHI from leaking through an LLM system?",
+          "points": [
+            "Map the <strong>data flow</strong>: every place personal data goes — prompts, vendors, logs, traces, evals, vectors",
+            "<strong>Minimise and redact</strong> before it leaves: the model gets only what the step needs; logs are redacted",
+            "<strong>Tenant and role filters at retrieval</strong> (namespace / ACL), applied server-side before ranking",
+            "<strong>Vendor terms:</strong> zero data retention where offered, no training on your data, region",
+            "<strong>Retention + deletion</strong> per store, synthetic data in tests, and a test that tries to extract another user's data",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> structlog redaction, Pinecone namespace per tenant, sealed patient memory, transcripts purged at 90 days, synthetic data only in tests; vendor ZDR + DPDP/HIPAA map is C-16"
+          ],
+          "links": [
+            {
+              "label": "Privacy — memorization, PII extraction &amp; data governance",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/07-Privacy — memorization, PII extraction &amp; data governance"
+            },
+            {
+              "label": "Auditability and traceability",
+              "target": "03-Agentic-AI/10-Safety, Security &amp; Guardrails/11-Auditability and traceability"
+            }
+          ],
+          "flow": "map flows → minimise → redact → scope retrieval → vendor terms → retain and delete",
+          "trap": "\"The vendor is HIPAA compliant, so we are\"",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "Map the flows",
+              "Minimise",
+              "Scope retrieval",
+              "Vendors",
+              "Retention + proof"
+            ]
+          }
+        },
+        {
+          "id": "ai-safety-security-quality-q12",
+          "number": 12,
+          "marks": [],
+          "text": "How do you red-team an LLM application?",
+          "points": [
+            "Start from a <strong>threat model</strong>: assets, attackers, entry channels, worst outcomes",
+            "Attack suites: <strong>jailbreaks, direct + indirect injection, data extraction, cross-tenant, harmful advice, cost abuse</strong>",
+            "Mix <strong>manual creativity</strong> with automated generation (mutations, an attacker model)",
+            "Each finding → a <strong>regression case</strong> in the safety suite, run in CI like quality evals",
+            "In production: <strong>abuse and anomaly monitoring</strong>, rate limits, a way to report and respond",
+            "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m22.61 18.99-9.08-9.08c.93-2.34.45-5.1-1.44-7C9.79.61 6.21.4 3.66 2.26L7.5 6.11 6.08 7.52 2.25 3.69C.39 6.23.6 9.82 2.9 12.11c1.86 1.86 4.57 2.35 6.89 1.48l9.11 9.11c.39.39 1.02.39 1.41 0l2.3-2.3c.4-.38.4-1.01 0-1.41m-3 1.6-9.46-9.46c-.61.45-1.29.72-2 .82-1.36.2-2.79-.21-3.83-1.25C3.37 9.76 2.93 8.5 3 7.26l3.09 3.09 4.24-4.24-3.09-3.09c1.24-.07 2.49.37 3.44 1.31 1.08 1.08 1.49 2.57 1.24 3.96-.12.71-.42 1.37-.88 1.96l9.45 9.45z\"></path></svg> <strong>ResoDesk:</strong> planned suites: jailbreaks, injection, 'read me the last caller's number', cross-clinic probes, medical-advice bait, abuse (C-17)"
+          ],
+          "links": [
+            {
+              "label": "Red teaming &amp; adversarial evaluation",
+              "target": "05-LLM-Production/10-Evaluation/09-Red-teaming &amp; adversarial evaluation"
+            },
+            {
+              "label": "Jailbreaks &amp; defenses",
+              "target": "05-LLM-Production/11-Hallucination, Safety &amp; Guardrails/05-Jailbreaks &amp; defenses"
+            }
+          ],
+          "flow": "threat model → attack suites → findings → fixes → regression set in CI → monitor live",
+          "trap": "a one-off red-team exercise before launch and nothing after",
+          "modelAnswer": {
+            "type": "threat",
+            "spine": [
+              "Threat model",
+              "Attack suites",
+              "Manual + automated",
+              "Regression",
+              "Monitor"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2716,6 +2716,39 @@
       ]
     },
     {
+      "slug": "ai-safety-security-quality",
+      "number": 9,
+      "icon": "🛡️",
+      "title": "AI Safety, Security & Quality",
+      "count": 12,
+      "bands": [
+        {
+          "id": "ai-safety-security-quality-a",
+          "letter": "A",
+          "name": "Quality: evals and LLM-as-judge",
+          "count": 3
+        },
+        {
+          "id": "ai-safety-security-quality-b",
+          "letter": "B",
+          "name": "Observability and guardrails",
+          "count": 3
+        },
+        {
+          "id": "ai-safety-security-quality-c",
+          "letter": "C",
+          "name": "Security: injection, tools and agents",
+          "count": 4
+        },
+        {
+          "id": "ai-safety-security-quality-d",
+          "letter": "D",
+          "name": "Data protection and red-teaming",
+          "count": 2
+        }
+      ]
+    },
+    {
       "slug": "ml-dl",
       "number": 11,
       "icon": "📐",
@@ -3959,37 +3992,44 @@
   ],
   "networking": [
     {
+      "slug": "mental-models-map",
+      "title": "Chapter map: Mental models",
+      "tier": "MAP",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "mental-models-breadth-flashcards",
+      "title": "Mental Models — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "01-mental-models",
+      "sectionTitle": "Mental models"
+    },
+    {
       "slug": "osi-model",
       "order": "001",
-      "title": "The OSI 7-Layer Model",
+      "title": "The OSI Model — Layers, Encapsulation and the Request Path",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
     },
     {
       "slug": "tcp-ip-model",
       "order": "002",
-      "title": "The TCP/IP (4-Layer) Model",
+      "title": "The TCP/IP Model — Four Layers, and Who Implements Each",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
-      "section": "01-mental-models",
-      "sectionTitle": "Mental models"
-    },
-    {
-      "slug": "encapsulation",
-      "title": "Encapsulation",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
     },
     {
       "slug": "l4-vs-l7",
       "order": "004",
-      "title": "L4 vs L7 — What the Distinction Actually Means",
+      "title": "L4 vs L7 — Connections or Requests",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
     },
@@ -3998,7 +4038,7 @@
       "order": "005",
       "title": "The Four Communication Shapes",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
     },
@@ -4007,24 +4047,16 @@
       "order": "006",
       "title": "Latency vs Bandwidth vs Throughput",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "01-mental-models",
-      "sectionTitle": "Mental models"
-    },
-    {
-      "slug": "bandwidth-delay-product",
-      "title": "Bandwidth-Delay Product",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
     },
     {
       "slug": "speed-of-light-budget",
       "order": "008",
-      "title": "The Speed-of-Light Budget",
+      "title": "The Speed-of-Light Budget — Round Trips Before Any Server Work",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
     },
@@ -4033,16 +4065,31 @@
       "order": "009",
       "title": "The Number Line That Matters (L1 → Cross-Continent)",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "01-mental-models",
       "sectionTitle": "Mental models"
+    },
+    {
+      "slug": "ip-packets-routing-map",
+      "title": "Chapter map: IP, packets & routing",
+      "tier": "MAP",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
+    },
+    {
+      "slug": "ip-packets-routing-breadth-flashcards",
+      "title": "IP, Packets & Routing — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "02-ip-packets-routing",
+      "sectionTitle": "IP, packets & routing"
     },
     {
       "slug": "ip-addressing",
       "order": "010",
       "title": "IP Addressing — IPv4, IPv6, and Why IPv6 Keeps Appearing in Cloud Defaults",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "02-ip-packets-routing",
       "sectionTitle": "IP, packets & routing"
     },
@@ -4051,7 +4098,7 @@
       "order": "011",
       "title": "Subnets & CIDR Notation",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "02-ip-packets-routing",
       "sectionTitle": "IP, packets & routing"
     },
@@ -4060,7 +4107,7 @@
       "order": "012",
       "title": "Private vs Public IP Ranges",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "02-ip-packets-routing",
       "sectionTitle": "IP, packets & routing"
     },
@@ -4069,7 +4116,7 @@
       "order": "013",
       "title": "Packets, MTU, Fragmentation & Path MTU Discovery",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "02-ip-packets-routing",
       "sectionTitle": "IP, packets & routing"
     },
@@ -4078,7 +4125,7 @@
       "order": "014",
       "title": "Routing Basics — Tables, Default Gateway, Next Hop",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "02-ip-packets-routing",
       "sectionTitle": "IP, packets & routing"
     },
@@ -4087,76 +4134,67 @@
       "order": "015",
       "title": "NAT — Source NAT, Destination NAT & Port Exhaustion",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "02-ip-packets-routing",
       "sectionTitle": "IP, packets & routing"
     },
     {
-      "slug": "arp-mac-addresses",
-      "title": "ARP & MAC Addresses",
-      "tier": "BREADTH",
-      "relevance": "Low",
-      "section": "02-ip-packets-routing",
-      "sectionTitle": "IP, packets & routing"
+      "slug": "tcp-udp-map",
+      "title": "Chapter map: TCP & UDP",
+      "tier": "MAP",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
     },
     {
-      "slug": "bgp-the-internets-routing-fabric",
-      "title": "BGP & the Internet's Routing Fabric",
+      "slug": "tcp-udp-breadth-flashcards",
+      "title": "TCP & UDP — Breadth Flashcards",
       "tier": "BREADTH",
-      "relevance": "High",
-      "section": "02-ip-packets-routing",
-      "sectionTitle": "IP, packets & routing"
-    },
-    {
-      "slug": "anycast",
-      "title": "Anycast",
-      "tier": "BREADTH",
-      "relevance": "High",
-      "section": "02-ip-packets-routing",
-      "sectionTitle": "IP, packets & routing"
+      "relevance": "Senior",
+      "section": "03-tcp-udp",
+      "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "tcp-vs-udp",
       "order": "019",
-      "title": "TCP vs UDP — The Decision Table",
+      "title": "TCP vs UDP — Who Owns Ordering, Loss and Pacing",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "three-way-handshake",
       "order": "020",
-      "title": "The TCP 3-Way Handshake",
+      "title": "The TCP 3-Way Handshake — One Round Trip, Two Queues",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "connection-teardown",
       "order": "021",
-      "title": "Connection Teardown — FIN/ACK and TIME_WAIT",
+      "title": "Connection Teardown — FIN, Half-Close and TIME_WAIT",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "sequence-numbers-acks-retransmission",
       "order": "022",
-      "title": "Sequence Numbers, ACKs & Retransmission",
+      "title": "Sequence Numbers, ACKs & Retransmission — Four Ways to Find a Loss",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "flow-control",
       "order": "023",
-      "title": "Flow Control — The Receive Window & Zero-Window Stalls",
+      "title": "Flow Control — The Receive Window & Stalls",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
@@ -4165,24 +4203,16 @@
       "order": "024",
       "title": "Congestion Control — Slow Start, CUBIC & BBR",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "tcp-head-of-line-blocking",
       "order": "025",
-      "title": "TCP Head-of-Line Blocking",
+      "title": "TCP Head-of-Line Blocking — One Gap Stalls Everything Behind It",
       "tier": "CORE",
-      "relevance": "High",
-      "section": "03-tcp-udp",
-      "sectionTitle": "TCP & UDP"
-    },
-    {
-      "slug": "nagles-algorithm-tcpnodelay",
-      "title": "Nagle's Algorithm & TCP_NODELAY",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
@@ -4191,34 +4221,41 @@
       "order": "027",
       "title": "Keepalives, Idle Timeouts & Half-Open Connections",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "sockets-ports-ephemeral-range",
       "order": "028",
-      "title": "Sockets, Ports & the Ephemeral Port Range",
+      "title": "Sockets, Ports & the Ephemeral Range — What Actually Runs Out",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
     },
     {
       "slug": "when-udp-is-right",
       "order": "029",
-      "title": "When UDP Is Right",
+      "title": "When UDP Is Right — and What You Then Owe",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "03-tcp-udp",
       "sectionTitle": "TCP & UDP"
+    },
+    {
+      "slug": "dns-map",
+      "title": "Chapter map: DNS",
+      "tier": "MAP",
+      "section": "04-dns",
+      "sectionTitle": "DNS"
     },
     {
       "slug": "dns-resolution",
       "order": "030",
       "title": "What DNS Resolution Actually Does",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "04-dns",
       "sectionTitle": "DNS"
     },
@@ -4227,7 +4264,7 @@
       "order": "031",
       "title": "Record Types You'll Use",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "04-dns",
       "sectionTitle": "DNS"
     },
@@ -4236,7 +4273,7 @@
       "order": "032",
       "title": "TTL & Caching Layers",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "04-dns",
       "sectionTitle": "DNS"
     },
@@ -4245,7 +4282,7 @@
       "order": "033",
       "title": "DNS-Based Load Balancing & Failover",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "04-dns",
       "sectionTitle": "DNS"
     },
@@ -4254,7 +4291,7 @@
       "order": "034",
       "title": "Private DNS & Service Discovery",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "04-dns",
       "sectionTitle": "DNS"
     },
@@ -4263,16 +4300,31 @@
       "order": "035",
       "title": "DNS as an Outage Cause",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "04-dns",
       "sectionTitle": "DNS"
+    },
+    {
+      "slug": "tls-map",
+      "title": "Chapter map: TLS",
+      "tier": "MAP",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
+    },
+    {
+      "slug": "tls-transport-security-breadth-flashcards",
+      "title": "TLS & Transport Security — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "05-tls",
+      "sectionTitle": "TLS"
     },
     {
       "slug": "what-tls-gives-you",
       "order": "036",
       "title": "What TLS Gives You — Encryption, Integrity, Identity",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "05-tls",
       "sectionTitle": "TLS"
     },
@@ -4281,7 +4333,7 @@
       "order": "037",
       "title": "The TLS 1.3 Handshake — 1-RTT, 0-RTT, and What 1.2 Cost",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "05-tls",
       "sectionTitle": "TLS"
     },
@@ -4290,7 +4342,7 @@
       "order": "038",
       "title": "Certificates & Chains of Trust",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "05-tls",
       "sectionTitle": "TLS"
     },
@@ -4299,7 +4351,7 @@
       "order": "040",
       "title": "TLS Termination vs Pass-Through vs Re-encryption",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "05-tls",
       "sectionTitle": "TLS"
     },
@@ -4308,16 +4360,31 @@
       "order": "041",
       "title": "mTLS — Mutual Authentication and Service-Mesh Zero Trust",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "05-tls",
       "sectionTitle": "TLS"
+    },
+    {
+      "slug": "http-versions-map",
+      "title": "Chapter map: HTTP versions",
+      "tier": "MAP",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
+    },
+    {
+      "slug": "http-versions-breadth-flashcards",
+      "title": "HTTP Versions — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "06-http-versions",
+      "sectionTitle": "HTTP versions"
     },
     {
       "slug": "http-as-a-protocol",
       "order": "044",
       "title": "HTTP as a Protocol — Message Anatomy & Statelessness",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4326,24 +4393,16 @@
       "order": "045",
       "title": "HTTP/1.0 vs HTTP/1.1 — Persistence, Host, and Chunked Encoding",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
     {
       "slug": "http11-limits",
       "order": "046",
-      "title": "HTTP/1.1's Limits — One Request in Flight, and the 6-Connection Cap",
+      "title": "HTTP/1.1's Limits — One Response at a Time, and the Six-Connection Workaround",
       "tier": "CORE",
-      "relevance": "High",
-      "section": "06-http-versions",
-      "sectionTitle": "HTTP versions"
-    },
-    {
-      "slug": "http-pipelining",
-      "title": "HTTP Pipelining",
-      "tier": "BREADTH",
-      "relevance": "Low",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4352,7 +4411,7 @@
       "order": "048",
       "title": "HTTP/2 — Binary Framing, Streams & Multiplexing",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4361,7 +4420,7 @@
       "order": "049",
       "title": "HPACK, Stream Priorities & Server Push",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4369,17 +4428,17 @@
       "slug": "http2-remaining-flaw",
       "order": "050",
       "title": "HTTP/2's Remaining Flaw — TCP Still Stalls Every Stream",
-      "tier": "CORE",
-      "relevance": "High",
+      "tier": "SUPPORTING",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
     {
       "slug": "quic",
       "order": "051",
-      "title": "QUIC — UDP Transport with Built-in TLS 1.3 and Per-Stream Recovery",
+      "title": "QUIC — A UDP Transport with TLS 1.3 Inside and Per-Stream Recovery",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4388,7 +4447,7 @@
       "order": "052",
       "title": "Connection Migration in QUIC",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4397,7 +4456,7 @@
       "order": "053",
       "title": "HTTP/3 — HTTP Semantics over QUIC",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4406,7 +4465,7 @@
       "order": "054",
       "title": "When Each HTTP Version Actually Matters",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
@@ -4415,24 +4474,31 @@
       "order": "055",
       "title": "gRPC's Dependence on HTTP/2 — and the Load-Balancing Problem",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "06-http-versions",
       "sectionTitle": "HTTP versions"
     },
     {
-      "slug": "protocol-negotiation-alpn-and-alt-svc",
-      "title": "Protocol Negotiation — ALPN and Alt-Svc",
+      "slug": "http-semantics-map",
+      "title": "Chapter map: HTTP semantics",
+      "tier": "MAP",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "http-semantics-breadth-flashcards",
+      "title": "HTTP Semantics — Breadth Flashcards",
       "tier": "BREADTH",
-      "relevance": "Medium",
-      "section": "06-http-versions",
-      "sectionTitle": "HTTP versions"
+      "relevance": "Senior",
+      "section": "07-http-semantics",
+      "sectionTitle": "HTTP semantics"
     },
     {
       "slug": "methods",
       "order": "057",
       "title": "HTTP Methods & Their Contracts",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4441,16 +4507,16 @@
       "order": "058",
       "title": "Safe vs Idempotent vs Cacheable",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
     {
       "slug": "status-codes",
       "order": "059",
-      "title": "Status Codes — the practical map",
+      "title": "Status Codes — the Practical Map",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4459,7 +4525,7 @@
       "order": "060",
       "title": "Choosing the Right Status Code",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4468,7 +4534,7 @@
       "order": "061",
       "title": "Headers That Matter",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4477,7 +4543,7 @@
       "order": "062",
       "title": "HTTP Caching",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4486,7 +4552,7 @@
       "order": "063",
       "title": "Cookies and Cookie Attributes",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4495,23 +4561,7 @@
       "order": "064",
       "title": "CORS and Preflight Requests",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "07-http-semantics",
-      "sectionTitle": "HTTP semantics"
-    },
-    {
-      "slug": "content-negotiation-and-compression",
-      "title": "Content Negotiation and Compression",
-      "tier": "BREADTH",
-      "relevance": "Medium",
-      "section": "07-http-semantics",
-      "sectionTitle": "HTTP semantics"
-    },
-    {
-      "slug": "range-requests-and-resumable-downloads",
-      "title": "Range Requests and Resumable Downloads",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4520,7 +4570,7 @@
       "order": "067",
       "title": "Idempotency Keys",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4529,7 +4579,7 @@
       "order": "068",
       "title": "Timeouts, Retries & Exponential Backoff with Jitter",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
     },
@@ -4538,16 +4588,31 @@
       "order": "069",
       "title": "Rate Limiting and 429",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "07-http-semantics",
       "sectionTitle": "HTTP semantics"
+    },
+    {
+      "slug": "realtime-streaming-map",
+      "title": "Chapter map: Real-time & streaming",
+      "tier": "MAP",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
+    },
+    {
+      "slug": "real-time-streaming-breadth-flashcards",
+      "title": "Real-Time & Streaming — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "08-realtime-streaming",
+      "sectionTitle": "Real-time & streaming"
     },
     {
       "slug": "four-options",
       "order": "070",
       "title": "The Four Real-Time Options — Polling, Long Polling, SSE, WebSocket",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "08-realtime-streaming",
       "sectionTitle": "Real-time & streaming"
     },
@@ -4556,7 +4621,7 @@
       "order": "071",
       "title": "Server-Sent Events (SSE)",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "08-realtime-streaming",
       "sectionTitle": "Real-time & streaming"
     },
@@ -4565,7 +4630,7 @@
       "order": "072",
       "title": "WebSocket — Handshake, Frames, Full Duplex, Subprotocols",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "08-realtime-streaming",
       "sectionTitle": "Real-time & streaming"
     },
@@ -4574,7 +4639,7 @@
       "order": "073",
       "title": "WebSocket Operational Reality — Stickiness, Timeouts, Heartbeats, Resume, Fan-out",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "08-realtime-streaming",
       "sectionTitle": "Real-time & streaming"
     },
@@ -4583,7 +4648,7 @@
       "order": "074",
       "title": "SSE vs WebSocket vs HTTP/2 Streaming vs gRPC Streaming — The Decision Framework",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "08-realtime-streaming",
       "sectionTitle": "Real-time & streaming"
     },
@@ -4592,15 +4657,7 @@
       "order": "075",
       "title": "Backpressure in Streaming Systems",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "08-realtime-streaming",
-      "sectionTitle": "Real-time & streaming"
-    },
-    {
-      "slug": "webtransport",
-      "title": "WebTransport",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "08-realtime-streaming",
       "sectionTitle": "Real-time & streaming"
     },
