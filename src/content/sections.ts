@@ -55,16 +55,18 @@ export type Section = {
 }
 
 /**
- * Recall files as one flat, numbered list in priority order: AI/ML first, then backend, cloud, and
- * front-end last. Unknown slugs go at the end so a new vault file still shows up; add its slug here.
+ * Recall files as one flat, numbered list in study order: Python and FastAPI first, then AI/ML from
+ * fundamentals up (ML/DL → LLMs → RAG → agents → safety → serving), then the rest of the backend and
+ * front-end. Unknown slugs go at the end so a new vault file still shows up; add its slug here.
  */
 const RECALL_ORDER = [
-  // AI / ML
-  'llm-foundations', 'rag', 'agentic-ai', 'mcp-context-engineering', 'prompt-engineering', 'llm-serving-inference',
-  'ai-safety-security-quality', 'ml-dl', 'nlp-classical', 'real-time-systems',
-  // Backend
-  'python', 'fastapi', 'java-spring', 'databases',
-  // Cloud (none yet)
+  // Python backend
+  'python', 'fastapi',
+  // AI / ML, fundamentals up
+  'ml-dl', 'nlp-classical', 'llm-foundations', 'prompt-engineering', 'rag', 'agentic-ai',
+  'mcp-context-engineering', 'ai-safety-security-quality', 'llm-serving-inference', 'real-time-systems',
+  // Other backend
+  'databases', 'java-spring',
   // Front-end
   'react',
 ]
