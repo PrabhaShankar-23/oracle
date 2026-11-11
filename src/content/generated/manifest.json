@@ -2753,7 +2753,7 @@
       "number": 11,
       "icon": "📐",
       "title": "Classical ML & Deep Learning",
-      "count": 76,
+      "count": 77,
       "bands": [
         {
           "id": "ml-dl-ml-generalisation-honest-validation",
@@ -2801,7 +2801,7 @@
           "id": "ml-dl-added-11-nov-2026-ml-llm-era-bridges",
           "letter": null,
           "name": "Added 11 Nov 2026 — ML ↔ LLM-era bridges",
-          "count": 3
+          "count": 4
         }
       ]
     },

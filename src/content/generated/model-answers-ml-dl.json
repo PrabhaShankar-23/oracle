@@ -7857,5 +7857,129 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;not on the hot path\"]:::in\n        N2[\"2 · Why&lt;br/&gt;833 req/s, 20 ms\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Classify&lt;br/&gt;embed → logistic head\"]:::step\n        N4[\"4 · Fallback&lt;br/&gt;low confidence → LLM\"]:::step\n        N5[\"5 · Learn&lt;br/&gt;LLM labels → retrain\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Unknowns&lt;br/&gt;calibration, new intents\"]:::bad\n        NC([\"Close&lt;br/&gt;cheapest that meets SLA\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "ml-dl-q77": {
+    "type": "diagnose",
+    "spine": [
+      "Name it",
+      "Rule out the fakes",
+      "Confirm with evidence",
+      "Fix by experiment",
+      "Validate",
+      "Productionise"
+    ],
+    "testing": "whether classical bias–variance thinking carries over to LLM fine-tuning, or stops at &quot;add more epochs&quot;.",
+    "trap": "&quot;LoRA has so few parameters it can&#39;t overfit&quot;, or reaching for a bigger rank.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>high variance</td>\n<td>\"That's overfitting: with 2k examples, the adapter starts memorising them after about an epoch. Train loss keeps falling while eval loss turns up.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>small data, big capacity</td>\n<td>\"It's the classic bias–variance story. Even a LoRA adapter has millions of trainable parameters, and 2k examples can't pin them all down.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · rule out</strong></td>\n<td>leak, template, noise</td>\n<td>\"First I rule out fakes: duplicates between train and eval, a prompt-template mismatch, or an eval set so small the curve is noise.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · stop early</strong></td>\n<td>best checkpoint by eval</td>\n<td>\"Then the cheapest fix: evaluate every few hundred steps and keep the best checkpoint, which usually means one to three epochs, not ten.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · shrink</strong></td>\n<td>lower rank, LR, dropout</td>\n<td>\"If it still overfits, I cut capacity and step size: lower rank, fewer target modules, a lower learning rate, plus LoRA dropout and weight decay.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How · data</strong></td>\n<td>dedupe, augment, mix</td>\n<td>\"Data is the strongest lever: deduplicate, add paraphrased or harder examples, and mix in some general data so the model doesn't drift.\"</td>\n</tr>\n<tr>\n<td><strong>7 · Watch · forgetting</strong></td>\n<td>general eval set</td>\n<td>\"I also run a general regression set, because a drop there is forgetting, not overfitting, and it needs a different fix.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>best on eval, not last</td>\n<td>\"Each change is one experiment against the same eval, and the checkpoint that ships is the best on eval, not the last one.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Name it",
+        "claim": "high variance: the adapter is memorising 2k examples",
+        "html": "<p><strong>\"Train loss down, eval loss up is the overfitting signature, same as Q1, just on an adapter.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;LoRA fine-tune on 2k examples: train vs eval loss&quot;,&quot;caption&quot;:&quot;Illustrative. Eval loss bottoms out around epoch 1, then rises while train loss keeps falling.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;epochs&quot;,&quot;domain&quot;:[0,5]},&quot;y&quot;:{&quot;label&quot;:&quot;loss&quot;,&quot;domain&quot;:[0,2.2]},&quot;series&quot;:[{&quot;name&quot;:&quot;train&quot;,&quot;points&quot;:[[0,2],[0.5,1.3],[1,1],[2,0.6],[3,0.35],[5,0.12]]},{&quot;name&quot;:&quot;eval&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[0,2],[0.5,1.35],[1,1.15],[2,1.3],[3,1.5],[5,1.9]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:1,&quot;label&quot;:&quot;best checkpoint&quot;},{&quot;kind&quot;:&quot;band&quot;,&quot;between&quot;:[&quot;train&quot;,&quot;eval&quot;],&quot;from&quot;:1,&quot;label&quot;:&quot;memorising&quot;}]}\"></div><figcaption>Illustrative. Eval loss bottoms out around epoch 1, then rises while train loss keeps falling.</figcaption></figure>\n<pre><code class=\"language-text\">trainable params per adapted matrix = r × (d_in + d_out)\nd = 4096, r = 16 → 16 × 8,192 = 131,072      ← computed\n× 4 attention matrices × 32 layers ≈ 16.8M    ← still far more than 2k examples can pin down\n</code></pre>"
+      },
+      {
+        "number": 2,
+        "name": "Rule out the fakes",
+        "claim": "not every rising eval curve is overfitting",
+        "html": "<p><strong>\"Before I touch hyperparameters, I check the curve is telling the truth.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Fake</th>\n<th>How I check</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Train–eval leak</strong></td>\n<td>near-duplicate search between the splits</td>\n</tr>\n<tr>\n<td><strong>Template mismatch</strong></td>\n<td>eval prompts formatted differently from training</td>\n</tr>\n<tr>\n<td><strong>Loss on prompt tokens</strong></td>\n<td>mask the prompt so loss counts only the response</td>\n</tr>\n<tr>\n<td><strong>Eval set too small</strong></td>\n<td>a few dozen examples make the curve noise</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Confirm with evidence",
+        "claim": "read what kind of failure it is",
+        "html": "<p><strong>\"The same rising curve has different causes, and each needs a different fix.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Observation</th>\n<th>Likely cause</th>\n<th>Next action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Eval loss up, outputs copy training phrasing</strong></td>\n<td>memorisation</td>\n<td>early stopping, less capacity, more varied data</td>\n</tr>\n<tr>\n<td><strong>Eval loss up from the first steps</strong></td>\n<td>learning rate too high</td>\n<td>lower LR, add warmup</td>\n</tr>\n<tr>\n<td><strong>Eval loss up, task metric still improving</strong></td>\n<td>overconfidence, not worse answers</td>\n<td>select checkpoints on the task metric</td>\n</tr>\n<tr>\n<td><strong>In-domain fine, general skills dropped</strong></td>\n<td>catastrophic forgetting</td>\n<td>mix in general data, lower LR (see <span class=\"vault-ref\" title=\"04-LLM-FOUNDATIONS\">LLM-FOUNDATIONS</span> Q17)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "name": "Fix by experiment",
+        "claim": "the classical levers, in LoRA form",
+        "html": "<p><strong>\"Every bias–variance lever I'd use on a classical model has a LoRA equivalent.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Classical lever</th>\n<th>LoRA equivalent</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Early stopping</strong></td>\n<td>evaluate every N steps, keep the best checkpoint</td>\n</tr>\n<tr>\n<td><strong>Smaller model</strong></td>\n<td>lower rank <code>r</code>, fewer target modules</td>\n</tr>\n<tr>\n<td><strong>L2 / weight decay</strong></td>\n<td>weight decay on the adapter</td>\n</tr>\n<tr>\n<td><strong>Dropout</strong></td>\n<td><code>lora_dropout</code></td>\n</tr>\n<tr>\n<td><strong>More data</strong></td>\n<td>dedupe, paraphrase, harder examples</td>\n</tr>\n</tbody></table>\n<div class=\"exp-list\"><section class=\"exp\"><span class=\"exp-tag\">Experiment 1</span><h4 class=\"exp-title\">Early stopping</h4><p>I'd evaluate every few hundred steps and keep the best checkpoint, usually one to three epochs.</p><p><strong>Why?</strong> On small data the adapter learns the pattern first and the noise later.</p><p class=\"exp-best\">Best suited when eval loss has a clear minimum, as here.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 2</span><h4 class=\"exp-title\">Cut capacity</h4><p>I'd drop the rank (say 16 → 8) or adapt fewer modules, and lower the learning rate.</p><p><strong>Why?</strong> Fewer free parameters and smaller steps leave less room to memorise.</p><p class=\"exp-best\">Best suited when eval loss climbs even with early stopping.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 3</span><h4 class=\"exp-title\">Regularise</h4><p>I'd add <code>lora_dropout</code> (around 0.05–0.1) and weight decay.</p><p><strong>Why?</strong> The same effect dropout and L2 have on any network.</p><p class=\"exp-best\">Best suited as a cheap add-on to experiments 1 and 2.</p></section><section class=\"exp\"><span class=\"exp-tag\">Experiment 4</span><h4 class=\"exp-title\">Fix the data</h4><p>I'd deduplicate, add paraphrased and harder examples, and mix in some general instruction data.</p><p><strong>Why?</strong> More varied data is the only lever that lowers variance without lowering capacity.</p><p class=\"exp-best\">Best suited when the 2k examples are repetitive or templated.</p></section></div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n<p><strong>Why this matters:</strong> one change per run, all against the same eval, or I can't tell which one worked.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Validate",
+        "claim": "beat the baselines, not just the last run",
+        "html": "<p><strong>\"The fine-tune has to beat the cheaper options on held-out data.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Compare:</strong></span><span class=\"flow-step\">base model + prompt</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">base + few-shot</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LoRA best checkpoint</span><span class=\"flow-arrow\" data-label=\"same eval\"></span><span class=\"flow-step\"><strong>pick the cheapest that meets the target</strong></span></div>\n<ul>\n<li>Held-out task eval, deduplicated against train.</li>\n<li>A general regression set to catch forgetting.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "name": "Productionise",
+        "claim": "ship the best checkpoint, keep the eval running",
+        "html": "<p><strong>\"What ships is the best checkpoint on eval, never the last one.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Release:</strong></span><span class=\"flow-step\">new data</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">retrain</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">task eval + regression set in CI</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>best checkpoint</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">ship with config and data version</span></div>\n<p>2k examples today is a starting point; the loop matters more than this one run.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not do a full fine-tune instead?",
+        "tag": "trap",
+        "html": "<p><strong>On 2k examples that makes overfitting worse, not better.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>LoRA</th>\n<th>Full fine-tune</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Trainable params (7B model)</strong></td>\n<td>millions</td>\n<td>billions</td>\n</tr>\n<tr>\n<td><strong>Risk on 2k examples</strong></td>\n<td>moderate</td>\n<td>high, plus forgetting</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "Isn&#39;t LoRA already a regulariser?",
+        "tag": "probe",
+        "html": "<p><strong>Partly: the low-rank constraint limits capacity, but not enough on its own for tiny data.</strong></p>\n<pre><code class=\"language-text\">ΔW = B · A,  rank ≤ r        ← updates confined to an r-dimensional subspace\nsmall r → less capacity      ← like a smaller model, still not zero variance\n</code></pre>"
+      },
+      {
+        "number": 3,
+        "question": "Eval loss is rising but task accuracy still improves. Stop or continue?",
+        "tag": "edge",
+        "html": "<p><strong>Select on the task metric; loss is also measuring confidence.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Signal</th>\n<th>What it means</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Eval loss up</strong></td>\n<td>the model is more confident on its wrong tokens</td>\n</tr>\n<tr>\n<td><strong>Task metric up</strong></td>\n<td>the answers themselves are getting better</td>\n</tr>\n</tbody></table>\n<p>I'd keep training while the task metric improves, and check calibration if confidence matters downstream.</p>"
+      },
+      {
+        "number": 4,
+        "question": "How do you tell overfitting from catastrophic forgetting?",
+        "tag": "probe",
+        "html": "<p><strong>By which eval drops.</strong></p>\n<table>\n<thead>\n<tr>\n<th>In-domain eval</th>\n<th>General eval</th>\n<th>Diagnosis</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>down</strong></td>\n<td>flat</td>\n<td>overfitting</td>\n</tr>\n<tr>\n<td><strong>fine</strong></td>\n<td><strong>down</strong></td>\n<td>forgetting</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "With only 2k examples, should you fine-tune at all?",
+        "tag": "senior",
+        "html": "<p><strong>Only after prompting and few-shot have been tried and measured.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Order:</strong></span><span class=\"flow-step\">prompt</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">few-shot</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">RAG if it's knowledge</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LoRA if it's behaviour</span></div>\n<p>Fine-tuning teaches format and behaviour; facts belong in retrieval (<span class=\"vault-ref\" title=\"04-LLM-FOUNDATIONS\">LLM-FOUNDATIONS</span> Q24).</p>"
+      },
+      {
+        "number": 6,
+        "question": "How big should the eval set be?",
+        "tag": "senior",
+        "html": "<p><strong>A few hundred held-out examples, deduplicated against train.</strong></p>\n<pre><code class=\"language-text\">SE ≈ √(p(1 − p) / n)\np = 0.8, n = 200 → SE ≈ 0.028 → about ±5.5 points at 95%\n</code></pre>\n<p>Smaller than that and checkpoint choice is noise.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;LoRA can&#39;t overfit, it&#39;s only a few parameters.&quot; — millions of parameters against 2k examples.",
+      "&quot;Train for more epochs until loss is low.&quot; — train loss low is the symptom.",
+      "&quot;Increase the rank for better quality.&quot; — more capacity, more memorising.",
+      "&quot;Ship the final checkpoint.&quot; — ship the best one on eval."
+    ],
+    "links": [
+      {
+        "label": "Bias Variance Tradeoff",
+        "target": "01-ML/01-Foundations/05-Bias-Variance Tradeoff"
+      },
+      {
+        "label": "Overfitting, Underfitting & Generalization",
+        "target": "01-ML/01-Foundations/06-Overfitting, Underfitting & Generalization"
+      },
+      {
+        "label": "Early Stopping",
+        "target": "02-DL/01-Foundations/14-Early Stopping"
+      },
+      {
+        "label": "Dropout",
+        "target": "02-DL/05-Training Mechanics that make transformers work/06-Dropout"
+      },
+      {
+        "label": "LoRA",
+        "target": "05-LLM-Production/05-Parameter-Efficient fine-tuning/02-LoRA"
+      },
+      {
+        "label": "Catastrophic forgetting during fine tuning",
+        "target": "05-LLM-Production/04-Post-Training& Alignment/10-Catastrophic forgetting during fine-tuning"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;high variance\"]:::in\n        N2[\"2 · Why&lt;br/&gt;small data, big capacity\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Rule out&lt;br/&gt;leak, template, noise\"]:::ask\n        N4[\"4 · Stop early&lt;br/&gt;best checkpoint by eval\"]:::step\n        N5[\"5 · Shrink&lt;br/&gt;lower rank, LR, dropout\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Data&lt;br/&gt;dedupe, augment, mix\"]:::step\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Forgetting&lt;br/&gt;general eval set\"]:::ask\n        NC([\"Close&lt;br/&gt;best on eval, not last\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>"
   }
 }

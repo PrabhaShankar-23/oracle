@@ -1597,6 +1597,28 @@
               "What I'd pick here: a cascade"
             ]
           }
+        },
+        {
+          "id": "ml-dl-q77",
+          "number": 77,
+          "marks": [
+            "decides"
+          ],
+          "text": "You're LoRA fine-tuning on 2k examples. Train loss keeps falling, eval loss turns up after epoch 1. How do you stop it overfitting?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen — bias–variance and regularisation (Q1, Q3, Q22) carried into fine-tuning; LoRA mechanics stay in [[04-LLM-FOUNDATIONS]] Q15.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "Name it",
+              "Rule out the fakes",
+              "Confirm with evidence",
+              "Fix by experiment",
+              "Validate",
+              "Productionise"
+            ]
+          }
         }
       ]
     }

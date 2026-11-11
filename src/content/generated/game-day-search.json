@@ -3129,6 +3129,13 @@
     "band": "Added 11 Nov 2026 — ML ↔ LLM-era bridges"
   },
   {
+    "id": "ml-dl-q77",
+    "text": "You're LoRA fine-tuning on 2k examples. Train loss keeps falling, eval loss turns up after epoch 1. How do you stop it overfitting?",
+    "topic": "ml-dl",
+    "topicTitle": "Classical ML & Deep Learning",
+    "band": "Added 11 Nov 2026 — ML ↔ LLM-era bridges"
+  },
+  {
     "id": "databases-q1",
     "text": "Second-highest salary. Then the Nth.",
     "topic": "databases",
