@@ -2753,7 +2753,7 @@
       "number": 11,
       "icon": "📐",
       "title": "Classical ML & Deep Learning",
-      "count": 73,
+      "count": 76,
       "bands": [
         {
           "id": "ml-dl-ml-generalisation-honest-validation",
@@ -2796,6 +2796,12 @@
           "letter": null,
           "name": "Added from saved LinkedIn interview posts — 24 Oct 2026",
           "count": 1
+        },
+        {
+          "id": "ml-dl-added-11-nov-2026-ml-llm-era-bridges",
+          "letter": null,
+          "name": "Added 11 Nov 2026 — ML ↔ LLM-era bridges",
+          "count": 3
         }
       ]
     },

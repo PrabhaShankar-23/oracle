@@ -3108,6 +3108,27 @@
     "band": "Added from saved LinkedIn interview posts — 24 Oct 2026"
   },
   {
+    "id": "ml-dl-q74",
+    "text": "Walk me from logistic regression to self-attention in two minutes.",
+    "topic": "ml-dl",
+    "topicTitle": "Classical ML & Deep Learning",
+    "band": "Added 11 Nov 2026 — ML ↔ LLM-era bridges"
+  },
+  {
+    "id": "ml-dl-q75",
+    "text": "Your guardrail classifier flags 2% of traffic. How do you know whether it's any good?",
+    "topic": "ml-dl",
+    "topicTitle": "Classical ML & Deep Learning",
+    "band": "Added 11 Nov 2026 — ML ↔ LLM-era bridges"
+  },
+  {
+    "id": "ml-dl-q76",
+    "text": "You need intent routing at 50k requests a minute under 20 ms. Would you use an LLM?",
+    "topic": "ml-dl",
+    "topicTitle": "Classical ML & Deep Learning",
+    "band": "Added 11 Nov 2026 — ML ↔ LLM-era bridges"
+  },
+  {
     "id": "databases-q1",
     "text": "Second-highest salary. Then the Nth.",
     "topic": "databases",

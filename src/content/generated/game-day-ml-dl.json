@@ -1527,6 +1527,78 @@
           }
         }
       ]
+    },
+    {
+      "id": "ml-dl-added-11-nov-2026-ml-llm-era-bridges",
+      "letter": null,
+      "name": "Added 11 Nov 2026 — ML ↔ LLM-era bridges",
+      "questions": [
+        {
+          "id": "ml-dl-q74",
+          "number": 74,
+          "marks": [
+            "decides"
+          ],
+          "text": "Walk me from logistic regression to self-attention in two minutes.",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen — the ML → DL link in one breath; tests whether the pillars connect or were memorised separately.",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "One neuron is logistic regression",
+              "Stack neurons, add nonlinearity",
+              "Learn the inputs too",
+              "Let the weights depend on the input",
+              "Where each step breaks",
+              "Why I tell it this way"
+            ]
+          }
+        },
+        {
+          "id": "ml-dl-q75",
+          "number": 75,
+          "marks": [
+            "decides"
+          ],
+          "text": "Your guardrail classifier flags 2% of traffic. How do you know whether it's any good?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen — classical metrics applied to an LLM-era component: precision/recall, imbalance, labels, thresholds.",
+          "modelAnswer": {
+            "type": "diagnose",
+            "spine": [
+              "A flag rate isn't a quality metric",
+              "Rule out the fake metrics",
+              "Build an honest labelled sample",
+              "Measure precision and recall per harm",
+              "Set the threshold from the cost of errors",
+              "Monitor it like a model"
+            ]
+          }
+        },
+        {
+          "id": "ml-dl-q76",
+          "number": 76,
+          "marks": [
+            "decides"
+          ],
+          "text": "You need intent routing at 50k requests a minute under 20 ms. Would you use an LLM?",
+          "points": [],
+          "links": [],
+          "badge": "Evergreen — the architect's \"why not just use an LLM?\": size the model to the constraint.",
+          "modelAnswer": {
+            "type": "trade-off",
+            "spine": [
+              "Frame the axis",
+              "Where a small classifier wins",
+              "Where the LLM wins",
+              "The deciding question",
+              "What I'd pick here: a cascade"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

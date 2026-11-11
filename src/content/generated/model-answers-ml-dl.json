@@ -7504,5 +7504,358 @@
       }
     ],
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;legs, quantile, fresh\"]:::in\n        N2[\"2 · Why&lt;br/&gt;late costs more\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Legs&lt;br/&gt;prep, pickup, drive\"]:::step\n        N4[\"4 · Features&lt;br/&gt;streaming feature store\"]:::step\n        N5[\"5 · Loss&lt;br/&gt;pinball at p80\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Serving&lt;br/&gt;re-predict on events\"]:::step\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Watch&lt;br/&gt;on-time rate by segment\"]:::bad\n        NC([\"Close&lt;br/&gt;a calibrated promise\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "ml-dl-q74": {
+    "type": "concept",
+    "spine": [
+      "One neuron is logistic regression",
+      "Stack neurons, add nonlinearity",
+      "Learn the inputs too",
+      "Let the weights depend on the input",
+      "Where each step breaks",
+      "Why I tell it this way"
+    ],
+    "testing": "whether you see one idea growing (a learned weighted sum trained by gradient descent) or four topics you memorised separately.",
+    "trap": "reciting the transformer block diagram without connecting it to anything a classical model does.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>one idea, four steps</td>\n<td>\"Logistic regression to self-attention is one idea growing: a learned weighted sum, trained by gradient descent on cross-entropy. Each step removes one limit of the step before.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>three limits to fix</td>\n<td>\"Logistic regression draws only a straight boundary, needs hand-made features, and uses the same weights for every input. Deep learning removes those limits in turn.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · neuron</strong></td>\n<td>sigmoid of w·x + b</td>\n<td>\"Logistic regression is literally one neuron: a weighted sum through a sigmoid. Softmax extends it to many classes, with the same cross-entropy loss LLMs train on.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · stack</strong></td>\n<td>layers + nonlinearity</td>\n<td>\"Stack neurons in layers with a nonlinearity between them and you get an MLP. It learns its own features, and backprop trains it with the chain rule.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · embed</strong></td>\n<td>IDs → dense vectors</td>\n<td>\"For words or IDs, one-hot inputs are huge and carry no similarity. An embedding layer learns a dense vector per token, so similar things land close together.\"</td>\n</tr>\n<tr>\n<td><strong>6 · How · attend</strong></td>\n<td>weights from the input</td>\n<td>\"Attention makes the weights depend on the input. Each token scores every other token with a dot product, softmax turns scores into weights, then it averages.\"</td>\n</tr>\n<tr>\n<td><strong>7 · Watch · cost</strong></td>\n<td>O(n²), needs data</td>\n<td>\"The price is compute and data: attention is quadratic in sequence length, and all this capacity overfits without lots of data or pretraining.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>same loss, more learned</td>\n<td>\"So it's the same loss and the same optimiser throughout. What changes is how much of the model is learned instead of fixed.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "One neuron is logistic regression",
+        "claim": "same maths, newer name",
+        "html": "<p><strong>\"Logistic regression is a weighted sum pushed through a sigmoid. That's exactly one neuron.\"</strong></p>\n<pre><code class=\"language-text\">z = w·x + b                          ← weighted sum: the linear part\np = σ(z) = 1 / (1 + e^-z)            ← squash to a probability\nL = −[y log p + (1 − y) log(1 − p)]  ← binary cross-entropy, minimised by gradient descent\np = softmax(Wx + b)                  ← many classes: one row of W per class\n</code></pre>\n<ul>\n<li>The loss in the last-but-one line is the same objective an LLM minimises, once per next token.</li>\n<li><strong>Example:</strong> a churn model on 20 features is one neuron with 20 weights and a bias.</li>\n</ul>\n<p><strong>Why this matters:</strong> its limit is the straight decision boundary, and the next step removes it.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Stack neurons, add nonlinearity",
+        "claim": "the model learns its own features",
+        "html": "<p><strong>\"Put neurons in layers with a nonlinearity between them and the boundary can bend.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>MLP:</strong></span><span class=\"flow-step\">x</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">W₁x + b₁</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">ReLU</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">W₂h + b₂</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">softmax</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>p</strong></span></div>\n<pre><code class=\"language-text\">W₂(W₁x) = (W₂W₁)x     ← without the nonlinearity, two layers collapse into one\nh = ReLU(W₁x + b₁)    ← with it, h is a learned feature, not a hand-made one\n</code></pre>\n<ul>\n<li>Backprop is the chain rule carrying the same cross-entropy gradient back through each layer.</li>\n<li>The hidden layer replaces feature engineering: in logistic regression I'd build <code>age × tenure</code> myself.</li>\n</ul>\n<p><strong>Why this matters:</strong> the MLP still needs numeric inputs, and words or IDs aren't numbers.</p>"
+      },
+      {
+        "number": 3,
+        "name": "Learn the inputs too",
+        "claim": "embeddings turn IDs into vectors",
+        "html": "<p><strong>\"For tokens or IDs, the first layer becomes a lookup table the model learns.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>One-hot input</th>\n<th>Embedding</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Size</strong></td>\n<td>one dimension per vocabulary item, sparse</td>\n<td>a few hundred dense dimensions</td>\n</tr>\n<tr>\n<td><strong>Similarity</strong></td>\n<td>every pair equally far apart</td>\n<td>similar items land close together</td>\n</tr>\n<tr>\n<td><strong>Where it comes from</strong></td>\n<td>fixed</td>\n<td>learned by the same gradient descent</td>\n</tr>\n<tr>\n<td><strong>Verdict</strong></td>\n<td>fine for a handful of categories</td>\n<td>the default for words, products, users</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">e = onehot(token) · E    ← a lookup is just a matrix multiply that picks one row of E\n</code></pre>\n<p><strong>Example:</strong> product IDs in a recommender: the model learns that two phone cases sit near each other.</p>"
+      },
+      {
+        "number": 4,
+        "name": "Let the weights depend on the input",
+        "claim": "that&#39;s attention",
+        "html": "<p><strong>\"In an MLP the weights are fixed after training. In attention, the mixing weights are computed from the input itself.\"</strong></p>\n<pre><code class=\"language-text\">Q = XW_Q,  K = XW_K,  V = XW_V          ← three learned projections of the same embeddings\nscores  = QKᵀ / √d_k                    ← every token's dot product with every other token\nweights = softmax(scores)               ← the same softmax as stage 1, now over tokens\noutput  = weights · V                   ← a weighted average of the values\n</code></pre>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>MLP / logistic regression weight</th>\n<th>Attention weight</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Set by</strong></td>\n<td>training, then frozen</td>\n<td>the current input, on every call</td>\n</tr>\n<tr>\n<td><strong>Means</strong></td>\n<td>how much this feature matters</td>\n<td>how much this token should read that one</td>\n</tr>\n</tbody></table>\n<p><strong>Example:</strong> in \"the bank of the river\", <em>bank</em> attends to <em>river</em>, so its vector shifts away from money.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Where each step breaks",
+        "claim": "capacity is paid for in data and compute",
+        "html": "<p><strong>\"Each step learns more, and each one costs more.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Step</th>\n<th>What it fixes</th>\n<th>What it costs</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Logistic regression</strong></td>\n<td>fast, calibrated, explainable</td>\n<td>straight boundary, hand-made features</td>\n</tr>\n<tr>\n<td><strong>MLP</strong></td>\n<td>learns features</td>\n<td>more data, less explainable</td>\n</tr>\n<tr>\n<td><strong>Embeddings</strong></td>\n<td>similarity between IDs</td>\n<td>cold start for unseen IDs</td>\n</tr>\n<tr>\n<td><strong>Attention</strong></td>\n<td>context-dependent mixing</td>\n<td>O(n²) compute and memory in sequence length; huge data, so pretraining</td>\n</tr>\n</tbody></table>\n<p><strong>Why this matters:</strong> the cost column is why classical models still run the hot path in many AI systems (see Q76).</p>"
+      },
+      {
+        "number": 6,
+        "name": "Why I tell it this way",
+        "claim": "it maps onto what I build",
+        "html": "<p><strong>\"The RAG and routing systems I build use every step of this chain.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Intent router:</strong></span><span class=\"flow-step\">text</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">frozen encoder</span><span class=\"flow-arrow\" data-label=\"attention\"></span><span class=\"flow-step\">embedding</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>logistic regression head</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">intent</span></div>\n<ul>\n<li>The retriever's embedding model is stages 3 and 4.</li>\n<li>Cosine similarity in the vector store is stage 4's dot product on normalised vectors.</li>\n<li>A logistic-regression head on frozen embeddings is my first baseline for any text classifier.</li>\n</ul>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why does the network need a nonlinearity at all?",
+        "tag": "probe",
+        "html": "<p><strong>Without it, any stack of layers is still one linear model.</strong></p>\n<pre><code class=\"language-text\">W₃(W₂(W₁x)) = (W₃W₂W₁)x = Wx   ← one matrix, one straight boundary\n</code></pre>\n<p>The nonlinearity is what lets depth add expressive power (Q56).</p>"
+      },
+      {
+        "number": 2,
+        "question": "Isn&#39;t attention just a weighted average? Why is that powerful?",
+        "tag": "trap",
+        "html": "<p><strong>Yes, and the power is that the weights are recomputed for every input.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Fixed weights (MLP, CNN)</th>\n<th>Attention</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Which inputs mix</strong></td>\n<td>decided at training time</td>\n<td>decided per sequence</td>\n</tr>\n<tr>\n<td><strong>Order of tokens</strong></td>\n<td>built into the layout</td>\n<td>none; positions must be added</td>\n</tr>\n</tbody></table>\n<p>That's why transformers need positional encodings.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Why divide by √d_k?",
+        "tag": "probe",
+        "html": "<p><strong>So the dot products don't grow with dimension and saturate the softmax.</strong></p>\n<pre><code class=\"language-text\">q, k with unit-variance entries → Var(q·k) = d_k\ndivide by √d_k                  → Var = 1, softmax stays soft, gradients stay alive\n</code></pre>\n<p>Deeper detail lives in <span class=\"vault-ref\" title=\"04-LLM-FOUNDATIONS\">LLM-FOUNDATIONS</span> Q41.</p>"
+      },
+      {
+        "number": 4,
+        "question": "Where do decision trees fit in this story?",
+        "tag": "edge",
+        "html": "<p><strong>They don't, and that's the point.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Gradient-boosted trees</th>\n<th>This chain</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Trained by</strong></td>\n<td>greedy splits, boosting on residuals</td>\n<td>gradient descent end to end</td>\n</tr>\n<tr>\n<td><strong>Wins on</strong></td>\n<td>tabular data, mixed types</td>\n<td>text, images, IDs at scale</td>\n</tr>\n</tbody></table>\n<p>That's why boosted trees still beat deep models on most tabular problems (Q24).</p>"
+      },
+      {
+        "number": 5,
+        "question": "Is cosine similarity in a vector store the same as attention&#39;s dot product?",
+        "tag": "edge",
+        "html": "<p><strong>Same operation, different job.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Attention</th>\n<th>Vector search</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Compares</strong></td>\n<td>learned Q and K inside one sequence</td>\n<td>query and document embeddings</td>\n</tr>\n<tr>\n<td><strong>Then</strong></td>\n<td>softmax, mix the values</td>\n<td>rank, return top-k</td>\n</tr>\n</tbody></table>\n<p>With normalised vectors, cosine similarity equals the dot product.</p>"
+      },
+      {
+        "number": 6,
+        "question": "Would you ship logistic regression on top of a transformer?",
+        "tag": "senior",
+        "html": "<p><strong>Yes, often as the first version.</strong></p>\n<ul>\n<li><strong>Latency:</strong> milliseconds on a CPU once embeddings exist.</li>\n<li><strong>Cost:</strong> retrains in seconds when labels change.</li>\n<li><strong>Calibration:</strong> probabilities I can threshold and route on.</li>\n</ul>\n<p>I fine-tune the encoder only when the head plateaus on the eval set.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;Attention is all you need.&quot; — a paper title, not a mechanism.",
+      "&quot;Neural networks work like the brain.&quot; — true-ish and tells them nothing.",
+      "&quot;Logistic regression is a regression model.&quot; — it&#39;s a classifier; the name is history.",
+      "&quot;Transformers learn in a fundamentally different way.&quot; — same loss family, same optimiser family."
+    ],
+    "links": [
+      {
+        "label": "Logistic Regression",
+        "target": "01-ML/08-Classification Models/01-Logistic Regression"
+      },
+      {
+        "label": "Perceptron — Loss, Trick & Training",
+        "target": "02-DL/01-Foundations/02-Perceptron — Loss, Trick & Training"
+      },
+      {
+        "label": "Universal Approximation Theorem",
+        "target": "02-DL/01-Foundations/11-Universal Approximation Theorem"
+      },
+      {
+        "label": "Embeddings",
+        "target": "02-DL/01-Foundations/13-Embeddings"
+      },
+      {
+        "label": "Self Attention",
+        "target": "02-DL/03-Transformer Architecture Core/04-Self-Attention"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;one idea, four steps\"]:::in\n        N2[\"2 · Why&lt;br/&gt;three limits to fix\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Neuron&lt;br/&gt;sigmoid of w·x + b\"]:::calc\n        N4[\"4 · Stack&lt;br/&gt;layers + nonlinearity\"]:::step\n        N5[\"5 · Embed&lt;br/&gt;IDs → dense vectors\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L2b[\" \"]\n        direction LR\n        N6[\"6 · Attend&lt;br/&gt;weights from the input\"]:::calc\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N7[\"7 · Cost&lt;br/&gt;O(n²), needs data\"]:::bad\n        NC([\"Close&lt;br/&gt;same loss, more learned\"]):::ok\n        N7 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L2b --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
+  },
+  "ml-dl-q75": {
+    "type": "diagnose",
+    "spine": [
+      "A flag rate isn't a quality metric",
+      "Rule out the fake metrics",
+      "Build an honest labelled sample",
+      "Measure precision and recall per harm",
+      "Set the threshold from the cost of errors",
+      "Monitor it like a model"
+    ],
+    "testing": "whether you judge an LLM-era component with classical classification discipline, or by feel.",
+    "trap": "&quot;It blocks about 2%, which seems right&quot; or quoting accuracy.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>flag rate ≠ quality</td>\n<td>\"Two percent tells me how often it fires, not whether it's right. I'd measure precision and recall on labelled traffic, per harm category.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>both errors cost</td>\n<td>\"The two errors cost different things. A miss lets a jailbreak or a PII leak through; a false flag blocks a real user and erodes trust.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · sample</strong></td>\n<td>two labellers, kappa</td>\n<td>\"I'd label a production sample: oversample flagged traffic, sample unflagged traffic for misses, and have two people label it, checking agreement with Cohen's kappa.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · measure</strong></td>\n<td>P and R per harm</td>\n<td>\"Precision is how many flags were really bad; recall is how many bad requests we caught. Accuracy is useless, because most traffic is benign.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · threshold</strong></td>\n<td>cost sets the cut</td>\n<td>\"Then I set each threshold from cost: high recall for prompt injection and PII, higher precision where blocking hurts users, with a review band between.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch · drift</strong></td>\n<td>flag rate + fresh labels</td>\n<td>\"Attacks change, so I'd watch the flag rate and score distribution daily, and re-label a fresh sample every month to re-measure recall honestly.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>a number per harm</td>\n<td>\"Good means a precision and recall I can quote per harm, measured on real traffic, with a threshold that a named owner has signed off.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "A flag rate isn't a quality metric",
+        "claim": "it&#39;s an alarm, not a grade",
+        "html": "<p><strong>\"Two classifiers can both flag 2% and be completely different models.\"</strong></p>\n<pre><code class=\"language-text\">100,000 requests, 1,000 truly harmful                      ← illustrative\nA: flags 2,000 → 900 harmful   precision 45%   recall 90%  ← catches almost everything\nB: flags 2,000 → 300 harmful   precision 15%   recall 30%  ← mostly blocks real users\nsame 2% flag rate                                          ← the rate can't tell them apart\n</code></pre>\n<p><strong>Why this matters:</strong> quality needs ground truth, so the next step is labels.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Rule out the fake metrics",
+        "claim": "they all flatter the model",
+        "html": "<p><strong>\"Before I measure anything, I throw out the numbers that look good for the wrong reason.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>What it says here</th>\n<th>Verdict</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Accuracy</strong></td>\n<td>flagging nothing scores ~99%</td>\n<td>useless under imbalance</td>\n</tr>\n<tr>\n<td><strong>ROC-AUC</strong></td>\n<td>FPR's denominator is the huge benign class</td>\n<td>ranking only, hides false alarms</td>\n</tr>\n<tr>\n<td><strong>Vendor benchmark</strong></td>\n<td>measured on someone else's traffic</td>\n<td>a prior, not evidence</td>\n</tr>\n<tr>\n<td><strong>LLM-judge labels alone</strong></td>\n<td>the judge has its own biases</td>\n<td>calibrate against humans first</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Build an honest labelled sample",
+        "claim": "both sides of the flag, checked labels",
+        "html": "<p><strong>\"Misses only live in the unflagged traffic, so I sample both sides.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Sample:</strong></span><span class=\"flow-step\">prod traffic</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">split by flag</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">sample both sides</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">two labellers</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><strong>κ check</strong></span><span class=\"flow-arrow\"></span><span class=\"flow-step\">golden set</span></div>\n<pre><code class=\"language-text\">κ = (p_o − p_e) / (1 − p_e)    ← agreement beyond chance (Cohen's kappa)\nlow κ on a category             ← the policy is vague; fix the guideline before the model\n</code></pre>\n<ul>\n<li>Oversample flagged traffic, then reweight by sampling rate when estimating recall.</li>\n<li>Stratify by harm category, language and tenant.</li>\n</ul>"
+      },
+      {
+        "number": 4,
+        "name": "Measure precision and recall per harm",
+        "claim": "read the pattern, then act",
+        "html": "<p><strong>\"One number for 'safety' hides the category that's broken.\"</strong></p>\n<pre><code class=\"language-text\">precision = TP / (TP + FP)   ← of what I blocked, how much was really bad\nrecall    = TP / (TP + FN)   ← of what was bad, how much I caught\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Observation</th>\n<th>Likely cause</th>\n<th>Next action</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>High precision, low recall on jailbreaks</strong></td>\n<td>new attack phrasings not in training</td>\n<td>add red-team examples; add an LLM-judge second stage</td>\n</tr>\n<tr>\n<td><strong>Low precision on medical or legal questions</strong></td>\n<td>keys on topic words, not intent</td>\n<td>add hard negatives; per-category threshold</td>\n</tr>\n<tr>\n<td><strong>Good offline, users complain about blocks</strong></td>\n<td>sample missed a segment</td>\n<td>stratify by language and tenant, re-measure</td>\n</tr>\n<tr>\n<td><strong>Labellers disagree on one category</strong></td>\n<td>the policy itself is unclear</td>\n<td>rewrite the guideline, relabel</td>\n</tr>\n</tbody></table>\n<p><strong>Example:</strong> a medical assistant blocking every \"dosage\" question is a precision problem, not a safety win.</p>"
+      },
+      {
+        "number": 5,
+        "name": "Set the threshold from the cost of errors",
+        "claim": "one cut per harm",
+        "html": "<p><strong>\"The threshold is a business decision I make visible, not 0.5.\"</strong></p>\n<figure class=\"chart-fig\"><div class=\"vault-chart\" data-spec=\"{&quot;type&quot;:&quot;line&quot;,&quot;title&quot;:&quot;Precision and recall against threshold for one harm category&quot;,&quot;caption&quot;:&quot;Illustrative. Raising the threshold trades recall for precision; scores in the middle band go to review.&quot;,&quot;x&quot;:{&quot;label&quot;:&quot;threshold&quot;,&quot;domain&quot;:[0.1,0.9]},&quot;y&quot;:{&quot;label&quot;:&quot;score&quot;,&quot;unit&quot;:&quot;%&quot;,&quot;domain&quot;:[0,100]},&quot;series&quot;:[{&quot;name&quot;:&quot;recall&quot;,&quot;tone&quot;:&quot;warn&quot;,&quot;points&quot;:[[0.1,98],[0.3,94],[0.5,85],[0.7,68],[0.9,40]]},{&quot;name&quot;:&quot;precision&quot;,&quot;tone&quot;:&quot;primary&quot;,&quot;points&quot;:[[0.1,20],[0.3,38],[0.5,58],[0.7,78],[0.9,93]]}],&quot;annotations&quot;:[{&quot;kind&quot;:&quot;region&quot;,&quot;from&quot;:0.35,&quot;to&quot;:0.7,&quot;label&quot;:&quot;review band&quot;},{&quot;kind&quot;:&quot;vline&quot;,&quot;x&quot;:0.7,&quot;label&quot;:&quot;auto-block\\nabove here&quot;}]}\"></div><figcaption>Illustrative. Raising the threshold trades recall for precision; scores in the middle band go to review.</figcaption></figure>\n<table>\n<thead>\n<tr>\n<th>Harm</th>\n<th>Favour</th>\n<th>Policy</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Prompt injection, PII leak</strong></td>\n<td>recall</td>\n<td>low threshold, block</td>\n</tr>\n<tr>\n<td><strong>Toxic user input</strong></td>\n<td>balance</td>\n<td>block high, review the middle</td>\n</tr>\n<tr>\n<td><strong>Off-topic, sensitive advice</strong></td>\n<td>precision</td>\n<td>high threshold, warn rather than block</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 6,
+        "name": "Monitor it like a model",
+        "claim": "attacks drift, so recall decays",
+        "html": "<p><strong>\"A guardrail measured once is already out of date.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Loop:</strong></span><span class=\"flow-step\">daily flag rate and score histogram</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">alert on shift</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">fresh labelled sample</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">re-measure P/R</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">retrain or re-threshold</span></div>\n<ul>\n<li>Log the score, not just the decision, so a new threshold can be replayed on history.</li>\n<li>User appeals and overrides are a free precision signal.</li>\n<li>The red-team set runs as a regression test in CI.</li>\n</ul>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "How big does the labelled sample need to be?",
+        "tag": "senior",
+        "html": "<p><strong>Big enough in harmful examples, not in total traffic, because recall is measured on positives.</strong></p>\n<pre><code class=\"language-text\">SE ≈ √(p(1 − p) / n)              ← standard error of a proportion\nrecall 0.9, n = 100 harmful        → SE ≈ 0.03 → about ±6 points at 95%\n</code></pre>\n<p>To tighten that, I sample more of the flagged side and the high-score unflagged band.</p>"
+      },
+      {
+        "number": 2,
+        "question": "Can&#39;t an LLM-as-judge label the sample instead of humans?",
+        "tag": "trap",
+        "html": "<p><strong>For volume, yes, but only after it agrees with humans.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Validate:</strong></span><span class=\"flow-step\">humans label 200</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">judge labels the same 200</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">κ(judge, human)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">close to human–human κ? scale up</span></div>\n<p>The judge-trust details are in <span class=\"vault-ref\" title=\"09-AI-SAFETY-SECURITY-QUALITY\">AI-SAFETY-SECURITY-QUALITY</span> Q2.</p>"
+      },
+      {
+        "number": 3,
+        "question": "Why is PR better than ROC here?",
+        "tag": "probe",
+        "html": "<p><strong>PR has the positives in its denominator, so it shows false alarms that ROC hides.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>ROC curve</th>\n<th>PR curve</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Uses</strong></td>\n<td>TPR against FPR = FP / all negatives</td>\n<td>precision against recall</td>\n</tr>\n<tr>\n<td><strong>At 1% positives</strong></td>\n<td>looks great: FPR stays tiny</td>\n<td>shows the false-alarm flood</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "The flag rate jumped from 2% to 6% overnight. What happened?",
+        "tag": "edge",
+        "html": "<p><strong>Either the traffic changed or the model did; I check which first.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Observation</th>\n<th>Likely cause</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Flags concentrated on one tenant or category</strong></td>\n<td>a real attack, or a new customer's use case</td>\n</tr>\n<tr>\n<td><strong>Score distribution shifted everywhere</strong></td>\n<td>model version or preprocessing change</td>\n</tr>\n<tr>\n<td><strong>Flags on repeated template text</strong></td>\n<td>a product change put new text in the prompt</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "One threshold, or one per category?",
+        "tag": "probe",
+        "html": "<p><strong>One per category, because each harm has a different cost of error.</strong></p>\n<ul>\n<li><strong>Calibration</strong> differs by category, so one cut means different precision for each.</li>\n<li><strong>Ownership:</strong> each threshold gets a named owner who signs it off.</li>\n</ul>"
+      },
+      {
+        "number": 6,
+        "question": "Precision 95%, recall 60% on prompt injection. Ship it?",
+        "tag": "senior",
+        "html": "<p><strong>Not as the only defence.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Layer</th>\n<th>Covers what the classifier misses</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Least privilege on tools</strong></td>\n<td>limits the damage of a miss</td>\n</tr>\n<tr>\n<td><strong>Output checks</strong></td>\n<td>catches leaks after generation</td>\n</tr>\n<tr>\n<td><strong>Human approval on risky actions</strong></td>\n<td>stops the irreversible ones</td>\n</tr>\n</tbody></table>\n<p>More in <span class=\"vault-ref\" title=\"09-AI-SAFETY-SECURITY-QUALITY\">AI-SAFETY-SECURITY-QUALITY</span> Q5.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;It flags about 2%, which seems right.&quot; — a rate isn&#39;t a grade.",
+      "&quot;Accuracy is 98%.&quot; — a classifier that flags nothing scores higher.",
+      "&quot;We trust the vendor&#39;s benchmark.&quot; — it was measured on someone else&#39;s traffic.",
+      "&quot;The LLM judge labelled everything, so the numbers are solid.&quot; — not until it agrees with humans."
+    ],
+    "links": [
+      {
+        "label": "Classification Metrics",
+        "target": "01-ML/08-Classification Models/03-Classification Metrics"
+      },
+      {
+        "label": "Metric Selection & Threshold Tuning",
+        "target": "01-ML/08-Classification Models/04-Metric Selection & Threshold Tuning"
+      },
+      {
+        "label": "Imbalanced Data — Class Weights, SMOTE ADASYN, Undersampling, Cost Sensitive Learning",
+        "target": "01-ML/11-Model Selection, Validation & Tuning/07-Imbalanced Data — Class Weights, SMOTE-ADASYN, Undersampling, Cost-Sensitive Learning"
+      },
+      {
+        "label": "Guardrail models & classifiers",
+        "target": "08-Prompt-engineering/10-Safety, Security & Adversarial Prompting/98-Guardrail models & classifiers"
+      },
+      {
+        "label": "Guardrails",
+        "target": "03-Agentic-AI/10-Safety, Security & Guardrails/09-Guardrails"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;flag rate ≠ quality\"]:::in\n        N2[\"2 · Why&lt;br/&gt;both errors cost\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Sample&lt;br/&gt;two labellers, kappa\"]:::step\n        N4[\"4 · Measure&lt;br/&gt;P and R per harm\"]:::calc\n        N5[\"5 · Threshold&lt;br/&gt;cost sets the cut\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Drift&lt;br/&gt;flag rate + fresh labels\"]:::ask\n        NC([\"Close&lt;br/&gt;a number per harm\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n</div></figure>"
+  },
+  "ml-dl-q76": {
+    "type": "trade-off",
+    "spine": [
+      "Frame the axis",
+      "Where a small classifier wins",
+      "Where the LLM wins",
+      "The deciding question",
+      "What I'd pick here: a cascade"
+    ],
+    "testing": "whether you size the model to the constraint instead of reaching for the most capable one.",
+    "trap": "&quot;Yes, a small fast LLM&quot; without doing the latency and volume arithmetic.",
+    "speakTime": "~90 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th># · Beat</th>\n<th>Cue</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · What</strong></td>\n<td>not on the hot path</td>\n<td>\"Not on the hot path. At that volume and budget I'd route with a small classifier, and use an LLM only for the cases it can't decide.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Why</strong></td>\n<td>833 req/s, 20 ms</td>\n<td>\"Fifty thousand a minute is about 833 requests a second, and a hosted LLM call alone takes hundreds of milliseconds. The budget rules it out first.\"</td>\n</tr>\n<tr>\n<td><strong>3 · How · classify</strong></td>\n<td>embed → logistic head</td>\n<td>\"The router embeds the request with a small encoder and puts logistic regression or a boosted model on top. That runs in milliseconds on a CPU.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How · fallback</strong></td>\n<td>low confidence → LLM</td>\n<td>\"When the classifier's top probability is below a threshold, the request goes to an LLM with a looser budget. That's usually a small slice.\"</td>\n</tr>\n<tr>\n<td><strong>5 · How · learn</strong></td>\n<td>LLM labels → retrain</td>\n<td>\"The LLM's decisions become training labels, so the classifier learns new intents and the fallback share shrinks over time.\"</td>\n</tr>\n<tr>\n<td><strong>6 · Watch · unknowns</strong></td>\n<td>calibration, new intents</td>\n<td>\"The risks are a confidently wrong classifier and intents it has never seen, so I calibrate it and watch fallback rate and per-intent accuracy.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>cheapest that meets SLA</td>\n<td>\"So I ship the cheapest model that meets the latency and accuracy target, and let the LLM handle the long tail it's genuinely better at.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Frame the axis",
+        "claim": "latency and volume decide before quality does",
+        "html": "<p><strong>\"I do the arithmetic before I pick a model.\"</strong></p>\n<pre><code class=\"language-text\">50,000 req/min ÷ 60          ≈ 833 req/s                ← sustained load\nbudget                       = 20 ms per request        ← the router sits on every request\nhosted LLM call              ≈ 200–800 ms (illustrative) ← 10–40× over budget\n72M req/day × 200 tokens     = 14.4B input tokens/day   ← computed; assumes a 200-token prompt\n</code></pre>\n<p><strong>Why this matters:</strong> the LLM can't sit on the hot path, so the real question is where it does belong.</p>"
+      },
+      {
+        "number": 2,
+        "name": "Where a small classifier wins",
+        "claim": "fixed intents, heavy traffic",
+        "html": "<p><strong>\"For a known set of intents at this volume, a classifier on embeddings is the default to beat.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Embeddings + logistic regression / XGBoost</th>\n<th>LLM</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Latency</strong></td>\n<td>a few ms on CPU</td>\n<td>hundreds of ms</td>\n</tr>\n<tr>\n<td><strong>Cost per call</strong></td>\n<td>near zero</td>\n<td>per token, every call</td>\n</tr>\n<tr>\n<td><strong>Same input, same output</strong></td>\n<td>yes</td>\n<td>varies with sampling and model version</td>\n</tr>\n<tr>\n<td><strong>Confidence</strong></td>\n<td>calibratable probabilities to threshold</td>\n<td>no reliable confidence for free</td>\n</tr>\n<tr>\n<td><strong>Needs</strong></td>\n<td>labelled examples per intent</td>\n<td>a prompt and a few examples</td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>intents are stable and traffic is high</td>\n<td>see stage 3</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where the LLM wins",
+        "claim": "few labels, open or changing intents",
+        "html": "<p><strong>\"The LLM wins wherever labels are scarce or the label set keeps moving.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Situation</th>\n<th>Why the LLM wins</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Cold start</strong></td>\n<td>no labelled data yet; a prompt works on day one</td>\n</tr>\n<tr>\n<td><strong>Changing taxonomy</strong></td>\n<td>new intents or tools weekly: edit a prompt, don't retrain</td>\n</tr>\n<tr>\n<td><strong>Hard inputs</strong></td>\n<td>long, multi-intent or ambiguous requests</td>\n</tr>\n<tr>\n<td><strong>More than a label</strong></td>\n<td>arguments must be extracted too: slot filling, not classification</td>\n</tr>\n</tbody></table>\n<p><strong>Example:</strong> an ops assistant that gains new tools weekly; retraining a classifier each time lags behind.</p>"
+      },
+      {
+        "number": 4,
+        "name": "The deciding question",
+        "claim": "what does a wrong route cost, and how stable are the intents?",
+        "html": "<p><strong>\"Two questions decide it: the latency budget, and how often the intent set changes.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Question</th>\n<th>If yes</th>\n<th>If no</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Is the budget under ~100 ms at high volume?</strong></td>\n<td>classifier on the hot path</td>\n<td>an LLM router is affordable</td>\n</tr>\n<tr>\n<td><strong>Do I have labelled data?</strong></td>\n<td>train the classifier now</td>\n<td>let the LLM label first</td>\n</tr>\n<tr>\n<td><strong>Do intents change often?</strong></td>\n<td>keep an LLM fallback for the tail</td>\n<td>the classifier alone may do</td>\n</tr>\n<tr>\n<td><strong>Is a wrong route expensive?</strong></td>\n<td>lower auto-route threshold, more fallback</td>\n<td>route aggressively</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "name": "What I'd pick here: a cascade",
+        "claim": "classifier first, LLM for the tail",
+        "html": "<p><strong>\"The classifier takes the confident majority; the LLM takes the rest and teaches the classifier.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Hot path:</strong></span><span class=\"flow-step\">request</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">embed + classifier</span><span class=\"flow-arrow\" data-label=\"confident\"></span><span class=\"flow-step\"><strong>route</strong></span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Tail:</strong></span><span class=\"flow-step\">low confidence</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">LLM, async or looser budget</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">route</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">store as a label</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">retrain</span></div>\n<table>\n<thead>\n<tr>\n<th>Metric</th>\n<th>Why I watch it</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Fallback share</strong></td>\n<td>should fall over time as the classifier learns</td>\n</tr>\n<tr>\n<td><strong>Per-intent accuracy</strong></td>\n<td>an average hides the intent that's failing</td>\n</tr>\n<tr>\n<td><strong>p99 latency including fallback</strong></td>\n<td>the SLA is end to end</td>\n</tr>\n</tbody></table>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "Why not a small open-weight LLM on your own GPUs?",
+        "tag": "trap",
+        "html": "<p><strong>Possible, but it costs more than a classifier for the same label.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Self-hosted small LLM</th>\n<th>Classifier on embeddings</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Hardware for ~833 req/s</strong></td>\n<td>a GPU fleet with batching</td>\n<td>CPUs</td>\n</tr>\n<tr>\n<td><strong>Confidence to threshold on</strong></td>\n<td>needs extra work</td>\n<td>calibrated probabilities</td>\n</tr>\n</tbody></table>\n<p>Worth it only if the classifier can't reach the accuracy target.</p>"
+      },
+      {
+        "number": 2,
+        "question": "How do you pick the confidence threshold?",
+        "tag": "probe",
+        "html": "<p><strong>From the accuracy I need on the auto-routed slice and the fallback I can afford.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Threshold</th>\n<th>Fallback share</th>\n<th>Auto-routed accuracy</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>0.5</td>\n<td>low</td>\n<td>lowest</td>\n</tr>\n<tr>\n<td><strong>0.7</strong></td>\n<td><strong>moderate</strong></td>\n<td><strong>meets target</strong></td>\n</tr>\n<tr>\n<td>0.9</td>\n<td>high</td>\n<td>highest</td>\n</tr>\n</tbody></table>\n<p>Illustrative shape; I read the real numbers off a calibrated model on a held-out set.</p>"
+      },
+      {
+        "number": 3,
+        "question": "What if there&#39;s no labelled data yet?",
+        "tag": "edge",
+        "html": "<p><strong>Let the LLM label first.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Bootstrap:</strong></span><span class=\"flow-step\">LLM routes in shadow</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">humans check a sample</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">train the classifier</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">classifier takes the hot path</span></div>"
+      },
+      {
+        "number": 4,
+        "question": "A brand-new intent appears. What happens?",
+        "tag": "edge",
+        "html": "<p><strong>The classifier forces it into the nearest known intent, sometimes confidently. That's the failure to design for.</strong></p>\n<ul>\n<li><strong>\"Other\" class</strong> trained on out-of-scope examples.</li>\n<li><strong>Distance check:</strong> far from every intent's centroid → fallback.</li>\n<li><strong>Alarm:</strong> daily fallback share and \"other\" rate.</li>\n</ul>"
+      },
+      {
+        "number": 5,
+        "question": "How is this different from LLM model routing?",
+        "tag": "probe",
+        "html": "<p><strong>Same cascade idea, different decision.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Intent routing</th>\n<th>Model routing</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Decides</strong></td>\n<td>which handler or tool</td>\n<td>which model size answers</td>\n</tr>\n<tr>\n<td><strong>Cost of a miss</strong></td>\n<td>wrong workflow</td>\n<td>weaker answer or wasted spend</td>\n</tr>\n</tbody></table>\n<p>Model routing is covered in <span class=\"vault-ref\" title=\"08-LLM-SERVING-INFERENCE\">LLM-SERVING-INFERENCE</span> Q13.</p>"
+      },
+      {
+        "number": 6,
+        "question": "How do you prove the cascade is good enough?",
+        "tag": "senior",
+        "html": "<p><strong>Measure it end to end, not stage by stage.</strong></p>\n<ul>\n<li><strong>Routed accuracy</strong> on a labelled sample of real traffic.</li>\n<li><strong>p99 latency</strong> including the fallback path.</li>\n<li><strong>Cost per 1,000 requests</strong> against the LLM-only baseline.</li>\n</ul>"
+      }
+    ],
+    "dontSay": [
+      "&quot;LLMs are fast enough now.&quot; — not before you&#39;ve done the arithmetic.",
+      "&quot;Classical ML is outdated.&quot; — it runs the hot path of most AI systems.",
+      "&quot;We&#39;ll use the LLM&#39;s confidence.&quot; — LLMs don&#39;t give calibrated confidence for free.",
+      "&quot;The classifier is 95% accurate, done.&quot; — check per intent and unseen intents."
+    ],
+    "links": [
+      {
+        "label": "Logistic Regression",
+        "target": "01-ML/08-Classification Models/01-Logistic Regression"
+      },
+      {
+        "label": "Probability Calibration",
+        "target": "01-ML/08-Classification Models/05-Probability Calibration"
+      },
+      {
+        "label": "XGBoost",
+        "target": "01-ML/09-Ensemble Methods/05-XGBoost"
+      },
+      {
+        "label": "Model routing by difficulty",
+        "target": "08-Prompt-engineering/12-Production Prompt Systems/115-Model routing by difficulty"
+      },
+      {
+        "label": "When DL is the Wrong Choice",
+        "target": "02-DL/09-diagnostics & engineering Judgement/05-When DL is the Wrong Choice"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph L1[\"WHAT · WHY\"]\n        direction LR\n        N1[\"1 · What&lt;br/&gt;not on the hot path\"]:::in\n        N2[\"2 · Why&lt;br/&gt;833 req/s, 20 ms\"]:::in\n        N1 --&gt; N2\n    end\n    subgraph L2[\"HOW\"]\n        direction LR\n        N3[\"3 · Classify&lt;br/&gt;embed → logistic head\"]:::step\n        N4[\"4 · Fallback&lt;br/&gt;low confidence → LLM\"]:::step\n        N5[\"5 · Learn&lt;br/&gt;LLM labels → retrain\"]:::step\n        N3 --&gt; N4 --&gt; N5\n    end\n    subgraph L3[\"WATCH · CLOSE\"]\n        direction LR\n        N6[\"6 · Unknowns&lt;br/&gt;calibration, new intents\"]:::bad\n        NC([\"Close&lt;br/&gt;cheapest that meets SLA\"]):::ok\n        N6 --&gt; NC\n    end\n    L1 --&gt; L2 --&gt; L3\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n</div></figure>"
   }
 }
