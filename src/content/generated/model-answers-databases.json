@@ -5910,5 +5910,108 @@
     ],
     "warning": "The story bank (<span class=\"vault-ref\" title=\"16-PROJECT-STORIES\">PROJECT-STORIES</span> S4) records four facts: the cv-parser service was repeatedly OOM-killed in production; the cause was algorithmic, not a leak; it was a Cartesian product in the matching path; the fix was deduplication. Everything else here is a <code>&lt;fill: …&gt;</code> slot: how you found it, where the product was formed, and every number. Don&#39;t say one you didn&#39;t measure.",
     "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · The decision it&lt;br/&gt;served&lt;br/&gt;more memory, or the&lt;br/&gt;cause\"]):::step\n        N2[\"2 · The constraint&lt;br/&gt;production only\"]:::calc\n        N3[\"3 · Options weighed&lt;br/&gt;limit, stream, or fix\"]:::step\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · What I built&lt;br/&gt;find the multiplication,&lt;br/&gt;remove it\"]:::step\n        N5[\"5 · What broke&lt;br/&gt;the wrong turn, and the&lt;br/&gt;guard\"]:::step\n        N6([\"6 · The number&lt;br/&gt;before and after\"]):::ok\n        N4 --&gt; N5 --&gt; N6\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
+  },
+  "databases-q57": {
+    "type": "concept",
+    "spine": [
+      "Plain definition",
+      "Mechanism",
+      "Where it breaks",
+      "How I'd use it",
+      "Adjacent concept"
+    ],
+    "testing": "that you match an index type to the operator in the query, and know what a multi-valued column costs to index.",
+    "trap": "a GIN on the JSONB column, then filtering with <code>meta-&gt;&gt;&#39;key&#39; = &#39;value&#39;</code>, which it can&#39;t serve.",
+    "speakTime": "~75 s",
+    "spoken": "<table>\n<thead>\n<tr>\n<th>Beat</th>\n<th>Say</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>1 · Plain definition</strong></td>\n<td>\"GIN, the Generalized Inverted Index, is Postgres's inverted index. A B-tree maps a row's whole value to the row. GIN maps every element inside a value, each JSON key and value, each array item, each word, to the list of rows that contain it. It answers 'which rows contain X'.\"</td>\n</tr>\n<tr>\n<td><strong>2 · Mechanism</strong></td>\n<td>\"One row produces many keys, and each key points at a list of row ids. A query like 'metadata contains pii true' or 'tags contain legal' looks up the key, intersects the lists, builds a bitmap of pages, reads only those pages and rechecks the condition.\"</td>\n</tr>\n<tr>\n<td><strong>3 · Where it breaks</strong></td>\n<td>\"It only serves its operators: containment, key existence, overlap, full-text match. Plain equality on an extracted field isn't one of them, so that's a sequential scan. A value most rows contain still loses to a scan. And writes are expensive, so Postgres parks new entries in a pending list that every search has to read until vacuum merges it.\"</td>\n</tr>\n<tr>\n<td><strong>4 · How I'd use it</strong></td>\n<td>\"On a RAG chunk table: GIN with jsonb_path_ops for metadata filters, GIN on a tsvector column for keyword search, a trigram GIN for fuzzy entity lookup. I confirm a bitmap index scan in the plan and watch the pending list on write-heavy tables.\"</td>\n</tr>\n<tr>\n<td><strong>5 · Adjacent concept</strong></td>\n<td>\"GiST is the cousin for overlap and nearest-neighbour on ranges and geometry; BRIN is for append-only timestamps; and HNSW for vectors is a graph, not an inverted index.\"</td>\n</tr>\n<tr>\n<td><strong>Close</strong></td>\n<td>\"GIN maps elements to rows, for multi-valued columns. Check the operator, and pay for it on writes.\"</td>\n</tr>\n</tbody></table>",
+    "stages": [
+      {
+        "number": 1,
+        "name": "Plain definition",
+        "claim": "element → rows that contain it",
+        "html": "<p><strong>\"A B-tree indexes a value; GIN indexes what's inside it.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>B-tree</th>\n<th>GIN</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Key</strong></td>\n<td>the whole column value</td>\n<td>each element extracted from the value</td>\n</tr>\n<tr>\n<td><strong>Entries per row</strong></td>\n<td>one</td>\n<td>many (every key, item, lexeme or trigram)</td>\n</tr>\n<tr>\n<td><strong>Answers</strong></td>\n<td><code>=</code>, <code>&lt;</code>, <code>&gt;</code>, ranges, <code>ORDER BY</code></td>\n<td>\"contains\", \"has key\", \"overlaps\", \"matches\"</td>\n</tr>\n<tr>\n<td><strong>Typical columns</strong></td>\n<td>ids, timestamps, status</td>\n<td><code>jsonb</code>, arrays, <code>tsvector</code>, text with <code>pg_trgm</code></td>\n</tr>\n</tbody></table>\n<table>\n<thead>\n<tr>\n<th>Column type</th>\n<th>Operator class</th>\n<th>Operators served</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>jsonb</code></strong></td>\n<td><code>jsonb_ops</code> (default)</td>\n<td><code>@&gt;</code> <code>?</code> `?</td>\n</tr>\n<tr>\n<td><strong><code>jsonb</code></strong></td>\n<td><code>jsonb_path_ops</code></td>\n<td><code>@&gt;</code> <code>@?</code> <code>@@</code></td>\n</tr>\n<tr>\n<td><strong>arrays</strong></td>\n<td><code>array_ops</code></td>\n<td><code>@&gt;</code> <code>&lt;@</code> <code>&amp;&amp;</code> <code>=</code></td>\n</tr>\n<tr>\n<td><strong><code>tsvector</code></strong></td>\n<td><code>tsvector_ops</code></td>\n<td><code>@@</code></td>\n</tr>\n<tr>\n<td><strong><code>text</code></strong> (with <code>pg_trgm</code>)</td>\n<td><code>gin_trgm_ops</code></td>\n<td><code>LIKE</code> <code>ILIKE</code> <code>~</code> <code>%</code> (similarity)</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "name": "Mechanism",
+        "claim": "posting lists, bitmap, recheck",
+        "html": "<p><strong>\"Look up the key, collect row ids, read only those pages.\"</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Write:</strong></span><span class=\"flow-step\">row</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">extract keys (<code>source:pdf</code>, <code>pii:true</code>, …)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">add the row id to each key's posting list</span></div><div class=\"flow-chain\"><span class=\"flow-label\"><strong>Read:</strong></span><span class=\"flow-step\">query keys</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">fetch their posting lists</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">intersect</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">bitmap of pages</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">read pages</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">recheck</span></div>\n<p>Run on PostgreSQL 16.15, 200,000 chunks, <code>meta @&gt; '{\"pii\": true}'</code> matching 200 rows:</p>\n<pre><code class=\"language-text\">-- no index\nSeq Scan on chunks (actual rows=200 loops=1)\n  Filter: (meta @&gt; '{\"pii\": true}'::jsonb)\n  Rows Removed by Filter: 199800\n  Buffers: shared hit=6314\n\n-- GIN (jsonb_path_ops)\nBitmap Heap Scan on chunks (actual rows=200 loops=1)\n  Recheck Cond: (meta @&gt; '{\"pii\": true}'::jsonb)\n  Buffers: shared hit=203\n  -&gt;  Bitmap Index Scan on chunks_meta_path (actual rows=200 loops=1)\n        Buffers: shared hit=3\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Same table</th>\n<th>Plan</th>\n<th>Pages</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>tags @&gt; array['legal']</code></strong>, GIN on <code>tags</code></td>\n<td>Bitmap Index Scan</td>\n<td>202</td>\n</tr>\n<tr>\n<td><strong><code>body_tsv @@ to_tsquery('indemnification')</code></strong>, GIN on <code>tsvector</code></td>\n<td>Bitmap Index Scan (<code>'indemnif'</code>)</td>\n<td>104</td>\n</tr>\n<tr>\n<td><strong><code>tenant_id = 0 AND tags @&gt; …</code></strong>, <code>btree_gin</code> on <code>(tenant_id, tags)</code></td>\n<td>one Bitmap Index Scan, both conditions</td>\n<td>—</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 3,
+        "name": "Where it breaks",
+        "claim": "wrong operator, pending list, write cost",
+        "html": "<p><strong>\"Three ways a GIN index doesn't help.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Break</th>\n<th>Run on PostgreSQL 16.15</th>\n<th>Fix</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>meta-&gt;&gt;'pii' = 'true'</code></strong></td>\n<td>Seq Scan, 199,800 rows removed</td>\n<td><code>meta @&gt; '{\"pii\": true}'</code>, or a B-tree on <code>(meta-&gt;&gt;'pii')</code></td>\n</tr>\n<tr>\n<td><strong><code>meta ? 'reviewed_by'</code> with only <code>jsonb_path_ops</code></strong></td>\n<td>Seq Scan</td>\n<td><code>jsonb_ops</code>, which has key-existence</td>\n</tr>\n<tr>\n<td><strong>A value 98% of rows contain</strong> (<code>lang = en</code>)</td>\n<td>Seq Scan, the planner is right</td>\n<td>nothing: low selectivity (Q21)</td>\n</tr>\n<tr>\n<td><strong>Searching while the pending list is full</strong></td>\n<td>493 index buffers vs <strong>2</strong> after <code>VACUUM</code></td>\n<td>autovacuum, <code>gin_clean_pending_list()</code>, or <code>fastupdate = off</code></td>\n</tr>\n</tbody></table>\n<p><strong>Write cost.</strong> 100,000 rows inserted in 500-row batches into a table with three GIN indexes (<code>meta</code>, <code>tags</code>, <code>tsvector</code>):</p>\n<table>\n<thead>\n<tr>\n<th>Table</th>\n<th>WAL written</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>No GIN indexes</strong></td>\n<td>27 MB</td>\n</tr>\n<tr>\n<td><strong>GIN, <code>fastupdate = on</code></strong> (default)</td>\n<td>105 MB</td>\n</tr>\n<tr>\n<td><strong>GIN, <code>fastupdate = off</code></strong></td>\n<td>221 MB</td>\n</tr>\n</tbody></table>\n<pre><code class=\"language-text\">fastupdate on  → new entries go to an unsorted pending list (limit: gin_pending_list_limit, default 4MB)\n               → cheap writes, but every search scans the list until vacuum or the limit merges it\nfastupdate off → each insert updates the main tree: steadier reads, about 2× the WAL here\n</code></pre>"
+      },
+      {
+        "number": 4,
+        "name": "How I'd use it",
+        "claim": "metadata, keywords, fuzzy lookup",
+        "html": "<p><strong>\"Three GIN indexes on a RAG chunk table, each for one operator.\"</strong></p>\n<pre><code class=\"language-sql\">-- PostgreSQL 16\nCREATE INDEX chunks_meta  ON chunks USING gin (meta jsonb_path_ops);   -- meta @&gt; '{\"source\":\"pdf\"}'\nCREATE INDEX chunks_fts   ON chunks USING gin (body_tsv);              -- body_tsv @@ to_tsquery(...)\nCREATE INDEX chunks_trgm  ON chunks USING gin (body gin_trgm_ops);     -- body ILIKE '%indemnif%'\nCREATE INDEX chunks_doc   ON chunks ((meta-&gt;&gt;'doc_id'));               -- one hot key: B-tree\n</code></pre>\n<table>\n<thead>\n<tr>\n<th>Index</th>\n<th>Size on 200k rows</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>table</td>\n<td>49 MB</td>\n</tr>\n<tr>\n<td><strong><code>jsonb_ops</code></strong></td>\n<td>2.6 MB</td>\n</tr>\n<tr>\n<td><strong><code>jsonb_path_ops</code></strong></td>\n<td>1.8 MB</td>\n</tr>\n<tr>\n<td><strong><code>tsvector</code></strong></td>\n<td>12 MB</td>\n</tr>\n<tr>\n<td><strong>trigram</strong></td>\n<td>10 MB</td>\n</tr>\n</tbody></table>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Check:</strong></span><span class=\"flow-step\">write the predicate in the operator the index serves</span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><code>EXPLAIN (ANALYZE, BUFFERS)</code> shows a Bitmap Index Scan</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">on write-heavy tables, watch <code>pgstatginindex()</code> pending pages and insert latency</span></div>"
+      },
+      {
+        "number": 5,
+        "name": "Adjacent concept",
+        "claim": "GiST, BRIN, and HNSW is not GIN",
+        "html": "<p><strong>\"Pick the index by the operator, not by the column.\"</strong></p>\n<table>\n<thead>\n<tr>\n<th>Need</th>\n<th>Index</th>\n<th>Why</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>\"contains\", \"has key\", \"matches\"</strong></td>\n<td>GIN</td>\n<td>exact, fast reads, expensive writes</td>\n</tr>\n<tr>\n<td><strong>overlap, nearest, ranges, geometry, exclusion</strong></td>\n<td>GiST</td>\n<td>lossy tree; cheaper to update than GIN</td>\n</tr>\n<tr>\n<td><strong>time range on an append-only table</strong></td>\n<td>BRIN</td>\n<td>24 kB vs 43 MB B-tree on 2M rows (run, Q58)</td>\n</tr>\n<tr>\n<td><strong>nearest embedding</strong></td>\n<td>HNSW / IVFFlat (pgvector)</td>\n<td>a graph or clusters, approximate</td>\n</tr>\n</tbody></table>\n<p>Fix layer: <em>index type</em>, chosen by the <em>operator</em> in the predicate.</p>"
+      }
+    ],
+    "followUps": [
+      {
+        "number": 1,
+        "question": "&quot;Put a GIN on the JSONB column and every JSON query is fast.&quot;",
+        "tag": "trap",
+        "html": "<p><strong>Only queries written with its operators.</strong></p>\n<table>\n<thead>\n<tr>\n<th>Predicate</th>\n<th>GIN on <code>meta</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>meta @&gt; '{\"source\":\"pdf\"}'</code></strong></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong><code>meta ? 'reviewed_by'</code></strong></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> with <code>jsonb_ops</code> only</td>\n</tr>\n<tr>\n<td><strong><code>meta-&gt;&gt;'source' = 'pdf'</code></strong></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> Seq Scan</td>\n</tr>\n<tr>\n<td><strong><code>(meta-&gt;&gt;'score')::float &gt; 0.8</code></strong></td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z\"></path></svg> needs an expression B-tree</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 2,
+        "question": "🧪 There&#39;s a GIN on . Why does  still scan?",
+        "tag": "meta",
+        "html": "<p><strong><code>-&gt;&gt;</code> then <code>=</code> is text equality; GIN has no entry for it.</strong></p>\n<pre><code class=\"language-text\">Seq Scan on chunks (actual rows=200 loops=1)\n  Filter: ((meta -&gt;&gt; 'pii'::text) = 'true'::text)\n  Rows Removed by Filter: 199800\nrewrite: meta @&gt; '{\"pii\": true}'  → Bitmap Index Scan on chunks_meta_path, 3 index pages\n</code></pre>\n<p>Mind the JSON type: <code>{\"pii\": true}</code> (boolean) won't match a stored <code>\"true\"</code> (string).</p>"
+      },
+      {
+        "number": 3,
+        "question": "or ?",
+        "tag": "jsonb_ops",
+        "html": "<p><strong><code>jsonb_path_ops</code> unless you need key-existence.</strong></p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th><code>jsonb_ops</code></th>\n<th><code>jsonb_path_ops</code></th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Indexes</strong></td>\n<td>each key and each value</td>\n<td>a hash of each path-to-value</td>\n</tr>\n<tr>\n<td><strong>Size (run)</strong></td>\n<td>2.6 MB</td>\n<td>1.8 MB</td>\n</tr>\n<tr>\n<td>**<code>?</code> `?</td>\n<td><code> </code>?&amp;`**</td>\n<td><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg></td>\n</tr>\n<tr>\n<td><strong>Pick when</strong></td>\n<td>queries test whether a key exists</td>\n<td>queries are containment only</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 4,
+        "question": "After a bulk ingest, metadata-filtered queries got slower, then recovered overnight. Why?",
+        "tag": "senior",
+        "html": "<p><strong>The pending list was full until autovacuum merged it.</strong></p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Cause:</strong></span><span class=\"flow-step\">bulk insert</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">entries parked in the pending list</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">each search scans it (493 index buffers)</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">vacuum merges it</span><span class=\"flow-arrow\"></span><span class=\"flow-step\">2 buffers</span></div>\n<table>\n<thead>\n<tr>\n<th>Fix</th>\n<th>Trade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong><code>VACUUM</code> or <code>gin_clean_pending_list()</code> after the load</strong></td>\n<td>one step in the ingest job</td>\n</tr>\n<tr>\n<td><strong>Lower <code>gin_pending_list_limit</code> on that index</strong></td>\n<td>more frequent, smaller merges</td>\n</tr>\n<tr>\n<td><strong><code>fastupdate = off</code></strong></td>\n<td>steady reads, more write work</td>\n</tr>\n<tr>\n<td><strong>Build the index after a large initial load</strong></td>\n<td>fastest for a one-off backfill</td>\n</tr>\n</tbody></table>"
+      },
+      {
+        "number": 5,
+        "question": "Every query filters on  and a tag. One index or two?",
+        "tag": "tenant_id",
+        "html": "<p><strong>One multicolumn GIN with <code>btree_gin</code>, or let the planner combine two bitmaps.</strong></p>\n<pre><code class=\"language-text\">CREATE EXTENSION btree_gin;\nCREATE INDEX ON chunks USING gin (tenant_id, tags);\nBitmap Index Scan on chunks_tenant_tags\n  Index Cond: ((tenant_id = 0) AND (tags @&gt; '{legal}'::text[]))     ← run\n</code></pre>\n<p>A B-tree on <code>tenant_id</code> plus a GIN on <code>tags</code> also works, through a BitmapAnd.</p>"
+      }
+    ],
+    "dontSay": [
+      "&quot;GIN is a faster B-tree.&quot; — it serves different operators.",
+      "&quot;Index the JSON column and you&#39;re done.&quot; — only for <code>@&gt;</code>, <code>?</code>, <code>@?</code>, <code>@@</code>.",
+      "&quot;GIN is free on writes.&quot; — 105 MB of WAL against 27 MB in the run above.",
+      "&quot;pgvector uses GIN.&quot; — HNSW and IVFFlat are separate index types."
+    ],
+    "links": [
+      {
+        "label": "Index Internals",
+        "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+      },
+      {
+        "label": "Query Optimization",
+        "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+      },
+      {
+        "label": "btree index",
+        "target": "model-answers/12-DATABASES/18-btree-index"
+      },
+      {
+        "label": "reading explain",
+        "target": "model-answers/12-DATABASES/21-reading-explain"
+      }
+    ],
+    "map": "<figure><div class=\"mermaid\">flowchart TB\n    subgraph R0[\" \"]\n        direction LR\n        N1([\"1 · Plain definition&lt;br/&gt;element → rows that&lt;br/&gt;contain it\"]):::step\n        N2[\"2 · Mechanism&lt;br/&gt;posting lists, bitmap,&lt;br/&gt;recheck\"]:::calc\n        N3[\"3 · Where it breaks&lt;br/&gt;wrong operator, pending&lt;br/&gt;list, write cost\"]:::bad\n        N1 --&gt; N2 --&gt; N3\n    end\n    subgraph R1[\" \"]\n        direction LR\n        N4[\"4 · How I'd use it&lt;br/&gt;metadata, keywords,&lt;br/&gt;fuzzy lookup\"]:::step\n        N5([\"5 · Adjacent concept&lt;br/&gt;GiST, BRIN, and&lt;br/&gt;HNSW is not GIN\"]):::ok\n        N4 --&gt; N5\n    end\n    R0 --&gt; R1\n    classDef step fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef calc fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef ask fill:#C4B5FD,stroke:#8B5CF6,color:#000\n    classDef ok fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef bad fill:#FCA5A5,stroke:#F87171,color:#000\n    style R0 fill:none,stroke:none\n    style R1 fill:none,stroke:none\n</div></figure>"
   }
 }

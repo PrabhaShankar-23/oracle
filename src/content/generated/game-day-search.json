@@ -2402,7 +2402,7 @@
   },
   {
     "id": "llm-serving-inference-q17",
-    "text": "📝 \"What would you do if your application hits a token-limit-exceeded error?",
+    "text": "📝 What would you do if your application hits a token-limit-exceeded error?",
     "topic": "llm-serving-inference",
     "topicTitle": "LLM Serving & Inference",
     "band": "Scaling & failure"
@@ -2689,7 +2689,7 @@
   },
   {
     "id": "ml-dl-q14",
-    "text": "📝 \"Live metrics degraded 6 points over two months. Build me the decision framework.",
+    "text": "📝 Live metrics degraded 6 points over two months. Build me the decision framework.",
     "topic": "ml-dl",
     "topicTitle": "Classical ML & Deep Learning",
     "band": "ML in production"
@@ -3249,7 +3249,7 @@
   },
   {
     "id": "databases-q17",
-    "text": "📝 \"Paginate a large table without OFFSET.",
+    "text": "📝 Paginate a large table without OFFSET.",
     "topic": "databases",
     "topicTitle": "Databases",
     "band": "Write the query"
@@ -3319,7 +3319,7 @@
   },
   {
     "id": "databases-q27",
-    "text": "📝 \"B-tree or LSM-tree?",
+    "text": "📝 B-tree or LSM-tree?",
     "topic": "databases",
     "topicTitle": "Databases",
     "band": "Engine mechanics"
@@ -3410,7 +3410,7 @@
   },
   {
     "id": "databases-q40",
-    "text": "📝 \"Add a NOT NULL column to a 500 GB table with zero downtime.",
+    "text": "📝 Add a NOT NULL column to a 500 GB table with zero downtime.",
     "topic": "databases",
     "topicTitle": "Databases",
     "band": "Scaling & failure"
@@ -3452,7 +3452,7 @@
   },
   {
     "id": "databases-q46",
-    "text": "📝 \"What are RPO and RTO, and how do you know your backups work?",
+    "text": "📝 What are RPO and RTO, and how do you know your backups work?",
     "topic": "databases",
     "topicTitle": "Databases",
     "band": "Scaling & failure"
@@ -3526,6 +3526,69 @@
     "topic": "databases",
     "topicTitle": "Databases",
     "band": "Your story"
+  },
+  {
+    "id": "databases-q57",
+    "text": "📝 (B) What is a GIN index, and when do you reach for it instead of a B-tree?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q58",
+    "text": "📝 (B) Beyond B-tree: when does GiST, BRIN, hash or a partial index win?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q59",
+    "text": "📝 (B) Make ILIKE '%term%' and typo-tolerant name search fast.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q60",
+    "text": "📝 (B) Keyword search inside Postgres with tsvector and GIN. Where does it stop being enough?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q61",
+    "text": "(C) JSONB or real columns for LLM metadata and structured outputs?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q62",
+    "text": "(D) pgvector: filter by tenant, ask for the 10 nearest, get 3 back. Why?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q63",
+    "text": "📝 (D) Workers pull embedding and LLM jobs from a Postgres table. How do they not collide?",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q64",
+    "text": "📝 (E) Enforce tenant isolation for AI retrieval in the database, not in the prompt.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
+  },
+  {
+    "id": "databases-q65",
+    "text": "(E) Design the tables for chat history and LLM call logs at tens of millions of rows a day.",
+    "topic": "databases",
+    "topicTitle": "Databases",
+    "band": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer"
   },
   {
     "id": "real-time-systems-q1",

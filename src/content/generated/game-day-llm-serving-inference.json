@@ -787,7 +787,7 @@
           "marks": [
             "decides"
           ],
-          "text": "📝 \"What would you do if your application hits a token-limit-exceeded error?",
+          "text": "📝 What would you do if your application hits a token-limit-exceeded error?",
           "points": [
             "They want the <strong>runtime catch path</strong>, not prevention — answer that first",
             "Budget upfront: tokenizer-accurate count, <strong>reserve for output</strong>, fail fast before the call",

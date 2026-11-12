@@ -2810,7 +2810,7 @@
       "number": 12,
       "icon": "🗄️",
       "title": "Databases",
-      "count": 56,
+      "count": 65,
       "bands": [
         {
           "id": "databases-write-the-query",
@@ -2847,6 +2847,12 @@
           "letter": null,
           "name": "Your story",
           "count": 1
+        },
+        {
+          "id": "databases-added-12-nov-2026-postgres-for-genai-index-types-and-the-ai-data-layer",
+          "letter": null,
+          "name": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer",
+          "count": 9
         }
       ]
     },

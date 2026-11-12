@@ -575,7 +575,7 @@
           "id": "databases-q17",
           "number": 17,
           "marks": [],
-          "text": "📝 \"Paginate a large table without OFFSET.",
+          "text": "📝 Paginate a large table without OFFSET.",
           "points": [
             "<strong>Pattern:</strong> <strong>keyset (seek) pagination</strong> → \"rows after the last one I saw\"",
             "<strong>Query:</strong><pre><code class=\"language-sql\">SELECT id, created_at FROM orders\nWHERE (created_at, id) &lt; ('2026-03-01', 5)   -- last row seen\nORDER BY created_at DESC, id DESC\nLIMIT 2;\n</code></pre>",
@@ -899,7 +899,7 @@
           "id": "databases-q27",
           "number": 27,
           "marks": [],
-          "text": "📝 \"B-tree or LSM-tree?",
+          "text": "📝 B-tree or LSM-tree?",
           "points": [
             "<strong>B-tree:</strong> update in place → fast, predictable reads; random I/O on writes",
             "<strong>LSM-tree:</strong> append to a memtable + log → flush to sorted files → <strong>compaction</strong> merges them",
@@ -1337,7 +1337,7 @@
           "marks": [
             "decides"
           ],
-          "text": "📝 \"Add a NOT NULL column to a 500 GB table with zero downtime.",
+          "text": "📝 Add a NOT NULL column to a 500 GB table with zero downtime.",
           "points": [
             "<strong>Expand → backfill → contract</strong>; never one big blocking statement",
             "Add the column <strong>nullable</strong> (a metadata change on modern engines)",
@@ -1530,7 +1530,7 @@
           "id": "databases-q46",
           "number": 46,
           "marks": [],
-          "text": "📝 \"What are RPO and RTO, and how do you know your backups work?",
+          "text": "📝 What are RPO and RTO, and how do you know your backups work?",
           "points": [
             "<strong>RPO</strong> = how much data you can lose · <strong>RTO</strong> = how long recovery may take",
             "Full backups + continuous <strong>log archiving</strong> → point-in-time recovery, RPO of seconds to minutes",
@@ -1899,6 +1899,231 @@
               "The number"
             ]
           }
+        }
+      ]
+    },
+    {
+      "id": "databases-added-12-nov-2026-postgres-for-genai-index-types-and-the-ai-data-layer",
+      "letter": null,
+      "name": "Added 12 Nov 2026 — Postgres for GenAI: index types and the AI data layer",
+      "questions": [
+        {
+          "id": "databases-q57",
+          "number": 57,
+          "marks": [
+            "decides"
+          ],
+          "text": "📝 (B) What is a GIN index, and when do you reach for it instead of a B-tree?",
+          "points": [
+            "<strong>Generalized Inverted Index:</strong> maps each <strong>element → the rows that contain it</strong>, like the index at the back of a book",
+            "One row yields <strong>many keys</strong>: JSONB keys and values, array items, full-text lexemes, trigrams",
+            "Serves <strong>containment and membership</strong>: <code>@&gt;</code>, <code>?</code>, <code>&amp;&amp;</code>, <code>@@</code>, <code>ILIKE '%x%'</code> via <code>pg_trgm</code>. A B-tree orders whole values and can't",
+            "JSONB opclasses: <code>jsonb_ops</code> (default, has <code>?</code> key-exists) vs <code>jsonb_path_ops</code> (smaller, <code>@&gt;</code> only). Run: 2.6 MB vs 1.8 MB on 200k rows",
+            "<strong>Not</strong> <code>meta-&gt;&gt;'k' = 'v'</code> → Seq Scan (run). Rewrite as <code>@&gt;</code>, or an expression B-tree on that key",
+            "Writes are costly: one row = many entries → <strong><code>fastupdate</code> pending list</strong>, which every search scans until vacuum (run: 493 vs 2 index buffers)"
+          ],
+          "links": [
+            {
+              "label": "Index Internals",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+            }
+          ],
+          "flow": "multi-valued column → one key per element → posting lists → bitmap scan → recheck",
+          "trap": "\"I put a GIN on the JSONB column\", then querying it with <code>-&gt;&gt;</code>",
+          "modelAnswer": {
+            "type": "concept",
+            "spine": [
+              "Plain definition",
+              "Mechanism",
+              "Where it breaks",
+              "How I'd use it",
+              "Adjacent concept"
+            ]
+          }
+        },
+        {
+          "id": "databases-q58",
+          "number": 58,
+          "marks": [],
+          "text": "📝 (B) Beyond B-tree: when does GiST, BRIN, hash or a partial index win?",
+          "points": [
+            "<strong>GiST:</strong> overlap and nearest-neighbour for ranges and geometry; range <strong>exclusion constraints</strong> (no double-booked room)",
+            "<strong>BRIN (Block Range INdex):</strong> min/max per block range → tiny, but only for columns that <strong>follow insert order</strong>. Run on 2M append-only rows: <strong>24 kB vs 43 MB</strong> B-tree; a 1-hour range read 133 pages, lossy",
+            "<strong>Hash:</strong> equality only; rarely beats a B-tree, which can also range and sort",
+            "<strong>Partial:</strong> index only the rows you query. Run: <code>WHERE status = 'failed'</code> → <strong>104 kB</strong> vs 43 MB",
+            "<strong>Expression:</strong> <code>lower(email)</code>, <code>(meta-&gt;&gt;'doc_id')</code> → a non-sargable predicate becomes a seek"
+          ],
+          "links": [
+            {
+              "label": "Index Internals",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Index-Internals"
+            }
+          ],
+          "flow": "name the operator → pick the index type that serves it → check correlation or selectivity → read the plan",
+          "trap": "BRIN on a column that is updated or randomly ordered: every block range matches"
+        },
+        {
+          "id": "databases-q59",
+          "number": 59,
+          "marks": [],
+          "text": "📝 (B) Make ILIKE '%term%' and typo-tolerant name search fast.",
+          "points": [
+            "A leading wildcard defeats a B-tree (Q18) → <strong><code>pg_trgm</code> + GIN (<code>gin_trgm_ops</code>)</strong>: text split into 3-character grams, posting lists intersected",
+            "Run on 200k rows, <code>ILIKE '%indemnif%'</code>: Seq Scan <strong>6,321 pages</strong> → Bitmap Index Scan <strong>113 pages</strong>",
+            "The same index serves <strong>similarity</strong> (<code>%</code>, <code>similarity()</code>): a typo, <code>indemnifcation</code>, still found the rows (run)",
+            "A pattern with too few trigrams can't use it → the planner fell back to a Seq Scan for <code>'%in%'</code> (run)",
+            "GenAI use: entity and name resolution before the LLM call; customer or SKU lookup tools for agents"
+          ],
+          "links": [
+            {
+              "label": "Query Optimization",
+              "target": "11-dbms/Sql/04-Performance/Query-Optimization"
+            }
+          ],
+          "flow": "text → trigrams → GIN posting lists → bitmap → recheck the pattern",
+          "trap": "trigram search over long documents for whole words: that's full-text search (Q60)"
+        },
+        {
+          "id": "databases-q60",
+          "number": 60,
+          "marks": [],
+          "text": "📝 (B) Keyword search inside Postgres with tsvector and GIN. Where does it stop being enough?",
+          "points": [
+            "<code>to_tsvector</code> → <strong>lexemes</strong> (stemmed, stop words dropped) in a <strong>generated column</strong>, GIN on it, <code>@@ to_tsquery</code>",
+            "Run: <code>indemnification</code> is stored as <code>'indemnif'</code>; 100 matches via Bitmap Index Scan, 104 pages",
+            "<code>ts_rank</code> / <code>ts_rank_cd</code>: term frequency, proximity, weights. <strong>No global statistics</strong> (no IDF), so it's not BM25 (Okapi Best Matching 25)",
+            "Ranking reads each match's tsvector → slow when a query matches a large share of rows",
+            "Enough for exact-term recall beside pgvector and for filters; past that → a BM25 engine (OpenSearch, Elasticsearch, or a Postgres BM25 extension)"
+          ],
+          "links": [
+            {
+              "label": "RAG",
+              "target": "05-RAG"
+            },
+            {
+              "label": "Vector and AI Workloads",
+              "target": "11-dbms/Sql/06-Data-Systems/Vector-and-AI-Workloads"
+            }
+          ],
+          "flow": "text → lexemes → GIN → <code>@@</code> match → rank the matches → fuse with vector results",
+          "trap": "calling <code>ts_rank</code> \"BM25\""
+        },
+        {
+          "id": "databases-q61",
+          "number": 61,
+          "marks": [],
+          "text": "(C) JSONB or real columns for LLM metadata and structured outputs?",
+          "points": [
+            "<strong>Columns</strong> for anything you filter, join, constrain or aggregate: <code>tenant_id</code>, <code>doc_id</code>, <code>status</code>, <code>created_at</code> → types, foreign keys, <code>NOT NULL</code>, statistics",
+            "<strong>JSONB</strong> for the long tail: per-source metadata, raw tool-call payloads, model output kept for audit",
+            "Index JSONB with GIN for <code>@&gt;</code>; one hot key → expression B-tree (Q57)",
+            "Validate structured output at the boundary (JSON Schema / Pydantic) <strong>and</strong> in the database: <code>CHECK (meta ? 'source')</code>",
+            "A key that becomes a filter gets <strong>promoted</strong>: add column → backfill in batches → index (Q40)"
+          ],
+          "links": [
+            {
+              "label": "Schema Design",
+              "target": "11-dbms/Sql/02-Schema-and-Indexing/Schema-Design"
+            }
+          ],
+          "flow": "list the query keys → columns · long tail → JSONB · hot key → promote",
+          "trap": "everything in one <code>meta jsonb</code> \"because the LLM's schema keeps changing\""
+        },
+        {
+          "id": "databases-q62",
+          "number": 62,
+          "marks": [
+            "decides"
+          ],
+          "text": "(D) pgvector: filter by tenant, ask for the 10 nearest, get 3 back. Why?",
+          "points": [
+            "HNSW and IVFFlat search the index <strong>first</strong> and filter <strong>after</strong> → only the <code>ef_search</code> candidates (default 40) reach the <code>WHERE</code>",
+            "Run (100k vectors, tenant = 1% of rows): asked for 10 → <strong>0</strong>; <code>hnsw.ef_search = 400</code> → <strong>4</strong>; filter first, exact distance → <strong>10</strong>",
+            "Fix 1: <strong>filter first</strong> when it's selective: B-tree on <code>tenant_id</code>, exact distance over ~1k rows",
+            "Fix 2: a <strong>partial index or partition</strong> per large tenant; Fix 3: pgvector <strong>0.8+ iterative index scans</strong> (<code>hnsw.iterative_scan</code>)",
+            "Measure recall@k against exact search <strong>per filter shape</strong>, not one overall number"
+          ],
+          "links": [
+            {
+              "label": "RAG",
+              "target": "05-RAG"
+            },
+            {
+              "label": "Vector and AI Workloads",
+              "target": "11-dbms/Sql/06-Data-Systems/Vector-and-AI-Workloads"
+            }
+          ],
+          "flow": "ANN returns <code>ef_search</code> candidates → filter drops most → fewer than k",
+          "trap": "raising <code>LIMIT</code> and hoping"
+        },
+        {
+          "id": "databases-q63",
+          "number": 63,
+          "marks": [],
+          "text": "📝 (D) Workers pull embedding and LLM jobs from a Postgres table. How do they not collide?",
+          "points": [
+            "Claim with <code>SELECT … FOR UPDATE SKIP LOCKED LIMIT n</code> in a CTE that sets <code>status = 'running'</code>",
+            "Run (two sessions): A held jobs 1–3; B got <strong>4–6 at once</strong>. Without <code>SKIP LOCKED</code>, B <strong>blocked ~2 s</strong> until A committed",
+            "<strong>Claim and commit, then call the model</strong>: never hold the row lock through a 20-second LLM call",
+            "At-least-once: a crashed worker's job is reclaimed by a timeout sweep → the write must be <strong>idempotent</strong> (upsert by chunk and model version, Q16)",
+            "Partial index <code>ON (run_after) WHERE status = 'queued'</code>; backoff via <code>run_after</code>; a dead-letter status after N attempts"
+          ],
+          "links": [
+            {
+              "label": "Locks and Deadlocks",
+              "target": "11-dbms/Sql/03-Transactions/Locks-and-Deadlocks"
+            }
+          ],
+          "flow": "claim (skip locked) → commit → call the model → idempotent write → mark done",
+          "trap": "one long transaction around the model call: locks held, connections exhausted (Q42)"
+        },
+        {
+          "id": "databases-q64",
+          "number": 64,
+          "marks": [
+            "decides"
+          ],
+          "text": "📝 (E) Enforce tenant isolation for AI retrieval in the database, not in the prompt.",
+          "points": [
+            "<strong>RLS (Row-Level Security):</strong> a policy <code>tenant_id = current_setting('app.tenant_id')::int</code> is added to <strong>every</strong> query, the vector search included",
+            "Run: tenant 1 saw 2 of 3 rows; with the setting missing the query <strong>errored</strong>: it fails closed",
+            "The <strong>table owner bypasses RLS</strong> unless <code>FORCE ROW LEVEL SECURITY</code> (run: the owner saw all 3); superusers and <code>BYPASSRLS</code> roles always do → connect as a non-owner role",
+            "Connection pools: a session <code>SET</code> <strong>leaks to the next request</strong> → <code>SET LOCAL</code> per transaction (run: the session value outlived the commit)",
+            "The policy shows up as a filter in the plan → index <code>tenant_id</code>, lead composite indexes with it"
+          ],
+          "links": [
+            {
+              "label": "RAG",
+              "target": "05-RAG"
+            }
+          ],
+          "flow": "auth → tenant id → <code>SET LOCAL</code> → query → the policy adds the filter",
+          "trap": "\"the agent's SQL tool always adds <code>WHERE tenant_id</code>\": a prompt is not a security boundary"
+        },
+        {
+          "id": "databases-q65",
+          "number": 65,
+          "marks": [],
+          "text": "(E) Design the tables for chat history and LLM call logs at tens of millions of rows a day.",
+          "points": [
+            "<strong>Access patterns first:</strong> last N messages of a conversation · token and cost per tenant · one trace for debugging · delete a user's data",
+            "<code>messages</code> PK <code>(conversation_id, seq)</code> → loading a conversation is one index seek (keyset, Q17)",
+            "<code>llm_calls</code> append-only, <strong>range-partitioned by day or month</strong> → retention is <code>DROP</code> a partition, not <code>DELETE</code> (Q45)",
+            "<strong>BRIN</strong> on <code>created_at</code> for time scans, partial index on failures (Q58); large prompts and responses in object storage with a pointer, or TOASTed text",
+            "Cost dashboards read <strong>hourly rollups</strong> per tenant and model, never the raw calls"
+          ],
+          "links": [
+            {
+              "label": "Partitioning",
+              "target": "11-dbms/Sql/05-Scaling/Partitioning"
+            },
+            {
+              "label": "OLTP vs OLAP",
+              "target": "11-dbms/Sql/06-Data-Systems/OLTP-vs-OLAP"
+            }
+          ],
+          "flow": "access patterns → keys → partitions → indexes → rollups → retention",
+          "trap": "one <code>logs</code> table with a JSONB blob and a nightly <code>DELETE WHERE created_at &lt; …</code>"
         }
       ]
     }
