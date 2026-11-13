@@ -79,6 +79,12 @@ function recallInOrder() {
   return [...manifest.gameDay].sort((a, b) => rank(a.slug) - rank(b.slug) || a.number - b.number)
 }
 
+/** Subtitles for the AI coding notes — shown on the page header and the section card. */
+export const AI_CODING_SUBTITLES: Record<string, string> = {
+  checklist: 'Priority-ordered from-scratch implementations for GenAI and agentic architect rounds.',
+  practice: '17 hands-on problems: task, how to do it, run code, follow-ups with cues.',
+}
+
 export const sections: Section[] = [
   {
     id: 'dsa',
@@ -215,7 +221,18 @@ export const sections: Section[] = [
       order: n.order,
     })),
   },
-  { id: 'ai-coding', title: 'AI Coding Patterns', path: '/ai-coding', description: 'Patterns for building with coding agents.', icon: AutoAwesomeOutlined, pages: [] },
+  {
+    id: 'ai-coding',
+    title: 'AI Coding Patterns',
+    path: '/ai-coding',
+    description: 'From-scratch AI/ML implementations and hands-on LLM coding rounds.',
+    icon: AutoAwesomeOutlined,
+    pages: manifest.aiCodingDocs.map((d) => ({
+      title: d.title,
+      path: `/ai-coding/${d.slug}`,
+      description: AI_CODING_SUBTITLES[d.slug] ?? '',
+    })),
+  },
   {
     id: 'python',
     title: 'Python',
@@ -362,6 +379,16 @@ export const searchIndex: SearchItem[] = [
     path: `/system-design/voice/${n.slug}`,
     group: 'Voice AI',
   })),
+  ...manifest.aiCodingDocs.flatMap((d) => [
+    { key: `ai-coding:${d.slug}`, label: d.title, secondary: 'AI Coding Patterns', path: `/ai-coding/${d.slug}`, group: 'AI Coding' },
+    ...d.headings.map((h) => ({
+      key: `ai-coding:${d.slug}:${h.id}`,
+      label: h.text.replace(/^[^\p{Letter}\p{Number}]+/u, ''),
+      secondary: `AI Coding · ${d.title}`,
+      path: `/ai-coding/${d.slug}#${h.id}`,
+      group: 'AI Coding',
+    })),
+  ]),
   ...manifest.gameDayDocs.flatMap((d) =>
     d.headings.map((h) => ({
       key: `gameday:${d.slug}:${h.id}`,

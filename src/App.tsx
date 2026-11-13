@@ -23,6 +23,7 @@ const PythonNotePage = lazy(() => import('./pages/python/PythonNotePage'))
 const PromptNotePage = lazy(() => import('./pages/ai-ml/PromptNotePage'))
 const GameDayRecallPage = lazy(() => import('./pages/game-day/GameDayRecallPage'))
 const GameDayDocPage = lazy(() => import('./pages/game-day/GameDayDocPage'))
+const AiCodingDocPage = lazy(() => import('./pages/ai-coding/AiCodingDocPage'))
 
 export default function App() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="ai-ml/prompt-engineering/:slug" element={<PromptNotePage />} />
           <Route path="game-day/recall/:slug" element={<GameDayRecallPage />} />
           <Route path="game-day/:slug" element={<GameDayDocPage />} />
+          <Route path="ai-coding/:slug" element={<AiCodingDocPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

@@ -8487,6 +8487,136 @@
       ]
     }
   ],
+  "aiCodingDocs": [
+    {
+      "slug": "checklist",
+      "icon": "",
+      "title": "AI/ML — From-Scratch Implementation Checklist",
+      "meta": [
+        "Priority-ordered blocks for GenAI/Agentic AI Architect roles (6+ YOE, India market). DSA excluded — covered separately.",
+        "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"></path></svg> <strong>12 Nov 2026 — first-lap practice set applied:</strong> <a href=\"/ai-coding/practice\">LLM coding rounds practice set</a> holds 17 hands-on problems (task, how to do it, run code, follow-ups with cues) drawn from Blocks 8, 2, 3 and 1, plus the two new blocks at the end of this file (13 LangGraph live builds, 14 round formats). Do its six <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m12 17.27 4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08z\"></path></svg> problems cold before opening any other block here. Checkboxes in this index are untouched: tick them yourself as each item goes cold."
+      ],
+      "headings": [
+        {
+          "id": "block-1-transformers-attention",
+          "text": "Block 1: Transformers & Attention 🔥",
+          "level": 2
+        },
+        {
+          "id": "block-2-rag-pipeline-components",
+          "text": "Block 2: RAG Pipeline Components 🔥",
+          "level": 2
+        },
+        {
+          "id": "block-3-agentic-ai-patterns",
+          "text": "Block 3: Agentic AI Patterns 🔥",
+          "level": 2
+        },
+        {
+          "id": "block-4-core-math-numerical-foundations",
+          "text": "Block 4: Core Math & Numerical Foundations",
+          "level": 2
+        },
+        {
+          "id": "block-5-generation-decoding",
+          "text": "Block 5: Generation & Decoding",
+          "level": 2
+        },
+        {
+          "id": "block-6-neural-networks-from-scratch",
+          "text": "Block 6: Neural Networks From Scratch",
+          "level": 2
+        },
+        {
+          "id": "block-7-classical-ml-from-scratch",
+          "text": "Block 7: Classical ML From Scratch",
+          "level": 2
+        },
+        {
+          "id": "block-8-production-systems-coding",
+          "text": "Block 8: Production / Systems Coding",
+          "level": 2
+        },
+        {
+          "id": "block-9-evaluation-metrics",
+          "text": "Block 9: Evaluation & Metrics",
+          "level": 2
+        },
+        {
+          "id": "block-10-optimization",
+          "text": "Block 10: Optimization",
+          "level": 2
+        },
+        {
+          "id": "block-11-data-feature-engineering",
+          "text": "Block 11: Data & Feature Engineering",
+          "level": 2
+        },
+        {
+          "id": "block-12-tokenization-text-processing",
+          "text": "Block 12: Tokenization & Text Processing",
+          "level": 2
+        },
+        {
+          "id": "block-13-langgraph-live-builds",
+          "text": "Block 13: LangGraph Live Builds",
+          "level": 2
+        },
+        {
+          "id": "block-14-round-formats",
+          "text": "Block 14: Round Formats",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "practice",
+      "icon": "",
+      "title": "LLM Coding Rounds — Hands-On Practice Set",
+      "meta": [
+        "<strong>Parent index:</strong> <a href=\"/ai-coding/checklist\">From-scratch checklist</a> (this set is the first lap through Blocks 8, 2, 3 and 1, plus LangGraph live builds and the round formats).",
+        "<strong>Created:</strong> 12 Nov 2026 · <strong>Why:</strong> Handshake and Deloitte both set 2–3 hour hands-on rounds; 2026 loops pair a DSA round with a practical LLM build.",
+        "<strong>Every snippet below was run</strong> on CPython 3.13 · NumPy 2.5 · Pydantic 2.13 · LangGraph 1.2.20 (12 Nov 2026). Re-check LangGraph snippets against the docs if your version differs."
+      ],
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "how-to-use-this-file",
+          "text": "How to use this file",
+          "level": 2
+        },
+        {
+          "id": "a-llm-plumbing",
+          "text": "A — LLM plumbing",
+          "level": 2
+        },
+        {
+          "id": "b-agent-loops-and-langgraph-live",
+          "text": "B — Agent loops and LangGraph live",
+          "level": 2
+        },
+        {
+          "id": "c-timed-builds",
+          "text": "C — Timed builds",
+          "level": 2
+        },
+        {
+          "id": "d-round-formats-how-to-behave",
+          "text": "D — Round formats: how to behave",
+          "level": 2
+        },
+        {
+          "id": "next-lap-after-the-six-are-cold",
+          "text": "Next lap (after the six ⭐ are cold)",
+          "level": 2
+        }
+      ]
+    }
+  ],
   "dsaUtils": [
     {
       "lang": "python",

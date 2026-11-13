@@ -242,6 +242,7 @@ export type Manifest = {
     bands: { id: string; letter: string | null; name: string; count: number }[]
   }[]
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
+  aiCodingDocs: (Omit<AiCodingDoc, 'html'> & { headings: Heading[] })[]
   agenticDecisions: NoteSummary[]
   networking: NoteSummary[]
   voice: (NoteSummary & { category?: string })[]
@@ -426,6 +427,11 @@ export type GameDayTopic = {
 export type GameDayDoc = VaultDoc & { icon: string }
 
 export type GameDayDocs = { docs: GameDayDoc[] }
+
+/** `06-AI Assisted Coding`: the from-scratch checklist and its practice set. */
+export type AiCodingDoc = VaultDoc & { icon: string }
+
+export type AiCodingDocs = { docs: AiCodingDoc[] }
 
 export type GameDaySearchEntry = {
   id: string

@@ -817,6 +817,59 @@ async function ingestGameDayDocs() {
   return docs
 }
 
+/* ---------------- AI-assisted coding (06-AI Assisted Coding) ---------------- */
+
+const AI_CODING_DIR = '06-AI Assisted Coding'
+const AI_CODING_ROUTE = '/ai-coding'
+/** The from-scratch checklist and its hands-on practice set; they link to each other by wiki ref. */
+const AI_CODING_DOCS = [
+  { slug: 'checklist', file: 'index-ai-coding-patterns.md', label: 'From-scratch checklist' },
+  { slug: 'practice', file: '01-llm-coding-rounds-practice.md', label: 'LLM coding rounds practice set' },
+]
+
+async function ingestAiCodingDocs() {
+  const routes = new Map(AI_CODING_DOCS.map((d) => [d.file.replace(/\.md$/, ''), `${AI_CODING_ROUTE}/${d.slug}`]))
+  const resolve = (target) => routes.get(target.split('/').pop().replace(/\.md$/, ''))
+  // A wiki ref's label is the file stem; give the sibling links their readable names.
+  const relabel = ($) => {
+    for (const d of AI_CODING_DOCS) {
+      $(`a[href="${AI_CODING_ROUTE}/${d.slug}"]`).each((_, a) => {
+        if (/^[\w-]+$/.test(text($(a)))) $(a).text(d.label)
+      })
+    }
+  }
+  const docs = []
+  for (const { slug, file } of AI_CODING_DOCS) {
+    const md = await readFile(path.join(VAULT, AI_CODING_DIR, file), 'utf8')
+    const $ = cheerio.load(marked.parse(md, { gfm: true, mangle: false, headerIds: false }))
+    const body = $('body')
+
+    const { icon, title } = prettifyTitle(text(body.find('h1').first()))
+    body.find('h1').first().remove()
+
+    // The opening blockquote(s) carry the parent link, dates and run notes: show them as the meta box.
+    const meta = []
+    while (body.children().first().is('blockquote')) {
+      const lead = body.children().first()
+      rewriteLinks($, lead)
+      flattenVaultRefsWithin($, lead, resolve)
+      relabel($)
+      meta.push(...lead.find('p').toArray().flatMap((p) => inner($(p)).split('\n')).map((l) => l.trim()).filter(Boolean))
+      lead.remove()
+    }
+
+    promoteMermaidFences($, body)
+    flattenVaultRefsWithin($, body, resolve)
+    rewriteLinks($, body)
+    relabel($)
+    const headings = collectHeadings($, body)
+    docs.push({ slug, icon, title, meta, headings, html: inner(body) })
+    console.log(`  parsed ${file} (${headings.length} headings)`)
+  }
+  await write('ai-coding-docs.json', { docs })
+  return docs
+}
+
 /*
  * Model answers: `02-Game-Day/model-answers/<recall-stem>/NN-slug.md`, one per question, linked from the
  * recall entry by `**🎤 Model answer:** [[…]]`. The format comes from the vault's
@@ -1636,7 +1689,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice, aiCoding) {
   const practiceProblems = practice.families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   await write('manifest.json', {
     dsaPractice: { total: practiceProblems.length, l1: practiceProblems.filter((p) => p.l1).length },
@@ -1726,6 +1779,10 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
       ...d,
       headings: d.headings.filter((h) => h.level === 2),
     })),
+    aiCodingDocs: aiCoding.map(({ html: _html, ...d }) => ({
+      ...d,
+      headings: d.headings.filter((h) => h.level === 2),
+    })),
     dsaUtils: utils.flatMap((u) =>
       u.sections.flatMap((s) =>
         s.helpers.filter((h) => h.id).map((h) => ({ lang: u.lang, id: h.id, name: h.name, section: s.title })),
@@ -1757,4 +1814,5 @@ await writeManifest(
   python,
   prompt,
   await ingestPractice(dsa),
+  await ingestAiCodingDocs(),
 )
