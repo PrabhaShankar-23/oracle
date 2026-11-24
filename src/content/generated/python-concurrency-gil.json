@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "concurrency-gil-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Concurrency & the GIL",
       "category": "Concept map & reading order",
@@ -26,6 +27,7 @@
     },
     {
       "slug": "the-gil",
+      "stem": "33-the-gil",
       "number": 33,
       "order": "33",
       "title": "The GIL — What It Actually Is",
@@ -86,6 +88,7 @@
     },
     {
       "slug": "concurrency-vs-parallelism",
+      "stem": "33a-concurrency-vs-parallelism",
       "number": 33.1,
       "order": "33a",
       "title": "Concurrency vs Parallelism",
@@ -146,6 +149,7 @@
     },
     {
       "slug": "threading",
+      "stem": "34-threading",
       "number": 34,
       "order": "34",
       "title": "threading",
@@ -206,6 +210,7 @@
     },
     {
       "slug": "multiprocessing",
+      "stem": "35-multiprocessing",
       "number": 35,
       "order": "35",
       "title": "multiprocessing",
@@ -266,6 +271,7 @@
     },
     {
       "slug": "concurrent-futures",
+      "stem": "36-concurrent-futures",
       "number": 36,
       "order": "36",
       "title": "concurrent.futures",
@@ -326,6 +332,7 @@
     },
     {
       "slug": "synchronization-hazards",
+      "stem": "37-synchronization-hazards",
       "number": 37,
       "order": "37",
       "title": "Synchronization & Hazards",
@@ -381,6 +388,7 @@
     },
     {
       "slug": "no-gil-free-threaded-cpython",
+      "stem": "38-no-gil-free-threaded-cpython",
       "number": 38,
       "order": "38",
       "title": "No-GIL / Free-Threaded CPython",
@@ -441,6 +449,7 @@
     },
     {
       "slug": "sub-interpreters",
+      "stem": "39-sub-interpreters",
       "number": 39,
       "order": "39",
       "title": "Sub-Interpreters",

@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "idiomatic-structural-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Idiomatic & structural",
       "category": "Concept map & reading order",
@@ -21,6 +22,7 @@
     },
     {
       "slug": "context-managers",
+      "stem": "51-context-managers",
       "number": 51,
       "order": "51",
       "title": "Context Managers",
@@ -81,6 +83,7 @@
     },
     {
       "slug": "dataclasses",
+      "stem": "52-dataclasses",
       "number": 52,
       "order": "52",
       "title": "dataclasses",
@@ -141,6 +144,7 @@
     },
     {
       "slug": "enum",
+      "stem": "53-enum",
       "number": 53,
       "order": "53",
       "title": "enum",
@@ -176,6 +180,7 @@
     },
     {
       "slug": "pattern-matching",
+      "stem": "54-pattern-matching",
       "number": 54,
       "order": "54",
       "title": "Pattern Matching (match / case)",
@@ -236,6 +241,7 @@
     },
     {
       "slug": "exception-model",
+      "stem": "55-exception-model",
       "number": 55,
       "order": "55",
       "title": "The Exception Model",
@@ -296,6 +302,7 @@
     },
     {
       "slug": "designing-custom-exceptions",
+      "stem": "55a-designing-custom-exceptions",
       "number": 55.1,
       "order": "55a",
       "title": "Designing Custom Exceptions",
@@ -356,6 +363,7 @@
     },
     {
       "slug": "exception-groups",
+      "stem": "56-exception-groups",
       "number": 56,
       "order": "56",
       "title": "Exception Groups (ExceptionGroup / except*)",
@@ -416,6 +424,7 @@
     },
     {
       "slug": "string-formatting-io",
+      "stem": "57-string-formatting-io",
       "number": 57,
       "order": "57",
       "title": "String Formatting & I/O",
@@ -451,6 +460,7 @@
     },
     {
       "slug": "text-processing-unicode",
+      "stem": "57a-text-processing-unicode",
       "number": 57.1,
       "order": "57a",
       "title": "Text Processing & Unicode",

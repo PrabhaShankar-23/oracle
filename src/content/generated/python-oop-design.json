@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "oop-design-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: OOP design",
       "category": "Concept map & reading order",
@@ -21,6 +22,7 @@
     },
     {
       "slug": "encapsulation-public-api-boundary",
+      "stem": "88-encapsulation-public-api-boundary",
       "number": 88,
       "order": "88",
       "title": "Encapsulation & the Public-API Boundary",
@@ -81,6 +83,7 @@
     },
     {
       "slug": "classmethod-vs-staticmethod",
+      "stem": "89-classmethod-vs-staticmethod",
       "number": 89,
       "order": "89",
       "title": "classmethod vs staticmethod — the Design Call",
@@ -141,6 +144,7 @@
     },
     {
       "slug": "new-vs-init",
+      "stem": "90-new-vs-init",
       "number": 90,
       "order": "90",
       "title": "__new__ vs __init__ — When Construction Is the Problem",
@@ -201,6 +205,7 @@
     },
     {
       "slug": "multiple-inheritance-mixins",
+      "stem": "91-multiple-inheritance-mixins",
       "number": 91,
       "order": "91",
       "title": "Multiple Inheritance & Mixin Design",
@@ -261,6 +266,7 @@
     },
     {
       "slug": "composition-delegation-python",
+      "stem": "92-composition-delegation-python",
       "number": 92,
       "order": "92",
       "title": "Composition & Delegation in Python",
@@ -321,6 +327,7 @@
     },
     {
       "slug": "patterns-solid-python-delta",
+      "stem": "94-patterns-solid-python-delta",
       "number": 94,
       "order": "94",
       "title": "Patterns & SOLID — the Python Delta",

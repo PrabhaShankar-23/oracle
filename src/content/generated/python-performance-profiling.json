@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "performance-profiling-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Performance & profiling",
       "category": "Concept map & reading order",
@@ -21,6 +22,7 @@
     },
     {
       "slug": "why-python-is-slow",
+      "stem": "58-why-python-is-slow",
       "number": 58,
       "order": "58",
       "title": "Why Python Is \"Slow\" — And Where It Isn't",
@@ -81,6 +83,7 @@
     },
     {
       "slug": "profiling-the-right-way",
+      "stem": "59-profiling-the-right-way",
       "number": 59,
       "order": "59",
       "title": "Profiling the Right Way",
@@ -141,6 +144,7 @@
     },
     {
       "slug": "micro-optimization-traps",
+      "stem": "60-micro-optimization-traps",
       "number": 60,
       "order": "60",
       "title": "Micro-Optimization Traps",
@@ -201,6 +205,7 @@
     },
     {
       "slug": "c-extension-native-boundary",
+      "stem": "61-c-extension-native-boundary",
       "number": 61,
       "order": "61",
       "title": "The C-Extension & Native Acceleration Boundary",
@@ -261,6 +266,7 @@
     },
     {
       "slug": "interpreter-level-speedups",
+      "stem": "62-interpreter-level-speedups",
       "number": 62,
       "order": "62",
       "title": "Interpreter-Level Speedups",

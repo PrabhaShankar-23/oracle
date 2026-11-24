@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "reasoning-decomposition-prompting-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Reasoning & decomposition",
       "category": "Concept map & reading order",
@@ -51,6 +52,7 @@
     },
     {
       "slug": "chain-of-thought",
+      "stem": "23-Chain-of-Thought",
       "number": 23,
       "order": "23",
       "title": "Chain-of-Thought — Asking for the Working Before the Answer",
@@ -126,6 +128,7 @@
     },
     {
       "slug": "why-cot-works",
+      "stem": "24-Why CoT works",
       "number": 24,
       "order": "24",
       "title": "Why Chain-of-Thought Works — Written Steps, Not Extra Compute",
@@ -191,6 +194,7 @@
     },
     {
       "slug": "self-consistency",
+      "stem": "25-Self-consistency",
       "number": 25,
       "order": "25",
       "title": "Self-Consistency — Sampling Many Chains and Voting on the Answers",
@@ -261,6 +265,7 @@
     },
     {
       "slug": "least-to-most-prompting",
+      "stem": "26-Least-to-most prompting",
       "number": 26,
       "order": "26",
       "title": "Least-to-Most Prompting — Decompose, Then Solve in Order",
@@ -296,6 +301,7 @@
     },
     {
       "slug": "plan-and-solve-prompting",
+      "stem": "27-Plan-and-solve prompting",
       "number": 27,
       "order": "27",
       "title": "Plan-and-Solve Prompting — Write the Plan, Then Follow It",
@@ -331,6 +337,7 @@
     },
     {
       "slug": "step-back-prompting",
+      "stem": "28-Step-back prompting",
       "number": 28,
       "order": "28",
       "title": "Step-Back Prompting — Name the Principle, Then Answer",
@@ -401,6 +408,7 @@
     },
     {
       "slug": "tree-of-thoughts-graph-of-thoughts",
+      "stem": "29-Tree-of-Thoughts & Graph-of-Thoughts",
       "number": 29,
       "order": "29",
       "title": "Tree of Thoughts & Graph of Thoughts — Search Over Partial Answers",
@@ -436,6 +444,7 @@
     },
     {
       "slug": "self-refine-self-critique-loops",
+      "stem": "30-Self-refine & self-critique loops",
       "number": 30,
       "order": "30",
       "title": "Self-Refine — Draft, Critique, Rewrite, and Keep the Best",
@@ -511,6 +520,7 @@
     },
     {
       "slug": "reflexion",
+      "stem": "31-Reflexion",
       "number": 31,
       "order": "31",
       "title": "Reflexion — A Written Lesson Carried to the Next Attempt",
@@ -546,6 +556,7 @@
     },
     {
       "slug": "reasoning-models-test-time-compute",
+      "stem": "32-Reasoning models & test-time compute",
       "number": 32,
       "order": "32",
       "title": "Reasoning Models — How the Prompt Changes When the Model Thinks by Itself",
@@ -616,6 +627,7 @@
     },
     {
       "slug": "when-cot-hurts",
+      "stem": "33-When CoT hurts",
       "number": 33,
       "order": "33",
       "title": "When Chain-of-Thought Hurts — Narrow Gains, Real Costs, False Explanations",
@@ -686,6 +698,7 @@
     },
     {
       "slug": "extended-thinking-thinking-budgets",
+      "stem": "34-Extended thinking & thinking budgets",
       "number": 34,
       "order": "34",
       "title": "Thinking Controls — Effort, Caps, and the Reply That Ran Out",

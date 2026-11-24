@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "typing-interfaces-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Typing & interfaces",
       "category": "Concept map & reading order",
@@ -15,6 +16,7 @@
     },
     {
       "slug": "type-hints-typing",
+      "stem": "46-type-hints-typing",
       "number": 46,
       "order": "46",
       "title": "Type Hints & typing",
@@ -75,6 +77,7 @@
     },
     {
       "slug": "generics-variance",
+      "stem": "47-generics-variance",
       "number": 47,
       "order": "47",
       "title": "Generics & Variance",
@@ -135,6 +138,7 @@
     },
     {
       "slug": "protocols-structural-typing",
+      "stem": "48-protocols-structural-typing",
       "number": 48,
       "order": "48",
       "title": "Protocols & Structural Typing",
@@ -195,6 +199,7 @@
     },
     {
       "slug": "abcs-duck-typing",
+      "stem": "49-abcs-duck-typing",
       "number": 49,
       "order": "49",
       "title": "ABCs & Duck Typing",
@@ -255,6 +260,7 @@
     },
     {
       "slug": "runtime-introspection-types",
+      "stem": "50-runtime-introspection-types",
       "number": 50,
       "order": "50",
       "title": "Runtime Introspection of Types",
@@ -290,6 +296,7 @@
     },
     {
       "slug": "pydantic-validation-boundary",
+      "stem": "50a-pydantic-validation-boundary",
       "number": 50.1,
       "order": "50a",
       "title": "Pydantic v2 as a Validation Boundary",
@@ -350,6 +357,7 @@
     },
     {
       "slug": "structured-outputs-tool-schemas",
+      "stem": "50b-structured-outputs-tool-schemas",
       "number": 50.2,
       "order": "50b",
       "title": "Structured Outputs & Tool Schemas",

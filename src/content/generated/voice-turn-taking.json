@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "turn-taking-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Turn-taking",
       "category": "Concept map & reading order",
@@ -51,6 +52,7 @@
     },
     {
       "slug": "endpointing",
+      "stem": "023-endpointing",
       "number": 23,
       "order": "023",
       "title": "Endpointing — Deciding the Turn Is Over",
@@ -110,6 +112,7 @@
     },
     {
       "slug": "semantic-turn-detection",
+      "stem": "024-semantic-turn-detection",
       "number": 24,
       "order": "024",
       "title": "Semantic Turn Detection — Finished, or Pausing to Think?",
@@ -169,6 +172,7 @@
     },
     {
       "slug": "barge-in",
+      "stem": "025-barge-in",
       "number": 25,
       "order": "025",
       "title": "Barge-in — Stopping When the Person Talks Over the Agent",
@@ -228,6 +232,7 @@
     },
     {
       "slug": "backchannels-and-overlap",
+      "stem": "026-backchannels-and-overlap",
       "number": 26,
       "order": "026",
       "title": "Backchannels and Overlap — \"Mm-hm\" Is Not an Interruption",
@@ -287,6 +292,7 @@
     },
     {
       "slug": "preemptive-generation",
+      "stem": "027-preemptive-generation",
       "number": 27,
       "order": "027",
       "title": "Preemptive Generation — Starting the Reply Before the Turn Is Confirmed",
@@ -346,6 +352,7 @@
     },
     {
       "slug": "silence-and-timeouts-when-the-person-says-nothing",
+      "stem": "breadth",
       "number": 28,
       "order": "028",
       "title": "Silence and Timeouts — When the Person Says Nothing",

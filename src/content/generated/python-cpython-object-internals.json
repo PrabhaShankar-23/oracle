@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "cpython-object-internals-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: CPython object internals",
       "category": "Concept map & reading order",
@@ -15,6 +16,7 @@
     },
     {
       "slug": "pyobject-refcounts-object-header",
+      "stem": "20-pyobject-refcounts-object-header",
       "number": 20,
       "order": "20",
       "title": "PyObject, Refcounts & the Object Header",
@@ -75,6 +77,7 @@
     },
     {
       "slug": "dict-internals",
+      "stem": "21-dict-internals",
       "number": 21,
       "order": "21",
       "title": "dict Internals",
@@ -135,6 +138,7 @@
     },
     {
       "slug": "set-frozenset-internals",
+      "stem": "21a-set-frozenset-internals",
       "number": 21.1,
       "order": "21a",
       "title": "set / frozenset Internals",
@@ -170,6 +174,7 @@
     },
     {
       "slug": "list-internals",
+      "stem": "22-list-internals",
       "number": 22,
       "order": "22",
       "title": "list Internals",
@@ -230,6 +235,7 @@
     },
     {
       "slug": "str-internals",
+      "stem": "23-str-internals",
       "number": 23,
       "order": "23",
       "title": "str Internals",
@@ -290,6 +296,7 @@
     },
     {
       "slug": "attribute-lookup-and-mro",
+      "stem": "24-attribute-lookup-and-mro",
       "number": 24,
       "order": "24",
       "title": "Attribute Lookup & the MRO",
@@ -350,6 +357,7 @@
     },
     {
       "slug": "descriptors",
+      "stem": "25-descriptors",
       "number": 25,
       "order": "25",
       "title": "Descriptors",
@@ -410,6 +418,7 @@
     },
     {
       "slug": "metaclasses-class-creation",
+      "stem": "26-metaclasses-class-creation",
       "number": 26,
       "order": "26",
       "title": "Metaclasses & Class Creation",
@@ -470,6 +479,7 @@
     },
     {
       "slug": "bytecode-and-eval-loop",
+      "stem": "27-bytecode-and-eval-loop",
       "number": 27,
       "order": "27",
       "title": "Bytecode & the Evaluation Loop",

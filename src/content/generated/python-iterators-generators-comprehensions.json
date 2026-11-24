@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "iterators-generators-comprehensions-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Iterators, generators & comprehensions",
       "category": "Concept map & reading order",
@@ -15,6 +16,7 @@
     },
     {
       "slug": "iterator-protocol",
+      "stem": "14-iterator-protocol",
       "number": 14,
       "order": "14",
       "title": "The Iterator Protocol",
@@ -75,6 +77,7 @@
     },
     {
       "slug": "generators-lazy-evaluation",
+      "stem": "15-generators-lazy-evaluation",
       "number": 15,
       "order": "15",
       "title": "Generators & Lazy Evaluation",
@@ -135,6 +138,7 @@
     },
     {
       "slug": "yield-from-delegation",
+      "stem": "16-yield-from-delegation",
       "number": 16,
       "order": "16",
       "title": "yield from & Generator Delegation",
@@ -195,6 +199,7 @@
     },
     {
       "slug": "coroutine-style-generators",
+      "stem": "17-coroutine-style-generators",
       "number": 17,
       "order": "17",
       "title": "Coroutine-Style Generators (.send() / .throw() / .close())",
@@ -230,6 +235,7 @@
     },
     {
       "slug": "comprehensions-genexps",
+      "stem": "18-comprehensions-genexps",
       "number": 18,
       "order": "18",
       "title": "Comprehensions & Generator Expressions",
@@ -290,6 +296,7 @@
     },
     {
       "slug": "itertools-patterns",
+      "stem": "19-itertools-patterns",
       "number": 19,
       "order": "19",
       "title": "itertools & functools.reduce Patterns",

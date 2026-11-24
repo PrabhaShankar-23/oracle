@@ -1,0 +1,284 @@
+{
+  "id": "01-requirements-and-scoping",
+  "title": "Requirements & scoping",
+  "notes": [
+    {
+      "slug": "requirements-and-scoping-map",
+      "stem": "00-chapter-map",
+      "number": -1,
+      "title": "Chapter map: Requirements & scoping",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping",
+      "headings": [
+        {
+          "id": "owners",
+          "text": "🏠 Owners",
+          "level": 2
+        },
+        {
+          "id": "decision-trees",
+          "text": "🌳 Decision trees",
+          "level": 2
+        },
+        {
+          "id": "at-a-glance",
+          "text": "📋 At a glance",
+          "level": 2
+        },
+        {
+          "id": "four-bullets",
+          "text": "Four bullets",
+          "level": 2
+        }
+      ],
+      "html": "<p>The first ten minutes of the round, in the order you make the moves. Nothing here is code, and all of it decides how the code is scored. Read each arrow as a sentence: <em>the functional split</em> <strong>is narrowed by</strong> <em>deliberate scope cuts</em>.</p>\n<figure><div class=\"mermaid\">%%{init: {\"flowchart\": {\"rankSpacing\": 32, \"nodeSpacing\": 30}}}%%\nflowchart TD\n    N1[\"🗣️ 01 · functional vs non-functional\"]\n    N2[\"✂️ 02 · deliberate scope cuts\"]\n    N3[\"🔤 03 · nouns to classes, verbs to methods\"]\n    N4[\"✍️ 04 · API-first sketch\"]\n    N5[\"🧠 05 · in-memory-first rule\"]\n    N1 --&gt;|\"is narrowed by\"| N2\n    N2 --&gt;|\"leaves the nouns for\"| N3\n    N3 --&gt;|\"becomes signatures in\"| N4\n    N4 --&gt;|\"is stored by\"| N5\n    classDef core fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef sup fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N1,N2,N3 core\n    class N4,N5 sup\n</div></figure>\n<p>Green = 🔴 CORE, blue = 🟡 SUPPORTING, yellow = 🟢 BREADTH.</p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Reading order:</strong></span><span class=\"flow-step\"><a href=\"/system-design/lld/functional-vs-nonfunctional-split\">01 functional vs non-functional</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/deliberate-scope-cuts\">02 scope cuts</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/nouns-to-classes-verbs-to-methods\">03 nouns and verbs</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/api-first-sketch\">04 API-first sketch</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/in-memory-first-rule\">05 in-memory-first</a></span></div>\n<h2 id=\"owners\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m12 5.69 5 4.5V18h-2v-6H9v6H7v-7.81zM12 3 2 12h3v8h6v-6h2v6h6v-8h3z\"></path></svg> Owners</h2>\n<table>\n<thead>\n<tr>\n<th>Idea</th>\n<th>Owner note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Listing functional and non-functional requirements out loud, and naming the dominant constraint</td>\n<td><a href=\"/system-design/lld/functional-vs-nonfunctional-split\">01</a></td>\n</tr>\n<tr>\n<td>Saying what is excluded, and why an unasked-for feature costs points</td>\n<td><a href=\"/system-design/lld/deliberate-scope-cuts\">02</a></td>\n</tr>\n<tr>\n<td>Extracting candidate classes and methods, pruning them, and finding the join entity (<code>ShowSeat</code>)</td>\n<td><a href=\"/system-design/lld/nouns-to-classes-verbs-to-methods\">03</a></td>\n</tr>\n<tr>\n<td>Writing 5–8 public signatures before any field</td>\n<td><a href=\"/system-design/lld/api-first-sketch\">04</a></td>\n</tr>\n<tr>\n<td>Repository interface over a <code>ConcurrentHashMap</code>; persistence as a swappable detail</td>\n<td><a href=\"/system-design/lld/in-memory-first-rule\">05</a></td>\n</tr>\n<tr>\n<td>Why you leave things out at all (YAGNI) and start plain (KISS)</td>\n<td><a href=\"/system-design/lld/dry-kiss-yagni\">DRY, KISS, YAGNI</a>, not these notes</td>\n</tr>\n<tr>\n<td>The repository as a pattern</td>\n<td><a href=\"/system-design/lld/repository-and-unit-of-work\">item 25</a>, not these notes</td>\n</tr>\n<tr>\n<td>Turning the requirement's wording into a pattern</td>\n<td><a href=\"/system-design/lld/pattern-selector\">pattern selector</a>, not these notes</td>\n</tr>\n</tbody></table>\n<h2 id=\"decision-trees\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3zM7 9H4V5h3zm10 6h3v4h-3zm0-10h3v4h-3z\"></path></svg> Decision trees</h2>\n<p>No decision tree: these five are steps of one opening, done in order, not alternatives.</p>\n<h2 id=\"at-a-glance\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M11 7h6v2h-6zm0 4h6v2h-6zm0 4h6v2h-6zM7 7h2v2H7zm0 4h2v2H7zm0 4h2v2H7zM20.1 3H3.9c-.5 0-.9.4-.9.9v16.2c0 .4.4.9.9.9h16.2c.4 0 .9-.5.9-.9V3.9c0-.5-.5-.9-.9-.9M19 19H5V5h14z\"></path></svg> At a glance</h2>\n<table>\n<thead>\n<tr>\n<th>Item</th>\n<th>The move</th>\n<th>What it produces</th>\n<th>If you skip it</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>01</td>\n<td>split requirements, name the dominant constraint</td>\n<td>two one-line lists</td>\n<td>you fail on scope, not on code</td>\n</tr>\n<tr>\n<td>02</td>\n<td>name the exclusions</td>\n<td>one sentence per cut</td>\n<td>you build features nobody scores</td>\n</tr>\n<tr>\n<td>03</td>\n<td>nouns → classes, verbs → methods, prune, find the join</td>\n<td>the entity list</td>\n<td>the join entity is missing, the most common modelling error</td>\n</tr>\n<tr>\n<td>04</td>\n<td>signatures before fields</td>\n<td>5–8 method signatures</td>\n<td>you design data, not a contract</td>\n</tr>\n<tr>\n<td>05</td>\n<td>repository interface, map behind it</td>\n<td>a storage seam</td>\n<td>the round turns into a schema discussion</td>\n</tr>\n</tbody></table>\n<h2 id=\"four-bullets\">Four bullets</h2>\n<ul>\n<li><strong>The one big idea:</strong> scope is a design decision, made out loud, before any class exists.</li>\n<li><strong>The two most-confused pairs:</strong> <em>functional vs non-functional</em> (01: what it does vs how well) · <em>an entity vs the join between two entities</em> (03: <code>Seat</code> vs <code>ShowSeat</code>).</li>\n<li><strong>Ten minutes before an interview:</strong> the five-minute script in this folder's README.</li>\n<li><strong>Cross-section links:</strong> the classes found here are shaped by <a href=\"/system-design/lld/foundations-map\">§0 foundations</a> and <a href=\"/system-design/lld/oo-design-principles-map\">§2 principles</a>; the contended one is handled in <a href=\"/system-design/lld/concurrency-in-lld-map\">§4 concurrency</a>.</li>\n</ul>"
+    },
+    {
+      "slug": "functional-vs-nonfunctional-split",
+      "stem": "01-functional-vs-nonfunctional-split",
+      "number": 1,
+      "order": "01",
+      "title": "Functional vs Non-Functional Split, Out Loud",
+      "category": "LLD — §1 Requirements & Scoping",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping",
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "why-it-decides-the-round",
+          "text": "Why It Decides the Round",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"reference-links\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1m0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5z\"></path><path d=\"M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99M13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83m4.5 1.84c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.52c-.79-.16-1.64-.24-2.5-.24\"></path></svg> Reference Links</h2>\n<ul>\n<li><p><strong>Why the round is scored on scope, not code</strong> — <a href=\"https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html\" target=\"_blank\" rel=\"noopener noreferrer\">Robert C. Martin: Solid Relevance</a></p>\n</li>\n<li><p><strong>Worked opening on a real problem</strong> — <code>../../07-Design-problems/book-my-show.md</code> (§1 Clarifying Questions)</p>\n</li>\n</ul>\n<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How long before you write a class?</strong></td>\n<td>~5 minutes. Clarification first, always.</td>\n</tr>\n<tr>\n<td><strong>What's the functional list?</strong></td>\n<td>The operations that must exist — verbs the user performs.</td>\n</tr>\n<tr>\n<td><strong>What's the non-functional list in LLD?</strong></td>\n<td>Concurrency, object-graph scale, latency of the hot operation, persistence stance. Short — usually one item dominates.</td>\n</tr>\n<tr>\n<td><strong>What do you do with the dominant constraint?</strong></td>\n<td>Name it, then defend every later decision by pointing at it.</td>\n</tr>\n<tr>\n<td><strong>Why do candidates fail here?</strong></td>\n<td>They start coding at minute two and commit to a shape before knowing which axis gets stretched.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Before any class, split the problem into what it must <em>do</em> and what it must <em>hold true under</em>. In LLD the functional list is long and cheap — browse, select, hold, pay, confirm — and the non-functional list is short and expensive, usually dominated by exactly one item: \"two users want the same seat.\" Saying that dominant constraint out loud in minute three is what lets you justify every structural decision for the next fifty-five, because you can point at it instead of arguing from taste.</p>\n<hr>\n<h2 id=\"why-it-decides-the-round\">Why It Decides the Round</h2>\n<p>The interviewer chose the follow-up feature before you walked in. The clarification phase is how you find out which one. A candidate who asks \"can two users book the same seat concurrently?\" learns that the round is a concurrency round; a candidate who asks \"should I support multiple payment providers?\" learns it's an extensibility round. Both answers change what you build in the first ten minutes.</p>\n<p>The non-functional list is also where LLD and HLD get separated. QPS, replication and partitioning are <em>not</em> your non-functionals here — thread-safety, invariant ownership and extension points are. Volunteering \"I'm treating this as single-process; the distributed version is a different conversation\" shows you know which round you're in.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<p>The opening exchange, roughly sixty seconds of it:</p>\n<blockquote>\n<p><strong>You:</strong> \"Before I model anything — functionally, I'm hearing: browse shows, pick seats, hold them, pay, confirm. Is cancellation in scope?\"\n<strong>Them:</strong> \"Assume not.\"\n<strong>You:</strong> \"Non-functionally, the one that shapes the design is concurrency — multiple users hitting the same seat on a popular show. Is that in scope, or should I assume single-threaded?\"\n<strong>Them:</strong> \"Definitely in scope.\"\n<strong>You:</strong> \"Then <code>ShowSeat</code> is a separate entity from <code>Seat</code>, and the hold/confirm lifecycle is where I'll spend my time. Latency target — is this a web request path, so tens of milliseconds?\"</p>\n</blockquote>\n<p>Three questions, and the design is now pointed at the thing being scored.</p>\n<p>A useful checklist for the non-functional side in LLD, in the order they usually matter:</p>\n<table>\n<thead>\n<tr>\n<th>Question</th>\n<th>What the answer changes</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Concurrent access to the same resource?</td>\n<td>Whether you need locks, atomic ops, or nothing</td>\n</tr>\n<tr>\n<td>How many objects — hundreds or millions?</td>\n<td>Whether a <code>List</code> scan is acceptable or you need an index</td>\n</tr>\n<tr>\n<td>Is this a request path or a background job?</td>\n<td>Whether blocking is allowed</td>\n</tr>\n<tr>\n<td>Persistence — real, or interface-only?</td>\n<td>Whether you discuss schema (usually: no)</td>\n</tr>\n<tr>\n<td>Multi-instance deployment?</td>\n<td>Whether an in-process lock is honest</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Starting to code at minute two.</strong> It reads as eagerness and scores as poor scope control. The design commits to a shape before the constraints are known, and when the follow-up arrives on an axis you didn't anticipate, the only recovery is surgery on code you already wrote.</p>\n<p><strong>Listing non-functionals from the HLD script.</strong> \"Availability, scalability, consistency, latency\" recited generically is worse than one specific sentence about the contended resource, because it shows you're pattern-matching on the wrong round.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/deliberate-scope-cuts\"><code>02-deliberate-scope-cuts.md</code></a> — what you say you're <em>not</em> building.</li>\n<li><strong>Uses this:</strong> <a href=\"/system-design/lld/identify-the-contended-resource\"><code>../04-concurrency-in-lld/27-identify-the-contended-resource.md</code></a> — the dominant non-functional, made concrete.</li>\n<li><strong>Worked:</strong> <code>../../07-Design-problems/book-my-show.md</code> · <code>../../07-Design-problems/parking-lot.md</code></li>\n</ul>"
+    },
+    {
+      "slug": "deliberate-scope-cuts",
+      "stem": "02-deliberate-scope-cuts",
+      "number": 2,
+      "order": "02",
+      "title": "Deliberate Scope Cuts",
+      "category": "LLD — §1 Requirements & Scoping",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping",
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "why-it-decides-the-round",
+          "text": "Why It Decides the Round",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"reference-links\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1m0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5z\"></path><path d=\"M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99M13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83m4.5 1.84c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.52c-.79-.16-1.64-.24-2.5-.24\"></path></svg> Reference Links</h2>\n<ul>\n<li><strong>Speculative generality and doing too much</strong> — <a href=\"/system-design/docs/anti-patterns\"><code>../03-design-patterns/catalogue/anti-patterns.md</code></a></li>\n</ul>\n<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What are the standard three cuts?</strong></td>\n<td>Payments (gateway internals), auth, persistence.</td>\n</tr>\n<tr>\n<td><strong>Why announce a cut instead of silently skipping it?</strong></td>\n<td>An unannounced gap reads as an oversight; an announced one reads as prioritisation.</td>\n</tr>\n<tr>\n<td><strong>What does an unasked-for feature cost?</strong></td>\n<td>Minutes that were needed for the extension points, which are what's actually scored.</td>\n</tr>\n<tr>\n<td><strong>Is a cut permanent?</strong></td>\n<td>No — state the seam. \"Payment is an interface; I'd implement it behind an adapter.\"</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Name what you're excluding and why, in one sentence each, before you build. \"I'm not implementing auth, the payment gateway, or persistence — auth is orthogonal, the gateway is an adapter behind an interface, and persistence is a repository implementation. I'll spend the time on the seat lifecycle instead.\" This is not modesty and it is not hedging; it's the statement that converts an incomplete design into a <em>deliberately scoped</em> one.</p>\n<hr>\n<h2 id=\"why-it-decides-the-round\">Why It Decides the Round</h2>\n<p>There is a fixed budget of about forty-five minutes of building. Every feature you add spends minutes that were available for extension points, and extension points are the scored dimension. A candidate who implements a full user-registration flow in a parking-lot problem has produced more code and a worse design.</p>\n<p>The second reason is interpretive. An interviewer looking at a design with no persistence has to decide whether you didn't know or didn't bother. Saying it removes the ambiguity — and naming the <em>seam</em> (\"repository interface, <code>ConcurrentHashMap</code> behind it\") shows you know where the boundary belongs, which is the same skill as the design work you did build.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<p>The cuts worth making by default, with the sentence for each:</p>\n<table>\n<thead>\n<tr>\n<th>Cut</th>\n<th>The sentence</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Persistence</strong></td>\n<td>\"Repository interfaces, in-memory implementations. Swapping in SQL is an implementation, not a redesign.\"</td>\n</tr>\n<tr>\n<td><strong>Auth / users</strong></td>\n<td>\"I'll take a <code>UserId</code> as given; authentication is orthogonal to this design.\"</td>\n</tr>\n<tr>\n<td><strong>Payment gateway</strong></td>\n<td>\"<code>PaymentGateway</code> is an interface with one fake implementation. The real ones are adapters.\"</td>\n</tr>\n<tr>\n<td><strong>Notifications</strong></td>\n<td>\"An observer on booking-confirmed. I'll define the listener interface and stop there.\"</td>\n</tr>\n<tr>\n<td><strong>Admin / CRUD</strong></td>\n<td>\"Assuming shows and seats are already loaded.\"</td>\n</tr>\n</tbody></table>\n<p>And the cuts that are <strong>not</strong> safe to make, because they're usually the thing being tested: concurrency on the contended resource, the state machine of the central entity, and whichever policy the follow-up will change (pricing, dispatch, allocation).</p>\n<p>If you cut something and time remains at the end, say so: \"I have ten minutes — I'd rather add two tests on the hold path than build the notification channel. Which is more useful to you?\" That question scores well; it shows you know what's valuable.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Building the feature list.</strong> Payments, auth, notifications, admin — each of them plausible, none of them scored, all of them consuming the budget.</p>\n<p><strong>Cutting the thing under test.</strong> \"I'll assume single-threaded for now\" in a booking problem is cutting the round itself. If you must defer concurrency to get a skeleton up, say <em>when</em> you'll come back: \"single-threaded first, then I'll add the locking — five minutes.\"</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/functional-vs-nonfunctional-split\"><code>01-functional-vs-nonfunctional-split.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/nouns-to-classes-verbs-to-methods\"><code>03-nouns-to-classes-verbs-to-methods.md</code></a></li>\n<li><strong>Related:</strong> <a href=\"/system-design/lld/in-memory-first-rule\"><code>05-in-memory-first-rule.md</code></a> — the persistence cut, in detail.</li>\n</ul>"
+    },
+    {
+      "slug": "nouns-to-classes-verbs-to-methods",
+      "stem": "03-nouns-to-classes-verbs-to-methods",
+      "number": 3,
+      "order": "03",
+      "title": "Core Entities → Nouns, Core Operations → Verbs",
+      "category": "LLD — §1 Requirements & Scoping",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping",
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "why-it-decides-the-round",
+          "text": "Why It Decides the Round",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"reference-links\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1m0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5z\"></path><path d=\"M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99M13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83m4.5 1.84c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.52c-.79-.16-1.64-.24-2.5-.24\"></path></svg> Reference Links</h2>\n<ul>\n<li><p><strong>Where behaviour belongs once the nouns exist</strong> — <a href=\"https://martinfowler.com/bliki/TellDontAsk.html\" target=\"_blank\" rel=\"noopener noreferrer\">Martin Fowler: Tell Don't Ask</a></p>\n</li>\n<li><p><strong>Entity vs value distinction, applied during the prune</strong> — <a href=\"https://martinfowler.com/bliki/ValueObject.html\" target=\"_blank\" rel=\"noopener noreferrer\">Martin Fowler: Value Object</a></p>\n</li>\n</ul>\n<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The mechanical first pass?</strong></td>\n<td>Extract nouns from the problem statement as candidate classes, verbs as candidate methods.</td>\n</tr>\n<tr>\n<td><strong>What's the second pass?</strong></td>\n<td>Prune. The extraction deliberately over-generates.</td>\n</tr>\n<tr>\n<td><strong>Where does the judgment show?</strong></td>\n<td>In the pruning, not the extraction.</td>\n</tr>\n<tr>\n<td><strong>Classic over-generation?</strong></td>\n<td><code>Ticket</code>, <code>Booking</code>, <code>Reservation</code> modelled as three classes when they're one.</td>\n</tr>\n<tr>\n<td><strong>Classic under-generation?</strong></td>\n<td>Missing the join entity — <code>ShowSeat</code>, <code>SpotAssignment</code>, <code>TripLeg</code>.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Read the problem statement and mechanically pull out every noun as a candidate class and every verb as a candidate method. Then prune hard: merge synonyms, delete nouns with no state and no behaviour, and — the move that actually matters — look for the <em>missing</em> noun, the join between two of your entities whose lifecycle belongs to neither. The extraction is clerical; the prune is the design.</p>\n<hr>\n<h2 id=\"why-it-decides-the-round\">Why It Decides the Round</h2>\n<p>The extraction stops you staring at a blank page, which is worth something under time pressure. But its real value is that it surfaces the join entity, and the join entity is where most LLD problems hide their difficulty.</p>\n<p>The canonical example: \"a seat in a screen\" and \"a show at a time\" are both obvious nouns. Whether a seat is <em>booked</em> belongs to neither — it's a property of the pair, and putting <code>isBooked</code> on <code>Seat</code> is the single most common modelling error in BookMyShow, because it makes a seat booked for every show simultaneously. The same shape recurs: a parking spot's occupancy belongs to <code>(spot, time-window)</code>; a driver's availability belongs to <code>(driver, trip)</code>; a room's booking belongs to <code>(room, date-range)</code>.</p>\n<p>So the working question after extraction is: <strong>for each piece of mutable state, which noun owns it?</strong> If the answer is \"both\", you've found a missing class.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<p>BookMyShow, worked:</p>\n<pre><code>Nouns (raw):    City, Theatre, Screen, Seat, Movie, Show, User, Booking,\n                Ticket, Payment, Reservation, Price, Seat Type, Time Slot\n\nVerbs (raw):    browse, search, select, hold, reserve, book, pay,\n                confirm, cancel, refund, display\n\nPrune:\n  Ticket ≡ Booking                         → merge, keep Booking\n  Reservation ≡ the HELD state of a seat   → not a class, a state\n  Price, Seat Type                         → value objects, not entities\n  City                                     → an attribute of Theatre unless search is in scope\n  browse/search/display                    → out of scope (item 2)\n\nMissing (the important step):\n  \"is this seat booked?\" — owned by Seat? No: only for one show.\n  Owned by Show? No: only for one seat.\n  → ShowSeat(show, seat, status, heldBy, holdExpiresAt)   ← the join entity\n</code></pre>\n<p>Final: <code>Theatre</code>, <code>Screen</code>, <code>Seat</code>, <code>Movie</code>, <code>Show</code>, <strong><code>ShowSeat</code></strong>, <code>Booking</code>, <code>Payment</code>, <code>User</code> — nine classes, one of which was never a noun in the problem statement and is where the entire round happens.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Shipping the raw extraction.</strong> Fourteen classes, half of them data bags with one field. The extraction over-generates on purpose; not pruning turns a technique into noise.</p>\n<p><strong>Missing the join.</strong> <code>Seat.isBooked</code> is the flagship version. The tell is that a single boolean has to be true for one context and false for another — that's a pair, not a property.</p>\n<p><strong>Treating every noun as an entity.</strong> <code>Money</code>, <code>TimeSlot</code>, <code>SeatId</code> have no lifecycle and no identity; they're value objects (→ item 36). Giving them repositories and IDs is over-modelling.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/deliberate-scope-cuts\"><code>02-deliberate-scope-cuts.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/api-first-sketch\"><code>04-api-first-sketch.md</code></a> — signatures before fields.</li>\n<li><strong>Applies:</strong> <a href=\"/system-design/lld/value-objects-vs-entities\"><code>../05-modeling-craft/36-value-objects-vs-entities.md</code></a> — the test used during the prune.</li>\n<li><strong>Worked:</strong> <code>../../07-Design-problems/book-my-show.md</code> — <code>ShowSeat</code> in full.</li>\n</ul>"
+    },
+    {
+      "slug": "api-first-sketch",
+      "stem": "04-api-first-sketch",
+      "number": 4,
+      "order": "04",
+      "title": "API-First Sketch",
+      "category": "LLD — §1 Requirements & Scoping",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "why-it-matters",
+          "text": "Why It Matters",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How many signatures, and when?</strong></td>\n<td>5–8 public methods, before a single field.</td>\n</tr>\n<tr>\n<td><strong>Why before fields?</strong></td>\n<td>It forces you to design the contract rather than the data.</td>\n</tr>\n<tr>\n<td><strong>What's the cheap-feedback argument?</strong></td>\n<td>If the API is wrong you want to know at minute ten, not minute forty.</td>\n</tr>\n<tr>\n<td><strong>What do return types buy you?</strong></td>\n<td>They force the failure decision — exception vs <code>Optional</code> vs a result type — up front.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Write the five to eight public method signatures the system exposes, with parameter and return types, before writing any fields. Data-first design produces classes shaped like a database table and a service layer to operate on them; contract-first design produces classes shaped like the operations, which is what makes them extensible. It also gives the interviewer something cheap to react to — an API sketch takes ninety seconds to write and ninety seconds to critique.</p>\n<hr>\n<h2 id=\"why-it-matters\">Why It Matters</h2>\n<p>Return types are the part that does the work. <code>boolean hold(...)</code> and <code>Hold hold(...)</code> and <code>void hold(...) throws SeatUnavailableException</code> are three different designs, and choosing between them forces you to decide, at minute ten, how failure is communicated — which is a decision that otherwise gets made accidentally forty minutes later by whoever writes the first <code>return false</code>.</p>\n<p>Typed parameters do the same for argument-order bugs (→ item 36). <code>book(String, String, String)</code> is callable wrong; <code>book(ShowId, SeatId, UserId)</code> isn't.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<pre><code class=\"language-java\">// Minute 8. No fields yet, no implementations. This fits on a whiteboard.\npublic interface BookingApi {\n    List&lt;ShowSeatView&gt; availableSeats(ShowId show);\n    HoldToken          hold(ShowId show, List&lt;SeatId&gt; seats, UserId user);  // all-or-nothing\n    Booking            confirm(HoldToken token, String idempotencyKey);\n    void               release(HoldToken token);\n}\n\npublic interface PricingApi {\n    Money quote(ShowId show, List&lt;SeatId&gt; seats, Optional&lt;CouponCode&gt; coupon);\n}\n</code></pre>\n<p>Four decisions are already visible and defensible from those six lines: holds are all-or-nothing over a seat list (so group booking and its lock-ordering problem is in scope); a <code>HoldToken</code> exists, so hold state is a first-class thing with a lifetime; confirmation takes an idempotency key, so retries were considered; pricing is a separate interface, so it's the swappable axis.</p>\n<p>Narrate that. \"Here's the contract — notice <code>hold</code> takes a list, which is where the deadlock question lives, and <code>confirm</code> takes an idempotency key because the payment can time out.\" That sentence tells the interviewer you've already seen both follow-ups.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Writing fields first.</strong> You end up with <code>class Booking { Long id; Long userId; Long showId; ... }</code> and then a service to manipulate it — the anemic model (→ item 11), arrived at by process rather than by choice.</p>\n<p><strong>Signatures without return types.</strong> \"<code>hold()</code>, <code>confirm()</code>, <code>cancel()</code>\" defers every failure decision, which means it gets made badly under time pressure later.</p>\n<p><strong>More than about eight.</strong> Past that it stops being a sketch and starts being the implementation, and you've spent the clarification budget on typing.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/nouns-to-classes-verbs-to-methods\"><code>03-nouns-to-classes-verbs-to-methods.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/in-memory-first-rule\"><code>05-in-memory-first-rule.md</code></a></li>\n<li><strong>Depends on:</strong> <a href=\"/system-design/lld/value-objects-vs-entities\"><code>../05-modeling-craft/36-value-objects-vs-entities.md</code></a> — typed IDs in the signatures.</li>\n<li><strong>Feeds:</strong> <a href=\"/system-design/lld/idempotency-keys\"><code>../04-concurrency-in-lld/32-idempotency-keys.md</code></a> — why <code>confirm</code> takes a key.</li>\n</ul>"
+    },
+    {
+      "slug": "in-memory-first-rule",
+      "stem": "05-in-memory-first-rule",
+      "number": 5,
+      "order": "05",
+      "title": "In-Memory-First Rule",
+      "category": "LLD — §1 Requirements & Scoping",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping",
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "why-it-matters",
+          "text": "Why It Matters",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"reference-links\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1m0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5z\"></path><path d=\"M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99M13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83m4.5 1.84c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.52c-.79-.16-1.64-.24-2.5-.24\"></path></svg> Reference Links</h2>\n<ul>\n<li><strong>The map that backs the fake implementation</strong> — <a href=\"https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html\" target=\"_blank\" rel=\"noopener noreferrer\">Java SE 21 API: <code>ConcurrentHashMap</code></a></li>\n</ul>\n<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Persistence in a 60-minute LLD?</strong></td>\n<td>A repository <em>interface</em>, backed by <code>ConcurrentHashMap</code>.</td>\n</tr>\n<tr>\n<td><strong>Why is schema talk a mistake here?</strong></td>\n<td>It's an HLD/data-modelling conversation; it spends LLD minutes on an unscored dimension.</td>\n</tr>\n<tr>\n<td><strong>The one persistence detail worth saying anyway?</strong></td>\n<td>The unique constraint on the contended key — it's the only guard that survives multi-instance deployment.</td>\n</tr>\n<tr>\n<td><strong>What does the repository interface actually buy?</strong></td>\n<td>A named seam, plus tests that run without a database.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Put a repository interface at the persistence boundary and back it with a <code>ConcurrentHashMap</code>. Persistence is then a swappable implementation rather than a design constraint, your tests run in milliseconds, and you never enter the schema conversation — which is a different round. The one exception worth volunteering: name the unique constraint you'd put on the contended key, because that's the guard that still works after the service is deployed twice.</p>\n<hr>\n<h2 id=\"why-it-matters\">Why It Matters</h2>\n<p>Two reasons, one defensive and one positive.</p>\n<p>Defensively: schema discussion is a scope leak that eats minutes and drags you toward HLD territory (indexes, normalisation, read replicas) where nothing is scored. Saying \"repository interface, in-memory implementation\" once closes the topic cleanly.</p>\n<p>Positively: the seam is real design work, not a dodge. It's where dependency injection (→ item 13) becomes visible, it's what makes the domain testable without infrastructure (→ item 41), and it's the honest answer to \"how would this work with a real database?\" — you point at the interface and say \"a JDBC implementation of this, and the transaction boundary moves to the service method.\"</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<pre><code class=\"language-java\">public interface ShowSeatRepository {\n    Optional&lt;ShowSeat&gt; find(ShowId show, SeatId seat);\n    List&lt;ShowSeat&gt;     findByShow(ShowId show);\n    void               save(ShowSeat seat);\n}\n\n// The interview implementation. Ten lines, thread-safe, done.\npublic final class InMemoryShowSeatRepository implements ShowSeatRepository {\n    private final ConcurrentHashMap&lt;ShowSeatKey, ShowSeat&gt; store = new ConcurrentHashMap&lt;&gt;();\n\n    @Override public Optional&lt;ShowSeat&gt; find(ShowId show, SeatId seat) {\n        return Optional.ofNullable(store.get(new ShowSeatKey(show, seat)));\n    }\n    @Override public List&lt;ShowSeat&gt; findByShow(ShowId show) {\n        return store.values().stream().filter(s -&gt; s.showId().equals(show)).toList();\n    }\n    @Override public void save(ShowSeat s) { store.put(new ShowSeatKey(s.showId(), s.seatId()), s); }\n}\n</code></pre>\n<p>The sentence to say alongside it: <em>\"In production this is a JDBC implementation, and I'd put a unique constraint on <code>(show_id, seat_id)</code> where status is BOOKED — the in-process lock stops double-booking in one JVM, and the constraint is what stops it in three.\"</em></p>\n<p>Two notes on the fake. <code>findByShow</code> scanning <code>values()</code> is O(n) and that's fine at interview scale — say so rather than building a secondary index nobody asked for. And a <code>ConcurrentHashMap</code> gives you thread-safe <em>storage</em>, not thread-safe <em>transitions</em>; the check-and-write still needs <code>compute</code> or a lock (→ item 30).</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Drawing tables.</strong> The moment you write <code>CREATE TABLE</code> on the whiteboard you've changed rounds.</p>\n<p><strong>Assuming the map makes you safe.</strong> <code>if (repo.find(k).isEmpty()) repo.save(v)</code> is a race regardless of how concurrent the map is. Storage concurrency ≠ transition atomicity.</p>\n<p><strong>Building a real index in the fake.</strong> Secondary maps, ordering, eviction — that's minutes spent on a component you announced was out of scope.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/api-first-sketch\"><code>04-api-first-sketch.md</code></a></li>\n<li><strong>Section:</strong> <code>README.md</code></li>\n<li><strong>Depends on:</strong> <a href=\"/system-design/lld/constructor-dependency-injection\"><code>../02-oo-design-principles/13-constructor-dependency-injection.md</code></a></li>\n<li><strong>Careful with:</strong> <a href=\"/system-design/lld/concurrenthashmap-atomics\"><code>../04-concurrency-in-lld/30-concurrenthashmap-atomics.md</code></a> — the map is not the lock.</li>\n<li><strong>Pattern:</strong> Repository &amp; Unit of Work → item 25, <a href=\"/system-design/lld/repository-and-unit-of-work\"><code>../03-design-patterns/25-repository-and-unit-of-work.md</code></a></li>\n</ul>"
+    }
+  ]
+}

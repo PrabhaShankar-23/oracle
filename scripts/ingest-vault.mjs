@@ -1472,7 +1472,7 @@ const NETWORKING_CHAPTERS = {
 }
 
 /** A vault series is one folder of chapters, each holding notes that share a header prefix. */
-async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeader, chapterId = (d) => d, strictRefs = false }) {
+async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeader, chapterId = (d) => d, strictRefs = false, demote = false, extraResolve = () => null }) {
   const { readdir } = await import('node:fs/promises')
   const headerRe = new RegExp(`^# ${header}: `)
   const stripRe = new RegExp(`^${header}:\\s*`, 'i')
@@ -1519,6 +1519,8 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
         const lead = body.find('blockquote').first()
         const meta = parseDecisionMeta(text(lead))
         lead.remove()
+        // Older templates put every section under a `#` heading; shift them so the page TOC sees them.
+        if (demote) demoteHeadings($, body)
 
         // Order by the metadata's item number where there is one, else by the filename.
         const item = Number(/\(Item\s+(\d+)\)/.exec(meta.category ?? '')?.[1] ?? 0)
@@ -1570,15 +1572,18 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
     // Links to another note in this series become site routes; anything else flattens to text.
     body.find('a[href$=".md"]').each((_, node) => {
       const a = $(node)
-      const target = resolveNote(a.attr('href') ?? '', note.dir)
+      const href = a.attr('href') ?? ''
+      const target = resolveNote(href, note.dir)
+      const other = target ? null : extraResolve(href)
       if (target) a.attr('href', `${route}/${target}`)
+      else if (other) a.attr('href', other)
     })
     rewriteLinks($, body)
     promoteMermaidFences($, body)
     // Wikilinks to a published note in this series (`[[03-iterators-…/15-generators…|generators]]`) become routes too.
     flattenVaultRefsWithin($, body, (target) => {
       const slug = resolveNote(target, note.dir)
-      return slug ? `${route}/${slug}` : null
+      return slug ? `${route}/${slug}` : extraResolve(target)
     })
 
     const id = chapterId(note.dir)
@@ -1586,6 +1591,7 @@ async function ingestNoteSeries({ dir, chapters, route, header, prefix, mapHeade
     if (!out.includes(chapter)) out.push(chapter)
     chapter.notes.push({
       slug: note.slug,
+      stem: note.stem,
       number: note.number,
       order: note.order,
       title: note.title,
@@ -1616,7 +1622,151 @@ const ingestNetworking = () =>
     header: 'Networking Topic',
     prefix: 'networking',
     mapHeader: 'Chapter Map',
+    extraResolve: (ref) => resolveSdDoc(ref),
   })
+
+/* ---------------- Shared: shift headings down a level ---------------- */
+
+/** `#` sections → `##`, `##` → `###` … (h6 stays), so a page with several top-level sections gets a TOC. */
+function demoteHeadings($, body) {
+  if (body.find('h1').length === 0) return
+  for (let level = 5; level >= 1; level--) {
+    body.find(`h${level}`).each((_, node) => {
+      node.name = `h${level + 1}`
+    })
+  }
+}
+
+/* ---------------- System Design docs (LLD catalogue, HLD, distributed systems) ---------------- */
+
+const SD_DIR = '01-System Design'
+const SD_DOC_ROUTE = '/system-design/docs'
+/** Stand-alone articles: one page each, grouped in the sidebar the way the vault folders are. */
+const SD_DOCS = [
+  { slug: 'lld-reference-index', file: '02-lld/LLD-Interview-Reference-Index.md', group: '02 LLD', title: 'LLD reference index', description: 'Every LLD topic by section, tier and what a strong answer shows.' },
+  { slug: 'pattern-catalogue', file: '02-lld/03-design-patterns/catalogue/README.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Pattern catalogue index', description: 'The GoF and enterprise patterns at a glance, and how to pick one.' },
+  { slug: 'pattern-decision-tree', file: '02-lld/03-design-patterns/catalogue/decision-tree.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Pattern selection decision tree', description: 'From the problem in front of you to the pattern that fits it.' },
+  { slug: 'creational-patterns', file: '02-lld/03-design-patterns/catalogue/creational.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Creational patterns', description: 'Factory, builder, singleton, prototype: who creates objects, and how.' },
+  { slug: 'structural-patterns', file: '02-lld/03-design-patterns/catalogue/structural.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Structural patterns', description: 'Adapter, decorator, facade, proxy, composite: how objects fit together.' },
+  { slug: 'behavioral-patterns', file: '02-lld/03-design-patterns/catalogue/behavioral.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Behavioral patterns', description: 'Strategy, observer, state, command, chain: how objects share work.' },
+  { slug: 'anti-patterns', file: '02-lld/03-design-patterns/catalogue/anti-patterns.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Anti-patterns', description: 'When the pattern is the problem.' },
+  { slug: 'industry-problem-playbook', file: '02-lld/03-design-patterns/catalogue/industry-problem-playbook.md', group: '02 LLD', subgroup: 'Pattern catalogue', title: 'Industry problem → pattern playbook', description: 'Real product problems mapped to the patterns that solve them.' },
+  { slug: 'hld-reference-index', file: '03-hld/HLD-Interview-Reference-Index.md', group: '03 HLD', title: 'HLD reference index', description: 'Every HLD topic by section and tier, and where each is covered.' },
+  { slug: 'core-concepts', file: '00-design-basics/28-core-system-design-concepts.md', group: '03 HLD', title: '28 core system design concepts', description: 'The building blocks along a request’s path, and the failure each one prevents.' },
+  { slug: 'bloom-filters-and-sketches', file: '00-design-basics/29-bloom-filters-and-sketches.md', group: '03 HLD', title: 'Bloom filters & probabilistic sketches', description: 'Trading a small, bounded error for huge memory savings.' },
+  { slug: 'dev-prod-parity', file: '03-hld/dev-prod-parity.md', group: '03 HLD', title: 'Dev/prod parity', description: 'Why it works locally but breaks in production.' },
+  { slug: 'distributed-systems', file: '05-distributed-systems/README.md', group: '05 Distributed systems', title: 'Distributed systems index', description: 'Resilience, communication, data and operations across services.' },
+  { slug: 'resilience-patterns', file: '05-distributed-systems/resilience.md', group: '05 Distributed systems', title: 'Resilience patterns', description: 'Timeouts, retries, circuit breakers, bulkheads, rate limits.' },
+  { slug: 'communication-patterns', file: '05-distributed-systems/communication.md', group: '05 Distributed systems', title: 'Communication patterns', description: 'Sync vs async, API gateway, messaging, service discovery.' },
+  { slug: 'data-patterns', file: '05-distributed-systems/data.md', group: '05 Distributed systems', title: 'Data patterns', description: 'Database per service, sagas, outbox, CQRS, event sourcing.' },
+  { slug: 'deployment-observability-patterns', file: '05-distributed-systems/deployment-observability.md', group: '05 Distributed systems', title: 'Deployment & observability patterns', description: 'Rollouts, sidecars, tracing, health checks.' },
+]
+
+/** A link's file key: the last two path parts (`catalogue/README`), so two READMEs never collide. */
+const sdKey = (ref) => {
+  const parts = decodeURIComponent(ref.split('#')[0]).replace(/\.md$/, '').split('/').filter((x) => x && x !== '.' && x !== '..')
+  return parts.slice(-2).join('/')
+}
+const SD_DOC_ROUTES = new Map(SD_DOCS.map((d) => [sdKey(d.file), `${SD_DOC_ROUTE}/${d.slug}`]))
+/** Unique file stems also resolve alone (`[[resilience]]`); READMEs need their folder. */
+const SD_DOC_STEMS = new Map(
+  SD_DOCS.filter((d) => !d.file.endsWith('README.md')).map((d) => [sdKey(d.file).split('/').pop(), `${SD_DOC_ROUTE}/${d.slug}`]),
+)
+/** Filled once the LLD series is parsed, so docs can link to LLD notes too. */
+const LLD_STEMS = new Map()
+function resolveSdDoc(ref) {
+  if (!ref || /^[a-z]+:\/\//i.test(ref)) return null
+  const key = sdKey(ref)
+  const stem = key.split('/').pop()
+  return SD_DOC_ROUTES.get(key) ?? SD_DOC_STEMS.get(stem) ?? LLD_STEMS.get(stem) ?? null
+}
+
+/** The first `# 🗂️ Note Metadata` section is bookkeeping (dates, sources): drop it and what follows up to the next `#`. */
+function dropMetadataSection($, body) {
+  const first = body.children('h1').first()
+  if (!/note metadata/i.test(text(first))) return
+  let node = first.next()
+  while (node.length && !node.is('h1')) {
+    const next = node.next()
+    node.remove()
+    node = next
+  }
+  first.remove()
+}
+
+async function ingestSdDocs() {
+  const docs = []
+  for (const d of SD_DOCS) {
+    const md = await readFile(path.join(VAULT, SD_DIR, d.file), 'utf8')
+    chartSource = d.file
+    const $ = cheerio.load(marked.parse(linkMarkdownAliases(md), { gfm: true, mangle: false, headerIds: false }))
+    const body = $('body')
+    dropMetadataSection($, body)
+    body.find('h1').first().remove()
+
+    // Relative links (`README.md`, `./catalogue/behavioral.md`) resolve against this file's own folder.
+    const here = path.posix.dirname(d.file)
+    const resolveHref = (root) =>
+      root.find('a[href$=".md"], a[href*=".md#"]').each((_, node) => {
+        const a = $(node)
+        const href = a.attr('href') ?? ''
+        const target = /^[a-z]+:\/\//i.test(href) ? null : (resolveSdDoc(path.posix.normalize(path.posix.join(here, href))) ?? resolveSdDoc(href))
+        if (target) a.attr('href', target)
+      })
+
+    // The opening blockquote(s) carry dates and scope: shown as the meta box.
+    const meta = []
+    while (body.children().first().is('blockquote')) {
+      const lead = body.children().first()
+      resolveHref(lead)
+      flattenVaultRefsWithin($, lead, resolveSdDoc)
+      rewriteLinks($, lead)
+      meta.push(...lead.find('p').toArray().flatMap((p) => inner($(p)).split('\n')).map((l) => l.trim()).filter(Boolean))
+      lead.remove()
+    }
+    while (body.children().first().is('hr')) body.children().first().remove()
+
+    demoteHeadings($, body)
+    resolveHref(body)
+    promoteMermaidFences($, body)
+    flattenVaultRefsWithin($, body, resolveSdDoc)
+    rewriteLinks($, body)
+    const headings = collectHeadings($, body)
+    docs.push({ slug: d.slug, title: d.title, description: d.description, group: d.group, subgroup: d.subgroup, meta, headings, html: inner(body) })
+    console.log(`  parsed ${d.file} (${headings.length} headings)`)
+  }
+  await write('sd-docs.json', { docs })
+  return docs
+}
+
+/* ---------------- LLD (01-System Design/02-lld) ---------------- */
+
+const LLD_DIR = '01-System Design/02-lld'
+const LLD_ROUTE = '/system-design/lld'
+const LLD_CHAPTERS = {
+  '01-foundations': 'Foundations',
+  '01-requirements-and-scoping': 'Requirements & scoping',
+  '02-oo-design-principles': 'OO design principles',
+  '03-design-patterns': 'Design patterns',
+  '04-concurrency-in-lld': 'Concurrency in LLD',
+  '05-modeling-craft': 'Modeling craft',
+}
+
+async function ingestLld() {
+  const out = await ingestNoteSeries({
+    dir: LLD_DIR,
+    chapters: LLD_CHAPTERS,
+    route: LLD_ROUTE,
+    header: '(?:LLD Item \\d+|LLD Foundations)',
+    prefix: 'lld',
+    mapHeader: 'Chapter Map',
+    // Two vault folders start `01-`; foundations reads first, so it takes 00 on the site.
+    chapterId: (d) => (d === '01-foundations' ? '00-foundations' : d),
+    demote: true,
+    extraResolve: (ref) => resolveSdDoc(ref),
+  })
+  return out
+}
 
 /* ---------------- Voice AI (01-System Design/08-voice-system) ---------------- */
 
@@ -1790,7 +1940,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice, aiCoding, pythonDocs) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice, aiCoding, pythonDocs, lld, sdDocs) {
   const practiceProblems = practice.families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   await write('manifest.json', {
     dsaPractice: { total: practiceProblems.length, l1: practiceProblems.filter((p) => p.l1).length },
@@ -1888,6 +2038,21 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
       ...d,
       headings: d.headings.filter((h) => h.level === 2),
     })),
+    lld: lld.flatMap((ch) =>
+      ch.notes.map((n) => ({
+        slug: n.slug,
+        order: n.order,
+        title: n.title,
+        tier: n.tier,
+        relevance: n.relevance,
+        section: ch.id,
+        sectionTitle: ch.title,
+      })),
+    ),
+    sdDocs: sdDocs.map(({ html: _html, ...d }) => ({
+      ...d,
+      headings: d.headings.filter((h) => h.level === 2),
+    })),
     dsaUtils: utils.flatMap((u) =>
       u.sections.flatMap((s) =>
         s.helpers.filter((h) => h.id).map((h) => ({ lang: u.lang, id: h.id, name: h.name, section: s.title })),
@@ -1901,6 +2066,9 @@ console.log(`Vault: ${VAULT}`)
 const utils = []
 for (const u of UTILS) utils.push(await ingestUtils(u))
 const agentic = await ingestAgenticDecisions()
+const lld = await ingestLld()
+for (const ch of lld) for (const n of ch.notes) LLD_STEMS.set(n.stem ?? '', `${LLD_ROUTE}/${n.slug}`)
+const sdDocs = await ingestSdDocs()
 const networking = await ingestNetworking()
 const voice = await ingestVoice()
 const python = await ingestPython()
@@ -1921,4 +2089,6 @@ await writeManifest(
   await ingestPractice(dsa),
   await ingestAiCodingDocs(),
   await ingestPythonDocs(),
+  lld,
+  sdDocs,
 )

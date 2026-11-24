@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "automatic-prompt-optimization-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Automatic prompt optimization",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "why-hand-tuning-doesnt-scale",
+      "stem": "63-Why hand-tuning doesn't scale",
       "number": 63,
       "order": "63",
       "title": "Why Hand-Tuning Doesn't Scale — You Can Propose a Better Prompt, You Can't See That It Is Better",
@@ -111,6 +113,7 @@
     },
     {
       "slug": "ape",
+      "stem": "64-APE",
       "number": 64,
       "order": "64",
       "title": "APE — Infer the Instruction, Score Every Candidate, Keep the Best",
@@ -181,6 +184,7 @@
     },
     {
       "slug": "opro",
+      "stem": "65-OPRO",
       "number": 65,
       "order": "65",
       "title": "OPRO — The Scores So Far Become the Optimiser's Prompt",
@@ -251,6 +255,7 @@
     },
     {
       "slug": "dspy",
+      "stem": "66-DSPy",
       "number": 66,
       "order": "66",
       "title": "DSPy — Program the Pipeline, Compile the Prompts Against a Metric",
@@ -321,6 +326,7 @@
     },
     {
       "slug": "textgrad-natural-language-gradients",
+      "stem": "67-TextGrad & natural-language gradients",
       "number": 67,
       "order": "67",
       "title": "TextGrad — A Written Critique Passed Back Through the Pipeline",
@@ -356,6 +362,7 @@
     },
     {
       "slug": "evolutionary-genetic-prompt-search",
+      "stem": "68-Evolutionary & genetic prompt search",
       "number": 68,
       "order": "68",
       "title": "Evolutionary Prompt Search — EvoPrompt and GEPA",
@@ -391,6 +398,7 @@
     },
     {
       "slug": "automatic-few-shot-selection-bootstrapping",
+      "stem": "69-Automatic few-shot selection & bootstrapping",
       "number": 69,
       "order": "69",
       "title": "Automatic Few-Shot Bootstrapping — Harvest Demonstrations From Runs That Passed",
@@ -461,6 +469,7 @@
     },
     {
       "slug": "prompt-distillation",
+      "stem": "70-Prompt distillation",
       "number": 70,
       "order": "70",
       "title": "Prompt Distillation — Move a Long Prompt Into Fewer Tokens or Into the Weights",
@@ -496,6 +505,7 @@
     },
     {
       "slug": "cost-benefit-of-auto-optimization",
+      "stem": "71-Cost-benefit of auto-optimization",
       "number": 71,
       "order": "71",
       "title": "Cost-Benefit of Auto-Optimisation — Price the Run Against How Long the Gain Lasts",
@@ -566,6 +576,7 @@
     },
     {
       "slug": "portability-of-optimized-prompts",
+      "stem": "72-Portability of optimized prompts",
       "number": 72,
       "order": "72",
       "title": "Portability of Optimised Prompts — The Winner Was Fitted to One Model",

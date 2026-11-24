@@ -5080,135 +5080,134 @@
       "sectionTitle": "Proxies & load balancers"
     },
     {
+      "slug": "cloud-networking-map",
+      "title": "Chapter map: Cloud networking",
+      "tier": "MAP",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
+      "slug": "cloud-networking-breadth-flashcards",
+      "title": "Cloud Networking — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "12-cloud-networking",
+      "sectionTitle": "Cloud networking"
+    },
+    {
       "slug": "vpc-mental-model",
       "order": "122",
       "title": "VPC — The Mental Model",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "subnets-azs-cidr-planning",
       "order": "123",
-      "title": "Subnets, AZs & CIDR Planning",
+      "title": "Subnets, AZs & CIDR Planning — The One Irreversible Decision",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "igw-nat-egress",
       "order": "124",
-      "title": "Internet Gateway, NAT Gateway & Egress",
+      "title": "Internet Gateway, NAT Gateway & Egress — Out Yes, In No, Metered Twice",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "route-tables",
       "order": "125",
-      "title": "Route Tables",
+      "title": "Route Tables — Longest Prefix Wins, and the Main Table Catches the Rest",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "security-groups-vs-nacls",
       "order": "126",
-      "title": "Security Groups vs Network ACLs",
+      "title": "Security Groups vs NACLs — Stateful on the ENI, Stateless on the Subnet",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "vpc-peering",
       "order": "127",
-      "title": "VPC Peering",
+      "title": "VPC Peering — One Pair, Non-Transitive, No Overlap",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "transit-gateway",
       "order": "128",
-      "title": "Transit Gateway & Hub-and-Spoke",
+      "title": "Transit Gateway — A Regional Hub, Segmented by Route Table",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "privatelink-vpc-endpoints",
       "order": "129",
-      "title": "PrivateLink & VPC Endpoints",
+      "title": "VPC Endpoints & PrivateLink — A Free Route, or an ENI with DNS",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "12-cloud-networking",
-      "sectionTitle": "Cloud networking"
-    },
-    {
-      "slug": "site-to-site-vpn-vs-direct-connect",
-      "title": "Site-to-Site VPN vs Direct Connect",
-      "tier": "BREADTH",
-      "relevance": "Medium",
-      "section": "12-cloud-networking",
-      "sectionTitle": "Cloud networking"
-    },
-    {
-      "slug": "client-vpn-bastion-ssm-patterns-for-operator-access",
-      "title": "Client VPN, Bastion & SSM Patterns for Operator Access",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "cloud-load-balancer-types",
       "order": "132",
-      "title": "Load Balancer Types in Cloud",
+      "title": "Cloud Load Balancer Types — ALB, NLB, GWLB and Their GCP and Azure Twins",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "private-dns-cloud",
       "order": "133",
-      "title": "Private DNS in the Cloud",
+      "title": "Private DNS in the Cloud — The .2 Resolver, Private Zones and Resolver Endpoints",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "egress-cost-data-transfer",
       "order": "134",
-      "title": "Egress Cost & Data Transfer Pricing",
+      "title": "Data Transfer Cost — Every Boundary Is a Meter, and Meters Stack",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "multi-region-networking",
       "order": "135",
-      "title": "Multi-Region Networking",
+      "title": "Multi-Region Networking — Routing Is Easy, the Data Is the Project",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
     {
       "slug": "network-security-posture",
       "order": "136",
-      "title": "Network Security Posture",
+      "title": "Network Security Posture — Private by Route, Egress by Hostname, IMDSv2 Always",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "12-cloud-networking",
       "sectionTitle": "Cloud networking"
     },
@@ -8701,6 +8700,1597 @@
         {
           "id": "gotchas-idioms-q155q162",
           "text": "Gotchas & Idioms (Q155–Q162)",
+          "level": 2
+        }
+      ]
+    }
+  ],
+  "lld": [
+    {
+      "slug": "foundations-map",
+      "title": "Chapter map: Foundations",
+      "tier": "MAP",
+      "section": "00-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "oop-four-pillars",
+      "order": "01",
+      "title": "OOP — Encapsulation, Abstraction, Inheritance, Polymorphism",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "00-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "solid-principles",
+      "order": "02",
+      "title": "SOLID — Five Principles, Each as a Violation and Its Fix",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "00-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "dry-kiss-yagni",
+      "order": "03",
+      "title": "DRY, KISS, YAGNI — Keeping a Design Small",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "00-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "pattern-selector",
+      "order": "04",
+      "title": "The Pattern Selector",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "00-foundations",
+      "sectionTitle": "Foundations"
+    },
+    {
+      "slug": "requirements-and-scoping-map",
+      "title": "Chapter map: Requirements & scoping",
+      "tier": "MAP",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping"
+    },
+    {
+      "slug": "functional-vs-nonfunctional-split",
+      "order": "01",
+      "title": "Functional vs Non-Functional Split, Out Loud",
+      "tier": "",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping"
+    },
+    {
+      "slug": "deliberate-scope-cuts",
+      "order": "02",
+      "title": "Deliberate Scope Cuts",
+      "tier": "",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping"
+    },
+    {
+      "slug": "nouns-to-classes-verbs-to-methods",
+      "order": "03",
+      "title": "Core Entities → Nouns, Core Operations → Verbs",
+      "tier": "",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping"
+    },
+    {
+      "slug": "api-first-sketch",
+      "order": "04",
+      "title": "API-First Sketch",
+      "tier": "",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping"
+    },
+    {
+      "slug": "in-memory-first-rule",
+      "order": "05",
+      "title": "In-Memory-First Rule",
+      "tier": "",
+      "section": "01-requirements-and-scoping",
+      "sectionTitle": "Requirements & scoping"
+    },
+    {
+      "slug": "oo-design-principles-map",
+      "title": "Chapter map: OO design principles",
+      "tier": "MAP",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "solid-with-a-violation-each",
+      "order": "06",
+      "title": "SOLID, With a Concrete Violation for Each",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "open-closed-as-the-scoring-rubric",
+      "order": "07",
+      "title": "Open/Closed as the Scoring Rubric",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "composition-over-inheritance",
+      "order": "08",
+      "title": "Composition Over Inheritance",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "law-of-demeter-tell-dont-ask",
+      "order": "09",
+      "title": "Law of Demeter / Tell-Don't-Ask",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "encapsulation-of-invariants",
+      "order": "10",
+      "title": "Encapsulation of Invariants",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "anemic-domain-model",
+      "order": "11",
+      "title": "Anemic Domain Model",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "interface-segregation-for-extension-points",
+      "order": "12",
+      "title": "Interface Segregation for Extension Points",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "constructor-dependency-injection",
+      "order": "13",
+      "title": "Dependency Injection by Constructor",
+      "tier": "",
+      "section": "02-oo-design-principles",
+      "sectionTitle": "OO design principles"
+    },
+    {
+      "slug": "design-patterns-map",
+      "title": "Chapter map: Design patterns",
+      "tier": "MAP",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "strategy",
+      "order": "14",
+      "title": "Strategy",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "factory-and-abstract-factory",
+      "order": "15",
+      "title": "Factory & Abstract Factory",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "singleton-done-correctly",
+      "order": "16",
+      "title": "Singleton, Done Correctly",
+      "tier": "CORE ⚠️ TRAP 🧵 CONCURRENCY",
+      "relevance": "High",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "observer-pub-sub",
+      "order": "17",
+      "title": "Observer / Pub-Sub",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "state",
+      "order": "18",
+      "title": "State",
+      "tier": "CORE",
+      "relevance": "High",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "command",
+      "order": "19",
+      "title": "Command",
+      "tier": "SUPPORTING (+ CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Medium",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "decorator",
+      "order": "20",
+      "title": "Decorator",
+      "tier": "SUPPORTING (+ CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Medium",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "builder",
+      "order": "21",
+      "title": "Builder",
+      "tier": "SUPPORTING (+ CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Medium",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "template-method",
+      "order": "22",
+      "title": "Template Method",
+      "tier": "SUPPORTING (PROMOTED FROM BREADTH TO CARRY CODE; + CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Low",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "chain-of-responsibility",
+      "order": "23",
+      "title": "Chain of Responsibility",
+      "tier": "SUPPORTING (+ CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Medium",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "adapter-and-facade",
+      "order": "24",
+      "title": "Adapter & Facade",
+      "tier": "SUPPORTING (PROMOTED FROM BREADTH TO CARRY CODE; + CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Medium",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "repository-and-unit-of-work",
+      "order": "25",
+      "title": "Repository & Unit of Work",
+      "tier": "SUPPORTING (+ CODE & TRACE, LLD OVERRIDE)",
+      "relevance": "Medium",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "pattern-overuse",
+      "order": "26",
+      "title": "Pattern Overuse",
+      "tier": "",
+      "section": "03-design-patterns",
+      "sectionTitle": "Design patterns"
+    },
+    {
+      "slug": "concurrency-in-lld-map",
+      "title": "Chapter map: Concurrency in LLD",
+      "tier": "MAP",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "identify-the-contended-resource",
+      "order": "27",
+      "title": "Identify the Contended Resource First",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "optimistic-vs-pessimistic-locking",
+      "order": "28",
+      "title": "Optimistic vs Pessimistic Locking",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "lock-granularity",
+      "order": "29",
+      "title": "Lock Granularity",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "concurrenthashmap-atomics",
+      "order": "30",
+      "title": "ConcurrentHashMap.compute / putIfAbsent as the Atomic Primitive",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "deadlock-avoidance-by-lock-ordering",
+      "order": "31",
+      "title": "Deadlock Avoidance by Lock Ordering",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "idempotency-keys",
+      "order": "32",
+      "title": "Idempotency Keys",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "reservation-with-ttl-hold-then-confirm",
+      "order": "33",
+      "title": "Reservation with TTL / Hold-Then-Confirm",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "background-schedulers",
+      "order": "34",
+      "title": "Background Schedulers",
+      "tier": "",
+      "section": "04-concurrency-in-lld",
+      "sectionTitle": "Concurrency in LLD"
+    },
+    {
+      "slug": "modeling-craft-map",
+      "title": "Chapter map: Modeling craft",
+      "tier": "MAP",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "enum-with-behavior",
+      "order": "35",
+      "title": "Enum With Behaviour",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "value-objects-vs-entities",
+      "order": "36",
+      "title": "Value Objects vs Entities",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "never-use-double-for-money",
+      "order": "37",
+      "title": "Never Use double for Money",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "time-as-an-injected-dependency",
+      "order": "38",
+      "title": "Time as an Injected Dependency",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "null-handling-and-validation-placement",
+      "order": "39",
+      "title": "Null Handling & Validation Placement",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "custom-exceptions-for-domain-failures",
+      "order": "40",
+      "title": "Custom Exceptions for Domain Failures",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "testability-and-a-couple-of-tests",
+      "order": "41",
+      "title": "Testability & a Couple of Unit Tests",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    },
+    {
+      "slug": "uml-you-actually-need",
+      "order": "42",
+      "title": "UML You Actually Need",
+      "tier": "",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft"
+    }
+  ],
+  "sdDocs": [
+    {
+      "slug": "lld-reference-index",
+      "title": "LLD reference index",
+      "description": "Every LLD topic by section, tier and what a strong answer shows.",
+      "group": "02 LLD",
+      "meta": [
+        "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m-5.5-2.5 7.51-3.49L17.5 6.5 9.99 9.99zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1\"></path></svg> <strong>Start here:</strong> System Design — Master Index routes LLD · HLD · AI systems · RAG in one file; this index is the depth layer for its section.",
+        "<strong>Created:</strong> 28 Jul 2026 · Clean topic reference for the <strong>machine-coding / object-design round</strong> on a Senior → Staff/Principal track.",
+        "A pure study index: every line is a topic with a one-line \"why it matters.\" Companion to <em>Java — Core &amp; Advanced Reference Index (v2)</em> and <em>HLD — Interview Reference Index</em>.",
+        "Scope: the 45–90 minute round where you produce compiling, extensible classes — not boxes-and-arrows (that's HLD)."
+      ],
+      "headings": [
+        {
+          "id": "map-of-maps-the-eagle-view",
+          "text": "🗺️ Map of maps — the eagle view",
+          "level": 2
+        },
+        {
+          "id": "section-folders-one-file-per-pointer",
+          "text": "📂 Section folders — one file per pointer",
+          "level": 2
+        },
+        {
+          "id": "part-a-foundations-the-machinery-you-reuse-in-every-problem",
+          "text": "Part A — Foundations (the machinery you reuse in every problem)",
+          "level": 2
+        },
+        {
+          "id": "part-b-the-canonical-problems",
+          "text": "Part B — The Canonical Problems",
+          "level": 2
+        },
+        {
+          "id": "the-four-things-lld-interviewers-actually-score",
+          "text": "The four things LLD interviewers actually score",
+          "level": 2
+        },
+        {
+          "id": "cross-reference-ownership-map",
+          "text": "Cross-reference ownership map",
+          "level": 2
+        },
+        {
+          "id": "suggested-study-order",
+          "text": "Suggested study order",
+          "level": 2
+        },
+        {
+          "id": "tier-summary",
+          "text": "Tier summary",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "pattern-catalogue",
+      "title": "Pattern catalogue index",
+      "description": "The GoF and enterprise patterns at a glance, and how to pick one.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "<strong>Created:</strong> 28 Jul 2026 · The GoF catalogue, filtered to what actually earns points and what you actually ship.",
+        "Sibling folders: <code>02-lld</code> uses these in the machine-coding round · <code>05-distributed-systems</code> is the distributed-systems counterpart · <code>06-ai-systems</code> applies several to orchestration."
+      ],
+      "headings": [
+        {
+          "id": "files-in-this-folder",
+          "text": "Files in this folder",
+          "level": 2
+        },
+        {
+          "id": "the-15-that-matter-ranked-by-interview-frequency",
+          "text": "The 15 that matter (ranked by interview frequency)",
+          "level": 2
+        },
+        {
+          "id": "the-three-questions-to-answer-for-every-pattern",
+          "text": "The three questions to answer for every pattern",
+          "level": 2
+        },
+        {
+          "id": "the-comparisons-interviewers-actually-ask",
+          "text": "The comparisons interviewers actually ask 🔀",
+          "level": 2
+        },
+        {
+          "id": "anti-pattern-warnings",
+          "text": "Anti-pattern warnings ⚠️",
+          "level": 2
+        },
+        {
+          "id": "suggested-study-order",
+          "text": "Suggested study order",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "pattern-decision-tree",
+      "title": "Pattern selection decision tree",
+      "description": "From the problem in front of you to the pattern that fits it.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "<strong>Created:</strong> 7 Aug 2026 · Don't memorize the catalogue. Name the friction, then let the tree hand you a shortlist.",
+        "Parent: <a href=\"/system-design/docs/pattern-catalogue\"><code>README.md</code></a> · Catalogue: <a href=\"/system-design/docs/creational-patterns\"><code>creational.md</code></a> · <a href=\"/system-design/docs/structural-patterns\"><code>structural.md</code></a> · <a href=\"/system-design/docs/behavioral-patterns\"><code>behavioral.md</code></a> · Failure modes: <a href=\"/system-design/docs/anti-patterns\"><code>anti-patterns.md</code></a> · Applied: <a href=\"/system-design/docs/industry-problem-playbook\"><code>industry-problem-playbook.md</code></a>",
+        "<em>Adapted from Alina Kovtun, \"Stop Memorizing Design Patterns: Use This Decision Tree Instead\" (Women in Technology, Jan 2026). The article is member-only; the three-branch framing is hers, the tree below is built out from it.</em>"
+      ],
+      "headings": [
+        {
+          "id": "the-thesis",
+          "text": "The thesis",
+          "level": 2
+        },
+        {
+          "id": "gate-0-do-you-need-a-pattern-at-all",
+          "text": "🚦 Gate 0 — Do you need a pattern at all?",
+          "level": 2
+        },
+        {
+          "id": "the-root-question",
+          "text": "🌳 The root question",
+          "level": 2
+        },
+        {
+          "id": "branch-a-creation-friction",
+          "text": "🅰️ Branch A — Creation friction",
+          "level": 2
+        },
+        {
+          "id": "branch-b-structure-boundary-friction",
+          "text": "🅱️ Branch B — Structure / boundary friction",
+          "level": 2
+        },
+        {
+          "id": "branch-c-behaviour-friction",
+          "text": "🅲 Branch C — Behaviour friction",
+          "level": 2
+        },
+        {
+          "id": "the-fast-path-symptom-pattern-lookup",
+          "text": "⚡ The fast path — symptom → pattern lookup",
+          "level": 2
+        },
+        {
+          "id": "reverse-check-i-already-used-x-was-it-right",
+          "text": "🔎 Reverse check — \"I already used X. Was it right?\"",
+          "level": 2
+        },
+        {
+          "id": "the-cost-ledger",
+          "text": "💰 The cost ledger",
+          "level": 2
+        },
+        {
+          "id": "the-three-sentences-to-say-in-a-design-review",
+          "text": "🎤 The three sentences to say in a design review",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "creational-patterns",
+      "title": "Creational patterns",
+      "description": "Factory, builder, singleton, prototype: who creates objects, and how.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "Object creation: decoupling <em>what</em> gets created from <em>who</em> asks for it.",
+        "Parent: <a href=\"/system-design/docs/pattern-catalogue\"><code>README.md</code></a> · Applied in: <a href=\"/system-design/docs/lld-reference-index\"><code>02-lld</code></a>"
+      ],
+      "headings": [
+        {
+          "id": "1-factory-method-simple-factory",
+          "text": "1. Factory Method / Simple Factory 🔴 🔀 ☕",
+          "level": 2
+        },
+        {
+          "id": "2-abstract-factory",
+          "text": "2. Abstract Factory 🟡 🔀",
+          "level": 2
+        },
+        {
+          "id": "3-builder",
+          "text": "3. Builder 🔴 ☕",
+          "level": 2
+        },
+        {
+          "id": "4-singleton",
+          "text": "4. Singleton 🔴 ⚠️ ☕",
+          "level": 2
+        },
+        {
+          "id": "5-prototype",
+          "text": "5. Prototype 🟢 ☕",
+          "level": 2
+        },
+        {
+          "id": "6-object-pool",
+          "text": "6. Object Pool 🟢",
+          "level": 2
+        },
+        {
+          "id": "7-dependency-injection",
+          "text": "7. Dependency Injection 🔴",
+          "level": 2
+        },
+        {
+          "id": "fast-comparison-table",
+          "text": "Fast comparison table 🔀",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "structural-patterns",
+      "title": "Structural patterns",
+      "description": "Adapter, decorator, facade, proxy, composite: how objects fit together.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "Composing objects and classes into larger structures without rigid coupling.",
+        "Parent: <a href=\"/system-design/docs/pattern-catalogue\"><code>README.md</code></a> · The four wrappers (Adapter/Facade/Decorator/Proxy) are the highest-yield group in this folder — the exam question is the <em>distinction</em>, not the definition."
+      ],
+      "headings": [
+        {
+          "id": "1-adapter",
+          "text": "1. Adapter 🔴 🔀 ☕",
+          "level": 2
+        },
+        {
+          "id": "2-facade",
+          "text": "2. Facade 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "3-decorator",
+          "text": "3. Decorator 🔴 🔀 ☕",
+          "level": 2
+        },
+        {
+          "id": "4-proxy",
+          "text": "4. Proxy 🔴 🔀 ☕",
+          "level": 2
+        },
+        {
+          "id": "5-composite",
+          "text": "5. Composite 🟡 ☕",
+          "level": 2
+        },
+        {
+          "id": "6-flyweight",
+          "text": "6. Flyweight 🟡",
+          "level": 2
+        },
+        {
+          "id": "7-bridge",
+          "text": "7. Bridge 🟢 🔀",
+          "level": 2
+        },
+        {
+          "id": "the-four-wrappers-disambiguated",
+          "text": "The four wrappers, disambiguated 🔀",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "behavioral-patterns",
+      "title": "Behavioral patterns",
+      "description": "Strategy, observer, state, command, chain: how objects share work.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "How responsibility is assigned and how objects communicate.",
+        "Parent: <a href=\"/system-design/docs/pattern-catalogue\"><code>README.md</code></a> · <strong>Strategy, Observer, and State carry most of the LLD round</strong> — over-invest in those three."
+      ],
+      "headings": [
+        {
+          "id": "1-strategy",
+          "text": "1. Strategy 🔴 🔀 ☕",
+          "level": 2
+        },
+        {
+          "id": "2-observer",
+          "text": "2. Observer 🔴 ☕ 🧵",
+          "level": 2
+        },
+        {
+          "id": "3-state",
+          "text": "3. State 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "4-command",
+          "text": "4. Command 🟡 ☕",
+          "level": 2
+        },
+        {
+          "id": "5-template-method",
+          "text": "5. Template Method 🟡 🔀 ☕",
+          "level": 2
+        },
+        {
+          "id": "6-chain-of-responsibility",
+          "text": "6. Chain of Responsibility 🟡 ☕",
+          "level": 2
+        },
+        {
+          "id": "7-iterator",
+          "text": "7. Iterator 🟢 ☕",
+          "level": 2
+        },
+        {
+          "id": "8-mediator",
+          "text": "8. Mediator 🟡",
+          "level": 2
+        },
+        {
+          "id": "9-memento",
+          "text": "9. Memento 🟢",
+          "level": 2
+        },
+        {
+          "id": "10-visitor",
+          "text": "10. Visitor 🟢 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "11-interpreter",
+          "text": "11. Interpreter 🟢",
+          "level": 2
+        },
+        {
+          "id": "12-null-object",
+          "text": "12. Null Object 🟢",
+          "level": 2
+        },
+        {
+          "id": "fast-comparison-table",
+          "text": "Fast comparison table 🔀",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "anti-patterns",
+      "title": "Anti-patterns",
+      "description": "When the pattern is the problem.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "<strong>Created:</strong> 7 Aug 2026 · The counterpart to <a href=\"/system-design/docs/pattern-decision-tree\"><code>decision-tree.md</code></a>. Knowing when <em>not</em> to apply a pattern is the harder half of the skill.",
+        "Parent: <a href=\"/system-design/docs/pattern-catalogue\"><code>README.md</code></a> · Catalogue: <a href=\"/system-design/docs/creational-patterns\"><code>creational.md</code></a> · <a href=\"/system-design/docs/structural-patterns\"><code>structural.md</code></a> · <a href=\"/system-design/docs/behavioral-patterns\"><code>behavioral.md</code></a> · Applied: <a href=\"/system-design/docs/industry-problem-playbook\"><code>industry-problem-playbook.md</code></a>"
+      ],
+      "headings": [
+        {
+          "id": "the-simpler-move-ladder",
+          "text": "🪜 The simpler-move ladder",
+          "level": 2
+        },
+        {
+          "id": "1-pattern-itis",
+          "text": "1. Pattern-itis ⚠️",
+          "level": 2
+        },
+        {
+          "id": "2-singleton-as-a-global-variable",
+          "text": "2. Singleton as a global variable ⚠️ 🧵",
+          "level": 2
+        },
+        {
+          "id": "3-anemic-domain-model",
+          "text": "3. Anemic domain model ⚠️",
+          "level": 2
+        },
+        {
+          "id": "4-premature-abstraction",
+          "text": "4. Premature abstraction ⚠️",
+          "level": 2
+        },
+        {
+          "id": "5-inheritance-for-reuse",
+          "text": "5. Inheritance for reuse ⚠️",
+          "level": 2
+        },
+        {
+          "id": "6-the-god-facade",
+          "text": "6. The god facade ⚠️",
+          "level": 2
+        },
+        {
+          "id": "7-observer-spaghetti",
+          "text": "7. Observer spaghetti ⚠️ 🧵",
+          "level": 2
+        },
+        {
+          "id": "8-decorator-stack-depth",
+          "text": "8. Decorator stack depth ⚠️",
+          "level": 2
+        },
+        {
+          "id": "9-config-driven-everything",
+          "text": "9. Config-driven everything ⚠️",
+          "level": 2
+        },
+        {
+          "id": "10-interface-segregation-failure-the-fat-interface",
+          "text": "10. Interface segregation failure (the fat interface) ⚠️",
+          "level": 2
+        },
+        {
+          "id": "code-review-checklist",
+          "text": "✅ Code-review checklist",
+          "level": 2
+        },
+        {
+          "id": "the-interview-framing",
+          "text": "🎤 The interview framing",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "industry-problem-playbook",
+      "title": "Industry problem → pattern playbook",
+      "description": "Real product problems mapped to the patterns that solve them.",
+      "group": "02 LLD",
+      "subgroup": "Pattern catalogue",
+      "meta": [
+        "<strong>Created:</strong> 7 Aug 2026 · Real recurring problems from production codebases, each mapped to the pattern stack that actually ships — and the simpler thing to try first.",
+        "Parent: <a href=\"/system-design/docs/pattern-catalogue\"><code>README.md</code></a> · Selection logic: <a href=\"/system-design/docs/pattern-decision-tree\"><code>decision-tree.md</code></a> · Failure modes: <a href=\"/system-design/docs/anti-patterns\"><code>anti-patterns.md</code></a> · Distributed counterpart: <code>../../../05-distributed-systems/</code>"
+      ],
+      "headings": [
+        {
+          "id": "integration-vendor-boundaries",
+          "text": "🅰️ Integration & vendor boundaries",
+          "level": 2
+        },
+        {
+          "id": "configuration-varying-behaviour",
+          "text": "🅱️ Configuration & varying behaviour",
+          "level": 2
+        },
+        {
+          "id": "object-construction-lifecycle",
+          "text": "🅲 Object construction & lifecycle",
+          "level": 2
+        },
+        {
+          "id": "workflow-pipelines-state",
+          "text": "🅳 Workflow, pipelines & state",
+          "level": 2
+        },
+        {
+          "id": "cross-cutting-concerns",
+          "text": "🅴 Cross-cutting concerns",
+          "level": 2
+        },
+        {
+          "id": "domain-modelling",
+          "text": "🅵 Domain modelling",
+          "level": 2
+        },
+        {
+          "id": "at-a-glance-matrix",
+          "text": "🗺️ At-a-glance matrix",
+          "level": 2
+        },
+        {
+          "id": "the-three-questions-before-you-commit",
+          "text": "🧭 The three questions before you commit",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "hld-reference-index",
+      "title": "HLD reference index",
+      "description": "Every HLD topic by section and tier, and where each is covered.",
+      "group": "03 HLD",
+      "meta": [
+        "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m-5.5-2.5 7.51-3.49L17.5 6.5 9.99 9.99zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1\"></path></svg> <strong>Start here:</strong> System Design — Master Index routes LLD · HLD · AI systems · RAG in one file; this index is the depth layer for its section.",
+        "<strong>Created:</strong> 28 Jul 2026 · Clean topic reference for the <strong>system design round</strong> on a Senior → Staff/Principal · Architect track.",
+        "A pure study index: every line is a topic with a one-line \"why it matters.\" Companion to <em>LLD — Interview Reference Index</em> and <em>Java — Core &amp; Advanced Reference Index (v2)</em>.",
+        "Scope: the 45–60 minute round where you scope requirements, estimate, draw the architecture, and defend the trade-offs."
+      ],
+      "headings": [
+        {
+          "id": "part-a-the-building-blocks",
+          "text": "Part A — The Building Blocks",
+          "level": 2
+        },
+        {
+          "id": "part-b-the-canonical-problems",
+          "text": "Part B — The Canonical Problems",
+          "level": 2
+        },
+        {
+          "id": "the-four-dimensions-hld-interviewers-score",
+          "text": "The four dimensions HLD interviewers score",
+          "level": 2
+        },
+        {
+          "id": "cross-reference-ownership-map",
+          "text": "Cross-reference ownership map",
+          "level": 2
+        },
+        {
+          "id": "suggested-study-order",
+          "text": "Suggested study order",
+          "level": 2
+        },
+        {
+          "id": "tier-summary",
+          "text": "Tier summary",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "core-concepts",
+      "title": "28 core system design concepts",
+      "description": "The building blocks along a request’s path, and the failure each one prevents.",
+      "group": "03 HLD",
+      "meta": [
+        "<strong>Thesis</strong>: most outages are not caused by missing a clever technique. They are caused by skipping a basic one.",
+        "Knowing <strong>that</strong> a concept exists is table stakes. Knowing <strong>when</strong> it applies — and what it charges you in return — is the senior signal. Nothing in distributed systems is free: every technique that buys performance, availability, or scale bills you somewhere else, usually in consistency, operational complexity, or debuggability."
+      ],
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "the-request-lifecycle-where-each-concept-lives",
+          "text": "🗺️ The Request Lifecycle — Where Each Concept Lives",
+          "level": 2
+        },
+        {
+          "id": "index",
+          "text": "📇 Index",
+          "level": 2
+        },
+        {
+          "id": "part-i-sending-the-request",
+          "text": "Part I — Sending the Request",
+          "level": 2
+        },
+        {
+          "id": "part-ii-routing-the-request",
+          "text": "Part II — Routing the Request",
+          "level": 2
+        },
+        {
+          "id": "part-iii-serving-the-request",
+          "text": "Part III — Serving the Request",
+          "level": 2
+        },
+        {
+          "id": "part-iv-storing-the-data",
+          "text": "Part IV — Storing the Data",
+          "level": 2
+        },
+        {
+          "id": "part-v-keeping-it-consistent",
+          "text": "Part V — Keeping It Consistent",
+          "level": 2
+        },
+        {
+          "id": "part-vi-keeping-it-alive",
+          "text": "Part VI — Keeping It Alive",
+          "level": 2
+        },
+        {
+          "id": "appendix-a-numbers-every-architect-should-have-memorised",
+          "text": "📐 Appendix A — Numbers Every Architect Should Have Memorised",
+          "level": 2
+        },
+        {
+          "id": "appendix-b-the-decision-ladder",
+          "text": "🧭 Appendix B — The Decision Ladder",
+          "level": 2
+        },
+        {
+          "id": "appendix-c-how-each-concept-reappears-in-ai-systems",
+          "text": "🤖 Appendix C — How Each Concept Reappears in AI Systems",
+          "level": 2
+        },
+        {
+          "id": "self-test-before-moving-on",
+          "text": "✅ Self-Test Before Moving On",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "bloom-filters-and-sketches",
+      "title": "Bloom filters & probabilistic sketches",
+      "description": "Trading a small, bounded error for huge memory savings.",
+      "group": "03 HLD",
+      "meta": [
+        "<strong>Category:</strong> HLD — Foundations · <strong>Architect Relevance:</strong> High · <strong>Depth Tier:</strong> CORE · <strong>Created:</strong> 24 Oct 2026 · <strong>Last revised:</strong> 24 Oct 2026",
+        "<svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6z\"></path></svg> <strong>This note has one job:</strong> know when an exact answer is too expensive and a nearly exact one is enough. A <strong>Bloom filter</strong> answers \"have I seen this?\" with no false negatives. A <strong>count-min sketch</strong> answers \"how often?\" and only ever over-counts. <strong>HyperLogLog</strong> answers \"how many distinct?\" within about 1–2%. Each uses kilobytes where an exact structure would use gigabytes. This is HLD index item 40, and it recurs in item 60 (dedupe), item 82 (web crawler) and the LSM read path."
+      ],
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "revision-block",
+          "text": "🚀 REVISION BLOCK",
+          "level": 2
+        },
+        {
+          "id": "1-recall-check-cover-the-answers-test-before-you-read",
+          "text": "1. 🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "2-interview-explanation-30-seconds",
+          "text": "2. Interview Explanation (30 Seconds)",
+          "level": 2
+        },
+        {
+          "id": "3-at-a-glance",
+          "text": "3. At a glance",
+          "level": 2
+        },
+        {
+          "id": "4-bloom-filter-have-i-seen-this-in-ten-bits-a-key",
+          "text": "4. Bloom filter — \"have I seen this?\" in ten bits a key",
+          "level": 2
+        },
+        {
+          "id": "5-count-min-sketch-how-often-without-a-counter-per-key",
+          "text": "5. Count-min sketch — \"how often?\" without a counter per key",
+          "level": 2
+        },
+        {
+          "id": "6-hyperloglog-how-many-distinct-in-kilobytes",
+          "text": "6. HyperLogLog — \"how many distinct?\" in kilobytes",
+          "level": 2
+        },
+        {
+          "id": "7-where-they-show-up-in-designs",
+          "text": "7. Where they show up in designs",
+          "level": 2
+        },
+        {
+          "id": "8-interview-follow-ups",
+          "text": "8. Interview Follow-ups",
+          "level": 2
+        },
+        {
+          "id": "pitfalls",
+          "text": "🚫 Pitfalls",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "dev-prod-parity",
+      "title": "Dev/prod parity",
+      "description": "Why it works locally but breaks in production.",
+      "group": "03 HLD",
+      "meta": [
+        "<strong>Category:</strong> System Design / MLOps · <strong>Architect Relevance:</strong> High"
+      ],
+      "headings": [
+        {
+          "id": "recall-check-cover-the-answers-test-before-you-read",
+          "text": "🎯 Recall Check (Cover the answers — test before you read)",
+          "level": 2
+        },
+        {
+          "id": "1-definition",
+          "text": "1. Definition",
+          "level": 2
+        },
+        {
+          "id": "2-why-it-matters-in-production",
+          "text": "2. Why It Matters in Production",
+          "level": 2
+        },
+        {
+          "id": "3-algorithm-math-how-the-mechanism-works",
+          "text": "3. Algorithm & Math (How the Mechanism Works)",
+          "level": 2
+        },
+        {
+          "id": "4-code-pseudocode-example",
+          "text": "4. Code / Pseudocode Example",
+          "level": 2
+        },
+        {
+          "id": "5-concrete-trace-step-by-step-with-real-data",
+          "text": "5. Concrete Trace (Step-by-Step with Real Data)",
+          "level": 2
+        },
+        {
+          "id": "6-when-to-use-this",
+          "text": "6. When TO Use This",
+          "level": 2
+        },
+        {
+          "id": "7-when-not-to-use-this",
+          "text": "7. ⚠️ When NOT To Use This",
+          "level": 2
+        },
+        {
+          "id": "8-common-misconceptions",
+          "text": "8. Common Misconceptions",
+          "level": 2
+        },
+        {
+          "id": "9-interview-traps",
+          "text": "9. Interview Traps",
+          "level": 2
+        },
+        {
+          "id": "10-quick-comparison-table",
+          "text": "10. Quick Comparison Table",
+          "level": 2
+        },
+        {
+          "id": "11-key-numbers-benchmarks",
+          "text": "11. Key Numbers & Benchmarks",
+          "level": 2
+        },
+        {
+          "id": "12-trade-offs-performance-considerations",
+          "text": "12. Trade-offs & Performance Considerations",
+          "level": 2
+        },
+        {
+          "id": "13-real-world-usage",
+          "text": "13. Real World Usage",
+          "level": 2
+        },
+        {
+          "id": "14-interview-explanation-30-seconds",
+          "text": "14. Interview Explanation (30 Seconds)",
+          "level": 2
+        },
+        {
+          "id": "15-one-line-memory-hook-recall-aid",
+          "text": "15. One-Line Memory Hook + Recall Aid",
+          "level": 2
+        },
+        {
+          "id": "16-deep-interview-follow-ups-tiered",
+          "text": "16. Deep Interview Follow-ups (Tiered)",
+          "level": 2
+        },
+        {
+          "id": "17-connections-typed-knowledge-graph",
+          "text": "17. Connections (Typed Knowledge Graph)",
+          "level": 2
+        },
+        {
+          "id": "18-system-design-application",
+          "text": "18. System Design Application",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "distributed-systems",
+      "title": "Distributed systems index",
+      "description": "Resilience, communication, data and operations across services.",
+      "group": "05 Distributed systems",
+      "meta": [
+        "<strong>Created:</strong> 28 Jul 2026 · Renamed from <code>05-microservices-patterns</code> on 24 Nov 2026 · Distributed-systems patterns: resilience, communication, data, and operations.",
+        "Sibling folders: <code>02-lld/03-design-patterns/catalogue</code> is the in-process counterpart · <a href=\"/system-design/docs/hld-reference-index\"><code>03-hld</code></a> is where these get applied to whole designs · <code>06-ai-systems</code> is what happens when they're missing."
+      ],
+      "headings": [
+        {
+          "id": "files-in-this-folder",
+          "text": "Files in this folder",
+          "level": 2
+        },
+        {
+          "id": "the-one-framing-that-makes-this-whole-folder-click",
+          "text": "The one framing that makes this whole folder click",
+          "level": 2
+        },
+        {
+          "id": "the-12-you-must-own",
+          "text": "The 12 you must own",
+          "level": 2
+        },
+        {
+          "id": "single-points-of-failure-the-checklist-you-asked-for",
+          "text": "Single points of failure — the checklist you asked for",
+          "level": 2
+        },
+        {
+          "id": "anti-patterns",
+          "text": "Anti-patterns ⚠️",
+          "level": 2
+        },
+        {
+          "id": "suggested-study-order",
+          "text": "Suggested study order",
+          "level": 2
+        },
+        {
+          "id": "changelog",
+          "text": "Changelog",
+          "level": 2
+        },
+        {
+          "id": "production-concepts-owned-here",
+          "text": "Production concepts owned here",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "resilience-patterns",
+      "title": "Resilience patterns",
+      "description": "Timeouts, retries, circuit breakers, bulkheads, rate limits.",
+      "group": "05 Distributed systems",
+      "meta": [
+        "Keeping a system useful when its dependencies are slow, broken, or lying.",
+        "Parent: <a href=\"/system-design/docs/distributed-systems\"><code>README.md</code></a> · Incidents these prevent: <code>../06-ai-systems/AI-Failure-Modes-and-Debugging-Reference-Index.md</code>",
+        "Reference implementation throughout: <strong>Resilience4j</strong> (Spring Boot 3.x). Envoy/Istio does several of these at the mesh layer instead."
+      ],
+      "headings": [
+        {
+          "id": "the-composition-order-get-this-right-and-half-the-questions-answer-themselves",
+          "text": "The composition order (get this right and half the questions answer themselves)",
+          "level": 2
+        },
+        {
+          "id": "1-timeout",
+          "text": "1. Timeout 🔴 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "2-retry",
+          "text": "2. Retry 🔴 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "3-circuit-breaker",
+          "text": "3. Circuit Breaker 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "4-fallback-graceful-degradation",
+          "text": "4. Fallback / Graceful Degradation 🔴",
+          "level": 2
+        },
+        {
+          "id": "5-bulkhead",
+          "text": "5. Bulkhead 🔴",
+          "level": 2
+        },
+        {
+          "id": "6-rate-limiting-throttling",
+          "text": "6. Rate Limiting & Throttling 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "7-load-shedding-backpressure",
+          "text": "7. Load Shedding & Backpressure 🔴 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "8-health-checks-failure-detection",
+          "text": "8. Health Checks & Failure Detection 🔴",
+          "level": 2
+        },
+        {
+          "id": "9-timeout-budget-deadline-propagation",
+          "text": "9. Timeout Budget & Deadline Propagation 🟡",
+          "level": 2
+        },
+        {
+          "id": "10-redundancy-failover",
+          "text": "10. Redundancy & Failover 🔴",
+          "level": 2
+        },
+        {
+          "id": "11-isolation-cell-architecture",
+          "text": "11. Isolation & Cell Architecture 🟡",
+          "level": 2
+        },
+        {
+          "id": "12-chaos-engineering",
+          "text": "12. Chaos Engineering 🟢",
+          "level": 2
+        },
+        {
+          "id": "resilience4j-spring-boot-quick-reference",
+          "text": "Resilience4j / Spring Boot quick reference",
+          "level": 2
+        },
+        {
+          "id": "the-five-questions-to-ask-about-any-dependency",
+          "text": "The five questions to ask about any dependency",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "communication-patterns",
+      "title": "Communication patterns",
+      "description": "Sync vs async, API gateway, messaging, service discovery.",
+      "group": "05 Distributed systems",
+      "meta": [
+        "How services find each other, talk, and coordinate multi-step work.",
+        "Parent: <a href=\"/system-design/docs/distributed-systems\"><code>README.md</code></a> · Transactional side: <a href=\"/system-design/docs/data-patterns\"><code>data.md</code></a> · Failure side: <a href=\"/system-design/docs/resilience-patterns\"><code>resilience.md</code></a>"
+      ],
+      "headings": [
+        {
+          "id": "1-synchronous-vs-asynchronous",
+          "text": "1. Synchronous vs Asynchronous 🔴 🔀 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "2-requestresponse-protocols",
+          "text": "2. Request/Response Protocols 🟡 🔀",
+          "level": 2
+        },
+        {
+          "id": "3-messaging-styles",
+          "text": "3. Messaging Styles 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "4-api-gateway",
+          "text": "4. API Gateway 🔴",
+          "level": 2
+        },
+        {
+          "id": "5-service-discovery",
+          "text": "5. Service Discovery 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "6-service-mesh-vs-library",
+          "text": "6. Service Mesh vs Library 🟡 🔀",
+          "level": 2
+        },
+        {
+          "id": "7-saga-orchestration-vs-choreography",
+          "text": "7. Saga: Orchestration vs Choreography 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "8-aggregator-composition",
+          "text": "8. Aggregator / Composition 🟡",
+          "level": 2
+        },
+        {
+          "id": "9-api-versioning-contract-evolution",
+          "text": "9. API Versioning & Contract Evolution 🔴 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "10-correlation-context-propagation",
+          "text": "10. Correlation & Context Propagation 🔴",
+          "level": 2
+        },
+        {
+          "id": "11-anti-corruption-layer",
+          "text": "11. Anti-Corruption Layer 🟡",
+          "level": 2
+        },
+        {
+          "id": "12-strangler-fig",
+          "text": "12. Strangler Fig 🟡",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "data-patterns",
+      "title": "Data patterns",
+      "description": "Database per service, sagas, outbox, CQRS, event sourcing.",
+      "group": "05 Distributed systems",
+      "meta": [
+        "Consistency without distributed transactions. Where microservice architectures actually go wrong.",
+        "Parent: <a href=\"/system-design/docs/distributed-systems\"><code>README.md</code></a> · Storage mechanics: <a href=\"/system-design/docs/hld-reference-index\"><code>../03-hld</code></a> · Failure symptoms: <code>../06-ai-systems/AI-Failure-Modes-and-Debugging-Reference-Index.md</code>"
+      ],
+      "headings": [
+        {
+          "id": "1-database-per-service",
+          "text": "1. Database per Service 🔴 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "2-idempotency",
+          "text": "2. Idempotency 🔴 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "3-saga",
+          "text": "3. Saga 🔴 🔀",
+          "level": 2
+        },
+        {
+          "id": "4-transactional-outbox",
+          "text": "4. Transactional Outbox 🔴",
+          "level": 2
+        },
+        {
+          "id": "5-change-data-capture",
+          "text": "5. Change Data Capture 🟡",
+          "level": 2
+        },
+        {
+          "id": "6-cqrs",
+          "text": "6. CQRS 🟡 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "7-event-sourcing",
+          "text": "7. Event Sourcing 🟡 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "8-eventual-consistency-made-explicit",
+          "text": "8. Eventual Consistency, Made Explicit 🔴",
+          "level": 2
+        },
+        {
+          "id": "9-distributed-locking",
+          "text": "9. Distributed Locking 🟡 ⚠️",
+          "level": 2
+        },
+        {
+          "id": "10-data-consistency-across-services",
+          "text": "10. Data Consistency Across Services 🟢",
+          "level": 2
+        },
+        {
+          "id": "11-schema-migration-safety",
+          "text": "11. Schema Migration Safety 🔴",
+          "level": 2
+        },
+        {
+          "id": "12-data-retention-archival-erasure",
+          "text": "12. Data Retention, Archival & Erasure 🟡",
+          "level": 2
+        },
+        {
+          "id": "the-consistency-decision-tree",
+          "text": "The consistency decision tree",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
+          "level": 2
+        }
+      ]
+    },
+    {
+      "slug": "deployment-observability-patterns",
+      "title": "Deployment & observability patterns",
+      "description": "Rollouts, sidecars, tracing, health checks.",
+      "group": "05 Distributed systems",
+      "meta": [
+        "Shipping safely, and knowing what's happening after you do.",
+        "Parent: <a href=\"/system-design/docs/distributed-systems\"><code>README.md</code></a> · Incident practice: <code>../06-ai-systems/AI-Failure-Modes-and-Debugging-Reference-Index.md</code>"
+      ],
+      "headings": [
+        {
+          "id": "deployment",
+          "text": "Deployment",
+          "level": 2
+        },
+        {
+          "id": "observability",
+          "text": "Observability",
+          "level": 2
+        },
+        {
+          "id": "the-observability-readiness-test",
+          "text": "The observability readiness test",
+          "level": 2
+        },
+        {
+          "id": "your-notes",
+          "text": "Your notes",
           "level": 2
         }
       ]

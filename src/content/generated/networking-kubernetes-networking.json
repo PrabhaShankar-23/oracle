@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "k8s-networking-model",
+      "stem": "137-k8s-networking-model",
       "number": 137,
       "order": "137",
       "title": "The Kubernetes Networking Model",
@@ -119,6 +120,7 @@
     },
     {
       "slug": "cni-plugins",
+      "stem": "138-cni-plugins",
       "number": 138,
       "order": "138",
       "title": "CNI Plugins",
@@ -164,6 +166,7 @@
     },
     {
       "slug": "services-and-kube-proxy",
+      "stem": "139-services-and-kube-proxy",
       "number": 139,
       "order": "139",
       "title": "Services & kube-proxy",
@@ -264,6 +267,7 @@
     },
     {
       "slug": "headless-services-statefulset-dns",
+      "stem": "140-headless-services-statefulset-dns",
       "number": 140,
       "order": "140",
       "title": "Headless Services & StatefulSet DNS",
@@ -309,6 +313,7 @@
     },
     {
       "slug": "ingress-gateway-mesh",
+      "stem": "141-ingress-gateway-mesh",
       "number": 141,
       "order": "141",
       "title": "Ingress vs Gateway API vs Service Mesh",
@@ -409,6 +414,7 @@
     },
     {
       "slug": "coredns-service-discovery",
+      "stem": "142-coredns-service-discovery",
       "number": 142,
       "order": "142",
       "title": "CoreDNS & In-Cluster Service Discovery",
@@ -454,6 +460,7 @@
     },
     {
       "slug": "network-policies",
+      "stem": "143-network-policies",
       "number": 143,
       "order": "143",
       "title": "Network Policies",
@@ -499,6 +506,7 @@
     },
     {
       "slug": "probes-vs-lb-health-checks",
+      "stem": "144-probes-vs-lb-health-checks",
       "number": 144,
       "order": "144",
       "title": "Probes vs Load Balancer Health Checks",
@@ -544,6 +552,7 @@
     },
     {
       "slug": "rollouts-connection-handling",
+      "stem": "145-rollouts-connection-handling",
       "number": 145,
       "order": "145",
       "title": "Rollouts & Connection Handling",
@@ -589,6 +598,7 @@
     },
     {
       "slug": "gpu-inference-load-balancing",
+      "stem": "146-gpu-inference-load-balancing",
       "number": 146,
       "order": "146",
       "title": "Load Balancing GPU & Inference Workloads",

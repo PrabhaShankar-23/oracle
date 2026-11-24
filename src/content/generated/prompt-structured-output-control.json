@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "structured-output-control-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Structured output & control",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "why-structured-output-is-a-systems-problem",
+      "stem": "35-Why structured output is a systems problem",
       "number": 35,
       "order": "35",
       "title": "Structured Output Is a Systems Problem — A Guarantee of Shape Is Not a Guarantee of Meaning",
@@ -111,6 +113,7 @@
     },
     {
       "slug": "json-mode-schema-constrained-prompting",
+      "stem": "36-JSON-mode & schema-constrained prompting",
       "number": 36,
       "order": "36",
       "title": "JSON Mode & Schema-Enforced Output — What Each Provider Mechanism Guarantees",
@@ -186,6 +189,7 @@
     },
     {
       "slug": "constrained-decoding-grammar-based-generation",
+      "stem": "37-Constrained decoding & grammar-based generation",
       "number": 37,
       "order": "37",
       "title": "Your Own Grammar — When a Schema Can't Say It, and What Owning the Decoder Costs",
@@ -251,6 +255,7 @@
     },
     {
       "slug": "function-tool-call-prompting",
+      "stem": "38-Function & tool-call prompting",
       "number": 38,
       "order": "38",
       "title": "Function & Tool-Call Prompting — A Tool Definition Is Prompt Text With a Schema Attached",
@@ -286,6 +291,7 @@
     },
     {
       "slug": "parsing-repair-loops",
+      "stem": "39-Parsing & repair loops",
       "number": 39,
       "order": "39",
       "title": "Parsing & Repair Loops — Classify the Failure, Feed the Error Back, Fail Where It Shows",
@@ -351,6 +357,7 @@
     },
     {
       "slug": "output-length-verbosity-control",
+      "stem": "40-Output length & verbosity control",
       "number": 40,
       "order": "40",
       "title": "Output Length & Verbosity Control — A Token Cap Is a Cut, Not a Request",
@@ -386,6 +393,7 @@
     },
     {
       "slug": "prefill-assistant-turn-priming",
+      "stem": "41-Prefill & assistant-turn priming",
       "number": 41,
       "order": "41",
       "title": "Prefill & Assistant-Turn Priming — What Replaced Each Use of It",
@@ -421,6 +429,7 @@
     },
     {
       "slug": "classification-scoring-prompts",
+      "stem": "42-Classification & scoring prompts",
       "number": 42,
       "order": "42",
       "title": "Classification & Scoring Prompts — One Token per Label, a Threshold You Fitted",
@@ -456,6 +465,7 @@
     },
     {
       "slug": "deterministic-prompting",
+      "stem": "43-Deterministic prompting",
       "number": 43,
       "order": "43",
       "title": "Deterministic Prompting — Temperature Zero Is Not Reproducibility",

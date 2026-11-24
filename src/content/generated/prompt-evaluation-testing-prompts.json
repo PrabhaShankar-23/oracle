@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "evaluation-testing-prompts-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Evaluation & testing prompts",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "why-prompt-eval-is-the-whole-discipline",
+      "stem": "73-Why prompt eval is the whole discipline",
       "number": 73,
       "order": "73",
       "title": "Why Prompt Eval Is the Whole Discipline — A Change You Can't Measure Is a Change You Can't Defend",
@@ -116,6 +118,7 @@
     },
     {
       "slug": "golden-datasets-for-prompts",
+      "stem": "74-Golden datasets for prompts",
       "number": 74,
       "order": "74",
       "title": "Golden Datasets for Prompts — The Cases Are the Specification",
@@ -186,6 +189,7 @@
     },
     {
       "slug": "assertion-based-testing",
+      "stem": "75-Assertion-based testing",
       "number": 75,
       "order": "75",
       "title": "Assertion-Based Testing — Check in Code Everything Code Can Check",
@@ -251,6 +255,7 @@
     },
     {
       "slug": "llm-as-judge-for-prompt-quality",
+      "stem": "76-LLM-as-judge for prompt quality",
       "number": 76,
       "order": "76",
       "title": "LLM-as-Judge for Prompt Quality — The Judge Is a Prompt, and It Is Tested Before It Tests",
@@ -321,6 +326,7 @@
     },
     {
       "slug": "judge-biases",
+      "stem": "77-Judge biases",
       "number": 77,
       "order": "77",
       "title": "Judge Biases — Position, Verbosity, Self-Preference, and the Swap That Exposes Them",
@@ -391,6 +397,7 @@
     },
     {
       "slug": "regression-suites-ci-for-prompts",
+      "stem": "78-Regression suites & CI for prompts",
       "number": 78,
       "order": "78",
       "title": "Regression Suites & CI for Prompts — Contracts Block Exactly, Measurements Block Outside the Noise",
@@ -461,6 +468,7 @@
     },
     {
       "slug": "a-b-testing-prompts-in-production",
+      "stem": "79-A-B testing prompts in production",
       "number": 79,
       "order": "79",
       "title": "A/B Testing Prompts in Production — What Users Did, Against What the Suite Scored",
@@ -531,6 +539,7 @@
     },
     {
       "slug": "measuring-prompt-sensitivity",
+      "stem": "80-Measuring prompt sensitivity",
       "number": 80,
       "order": "80",
       "title": "Measuring Prompt Sensitivity — The Noise Floor Under Every Comparison",
@@ -571,6 +580,7 @@
     },
     {
       "slug": "component-vs-end-to-end-eval",
+      "stem": "81-Component vs end-to-end eval",
       "number": 81,
       "order": "81",
       "title": "Component vs End-to-End Eval — Gate on the Whole, Diagnose by the Part",
@@ -636,6 +646,7 @@
     },
     {
       "slug": "eval-driven-prompt-development",
+      "stem": "82-Eval-driven prompt development",
       "number": 82,
       "order": "82",
       "title": "Eval-Driven Prompt Development — Write the Failing Case, Then the Prompt That Passes It",

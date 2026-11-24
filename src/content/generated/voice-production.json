@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "production-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Production",
       "category": "Concept map & reading order",
@@ -36,6 +37,7 @@
     },
     {
       "slug": "measuring-a-turn",
+      "stem": "048-measuring-a-turn",
       "number": 48,
       "order": "048",
       "title": "Measuring a Turn — Key Metrics, Traces, Logs, Alerts",
@@ -95,6 +97,7 @@
     },
     {
       "slug": "latency-optimization-playbook",
+      "stem": "048a-latency-optimization-playbook",
       "number": 48.1,
       "order": "048a",
       "title": "Latency Optimization Playbook — The Levers, in Order",
@@ -154,6 +157,7 @@
     },
     {
       "slug": "evaluating-a-voice-agent",
+      "stem": "049-evaluating-a-voice-agent",
       "number": 49,
       "order": "049",
       "title": "Evaluating a Voice Agent — Goldens, Test Conditions, Simulations",
@@ -213,6 +217,7 @@
     },
     {
       "slug": "degradation-ladder",
+      "stem": "050-degradation-ladder",
       "number": 50,
       "order": "050",
       "title": "The Degradation Ladder — Fallbacks, Circuit Breakers, the LLM Gateway",
@@ -272,6 +277,7 @@
     },
     {
       "slug": "scaling-to-1000-calls",
+      "stem": "051-scaling-to-1000-calls",
       "number": 51,
       "order": "051",
       "title": "Scaling to 1,000 Concurrent Calls — Vendors Are the Ceiling",
@@ -331,6 +337,7 @@
     },
     {
       "slug": "cost-per-minute",
+      "stem": "052-cost-per-minute",
       "number": 52,
       "order": "052",
       "title": "Cost per Minute — What a Voice Call Spends",
@@ -390,6 +397,7 @@
     },
     {
       "slug": "recording-transcripts-pii",
+      "stem": "053-recording-transcripts-pii",
       "number": 53,
       "order": "053",
       "title": "Recording, Transcripts and PII",
@@ -449,6 +457,7 @@
     },
     {
       "slug": "fairness-across-accents",
+      "stem": "054-fairness-across-accents",
       "number": 54,
       "order": "054",
       "title": "Fairness Across Accents — Per-Cohort Accuracy as a Release Gate",
@@ -508,6 +517,7 @@
     },
     {
       "slug": "region-placement-everything-near-the-caller",
+      "stem": "breadth",
       "number": 55,
       "order": "055",
       "title": "Region Placement — Everything Near the Caller",

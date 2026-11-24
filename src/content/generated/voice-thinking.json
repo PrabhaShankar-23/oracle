@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "thinking-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Thinking",
       "category": "Concept map & reading order",
@@ -56,6 +57,7 @@
     },
     {
       "slug": "model-on-the-hot-path",
+      "stem": "029-model-on-the-hot-path",
       "number": 29,
       "order": "029",
       "title": "The Model on the Hot Path — Time to First Token in a Spoken Turn",
@@ -115,6 +117,7 @@
     },
     {
       "slug": "speculative-pre-generation",
+      "stem": "030-speculative-pre-generation",
       "number": 30,
       "order": "030",
       "title": "Speculative Pre-generation — The Reply Is Ready When the Turn Ends",
@@ -174,6 +177,7 @@
     },
     {
       "slug": "latency-tiered-agents",
+      "stem": "031-latency-tiered-agents",
       "number": 31,
       "order": "031",
       "title": "Latency-Tiered Agents — In the Turn, Beside It, After the Call",
@@ -233,6 +237,7 @@
     },
     {
       "slug": "writing-for-the-ear",
+      "stem": "032-writing-for-the-ear",
       "number": 32,
       "order": "032",
       "title": "Writing for the Ear — Prompts Whose Output Is Spoken",
@@ -292,6 +297,7 @@
     },
     {
       "slug": "persona-and-personality",
+      "stem": "032a-persona-and-personality",
       "number": 32.1,
       "order": "032a",
       "title": "Persona and Personality — Who the Agent Is, in Every Line",
@@ -351,6 +357,7 @@
     },
     {
       "slug": "guardrails-beside-the-reply",
+      "stem": "033-guardrails-beside-the-reply",
       "number": 33,
       "order": "033",
       "title": "Guardrails Beside the Reply — Draft and Hold",
@@ -410,6 +417,7 @@
     },
     {
       "slug": "tools-and-slow-work",
+      "stem": "034-tools-and-slow-work",
       "number": 34,
       "order": "034",
       "title": "Tools and Slow Work in a Turn — Never Leave Silence",
@@ -469,6 +477,7 @@
     },
     {
       "slug": "external-tools-and-mcp",
+      "stem": "034a-external-tools-and-mcp",
       "number": 34.1,
       "order": "034a",
       "title": "External Tools and MCP in a Voice Agent",

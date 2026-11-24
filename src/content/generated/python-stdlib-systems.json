@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "stdlib-systems-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Stdlib & systems",
       "category": "Concept map & reading order",
@@ -21,6 +22,7 @@
     },
     {
       "slug": "collections-heapq",
+      "stem": "68-collections-heapq",
       "number": 68,
       "order": "68",
       "title": "collections & heapq",
@@ -56,6 +58,7 @@
     },
     {
       "slug": "serialization",
+      "stem": "69-serialization",
       "number": 69,
       "order": "69",
       "title": "Serialization (pickle, json, marshal)",
@@ -116,6 +119,7 @@
     },
     {
       "slug": "filesystem-subprocess",
+      "stem": "70-filesystem-subprocess",
       "number": 70,
       "order": "70",
       "title": "Filesystem & Subprocess",
@@ -151,6 +155,7 @@
     },
     {
       "slug": "logging",
+      "stem": "71-logging",
       "number": 71,
       "order": "71",
       "title": "Logging",
@@ -186,6 +191,7 @@
     },
     {
       "slug": "datetime-numerics-gotchas",
+      "stem": "72-datetime-numerics-gotchas",
       "number": 72,
       "order": "72",
       "title": "Datetime & Numerics Gotchas",

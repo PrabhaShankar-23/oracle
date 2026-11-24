@@ -1,0 +1,379 @@
+{
+  "id": "05-modeling-craft",
+  "title": "Modeling craft",
+  "notes": [
+    {
+      "slug": "modeling-craft-map",
+      "stem": "00-chapter-map",
+      "number": -1,
+      "title": "Chapter map: Modeling craft",
+      "category": "Concept map & reading order",
+      "tier": "MAP",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "owners",
+          "text": "🏠 Owners",
+          "level": 2
+        },
+        {
+          "id": "decision-trees",
+          "text": "🌳 Decision trees",
+          "level": 2
+        },
+        {
+          "id": "at-a-glance-the-slip-the-habit",
+          "text": "📋 At a glance: the slip → the habit",
+          "level": 2
+        },
+        {
+          "id": "four-bullets",
+          "text": "Four bullets",
+          "level": 2
+        }
+      ],
+      "html": "<p>Habits, not architecture: small, visible at a glance, and two of them cost a lot when missing. Read each arrow as a sentence: <em>value objects</em> <strong>include the case of</strong> <em>money</em>.</p>\n<figure><div class=\"mermaid\">%%{init: {\"flowchart\": {\"rankSpacing\": 32, \"nodeSpacing\": 30}}}%%\nflowchart TD\n    D[\"💉 item 13 · injection\"]\n    N36[\"🪙 36 · value objects\"]\n    N37[\"💰 37 · money\"]\n    N35[\"🏷️ 35 · enum behaviour\"]\n    N38[\"🕰️ 38 · injected time\"]\n    N41[\"🧪 41 · two tests\"]\n    N39[\"🚧 39 · validation\"]\n    N40[\"❗ 40 · domain exceptions\"]\n    N42[\"📐 42 · UML\"]\n    N36 --&gt;|\"include the case of\"| N37\n    N37 --&gt;|\"like rules on\"| N35\n    D -.-&gt;|\"is how you pass\"| N38\n    N38 --&gt;|\"makes possible\"| N41\n    N35 --&gt;|\"reject bad input via\"| N39\n    N39 --&gt;|\"reports failures as\"| N40\n    N41 --&gt;|\"is explained with\"| N42\n    classDef core fill:#6EE7B7,stroke:#34D399,color:#000\n    classDef sup fill:#93C5FD,stroke:#60A5FA,color:#000\n    classDef br fill:#FCD34D,stroke:#F59E0B,color:#000\n    classDef in fill:#D1D5DB,stroke:#9CA3AF,color:#000\n    class N37 core\n    class N35,N36,N38,N39,N41 sup\n    class N40,N42 br\n    class D in\n</div></figure>\n<p>Green = 🔴 CORE, blue = 🟡 SUPPORTING, yellow = 🟢 BREADTH, grey = another section (dashed edges).</p>\n<div class=\"flow-chain\"><span class=\"flow-label\"><strong>Reading order:</strong></span><span class=\"flow-step\"><a href=\"/system-design/lld/never-use-double-for-money\">37 money</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/time-as-an-injected-dependency\">38 time as a dependency</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/value-objects-vs-entities\">36 value objects vs entities</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/enum-with-behavior\">35 enum with behaviour</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/null-handling-and-validation-placement\">39 nulls and validation</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/testability-and-a-couple-of-tests\">41 testability</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/custom-exceptions-for-domain-failures\">40 domain exceptions</a></span><span class=\"flow-arrow\"></span><span class=\"flow-step\"><a href=\"/system-design/lld/uml-you-actually-need\">42 UML</a></span></div>\n<h2 id=\"owners\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m12 5.69 5 4.5V18h-2v-6H9v6H7v-7.81zM12 3 2 12h3v8h6v-6h2v6h6v-8h3z\"></path></svg> Owners</h2>\n<table>\n<thead>\n<tr>\n<th>Idea</th>\n<th>Owner note</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>An enum carrying its own fee or rule, in place of a <code>switch</code> elsewhere</td>\n<td><a href=\"/system-design/lld/enum-with-behavior\">35</a></td>\n</tr>\n<tr>\n<td>Immutable values with <code>equals</code> and <code>hashCode</code> against entities with identity and a lifecycle</td>\n<td><a href=\"/system-design/lld/value-objects-vs-entities\">36</a></td>\n</tr>\n<tr>\n<td><code>BigDecimal</code> or whole minor units for money; writing <code>Money</code> properly</td>\n<td><a href=\"/system-design/lld/never-use-double-for-money\">37</a></td>\n</tr>\n<tr>\n<td>A <code>Clock</code> passed in, so expiry logic can be tested</td>\n<td><a href=\"/system-design/lld/time-as-an-injected-dependency\">38</a></td>\n</tr>\n<tr>\n<td>Validate at the boundary; keep the domain non-null; <code>Optional</code> on return only</td>\n<td><a href=\"/system-design/lld/null-handling-and-validation-placement\">39</a></td>\n</tr>\n<tr>\n<td><code>SeatAlreadyBookedException</code> over returning <code>false</code>, without a twelve-class hierarchy</td>\n<td><a href=\"/system-design/lld/custom-exceptions-for-domain-failures\">40</a></td>\n</tr>\n<tr>\n<td>Two tests for the contended path, and making them really race</td>\n<td><a href=\"/system-design/lld/testability-and-a-couple-of-tests\">41</a></td>\n</tr>\n<tr>\n<td>One class diagram with multiplicity and one sequence diagram</td>\n<td><a href=\"/system-design/lld/uml-you-actually-need\">42</a></td>\n</tr>\n<tr>\n<td>Passing dependencies through the constructor</td>\n<td><a href=\"/system-design/lld/constructor-dependency-injection\">item 13</a>, not these notes</td>\n</tr>\n<tr>\n<td>When behaviour on an enum should become a strategy</td>\n<td><a href=\"/system-design/lld/strategy\">strategy</a>, not these notes</td>\n</tr>\n<tr>\n<td>Time limits and holds that need the clock</td>\n<td><a href=\"/system-design/lld/reservation-with-ttl-hold-then-confirm\">item 33</a>, not these notes</td>\n</tr>\n<tr>\n<td><code>equals</code> and <code>hashCode</code> contracts in Java</td>\n<td><code>08-java/01-Core-language &amp; Object Model/</code>, not these notes</td>\n</tr>\n</tbody></table>\n<h2 id=\"decision-trees\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3zM7 9H4V5h3zm10 6h3v4h-3zm0-10h3v4h-3z\"></path></svg> Decision trees</h2>\n<p>No decision tree: these are independent habits applied from the first line, not alternatives.</p>\n<h2 id=\"at-a-glance-the-slip-the-habit\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M11 7h6v2h-6zm0 4h6v2h-6zm0 4h6v2h-6zM7 7h2v2H7zm0 4h2v2H7zm0 4h2v2H7zM20.1 3H3.9c-.5 0-.9.4-.9.9v16.2c0 .4.4.9.9.9h16.2c.4 0 .9-.5.9-.9V3.9c0-.5-.5-.9-.9-.9M19 19H5V5h14z\"></path></svg> At a glance: the slip → the habit</h2>\n<table>\n<thead>\n<tr>\n<th>What the interviewer sees</th>\n<th>Item</th>\n<th>Write this instead</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><code>double price</code></td>\n<td>37</td>\n<td><code>Money</code>, or a <code>long</code> of minor units</td>\n</tr>\n<tr>\n<td><code>Instant.now()</code> inside expiry logic</td>\n<td>38</td>\n<td>a <code>Clock</code> in the constructor</td>\n</tr>\n<tr>\n<td>a <code>switch</code> on an enum, far from the enum</td>\n<td>35</td>\n<td>a method on the enum</td>\n</tr>\n<tr>\n<td><code>SeatId</code> as a bare <code>String</code>; <code>equals</code> missing</td>\n<td>36</td>\n<td>a small immutable value type</td>\n</tr>\n<tr>\n<td>null checks scattered through the domain</td>\n<td>39</td>\n<td>validate once at the boundary</td>\n</tr>\n<tr>\n<td><code>return false</code> for a business failure</td>\n<td>40</td>\n<td>a named domain exception</td>\n</tr>\n<tr>\n<td>\"how would you test this?\" has no answer</td>\n<td>41</td>\n<td>two tests on the contended path</td>\n</tr>\n<tr>\n<td>five diagrams, or none</td>\n<td>42</td>\n<td>one class diagram, one sequence diagram</td>\n</tr>\n</tbody></table>\n<h2 id=\"four-bullets\">Four bullets</h2>\n<ul>\n<li><strong>The one big idea:</strong> these are decided in the first ten minutes or not at all. A <code>Clock</code> that isn't a constructor parameter at minute ten means no test at minute fifty.</li>\n<li><strong>The two most-confused pairs:</strong> <em>value object vs entity</em> (36: equal by value vs equal by identity) · <em>validation vs a domain failure</em> (39 vs 40: bad input at the edge vs a legitimate \"no\" from the domain).</li>\n<li><strong>Ten minutes before an interview:</strong> the table above. Items 37 and 38 are noticed first.</li>\n<li><strong>Cross-section links:</strong> injection is in <a href=\"/system-design/lld/oo-design-principles-map\">§2</a>; what the tests must race is in <a href=\"/system-design/lld/concurrency-in-lld-map\">§4</a>; the diagram rules are in the system design template.</li>\n</ul>"
+    },
+    {
+      "slug": "enum-with-behavior",
+      "stem": "35-enum-with-behavior",
+      "number": 35,
+      "order": "35",
+      "title": "Enum With Behaviour",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "the-two-forms",
+          "text": "The Two Forms",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>What it replaces?</strong></td>\n<td>A <code>switch</code> on the enum, living somewhere else.</td>\n</tr>\n<tr>\n<td><strong>Two forms?</strong></td>\n<td>A field per constant, or an abstract method each constant implements.</td>\n</tr>\n<tr>\n<td><strong>Why is it high signal?</strong></td>\n<td>Very small effort, and it removes a whole class of OCP violation.</td>\n</tr>\n<tr>\n<td><strong>When is it <em>not</em> enough?</strong></td>\n<td>When the rule needs injected collaborators or must be configurable at runtime — that's Strategy.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>If each enum constant has a rule, put the rule on the constant. A <code>switch (tier)</code> inside a pricing service is a place that must be edited every time a constant is added; <code>tier.priceFrom(base)</code> is not. It's the cheapest OCP win available and it takes four lines.</p>\n<hr>\n<h2 id=\"the-two-forms\">The Two Forms</h2>\n<pre><code class=\"language-java\">// Form 1 — a field per constant. Right when the rule is data.\npublic enum SeatTier {\n    SILVER(new BigDecimal(\"1.0\")),\n    GOLD(new BigDecimal(\"1.5\")),\n    PLATINUM(new BigDecimal(\"2.0\"));\n\n    private final BigDecimal multiplier;\n    SeatTier(BigDecimal m) { this.multiplier = m; }\n    public Money priceFrom(Money base) { return base.times(multiplier); }\n}\n\n// Form 2 — an abstract method. Right when the rule is genuinely different logic.\npublic enum SplitStrategy {\n    EQUAL      { public Map&lt;UserId,Money&gt; split(Money t, List&lt;UserId&gt; u, List&lt;BigDecimal&gt; w) { ... } },\n    EXACT      { public Map&lt;UserId,Money&gt; split(Money t, List&lt;UserId&gt; u, List&lt;BigDecimal&gt; w) { ... } },\n    PERCENTAGE { public Map&lt;UserId,Money&gt; split(Money t, List&lt;UserId&gt; u, List&lt;BigDecimal&gt; w) { ... } };\n\n    public abstract Map&lt;UserId,Money&gt; split(Money total, List&lt;UserId&gt; users, List&lt;BigDecimal&gt; weights);\n}\n</code></pre>\n<p>Adding a constant now forces you to write its rule — the compiler tells you, at the definition site, instead of a <code>switch</code> silently falling through to a default.</p>\n<p><strong>Where it stops.</strong> Form 2 is Strategy with a closed set of implementations. Once the rule needs an injected collaborator, needs to be swapped at runtime, or needs to be added without recompiling, promote it to a real interface (→ item 14). The tell is an enum constant that wants a repository or a <code>Clock</code>.</p>\n<p>The parking-lot and Splitwise versions of this are the common ones: <code>VehicleSize</code> carrying which spots it fits, <code>FeeSchedule</code> keyed by an enum, <code>SplitStrategy</code> as above.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong><code>switch</code> on an enum in a service.</strong> The thing this item exists to delete.</p>\n<p><strong>Enums with injected dependencies.</strong> They're constants; they can't take a constructor argument that isn't a constant. That's the signal to move to Strategy.</p>\n<p><strong>Enum constants with heavy bodies.</strong> Two or three lines each. Past that, extract.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/value-objects-vs-entities\"><code>36-value-objects-vs-entities.md</code></a></li>\n<li><strong>Promotes to:</strong> <a href=\"/system-design/lld/strategy\"><code>../03-design-patterns/14-strategy.md</code></a></li>\n<li><strong>Kills:</strong> <a href=\"/system-design/lld/open-closed-as-the-scoring-rubric\"><code>../02-oo-design-principles/07-open-closed-as-the-scoring-rubric.md</code></a> — the <code>switch</code> violation.</li>\n</ul>"
+    },
+    {
+      "slug": "value-objects-vs-entities",
+      "stem": "36-value-objects-vs-entities",
+      "number": 36,
+      "order": "36",
+      "title": "Value Objects vs Entities",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "why-its-worth-the-ceremony",
+          "text": "Why It's Worth the Ceremony",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"reference-links\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1m0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5z\"></path><path d=\"M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99M13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83m4.5 1.84c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.52c-.79-.16-1.64-.24-2.5-.24\"></path></svg> Reference Links</h2>\n<ul>\n<li><strong>Equality by state rather than identity</strong> — <a href=\"https://martinfowler.com/bliki/ValueObject.html\" target=\"_blank\" rel=\"noopener noreferrer\">Martin Fowler: Value Object</a></li>\n</ul>\n<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Value object?</strong></td>\n<td>Equality by state, immutable, no lifecycle — <code>Money</code>, <code>SeatId</code>, <code>TimeSlot</code>.</td>\n</tr>\n<tr>\n<td><strong>Entity?</strong></td>\n<td>Identity plus lifecycle — <code>Booking</code>, <code>User</code>, <code>ShowSeat</code>.</td>\n</tr>\n<tr>\n<td><strong>The test?</strong></td>\n<td>Are two instances with identical fields interchangeable? Yes → value.</td>\n</tr>\n<tr>\n<td><strong>What do typed IDs buy?</strong></td>\n<td>Argument-order mistakes become compile errors.</td>\n</tr>\n<tr>\n<td><strong>What breaks if <code>equals</code>/<code>hashCode</code> are wrong?</strong></td>\n<td>They fail silently as map keys — which is exactly where IDs get used.</td>\n</tr>\n<tr>\n<td><strong>What <em>not</em> to wrap?</strong></td>\n<td>A <code>name</code> or <code>description</code>: nothing to confuse it with, no invariant to enforce.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Two <code>Money(500, GBP)</code> are interchangeable — that's a value object, and equality is over state. A <code>Booking</code> with the same fields as another is still a different booking — that's an entity, and equality is over identity. The practical payoff is typed identifiers: <code>book(ShowId, SeatId, UserId)</code> cannot be called with the arguments in the wrong order, and <code>book(String, String, String)</code> can.</p>\n<hr>\n<h2 id=\"why-its-worth-the-ceremony\">Why It's Worth the Ceremony</h2>\n<p>The honest cost first: more types, mapping at the boundary, and noise if applied to everything. What it buys is one specific class of bug removed. In a domain where half the fields are opaque identifiers of the same shape, argument transposition is a real, silent failure — it either throws at runtime or, worse, succeeds against the wrong record.</p>\n<p>So the rule: <strong>wrap identifiers that travel together and could be confused, and wrap anything with an invariant</strong> (<code>Money</code> with a currency, <code>Percentage</code> bounded 0–100, <code>TimeSlot</code> where start must precede end). Don't wrap free text.</p>\n<p>The second payoff is that invariants get a home at construction. A <code>TimeSlot</code> that validates <code>start &lt; end</code> in its constructor cannot exist in an invalid state, which is item 10 applied to values instead of entities.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<pre><code class=\"language-java\">public record SeatId(String value) implements Comparable&lt;SeatId&gt; {\n    public SeatId { if (value == null || value.isBlank()) throw new IllegalArgumentException(\"seatId\"); }\n    @Override public int compareTo(SeatId o) { return value.compareTo(o.value); }   // → lock ordering\n}\n\npublic record TimeSlot(Instant start, Instant end) {\n    public TimeSlot {\n        if (!start.isBefore(end)) throw new IllegalArgumentException(\"start must precede end\");\n    }\n    public boolean overlaps(TimeSlot o) { return start.isBefore(o.end) &amp;&amp; o.start.isBefore(end); }\n}\n\n// Entity: identity survives state change; equality is by ID, not by fields.\npublic final class Booking {\n    private final BookingId id;\n    private BookingStatus status;\n    @Override public boolean equals(Object o) {\n        return o instanceof Booking b &amp;&amp; id.equals(b.id);      // identity, not state\n    }\n    @Override public int hashCode() { return id.hashCode(); }\n}\n</code></pre>\n<p><strong>On records.</strong> A <code>record</code> gives you equality and immutability <em>of the fields</em> — it doesn't stop you putting a mutable <code>List</code> inside (use <code>List.copyOf</code> in the compact constructor), and it doesn't enforce your invariant unless you write one. Value-object-ness is the semantics; the record is a convenient spelling.</p>\n<p>Note <code>SeatId implements Comparable</code> — that's not decoration, it's the total order that lock ordering (→ item 31) assumes exists.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Wrapping everything.</strong> Ceremony with no bug prevented reads as cargo cult.</p>\n<p><strong>Value objects with broken <code>equals</code>/<code>hashCode</code>.</strong> They fail silently as <code>HashMap</code> keys, which is their main use.</p>\n<p><strong>Mutable value objects.</strong> Sharing one and mutating it changes it everywhere. Values are <code>final</code>/records.</p>\n<p><strong>Giving value objects repositories and IDs.</strong> They have no lifecycle; that's over-modelling.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/enum-with-behavior\"><code>35-enum-with-behavior.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/never-use-double-for-money\"><code>37-never-use-double-for-money.md</code></a></li>\n<li><strong>Used during:</strong> <a href=\"/system-design/lld/nouns-to-classes-verbs-to-methods\"><code>../01-requirements-and-scoping/03-nouns-to-classes-verbs-to-methods.md</code></a> — the prune test.</li>\n<li><strong>Required by:</strong> <a href=\"/system-design/lld/deadlock-avoidance-by-lock-ordering\"><code>../04-concurrency-in-lld/31-deadlock-avoidance-by-lock-ordering.md</code></a> — a total order on the key.</li>\n</ul>"
+    },
+    {
+      "slug": "never-use-double-for-money",
+      "stem": "37-never-use-double-for-money",
+      "number": 37,
+      "order": "37",
+      "title": "Never Use double for Money",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "doing-it-correctly",
+          "text": "Doing It Correctly",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Why is <code>double</code> wrong?</strong></td>\n<td>Binary floating point can't represent most decimal fractions. <code>0.1 + 0.2 = 0.30000000000000004</code>.</td>\n</tr>\n<tr>\n<td><strong>The two right answers?</strong></td>\n<td><code>BigDecimal</code> with explicit scale + <code>RoundingMode</code>, or a <code>long</code> of minor units.</td>\n</tr>\n<tr>\n<td><strong>The <code>BigDecimal</code> constructor trap?</strong></td>\n<td><code>new BigDecimal(0.1)</code> preserves the binary error. Use <code>new BigDecimal(\"0.1\")</code> or <code>valueOf</code>.</td>\n</tr>\n<tr>\n<td><strong>The <code>equals</code> trap?</strong></td>\n<td>It compares scale too — <code>2.0</code> is not <code>equals</code> to <code>2.00</code>. Use <code>compareTo</code>.</td>\n</tr>\n<tr>\n<td><strong>The <code>divide</code> trap?</strong></td>\n<td>Without a scale + <code>RoundingMode</code> it throws on a non-terminating result.</td>\n</tr>\n<tr>\n<td><strong>Why does it matter beyond correctness?</strong></td>\n<td>It's visible in one glance and colours everything read after it.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Money in a <code>double</code> accumulates representation error across a basket, a tax calculation and a conversion until a total is off by a cent — which is a reconciliation ticket, not a rounding curiosity. Use <code>BigDecimal</code> correctly, or minor units in a <code>long</code>, wrapped in a <code>Money</code> value object that carries the currency so cross-currency arithmetic is an error rather than a silent number.</p>\n<hr>\n<h2 id=\"doing-it-correctly\">Doing It Correctly</h2>\n<pre><code class=\"language-java\">public record Money(BigDecimal amount, Currency currency) implements Comparable&lt;Money&gt; {\n    public Money {\n        Objects.requireNonNull(amount); Objects.requireNonNull(currency);\n        amount = amount.setScale(currency.getDefaultFractionDigits(), RoundingMode.HALF_EVEN);\n    }\n    public static Money of(String amount, Currency c) {       // String, never double\n        return new Money(new BigDecimal(amount), c);\n    }\n    public Money plus(Money o) {\n        if (!currency.equals(o.currency))\n            throw new CurrencyMismatchException(currency, o.currency);   // not a silent number\n        return new Money(amount.add(o.amount), currency);\n    }\n    public Money times(BigDecimal factor) { return new Money(amount.multiply(factor), currency); }\n    @Override public int compareTo(Money o) { return amount.compareTo(o.amount); }   // not equals\n}\n</code></pre>\n<p><strong>The three <code>BigDecimal</code> traps, each of which bites in practice:</strong></p>\n<table>\n<thead>\n<tr>\n<th>Trap</th>\n<th>Wrong</th>\n<th>Right</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Construction</td>\n<td><code>new BigDecimal(0.1)</code> → <code>0.1000000000000000055511...</code></td>\n<td><code>new BigDecimal(\"0.1\")</code> / <code>BigDecimal.valueOf(0.1)</code></td>\n</tr>\n<tr>\n<td>Comparison</td>\n<td><code>a.equals(b)</code> — compares scale</td>\n<td><code>a.compareTo(b) == 0</code></td>\n</tr>\n<tr>\n<td>Division</td>\n<td><code>a.divide(b)</code> — throws on non-terminating</td>\n<td><code>a.divide(b, 2, RoundingMode.HALF_EVEN)</code></td>\n</tr>\n</tbody></table>\n<p><strong>The <code>long</code> minor-units alternative</strong> — store 1250 for £12.50 — is exact, faster, and what most payment systems actually do. The cost is that you own the scale per currency, and not every currency has two decimal places (JPY has zero, some have three). Either answer is fine; being able to name the trade-off is the point.</p>\n<p><strong>Rounding mode matters and is asked about.</strong> <code>HALF_EVEN</code> (banker's rounding) is the default for financial work because it doesn't bias totals upward across many roundings, unlike <code>HALF_UP</code>.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong><code>double price</code>.</strong> Noticed instantly, and it recolours the interviewer's reading of everything after it.</p>\n<p><strong><code>BigDecimal</code> used carelessly.</strong> Constructing from a <code>double</code> or comparing with <code>equals</code> produces the same class of bug you switched types to avoid.</p>\n<p><strong>A bare <code>BigDecimal</code> with no currency.</strong> Adding GBP to USD becomes a number instead of an error.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/value-objects-vs-entities\"><code>36-value-objects-vs-entities.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/time-as-an-injected-dependency\"><code>38-time-as-an-injected-dependency.md</code></a></li>\n<li><strong>Wrapped as:</strong> a value object (item 36).</li>\n<li><strong>Used by:</strong> every pricing strategy — <a href=\"/system-design/lld/strategy\"><code>../03-design-patterns/14-strategy.md</code></a></li>\n</ul>"
+    },
+    {
+      "slug": "time-as-an-injected-dependency",
+      "stem": "38-time-as-an-injected-dependency",
+      "number": 38,
+      "order": "38",
+      "title": "Time as an Injected Dependency",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "reference-links",
+          "text": "📚 Reference Links",
+          "level": 2
+        },
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"reference-links\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1m0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5z\"></path><path d=\"M17.5 10.5c.88 0 1.73.09 2.5.26V9.24c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99M13 12.49v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26V11.9c-.79-.15-1.64-.24-2.5-.24-1.7 0-3.24.3-4.5.83m4.5 1.84c-1.7 0-3.24.29-4.5.83v1.66c1.13-.64 2.7-.99 4.5-.99.88 0 1.73.09 2.5.26v-1.52c-.79-.16-1.64-.24-2.5-.24\"></path></svg> Reference Links</h2>\n<ul>\n<li><p><strong>The documented best practice, and the <code>fixed</code>/<code>offset</code> test clocks</strong> — <a href=\"https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Clock.html\" target=\"_blank\" rel=\"noopener noreferrer\">Java SE 21 API: <code>java.time.Clock</code></a></p>\n</li>\n<li><p><strong>Why wrapping the clock is a design decision, not a test hack</strong> — <a href=\"https://martinfowler.com/bliki/ClockWrapper.html\" target=\"_blank\" rel=\"noopener noreferrer\">Martin Fowler: Clock Wrapper</a></p>\n</li>\n</ul>\n<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>The rule?</strong></td>\n<td><code>Clock</code> is a constructor dependency; the domain asks it for the time.</td>\n</tr>\n<tr>\n<td><strong>What's banned in domain code?</strong></td>\n<td><code>Instant.now()</code>, <code>System.currentTimeMillis()</code>, <code>LocalDate.now()</code> with no argument.</td>\n</tr>\n<tr>\n<td><strong>The test clocks?</strong></td>\n<td><code>Clock.fixed(instant, zone)</code> and <code>Clock.offset(clock, duration)</code>.</td>\n</tr>\n<tr>\n<td><strong>Is this a testing hack?</strong></td>\n<td>No — the Java docs state it as best practice for applications, with DI as the mechanism.</td>\n</tr>\n<tr>\n<td><strong>What else is in this category?</strong></td>\n<td>Randomness, UUID generation — anything ambient the domain reaches for.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>If expiry logic calls <code>Instant.now()</code>, testing \"the hold expired after ten minutes\" means either sleeping for ten minutes or mocking a static. Neither is acceptable, so the design decision precedes the test: inject a <code>Clock</code>, and the test becomes three lines that run in a millisecond and check the boundary exactly.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<pre><code class=\"language-java\">public final class Hold {\n    private final UserId holder;\n    private final Instant expiresAt;\n\n    public Hold(UserId holder, Duration ttl, Clock clock) {\n        this.holder = holder;\n        this.expiresAt = clock.instant().plus(ttl);      // not Instant.now()\n    }\n    public boolean isExpired(Clock clock) { return clock.instant().isAfter(expiresAt); }\n}\n</code></pre>\n<pre><code class=\"language-java\">@Test void hold_expires_after_ttl() {\n    Instant t0 = Instant.parse(\"2026-09-06T10:00:00Z\");\n    Hold hold = new Hold(new UserId(\"u1\"), Duration.ofMinutes(10), Clock.fixed(t0, UTC));\n\n    assertFalse(hold.isExpired(Clock.fixed(t0.plusSeconds(599), UTC)));   // boundary − 1s\n    assertFalse(hold.isExpired(Clock.fixed(t0.plusSeconds(600), UTC)));   // exactly at TTL\n    assertTrue( hold.isExpired(Clock.fixed(t0.plusSeconds(601), UTC)));   // boundary + 1s\n}\n</code></pre>\n<p>Three assertions around the boundary, no sleeping, no mocking framework. <code>Clock.offset</code> is the other useful one when you want to advance a clock during a test rather than construct several.</p>\n<p><strong>Wiring:</strong> <code>Clock.systemUTC()</code> in production, <code>Clock.fixed</code> in tests — a one-line difference at the composition root (→ item 13).</p>\n<p><strong>The generalisation worth stating in a round:</strong> the same argument applies to any ambient dependency the domain reaches out and grabs — <code>Math.random()</code>, <code>UUID.randomUUID()</code>, <code>new Date()</code>. If a test can't control it, it's a dependency that should have been injected. Having one answer for the whole category is efficient, because \"how would you test this?\" is a common follow-up.</p>\n<p><strong>Why UTC.</strong> Store and compute in <code>Instant</code>/UTC; convert to a zone only at display. Storing local times is how a booking system produces two 1:30am slots on a DST fall-back night.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong><code>Instant.now()</code> inside a domain method.</strong> Behaviour is right, testability is gone, and it's the first thing the \"how would you test this?\" follow-up lands on.</p>\n<p><strong>Mocking statics instead.</strong> It works and it signals that the design problem was left in place.</p>\n<p><strong>Passing <code>Clock</code> to every method instead of the constructor.</strong> Fine for a value object like <code>Hold</code> where there's no field to hold it; noise on a service, which should hold one.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/never-use-double-for-money\"><code>37-never-use-double-for-money.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/null-handling-and-validation-placement\"><code>39-null-handling-and-validation-placement.md</code></a></li>\n<li><strong>Required by:</strong> <a href=\"/system-design/lld/reservation-with-ttl-hold-then-confirm\"><code>../04-concurrency-in-lld/33-reservation-with-ttl-hold-then-confirm.md</code></a></li>\n<li><strong>Mechanism:</strong> <a href=\"/system-design/lld/constructor-dependency-injection\"><code>../02-oo-design-principles/13-constructor-dependency-injection.md</code></a></li>\n</ul>"
+    },
+    {
+      "slug": "null-handling-and-validation-placement",
+      "stem": "39-null-handling-and-validation-placement",
+      "number": 39,
+      "order": "39",
+      "title": "Null Handling & Validation Placement",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Where does validation live?</strong></td>\n<td>At the boundary — constructors, factories, and the edge where external input arrives.</td>\n</tr>\n<tr>\n<td><strong>What does that buy?</strong></td>\n<td>Past that line, code never has to ask whether a field is populated.</td>\n</tr>\n<tr>\n<td><strong><code>Optional</code> — where?</strong></td>\n<td>Return types only. Not fields, not parameters.</td>\n</tr>\n<tr>\n<td><strong>Why not as a field?</strong></td>\n<td>Serialisation problems plus a wrapper on every access.</td>\n</tr>\n<tr>\n<td><strong>Why not as a parameter?</strong></td>\n<td>It just moves the null one level out.</td>\n</tr>\n<tr>\n<td><strong>The symptom of getting it wrong?</strong></td>\n<td>Defensive null checks at every layer, because no layer trusts the one below.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Make the domain impossible to construct in an invalid state, and validate at the boundary. Once past that line nothing needs a null check, because nothing can be null. When validation is spread instead, every layer defends itself, and each of those checks is a decision about a bad value made by code with no context for what to do about it.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<pre><code class=\"language-java\">// Boundary: validate once, convert to domain types, fail loudly.\npublic final class BookingRequest {\n    public BookingRequest(String showId, List&lt;String&gt; seatIds, String userId) {\n        if (showId == null || showId.isBlank())   throw new IllegalArgumentException(\"showId\");\n        if (seatIds == null || seatIds.isEmpty()) throw new IllegalArgumentException(\"seatIds\");\n        if (seatIds.size() &gt; MAX_GROUP)           throw new GroupTooLargeException(seatIds.size());\n        this.show  = new ShowId(showId);\n        this.seats = seatIds.stream().map(SeatId::new).toList();\n        this.user  = new UserId(userId);\n    }\n}\n\n// Domain: non-null by construction. No defensive checks.\npublic final class ShowSeat {\n    private final ShowId show;      // final, validated at construction\n    private final SeatId seat;\n    private Status status;\n    private UserId heldBy;          // null only in AVAILABLE, and the state machine owns that\n}\n\n// Optional on the way OUT — \"this lookup may find nothing\".\npublic interface ShowSeatRepository {\n    Optional&lt;ShowSeat&gt; find(ShowId show, SeatId seat);      // ✅\n    // List&lt;ShowSeat&gt; findByShow(Optional&lt;ShowId&gt; show);    // ❌ parameter\n}\n</code></pre>\n<p>Two nuances worth having ready.</p>\n<p><strong>A nullable field inside a state machine is fine</strong> if the state machine owns it — <code>heldBy</code> is null exactly when the status is AVAILABLE, and no caller can observe an inconsistent pair because there are no setters (→ item 10). That's different from a field that's null because nobody got round to setting it.</p>\n<p><strong>Collections return empty, not null.</strong> <code>findByShow</code> on an unknown show returns <code>List.of()</code>. A null collection forces a check at every call site for no information gained.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Defensive null checks everywhere.</strong> The symptom of validation with no home.</p>\n<p><strong><code>Optional</code> as a field or parameter.</strong> Serialisation problems, extra indirection, and in the parameter case just a relocated null.</p>\n<p><strong>Validating in the service instead of the constructor.</strong> Works until the second construction site.</p>\n<p><strong><code>return false</code> on a validation failure.</strong> Discards the reason (→ item 40).</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/time-as-an-injected-dependency\"><code>38-time-as-an-injected-dependency.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/custom-exceptions-for-domain-failures\"><code>40-custom-exceptions-for-domain-failures.md</code></a></li>\n<li><strong>Same idea for entities:</strong> <a href=\"/system-design/lld/encapsulation-of-invariants\"><code>../02-oo-design-principles/10-encapsulation-of-invariants.md</code></a></li>\n<li><strong>Deeper:</strong> Java index #42 — <code>Optional</code> semantics.</li>\n</ul>"
+    },
+    {
+      "slug": "custom-exceptions-for-domain-failures",
+      "stem": "40-custom-exceptions-for-domain-failures",
+      "number": 40,
+      "order": "40",
+      "title": "Custom Exceptions for Domain Failures",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "in-practice",
+          "text": "In Practice",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>Why not <code>return false</code>?</strong></td>\n<td>It discards the reason and is trivially ignored by the caller.</td>\n</tr>\n<tr>\n<td><strong>How many custom exceptions?</strong></td>\n<td>Three or four named domain failures. Not twelve.</td>\n</tr>\n<tr>\n<td><strong>Checked or unchecked?</strong></td>\n<td>Unchecked for domain failures; the caller usually can't recover meaningfully anyway.</td>\n</tr>\n<tr>\n<td><strong>What should they carry?</strong></td>\n<td>The state that caused it — the current status, the expiry instant, the holder.</td>\n</tr>\n<tr>\n<td><strong>Boundary failures?</strong></td>\n<td><code>IllegalArgumentException</code> at the edge (→ item 39).</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p><code>SeatAlreadyBookedException</code> beats <code>return false</code>: it names what happened, carries the context, and can be caught specifically by a caller that wants to react to <em>that</em> failure rather than to any failure. But a twelve-class hierarchy in a 60-minute design is its own smell — three or four named failures is the right budget.</p>\n<hr>\n<h2 id=\"in-practice\">In Practice</h2>\n<pre><code class=\"language-java\">public sealed class BookingException extends RuntimeException\n        permits SeatUnavailableException, HoldExpiredException, NotTheHolderException {\n    BookingException(String message) { super(message); }\n}\n\npublic final class SeatUnavailableException extends BookingException {\n    private final Status actual;\n    public SeatUnavailableException(Status actual) {\n        super(\"seat is \" + actual);        // the reason travels with the failure\n        this.actual = actual;\n    }\n    public Status actual() { return actual; }\n}\n\npublic final class HoldExpiredException extends BookingException {\n    private final Instant expiredAt;\n    public HoldExpiredException(Instant expiredAt) {\n        super(\"hold expired at \" + expiredAt);\n        this.expiredAt = expiredAt;\n    }\n}\n</code></pre>\n<p>The value is in the call site:</p>\n<pre><code class=\"language-java\">try {\n    seat.confirm(user, clock);\n} catch (HoldExpiredException e) {\n    return Response.retryable(\"your hold expired — please reselect\");   // user can act\n} catch (SeatUnavailableException e) {\n    return Response.terminal(\"someone else took that seat\");            // user cannot\n}\n</code></pre>\n<p>Those two failures need different responses, and <code>boolean</code> can't express the difference. That's the whole argument.</p>\n<p><strong>Unchecked, and why:</strong> a checked exception forces every caller to handle or declare, which for a domain rule violation usually means a <code>throws</code> clause propagating through five layers to a place that just logs it. Unchecked lets the layers that care catch and the rest ignore.</p>\n<p><strong>Budget discipline:</strong> in a parking-lot round, <code>SpotUnavailableException</code> and <code>InvalidTicketException</code> is probably the whole list. Adding <code>VehicleTooLargeException</code>, <code>LevelFullException</code>, <code>GateClosedException</code> and six more is exception-flavoured pattern overuse.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong><code>return false</code>.</strong> Silently ignorable, reason discarded.</p>\n<p><strong>A deep hierarchy.</strong> Five levels of abstract exception classes in a 60-minute design.</p>\n<p><strong>Exceptions carrying no context.</strong> <code>throw new SeatUnavailableException()</code> with no status is barely better than a boolean.</p>\n<p><strong>Using exceptions for control flow on the happy path</strong> — an expected \"seat is taken\" outcome in a high-throughput loop is a case for a result type, and worth mentioning as the alternative.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/null-handling-and-validation-placement\"><code>39-null-handling-and-validation-placement.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/testability-and-a-couple-of-tests\"><code>41-testability-and-a-couple-of-tests.md</code></a></li>\n<li><strong>Thrown by:</strong> <a href=\"/system-design/lld/encapsulation-of-invariants\"><code>../02-oo-design-principles/10-encapsulation-of-invariants.md</code></a> — the intent methods.</li>\n</ul>"
+    },
+    {
+      "slug": "testability-and-a-couple-of-tests",
+      "stem": "41-testability-and-a-couple-of-tests",
+      "number": 41,
+      "order": "41",
+      "title": "Testability & a Couple of Unit Tests",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "the-two-tests",
+          "text": "The Two Tests",
+          "level": 2
+        },
+        {
+          "id": "the-ask",
+          "text": "The Ask",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>When do you write tests in a 60-min round?</strong></td>\n<td>If ~10 minutes remain. Two tests, not a suite.</td>\n</tr>\n<tr>\n<td><strong>Which two?</strong></td>\n<td>The contended path, and the time-dependent boundary.</td>\n</tr>\n<tr>\n<td><strong>Why does it pay disproportionately?</strong></td>\n<td>Testability is a scored dimension and most candidates produce zero tests.</td>\n</tr>\n<tr>\n<td><strong>What makes it possible?</strong></td>\n<td>Constructor injection (item 13) and an injected <code>Clock</code> (item 38) — decided at minute ten.</td>\n</tr>\n<tr>\n<td><strong>Should you ask first?</strong></td>\n<td>Yes: \"I have ten minutes — two tests on the hold path, or another feature?\"</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>Testability is scored, and two tests demonstrate it far better than saying \"this is testable.\" Pick the contended path and the expiry boundary — the two places the design is actually interesting — and write them. It takes six minutes and most candidates write none.</p>\n<hr>\n<h2 id=\"the-two-tests\">The Two Tests</h2>\n<pre><code class=\"language-java\">// 1. The contended path. Proves the atomic claim actually holds.\n@Test void only_one_of_many_threads_gets_the_seat() throws Exception {\n    var service = new SeatHoldService(Clock.systemUTC(), Duration.ofMinutes(10));\n    var key = new SeatKey(new ShowId(\"s1\"), new SeatId(\"A1\"));\n\n    int threads = 200;\n    var barrier = new CyclicBarrier(threads);\n    var winners = new AtomicInteger();\n    try (var pool = Executors.newFixedThreadPool(threads)) {\n        for (int i = 0; i &lt; threads; i++) {\n            int n = i;\n            pool.submit(() -&gt; {\n                barrier.await();                                   // all start together\n                if (service.tryHold(key, new UserId(\"u\" + n))) winners.incrementAndGet();\n                return null;\n            });\n        }\n    }\n    assertEquals(1, winners.get());        // exactly one, every run\n}\n\n// 2. The time boundary. Impossible without an injected Clock.\n@Test void hold_expires_after_ttl() {\n    Instant t0 = Instant.parse(\"2026-09-06T10:00:00Z\");\n    var hold = new Hold(new UserId(\"u1\"), Duration.ofMinutes(10), Clock.fixed(t0, UTC));\n\n    assertFalse(hold.isExpired(Clock.fixed(t0.plusSeconds(600), UTC)));   // exactly at TTL\n    assertTrue( hold.isExpired(Clock.fixed(t0.plusSeconds(601), UTC)));   // one second past\n}\n</code></pre>\n<p>The first is worth understanding rather than memorising: the <code>CyclicBarrier</code> is what makes it a real test. Without it the threads start staggered and the race never happens, so the test passes against broken code — which is the standard way concurrency tests provide false comfort.</p>\n<p><strong>Say the caveat too.</strong> A passing concurrency test doesn't prove thread-safety; it fails to disprove it. Running it a hundred times raises confidence, and the actual guarantee comes from the argument (<code>compute</code> is atomic per key), not from the test. Volunteering that distinction is a strong signal.</p>\n<hr>\n<h2 id=\"the-ask\">The Ask</h2>\n<p>If time is short, ask rather than assume:</p>\n<blockquote>\n<p>\"I've got about ten minutes. I'd rather write two tests on the hold path than add the notification channel — the concurrency is the interesting part. Which is more useful to you?\"</p>\n</blockquote>\n<p>That question demonstrates prioritisation, and the answer is usually \"tests.\"</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Testing getters and setters.</strong> Zero information. Test the invariant and the race.</p>\n<p><strong>Concurrency tests with no barrier.</strong> They pass against broken code.</p>\n<p><strong>Building a test suite.</strong> Two tests. This isn't the deliverable, it's evidence about the deliverable.</p>\n<p><strong>Discovering at minute fifty that nothing is injectable.</strong> Testability is decided at minute ten (→ item 13).</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/custom-exceptions-for-domain-failures\"><code>40-custom-exceptions-for-domain-failures.md</code></a></li>\n<li><strong>Next:</strong> <a href=\"/system-design/lld/uml-you-actually-need\"><code>42-uml-you-actually-need.md</code></a></li>\n<li><strong>Enabled by:</strong> <a href=\"/system-design/lld/constructor-dependency-injection\"><code>../02-oo-design-principles/13-constructor-dependency-injection.md</code></a> · <a href=\"/system-design/lld/time-as-an-injected-dependency\"><code>38-time-as-an-injected-dependency.md</code></a></li>\n<li><strong>Tests:</strong> <a href=\"/system-design/lld/concurrenthashmap-atomics\"><code>../04-concurrency-in-lld/30-concurrenthashmap-atomics.md</code></a></li>\n</ul>"
+    },
+    {
+      "slug": "uml-you-actually-need",
+      "stem": "42-uml-you-actually-need",
+      "number": 42,
+      "order": "42",
+      "title": "UML You Actually Need",
+      "category": "LLD — §5 Modeling Craft",
+      "tier": "",
+      "created": "6 Sep 2026",
+      "section": "05-modeling-craft",
+      "sectionTitle": "Modeling craft",
+      "headings": [
+        {
+          "id": "recall-check",
+          "text": "🎯 Recall Check",
+          "level": 2
+        },
+        {
+          "id": "the-30-second-answer",
+          "text": "The 30-Second Answer",
+          "level": 2
+        },
+        {
+          "id": "the-two-diagrams",
+          "text": "The Two Diagrams",
+          "level": 2
+        },
+        {
+          "id": "failure-mode",
+          "text": "⚠️ Failure Mode",
+          "level": 2
+        },
+        {
+          "id": "connections",
+          "text": "🔗 Connections",
+          "level": 2
+        }
+      ],
+      "html": "<hr>\n<h2 id=\"recall-check\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"m19.07 4.93-1.41 1.41C19.1 7.79 20 9.79 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.08 3.05-7.44 7-7.93v2.02C8.16 6.57 6 9.03 6 12c0 3.31 2.69 6 6 6s6-2.69 6-6c0-1.66-.67-3.16-1.76-4.24l-1.41 1.41C15.55 9.9 16 10.9 16 12c0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86v2.14c-.6.35-1 .98-1 1.72 0 1.1.9 2 2 2s2-.9 2-2c0-.74-.4-1.38-1-1.72V2h-1C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10c0-2.76-1.12-5.26-2.93-7.07\"></path></svg> Recall Check</h2>\n<table>\n<thead>\n<tr>\n<th>Prompt</th>\n<th>Answer (cover this column)</th>\n</tr>\n</thead>\n<tbody><tr>\n<td><strong>How many diagrams?</strong></td>\n<td>Two. One class diagram with multiplicity, one sequence diagram for the main flow.</td>\n</tr>\n<tr>\n<td><strong>What must the class diagram show?</strong></td>\n<td>Multiplicity — <code>1..*</code>, <code>0..1</code> — and the extension-point interfaces.</td>\n</tr>\n<tr>\n<td><strong>What should the sequence diagram show?</strong></td>\n<td>The contended path end to end, including the failure branch.</td>\n</tr>\n<tr>\n<td><strong>Is diagram volume scored?</strong></td>\n<td>No. Extension points are.</td>\n</tr>\n<tr>\n<td><strong>Do you draw a state diagram?</strong></td>\n<td>Only if the problem is state-machine-shaped (elevator, ATM, vending). Then it earns its place.</td>\n</tr>\n</tbody></table>\n<hr>\n<h2 id=\"the-30-second-answer\">The 30-Second Answer</h2>\n<p>One class diagram and one sequence diagram, then stop. Whiteboard time comes out of the extension points that are actually scored. The class diagram's job is to show multiplicity and where the interfaces sit; the sequence diagram's job is to show the interesting path, which is almost always the contended one.</p>\n<hr>\n<h2 id=\"the-two-diagrams\">The Two Diagrams</h2>\n<figure><div class=\"mermaid\">classDiagram\n    class Show { +ShowId id; +Instant startsAt; +Money basePrice }\n    class Seat { +SeatId id; +SeatTier tier }\n    class ShowSeat { +Status status; +UserId heldBy; +Instant holdExpiresAt; +hold(); +confirm(); +release() }\n    class Booking { +BookingId id; +confirm() }\n    class PricingRule { &lt;&lt;interface&gt;&gt; +apply() }\n    class PaymentGateway { &lt;&lt;interface&gt;&gt; +charge() }\n\n    Show \"1\" --&gt; \"*\" ShowSeat : has\n    Seat \"1\" --&gt; \"*\" ShowSeat : instantiated per show\n    ShowSeat \"*\" --&gt; \"0..1\" Booking : belongs to\n    Booking --&gt; PaymentGateway : uses\n    Show --&gt; PricingRule : priced by\n</div></figure>\n<p>Two things this diagram communicates in five seconds, which is its whole purpose: <strong><code>ShowSeat</code> is a join</strong> between <code>Show</code> and <code>Seat</code> (the modelling decision the round turns on, → item 3), and <strong><code>PricingRule</code> / <code>PaymentGateway</code> are interfaces</strong> (the extension points, → item 12). Multiplicity is what makes the first one legible — <code>Show 1 → * ShowSeat</code> and <code>Seat 1 → * ShowSeat</code> is the shape of a join, visible without reading a line of code.</p>\n<figure><div class=\"mermaid\">sequenceDiagram\n    participant U as 👤 User\n    participant S as BookingService\n    participant H as ShowSeat\n    participant P as PaymentGateway\n    U-&gt;&gt;S: hold(show, [A1,A2], user)\n    S-&gt;&gt;H: hold(user, ttl, clock)     %% atomic per seat\n    H--&gt;&gt;S: HoldToken(expires t+10m)\n    U-&gt;&gt;S: confirm(token, idempotencyKey)\n    S-&gt;&gt;S: insert idempotency key (UNIQUE)\n    S-&gt;&gt;P: charge(...)\n    P--&gt;&gt;S: ⏱️ TIMEOUT\n    Note over S: state = PAYMENT_UNKNOWN,&lt;br/&gt;hold still valid — not released\n    U-&gt;&gt;S: retry, same key\n    S--&gt;&gt;U: stored first result (no second charge)\n</div></figure>\n<p>The sequence diagram earns its place by showing the <strong>failure branch</strong>, not the happy path. A diagram of \"hold, pay, confirm, done\" tells the interviewer nothing they didn't assume.</p>\n<p><strong>When a third diagram is justified:</strong> a state diagram, for problems that <em>are</em> state machines — elevator (IDLE/MOVING_UP/MOVING_DOWN/DOOR_OPEN/MAINTENANCE), ATM, vending machine, order lifecycle. There it's the core artefact rather than decoration.</p>\n<hr>\n<h2 id=\"failure-mode\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Failure Mode</h2>\n<p><strong>Twenty minutes of drawing.</strong> The minutes come out of the design.</p>\n<p><strong>A class diagram with no multiplicity.</strong> Boxes and lines that don't say whether a relationship is one-to-many, which is the only thing the diagram was for.</p>\n<p><strong>A sequence diagram of the happy path.</strong> It shows nothing that wasn't obvious.</p>\n<p><strong>Diagrams before the API sketch.</strong> Signatures first (item 4); diagrams communicate a design you've already made.</p>\n<hr>\n<h2 id=\"connections\"><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M17 7h-4v2h4c1.65 0 3 1.35 3 3s-1.35 3-3 3h-4v2h4c2.76 0 5-2.24 5-5s-2.24-5-5-5m-6 8H7c-1.65 0-3-1.35-3-3s1.35-3 3-3h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4zm-3-4h8v2H8z\"></path></svg> Connections</h2>\n<ul>\n<li><strong>Previous:</strong> <a href=\"/system-design/lld/testability-and-a-couple-of-tests\"><code>41-testability-and-a-couple-of-tests.md</code></a></li>\n<li><strong>Section:</strong> <code>README.md</code></li>\n<li><strong>Shows:</strong> <a href=\"/system-design/lld/nouns-to-classes-verbs-to-methods\"><code>../01-requirements-and-scoping/03-nouns-to-classes-verbs-to-methods.md</code></a> — the join entity, made visible.</li>\n<li><strong>Diagram conventions:</strong> <code>../../00-Index/ai_design_prompt_v4.md</code> — 🎨 DIAGRAM RULES.</li>\n</ul>"
+    }
+  ]
+}

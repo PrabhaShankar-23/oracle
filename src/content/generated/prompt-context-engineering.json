@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "context-engineering-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Context engineering",
       "category": "Concept map & reading order",
@@ -51,6 +52,7 @@
     },
     {
       "slug": "context-engineering-vs-prompt-engineering",
+      "stem": "44-Context engineering vs prompt engineering",
       "number": 44,
       "order": "44",
       "title": "Context Engineering vs Prompt Engineering — Writing the String vs Deciding What Fills the Window",
@@ -111,6 +113,7 @@
     },
     {
       "slug": "context-window-budgeting",
+      "stem": "45-Context window budgeting",
       "number": 45,
       "order": "45",
       "title": "Context Window Budgeting — A Subtraction in Priority Order",
@@ -176,6 +179,7 @@
     },
     {
       "slug": "lost-in-the-middle",
+      "stem": "46-Lost-in-the-middle",
       "number": 46,
       "order": "46",
       "title": "Lost in the Middle — Being in the Window Is Not Being Used",
@@ -251,6 +255,7 @@
     },
     {
       "slug": "instruction-placement",
+      "stem": "47-Instruction placement",
       "number": 47,
       "order": "47",
       "title": "Instruction Placement — Framing at the Top, the Task at the Bottom",
@@ -316,6 +321,7 @@
     },
     {
       "slug": "context-ordering-for-prompt-cache-hit-rate",
+      "stem": "48-Context ordering for prompt-cache hit rate",
       "number": 48,
       "order": "48",
       "title": "Context Ordering for Prompt-Cache Hit Rate — Stable First, One Byte Can Cost the Prefix",
@@ -381,6 +387,7 @@
     },
     {
       "slug": "provider-prompt-caching",
+      "stem": "49-Provider prompt caching",
       "number": 49,
       "order": "49",
       "title": "Provider Prompt Caching — Paying Once for a Prefix You Send Every Time",
@@ -456,6 +463,7 @@
     },
     {
       "slug": "context-compression",
+      "stem": "50-Context compression",
       "number": 50,
       "order": "50",
       "title": "Context Compression — Five Ways to Shrink the Window, and What Each One Loses",
@@ -526,6 +534,7 @@
     },
     {
       "slug": "conversation-history-management",
+      "stem": "51-Conversation history management",
       "number": 51,
       "order": "51",
       "title": "Conversation History Management — Pin the Goal, Keep the Recent, Compact Rarely",
@@ -591,6 +600,7 @@
     },
     {
       "slug": "context-rot-context-pollution",
+      "stem": "52-Context rot & context pollution",
       "number": 52,
       "order": "52",
       "title": "Context Rot & Context Pollution — When What Is Already in the Window Works Against You",
@@ -656,6 +666,7 @@
     },
     {
       "slug": "multi-turn-prompt-design",
+      "stem": "53-Multi-turn prompt design",
       "number": 53,
       "order": "53",
       "title": "Multi-Turn Prompt Design — Keep State as an Object, Not as a Transcript to Re-read",
@@ -721,6 +732,7 @@
     },
     {
       "slug": "long-context-prompting",
+      "stem": "54-Long-context prompting",
       "number": 54,
       "order": "54",
       "title": "Long-Context Prompting — More Context Helps Until It Doesn't; Find Your Own Cliff",

@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "data-model-object-semantics-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Data model & object semantics",
       "category": "Concept map & reading order",
@@ -15,6 +16,7 @@
     },
     {
       "slug": "fundamentals-refresher",
+      "stem": "00-fundamentals-refresher",
       "number": 0,
       "order": "00",
       "title": "The CPython Execution Model",
@@ -75,6 +77,7 @@
     },
     {
       "slug": "names-binding-assignment",
+      "stem": "01-names-binding-assignment",
       "number": 1,
       "order": "01",
       "title": "Names, Binding & Assignment",
@@ -135,6 +138,7 @@
     },
     {
       "slug": "is-vs-equals-identity-interning",
+      "stem": "02-is-vs-equals-identity-interning",
       "number": 2,
       "order": "02",
       "title": "is vs ==, Identity & Interning",
@@ -195,6 +199,7 @@
     },
     {
       "slug": "mutable-vs-immutable-default-trap",
+      "stem": "03-mutable-vs-immutable-default-trap",
       "number": 3,
       "order": "03",
       "title": "Mutable vs Immutable & the Shared-Default Trap",
@@ -255,6 +260,7 @@
     },
     {
       "slug": "data-model-dunder-protocols",
+      "stem": "04-data-model-dunder-protocols",
       "number": 4,
       "order": "04",
       "title": "The Data Model / Dunder Protocols",
@@ -315,6 +321,7 @@
     },
     {
       "slug": "eq-hash-contract",
+      "stem": "04a-eq-hash-contract",
       "number": 4.1,
       "order": "04a",
       "title": "The __eq__ / __hash__ Contract",
@@ -375,6 +382,7 @@
     },
     {
       "slug": "slots-instance-layout",
+      "stem": "05-slots-instance-layout",
       "number": 5,
       "order": "05",
       "title": "__slots__ & Instance Layout",
@@ -435,6 +443,7 @@
     },
     {
       "slug": "copy-semantics",
+      "stem": "06-copy-semantics",
       "number": 6,
       "order": "06",
       "title": "Copy Semantics (assignment vs shallow vs deep)",
@@ -495,6 +504,7 @@
     },
     {
       "slug": "truthiness-operator-protocols",
+      "stem": "07-truthiness-operator-protocols",
       "number": 7,
       "order": "07",
       "title": "Truthiness & Operator Protocols",
@@ -530,6 +540,7 @@
     },
     {
       "slug": "equality-ordering-sorting",
+      "stem": "08-equality-ordering-sorting",
       "number": 8,
       "order": "08",
       "title": "Equality, Ordering & Sorting",

@@ -244,6 +244,8 @@ export type Manifest = {
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
   aiCodingDocs: (Omit<AiCodingDoc, 'html'> & { headings: Heading[] })[]
   pythonDocs: (Omit<AiCodingDoc, 'html'> & { headings: Heading[] })[]
+  lld: NoteSummary[]
+  sdDocs: (Omit<SdDoc, 'html'> & { headings: Heading[] })[]
   agenticDecisions: NoteSummary[]
   networking: NoteSummary[]
   voice: (NoteSummary & { category?: string })[]
@@ -433,6 +435,11 @@ export type GameDayDocs = { docs: GameDayDoc[] }
 export type AiCodingDoc = VaultDoc & { icon: string }
 
 export type AiCodingDocs = { docs: AiCodingDoc[] }
+/** A stand-alone System Design article (pattern catalogue, HLD reference, distributed-systems patterns). */
+export type SdDoc = VaultDoc & { description: string; group: string; subgroup?: string }
+
+export type SdDocs = { docs: SdDoc[] }
+
 /** Python drill pages that aren't topic notes (the snippet bank). Same shape as the AI coding docs. */
 export type PythonDocs = { docs: AiCodingDoc[] }
 

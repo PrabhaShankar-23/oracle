@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "curl-mastery",
+      "stem": "159-curl-mastery",
       "number": 159,
       "order": "159",
       "title": "curl Mastery — Splitting a Latency Number Into Five",
@@ -79,6 +80,7 @@
     },
     {
       "slug": "dns-tools",
+      "stem": "160-dns-tools",
       "number": 160,
       "order": "160",
       "title": "DNS Tools — dig, +trace, and Reading an Answer Honestly",
@@ -124,6 +126,7 @@
     },
     {
       "slug": "path-reachability",
+      "stem": "161-path-reachability",
       "number": 161,
       "order": "161",
       "title": "Path & Reachability — ping, mtr, and Proving a Port Is Open",
@@ -169,6 +172,7 @@
     },
     {
       "slug": "socket-state",
+      "stem": "162-socket-state",
       "number": 162,
       "order": "162",
       "title": "Socket State — ss, and What Each State Is Accusing",
@@ -214,6 +218,7 @@
     },
     {
       "slug": "packet-capture-tcpdump-and-when-you-actually-need-wireshark",
+      "stem": "breadth",
       "number": 163,
       "title": "Packet Capture — tcpdump and When You Actually Need Wireshark",
       "category": "Networking — Observability & Debugging (Item 163)",
@@ -227,6 +232,7 @@
     },
     {
       "slug": "browser-devtools-network",
+      "stem": "164-browser-devtools-network",
       "number": 164,
       "order": "164",
       "title": "The Browser Network Panel — The Client curl Cannot Imitate",
@@ -272,6 +278,7 @@
     },
     {
       "slug": "distributed-tracing",
+      "stem": "165-distributed-tracing",
       "number": 165,
       "order": "165",
       "title": "Distributed Tracing — One ID That Survives Every Hop",
@@ -317,6 +324,7 @@
     },
     {
       "slug": "metrics-that-matter",
+      "stem": "166-metrics-that-matter",
       "number": 166,
       "order": "166",
       "title": "The Metrics That Matter — RED at Every Hop, Plus What Runs Out",
@@ -362,6 +370,7 @@
     },
     {
       "slug": "triage-playbooks",
+      "stem": "167-triage-playbooks",
       "number": 167,
       "order": "167",
       "title": "Triage Playbooks — Symptom → Three Checks → Owner",

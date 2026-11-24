@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "async-io-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Async I/O",
       "category": "Concept map & reading order",
@@ -15,6 +16,7 @@
     },
     {
       "slug": "async-execution-model",
+      "stem": "40-async-execution-model",
       "number": 40,
       "order": "40",
       "title": "The Async Execution Model",
@@ -75,6 +77,7 @@
     },
     {
       "slug": "async-await-coroutines",
+      "stem": "41-async-await-coroutines",
       "number": 41,
       "order": "41",
       "title": "async/await & Coroutine Objects",
@@ -135,6 +138,7 @@
     },
     {
       "slug": "tasks-gather-cancellation",
+      "stem": "42-tasks-gather-cancellation",
       "number": 42,
       "order": "42",
       "title": "Tasks, Gathering & Cancellation",
@@ -195,6 +199,7 @@
     },
     {
       "slug": "bridging-sync-async",
+      "stem": "43-bridging-sync-async",
       "number": 43,
       "order": "43",
       "title": "Bridging Sync ↔ Async",
@@ -255,6 +260,7 @@
     },
     {
       "slug": "async-primitives-patterns",
+      "stem": "44-async-primitives-patterns",
       "number": 44,
       "order": "44",
       "title": "Async Primitives & Patterns",
@@ -315,6 +321,7 @@
     },
     {
       "slug": "async-ecosystem-comparatives",
+      "stem": "45-async-ecosystem-comparatives",
       "number": 45,
       "order": "45",
       "title": "Async Ecosystem & Comparatives",

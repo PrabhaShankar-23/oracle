@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "foundations-mental-model-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Foundations & mental model",
       "category": "Concept map & reading order",
@@ -51,6 +52,7 @@
     },
     {
       "slug": "what-prompting-actually-is",
+      "stem": "01-What prompting actually is",
       "number": 1,
       "order": "01",
       "title": "What Prompting Actually Is — Conditioning a Distribution, Not Giving an Order",
@@ -116,6 +118,7 @@
     },
     {
       "slug": "in-context-learning",
+      "stem": "02-In-context learning",
       "number": 2,
       "order": "02",
       "title": "In-Context Learning — What the Examples in a Prompt Actually Carry",
@@ -186,6 +189,7 @@
     },
     {
       "slug": "prompting-vs-fine-tuning-vs-rag-vs-tool-use",
+      "stem": "03-Prompting vs Fine-tuning vs RAG vs Tool-use",
       "number": 3,
       "order": "03",
       "title": "Prompting vs Fine-tuning vs RAG vs Tool-use — Name the Gap, Then Pick the Lever",
@@ -256,6 +260,7 @@
     },
     {
       "slug": "when-prompting-is-the-wrong-tool",
+      "stem": "04-When prompting is the wrong tool",
       "number": 4,
       "order": "04",
       "title": "When Prompting Is the Wrong Tool — Three Ceilings and the Oracle Test",
@@ -321,6 +326,7 @@
     },
     {
       "slug": "prompt-sensitivity-brittleness",
+      "stem": "05-Prompt sensitivity & brittleness",
       "number": 5,
       "order": "05",
       "title": "Prompt Sensitivity & Brittleness — A Prompt's Score Is a Spread, Not a Number",
@@ -386,6 +392,7 @@
     },
     {
       "slug": "instruction-tuned-vs-base-model-distinction",
+      "stem": "06-Instruction-tuned vs base-model distinction",
       "number": 6,
       "order": "06",
       "title": "Instruction-Tuned vs Base Model — Why the Prompt's Shape Depends on the Training",
@@ -421,6 +428,7 @@
     },
     {
       "slug": "alignment-tax-refusal-behavior",
+      "stem": "07-Alignment tax & refusal behavior",
       "number": 7,
       "order": "07",
       "title": "Alignment Tax & Refusal Behaviour — What Safety Training Costs a Prompt",
@@ -456,6 +464,7 @@
     },
     {
       "slug": "prompt-engineering-failure-taxonomy",
+      "stem": "08-Prompt engineering failure taxonomy",
       "number": 8,
       "order": "08",
       "title": "Prompt Failure Taxonomy — Five Classes, Each With Its Own Fix",
@@ -516,6 +525,7 @@
     },
     {
       "slug": "the-prompt-as-a-coupled-system",
+      "stem": "09-The prompt as a coupled system",
       "number": 9,
       "order": "09",
       "title": "The Prompt as a Coupled System — What Ships Is a Tuple, Not a String",

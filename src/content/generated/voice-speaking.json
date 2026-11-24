@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "speaking-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Speaking",
       "category": "Concept map & reading order",
@@ -56,6 +57,7 @@
     },
     {
       "slug": "streaming-text-to-speech",
+      "stem": "036-streaming-text-to-speech",
       "number": 36,
       "order": "036",
       "title": "Streaming Text-to-Speech — Time to First Byte",
@@ -115,6 +117,7 @@
     },
     {
       "slug": "sentence-chunking-and-flushing",
+      "stem": "037-sentence-chunking-and-flushing",
       "number": 37,
       "order": "037",
       "title": "Sentence Chunking and Flushing — Bounding the First Segment",
@@ -174,6 +177,7 @@
     },
     {
       "slug": "pronunciation",
+      "stem": "038-pronunciation",
       "number": 38,
       "order": "038",
       "title": "Pronunciation — Saying Domain Terms Right",
@@ -233,6 +237,7 @@
     },
     {
       "slug": "choosing-a-voice",
+      "stem": "039-choosing-a-voice",
       "number": 39,
       "order": "039",
       "title": "Choosing a Voice — By Ear and by Goldens",
@@ -292,6 +297,7 @@
     },
     {
       "slug": "realtime-speech-to-speech",
+      "stem": "040-realtime-speech-to-speech",
       "number": 40,
       "order": "040",
       "title": "Realtime Speech-to-Speech Models — When the Cascade Loses",
@@ -351,6 +357,7 @@
     },
     {
       "slug": "background-audio-and-thinking-sounds",
+      "stem": "breadth",
       "number": 41,
       "order": "041",
       "title": "Background Audio and Thinking Sounds",

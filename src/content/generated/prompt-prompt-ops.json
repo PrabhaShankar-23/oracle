@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "prompt-ops-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Prompt ops",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "prompts-as-code-vs-prompts-as-config",
+      "stem": "83-Prompts as code vs prompts as config",
       "number": 83,
       "order": "83",
       "title": "Prompts as Code vs Prompts as Config — Who Holds the Pen, and What CI Actually Tested",
@@ -116,6 +118,7 @@
     },
     {
       "slug": "prompt-versioning",
+      "stem": "84-Prompt versioning",
       "number": 84,
       "order": "84",
       "title": "Prompt Versioning — An Immutable Id the Trace Carries, a Movable Label the Service Reads",
@@ -191,6 +194,7 @@
     },
     {
       "slug": "prompt-registries-and-tooling",
+      "stem": "85-Prompt registries and tooling",
       "number": 85,
       "order": "85",
       "title": "Prompt Registries & Tooling — Same Primitives, Different Starting Point",
@@ -226,6 +230,7 @@
     },
     {
       "slug": "decoupling-prompt-release-from-code-release",
+      "stem": "86-Decoupling prompt release from code release",
       "number": 86,
       "order": "86",
       "title": "Decoupling Prompt Release from Code Release — Rollback Is a Pointer Move Plus Propagation",
@@ -296,6 +301,7 @@
     },
     {
       "slug": "model-upgrade-migration",
+      "stem": "87-Model-upgrade migration",
       "number": 87,
       "order": "87",
       "title": "Model-Upgrade Migration — Make the Request Valid, Hold the Prompt, Measure, Then Tune",
@@ -366,6 +372,7 @@
     },
     {
       "slug": "multi-tenant-and-localized-prompts",
+      "stem": "88-Multi-tenant and localized prompts",
       "number": 88,
       "order": "88",
       "title": "Multi-tenant & Localised Prompts — One Template, N Validated Config Rows",
@@ -431,6 +438,7 @@
     },
     {
       "slug": "observability",
+      "stem": "89-Observability",
       "number": 89,
       "order": "89",
       "title": "Prompt Observability — One Cheap Record per Call, Joined on the Version",
@@ -496,6 +504,7 @@
     },
     {
       "slug": "governance",
+      "stem": "90-Governance",
       "number": 90,
       "order": "90",
       "title": "Prompt Governance — Anyone May Draft, Few May Promote, Every Move Leaves a Record",

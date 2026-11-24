@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "modality-model-specific-prompting-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Modality & model-specific prompting",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "model-family-differences",
+      "stem": "102-Model-family differences",
       "number": 102,
       "order": "102",
       "title": "Model-Family Differences — One Task Spine, a Rendering per Family",
@@ -111,6 +113,7 @@
     },
     {
       "slug": "small-model-prompting",
+      "stem": "103-Small-model prompting",
       "number": 103,
       "order": "103",
       "title": "Small-Model Prompting — Which \"Small\" Do You Mean?",
@@ -146,6 +149,7 @@
     },
     {
       "slug": "multimodal-prompting",
+      "stem": "104-Multimodal prompting",
       "number": 104,
       "order": "104",
       "title": "Multimodal Prompting — Label the Images, Budget the Pixels, Test the Order",
@@ -181,6 +185,7 @@
     },
     {
       "slug": "code-generation-prompting",
+      "stem": "105-Code-generation prompting",
       "number": 105,
       "order": "105",
       "title": "Code-Generation Prompting — A Symptom, a Pattern to Copy, a Check It Can Run",
@@ -246,6 +251,7 @@
     },
     {
       "slug": "prompting-for-extraction-structured-data",
+      "stem": "106-Prompting for extraction & structured data",
       "number": 106,
       "order": "106",
       "title": "Prompting for Extraction — Make Absence Legal, Make Every Value Point at Its Source",
@@ -311,6 +317,7 @@
     },
     {
       "slug": "prompting-for-summarization",
+      "stem": "107-Prompting for summarization",
       "number": 107,
       "order": "107",
       "title": "Prompting for Summarisation — Faithful First, Short Second",
@@ -346,6 +353,7 @@
     },
     {
       "slug": "prompting-for-classification-at-scale",
+      "stem": "108-Prompting for classification at scale",
       "number": 108,
       "order": "108",
       "title": "Classification at Scale — Closed Labels, a Way Out, the Smallest Output",
@@ -381,6 +389,7 @@
     },
     {
       "slug": "non-english-cross-lingual-prompting",
+      "stem": "109-Non-English & cross-lingual prompting",
       "number": 109,
       "order": "109",
       "title": "Cross-Lingual Prompting — Three Languages, Chosen Separately",

@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "packaging-environments-tooling-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Packaging, environments & tooling",
       "category": "Concept map & reading order",
@@ -21,6 +22,7 @@
     },
     {
       "slug": "import-system",
+      "stem": "63-import-system",
       "number": 63,
       "order": "63",
       "title": "The Import System",
@@ -81,6 +83,7 @@
     },
     {
       "slug": "import-machinery-internals",
+      "stem": "64-import-machinery-internals",
       "number": 64,
       "order": "64",
       "title": "Import Machinery Internals",
@@ -116,6 +119,7 @@
     },
     {
       "slug": "virtual-environments-dependency-resolution",
+      "stem": "65-virtual-environments-dependency-resolution",
       "number": 65,
       "order": "65",
       "title": "Virtual Environments & Dependency Resolution",
@@ -176,6 +180,7 @@
     },
     {
       "slug": "packaging-distribution",
+      "stem": "66-packaging-distribution",
       "number": 66,
       "order": "66",
       "title": "Packaging & Distribution",
@@ -211,6 +216,7 @@
     },
     {
       "slug": "testing-quality-tooling",
+      "stem": "67-testing-quality-tooling",
       "number": 67,
       "order": "67",
       "title": "Testing & Quality Tooling",

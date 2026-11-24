@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "ip-packets-routing-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: IP, packets & routing",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "ip-packets-routing-breadth-flashcards",
+      "stem": "breadth",
       "number": 0,
       "title": "IP, Packets & Routing — Breadth Flashcards",
       "category": "Network",
@@ -75,6 +77,7 @@
     },
     {
       "slug": "ip-addressing",
+      "stem": "010-ip-addressing",
       "number": 10,
       "order": "010",
       "title": "IP Addressing — IPv4, IPv6, and Why IPv6 Keeps Appearing in Cloud Defaults",
@@ -150,6 +153,7 @@
     },
     {
       "slug": "subnets-cidr",
+      "stem": "011-subnets-cidr",
       "number": 11,
       "order": "011",
       "title": "Subnets & CIDR Notation",
@@ -225,6 +229,7 @@
     },
     {
       "slug": "private-vs-public-ip",
+      "stem": "012-private-vs-public-ip",
       "number": 12,
       "order": "012",
       "title": "Private vs Public IP Ranges",
@@ -300,6 +305,7 @@
     },
     {
       "slug": "mtu-fragmentation-pmtud",
+      "stem": "013-mtu-fragmentation-pmtud",
       "number": 13,
       "order": "013",
       "title": "Packets, MTU, Fragmentation & Path MTU Discovery",
@@ -370,6 +376,7 @@
     },
     {
       "slug": "routing-basics",
+      "stem": "014-routing-basics",
       "number": 14,
       "order": "014",
       "title": "Routing Basics — Tables, Default Gateway, Next Hop",
@@ -445,6 +452,7 @@
     },
     {
       "slug": "nat",
+      "stem": "015-nat",
       "number": 15,
       "order": "015",
       "title": "NAT — Source NAT, Destination NAT & Port Exhaustion",

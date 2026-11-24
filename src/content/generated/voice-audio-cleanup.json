@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "audio-cleanup-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Audio cleanup",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "echo-cancellation",
+      "stem": "013-echo-cancellation",
       "number": 13,
       "order": "013",
       "title": "Echo Cancellation — Why the Agent Hears Itself",
@@ -105,6 +107,7 @@
     },
     {
       "slug": "noise-suppression",
+      "stem": "014-noise-suppression",
       "number": 14,
       "order": "014",
       "title": "Noise Suppression and Background-Voice Removal",
@@ -164,6 +167,7 @@
     },
     {
       "slug": "server-side-echo-guard",
+      "stem": "015-server-side-echo-guard",
       "number": 15,
       "order": "015",
       "title": "The Server-Side Echo Guard — The Agent's Words Are Never Testimony",
@@ -223,6 +227,7 @@
     },
     {
       "slug": "agc-headphones-and-ducking-client-side-mitigations",
+      "stem": "breadth",
       "number": 16,
       "order": "016",
       "title": "AGC, Headphones and Ducking — Client-Side Mitigations",

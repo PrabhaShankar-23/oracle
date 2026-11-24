@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "safety-security-adversarial-prompting-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Safety, security & adversarial prompting",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "prompt-injection",
+      "stem": "91-Prompt injection",
       "number": 91,
       "order": "91",
       "title": "Prompt Injection — Instructions and Data Share One Channel",
@@ -111,6 +113,7 @@
     },
     {
       "slug": "indirect-prompt-injection",
+      "stem": "92-Indirect prompt injection",
       "number": 92,
       "order": "92",
       "title": "Indirect Prompt Injection — The Attacker Only Has to Write Something You Will Read",
@@ -176,6 +179,7 @@
     },
     {
       "slug": "jailbreaks",
+      "stem": "93-Jailbreaks",
       "number": 93,
       "order": "93",
       "title": "Jailbreaks — The Model's Policy Is the Target, Not Your Application",
@@ -241,6 +245,7 @@
     },
     {
       "slug": "system-prompt-extraction-prompt-leaking",
+      "stem": "94-System-prompt extraction & prompt leaking",
       "number": 94,
       "order": "94",
       "title": "System-Prompt Extraction — Treat the Prompt as Public and Make the Leak Boring",
@@ -306,6 +311,7 @@
     },
     {
       "slug": "data-exfiltration-via-prompts",
+      "stem": "95-Data exfiltration via prompts",
       "number": 95,
       "order": "95",
       "title": "Data Exfiltration via Prompts — The Rendering Surface Is a Way Out",
@@ -371,6 +377,7 @@
     },
     {
       "slug": "defense-in-depth",
+      "stem": "96-Defense in depth",
       "number": 96,
       "order": "96",
       "title": "Defence in Depth for LLM Applications — Assume the Injection Works, Make It Not Matter",
@@ -441,6 +448,7 @@
     },
     {
       "slug": "spotlighting-data-marking",
+      "stem": "97-Spotlighting & data marking",
       "number": 97,
       "order": "97",
       "title": "Spotlighting & Data Marking — A Mark the Attacker Can't Step Outside",
@@ -511,6 +519,7 @@
     },
     {
       "slug": "guardrail-models-classifiers",
+      "stem": "98-Guardrail models & classifiers",
       "number": 98,
       "order": "98",
       "title": "Guardrail Models & Classifiers — A Second Opinion With a Miss Rate",
@@ -546,6 +555,7 @@
     },
     {
       "slug": "the-lethal-trifecta",
+      "stem": "99-The lethal trifecta",
       "number": 99,
       "order": "99",
       "title": "The Lethal Trifecta — Private Data, Untrusted Content and a Way Out",
@@ -611,6 +621,7 @@
     },
     {
       "slug": "pii-handling-in-prompts",
+      "stem": "100-PII handling in prompts",
       "number": 100,
       "order": "100",
       "title": "PII Handling in Prompts — What You Send, What You Log, How Long Each Lives",
@@ -676,6 +687,7 @@
     },
     {
       "slug": "red-teaming-prompts",
+      "stem": "101-Red-teaming prompts",
       "number": 101,
       "order": "101",
       "title": "Red-Teaming Prompts — Every Attack That Landed Becomes a Permanent Test",

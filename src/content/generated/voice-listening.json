@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "listening-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Listening",
       "category": "Concept map & reading order",
@@ -56,6 +57,7 @@
     },
     {
       "slug": "voice-activity-detection",
+      "stem": "017-voice-activity-detection",
       "number": 17,
       "order": "017",
       "title": "Voice Activity Detection — Is Someone Speaking Right Now?",
@@ -115,6 +117,7 @@
     },
     {
       "slug": "streaming-speech-to-text",
+      "stem": "018-streaming-speech-to-text",
       "number": 18,
       "order": "018",
       "title": "Streaming Speech-to-Text — Interim and Final Words, While They Speak",
@@ -174,6 +177,7 @@
     },
     {
       "slug": "vocabulary-keyterm-prompting",
+      "stem": "019-vocabulary-keyterm-prompting",
       "number": 19,
       "order": "019",
       "title": "Vocabulary — Keyterm Prompting and What It Buys",
@@ -233,6 +237,7 @@
     },
     {
       "slug": "accent-language-code-switching",
+      "stem": "020-accent-language-code-switching",
       "number": 20,
       "order": "020",
       "title": "Accent, Language and Code-Switching",
@@ -292,6 +297,7 @@
     },
     {
       "slug": "diarization-who-spoke-as-a-signal",
+      "stem": "breadth",
       "number": 21,
       "order": "021",
       "title": "Diarization — Who Spoke, as a Signal",
@@ -326,6 +332,7 @@
     },
     {
       "slug": "measuring-recognition",
+      "stem": "022-measuring-recognition",
       "number": 22,
       "order": "022",
       "title": "Measuring Recognition — WER, Term Recall, Goldens",

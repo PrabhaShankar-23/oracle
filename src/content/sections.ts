@@ -90,6 +90,30 @@ export const PYTHON_DOC_SUBTITLES: Record<string, string> = {
   'snippet-questions': '162 predict-the-output questions. Answers and the 🔍 Go deeper explanations stay closed until you open them.',
 }
 
+/** Stand-alone System Design articles in one sidebar group, in the ingest's order. */
+function sdDocPages(group: string): NavPage[] {
+  return manifest.sdDocs
+    .filter((d) => d.group === group)
+    .map((d) => ({ title: d.title, path: `/system-design/docs/${d.slug}`, description: d.description, group: d.group, subgroup: d.subgroup }))
+}
+
+/** LLD chapters in reading order, with the pattern catalogue right after the design-patterns chapter. */
+function lldPages(): NavPage[] {
+  const notes: NavPage[] = manifest.lld.map((n) => ({
+    title: n.title,
+    path: `/system-design/lld/${n.slug}`,
+    description: n.tier === 'MAP' ? 'Concept map, reading order and how the notes connect.' : `${n.tier} · ${n.relevance ?? 'Medium'} architect relevance.`,
+    group: '02 LLD',
+    subgroup: numbered(n.section, n.sectionTitle),
+    order: n.order,
+  }))
+  const catalogue = sdDocPages('02 LLD')
+    .filter((p) => p.subgroup)
+    .map((p) => ({ ...p, subgroup: '03 Pattern catalogue' }))
+  const at = notes.map((p) => p.subgroup).lastIndexOf(numbered('03-design-patterns', 'Design patterns'))
+  return at < 0 ? [...notes, ...catalogue] : [...notes.slice(0, at + 1), ...catalogue, ...notes.slice(at + 1)]
+}
+
 export const sections: Section[] = [
   {
     id: 'dsa',
@@ -134,57 +158,62 @@ export const sections: Section[] = [
     id: 'system-design',
     title: 'System Design',
     path: '/system-design',
-    description: 'LLD and HLD case studies, architecture references and revision cards.',
+    description: 'Networking, LLD, HLD, distributed systems, agentic design, case studies and voice AI, in the vault’s order.',
     icon: AccountTreeOutlined,
+    // Groups carry the vault folder's number (01-Networking, 02-lld, 03-hld, 05-distributed-systems…).
     pages: [
-      {
-        title: 'Case studies overview',
-        path: '/system-design/case-studies',
-        description: 'How the five problems relate, and the order to read them in.',
-        group: 'Case studies',
-      },
-      ...manifest.caseStudies.map((s) => ({
-        title: shortTitle(s.title),
-        path: `/system-design/case-studies/${s.slug}`,
-        description: s.summary,
-        group: 'Case studies',
+      ...manifest.networking.map((n) => ({
+        title: n.title,
+        path: `/system-design/networking/${n.slug}`,
+        description: `${n.tier} · ${n.relevance ?? 'Medium'} architect relevance.`,
+        group: '01 Networking',
+        subgroup: numbered(n.section, n.sectionTitle),
+        order: n.order,
       })),
+      ...sdDocPages('02 LLD').filter((p) => !p.subgroup),
+      ...lldPages(),
+      ...sdDocPages('03 HLD'),
+      {
+        title: 'WebRTC revision cards',
+        path: '/system-design/webrtc',
+        description: 'Sixteen cards: signaling, ICE, DTLS/SRTP, SFUs and scaling tiers.',
+        group: '03 HLD',
+      },
+      ...sdDocPages('05 Distributed systems'),
       ...manifest.aiSystems.map((d) => ({
         title: 'Index — all 15 sections',
         path: `/system-design/ai-systems/${d.slug}`,
         description: 'Design-round view of agents: decisions, budgets and failure stories, 15 sections.',
-        group: 'Agentic system design',
+        group: '06 Agentic system design',
       })),
       ...manifest.agenticDecisions.map((d) => ({
         title: d.title,
         path: `/system-design/agentic-design/${d.slug}`,
         description: `${d.tier} · ${d.relevance ?? 'Medium'} round relevance.`,
-        group: 'Agentic system design',
+        group: '06 Agentic system design',
         subgroup: numbered(d.section, d.sectionTitle),
         order: d.order,
       })),
-      ...manifest.networking.map((n) => ({
-        title: n.title,
-        path: `/system-design/networking/${n.slug}`,
-        description: `${n.tier} · ${n.relevance ?? 'Medium'} architect relevance.`,
-        group: 'Networking',
-        subgroup: numbered(n.section, n.sectionTitle),
-        order: n.order,
+      {
+        title: 'Case studies overview',
+        path: '/system-design/case-studies',
+        description: 'How the five problems relate, and the order to read them in.',
+        group: '07 Case studies',
+      },
+      ...manifest.caseStudies.map((s) => ({
+        title: shortTitle(s.title),
+        path: `/system-design/case-studies/${s.slug}`,
+        description: s.summary,
+        group: '07 Case studies',
       })),
       ...manifest.voice.map((n) => ({
         title: n.title,
         path: `/system-design/voice/${n.slug}`,
         description: [n.tier, n.category].filter(Boolean).join(' · '),
-        group: 'Voice AI',
+        group: '08 Voice AI',
         subgroup: numbered(n.section, n.sectionTitle),
         order: n.order,
       })),
-      {
-        title: 'WebRTC revision cards',
-        path: '/system-design/webrtc',
-        description: 'Sixteen cards: signaling, ICE, DTLS/SRTP, SFUs and scaling tiers.',
-        group: 'HLD',
-      },
     ],
   },
   {
@@ -386,6 +415,23 @@ export const searchIndex: SearchItem[] = [
     path: `/system-design/networking/${n.slug}`,
     group: 'Networking',
   })),
+  ...manifest.lld.map((n) => ({
+    key: `lld:${n.slug}`,
+    label: n.title,
+    secondary: `LLD · ${n.sectionTitle} · ${n.tier}`,
+    path: `/system-design/lld/${n.slug}`,
+    group: 'System Design',
+  })),
+  ...manifest.sdDocs.flatMap((d) => [
+    { key: `sd-doc:${d.slug}`, label: d.title, secondary: `System Design · ${d.group.replace(/^\d+\s+/, '')}`, path: `/system-design/docs/${d.slug}`, group: 'System Design' },
+    ...d.headings.map((h) => ({
+      key: `sd-doc:${d.slug}:${h.id}`,
+      label: h.text.replace(/^[^\p{Letter}\p{Number}]+/u, ''),
+      secondary: d.title,
+      path: `/system-design/docs/${d.slug}#${h.id}`,
+      group: 'System Design',
+    })),
+  ]),
   ...manifest.voice.map((n) => ({
     key: `voice:${n.slug}`,
     label: n.title,

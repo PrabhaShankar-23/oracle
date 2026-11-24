@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "system-prompts-agent-instructions-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: System prompts & agent instructions",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "system-prompt-design-at-scale",
+      "stem": "55-System prompt design at scale",
       "number": 55,
       "order": "55",
       "title": "System Prompt Design at Scale — A Composed, Owned, Tested Artifact, Not a String",
@@ -111,6 +113,7 @@
     },
     {
       "slug": "layered-instruction-hierarchy",
+      "stem": "56-Layered instruction hierarchy",
       "number": 56,
       "order": "56",
       "title": "Layered Instruction Hierarchy — Who Outranks Whom, Trained In and Never Enforced",
@@ -171,6 +174,7 @@
     },
     {
       "slug": "behavioral-specs",
+      "stem": "57-Behavioral specs",
       "number": 57,
       "order": "57",
       "title": "Behavioural Specs — Tone, Refusal, Escalation and the When-Unsure Clause",
@@ -231,6 +235,7 @@
     },
     {
       "slug": "tool-descriptions-as-prompts",
+      "stem": "58-Tool descriptions as prompts",
       "number": 58,
       "order": "58",
       "title": "Tool Descriptions as Prompts — The Text the Model Reads at the Moment It Chooses",
@@ -291,6 +296,7 @@
     },
     {
       "slug": "skill-instruction-files-progressive-disclosure",
+      "stem": "59-Skill & instruction files, progressive disclosure",
       "number": 59,
       "order": "59",
       "title": "Skill and Instruction Files — Instructions That Load When They're Needed",
@@ -326,6 +332,7 @@
     },
     {
       "slug": "meta-prompting",
+      "stem": "60-Meta-prompting",
       "number": 60,
       "order": "60",
       "title": "Meta-Prompting — A Model Writes the Prompt, and Only a Score Says It Helped",
@@ -366,6 +373,7 @@
     },
     {
       "slug": "prompt-templating",
+      "stem": "61-Prompt templating",
       "number": 61,
       "order": "61",
       "title": "Prompt Templating — A Value Is Data, a Template Is Code",
@@ -431,6 +439,7 @@
     },
     {
       "slug": "multi-agent-prompt-design",
+      "stem": "62-Multi-agent prompt design",
       "number": 62,
       "order": "62",
       "title": "Multi-Agent Prompt Design — The Brief Is the Whole Interface",

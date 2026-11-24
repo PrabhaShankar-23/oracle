@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "core-prompt-anatomy-techniques-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Core prompt anatomy & techniques",
       "category": "Concept map & reading order",
@@ -51,6 +52,7 @@
     },
     {
       "slug": "anatomy-of-a-production-prompt",
+      "stem": "10-Anatomy of a production prompt",
       "number": 10,
       "order": "10",
       "title": "Anatomy of a Production Prompt — Six Regions, in an Order Set by Two Boundaries",
@@ -116,6 +118,7 @@
     },
     {
       "slug": "zero-shot-prompting",
+      "stem": "11-Zero-shot prompting",
       "number": 11,
       "order": "11",
       "title": "Zero-Shot Prompting — Describe the Task, Give No Examples",
@@ -151,6 +154,7 @@
     },
     {
       "slug": "one-shot-few-shot-prompting",
+      "stem": "12-One-shot & few-shot prompting",
       "number": 12,
       "order": "12",
       "title": "One-Shot & Few-Shot Prompting — How Many Examples, and When the Answer Is Zero",
@@ -216,6 +220,7 @@
     },
     {
       "slug": "few-shot-example-selection",
+      "stem": "13-Few-shot example selection",
       "number": 13,
       "order": "13",
       "title": "Few-Shot Example Selection — Which Examples, and in What Order",
@@ -281,6 +286,7 @@
     },
     {
       "slug": "dynamic-retrieved-few-shot-knn-example-selection",
+      "stem": "14-Dynamic retrieved few-shot (kNN example selection)",
       "number": 14,
       "order": "14",
       "title": "Dynamic Retrieved Few-Shot — Choosing the Examples per Request",
@@ -351,6 +357,7 @@
     },
     {
       "slug": "instruction-writing",
+      "stem": "15-Instruction writing",
       "number": 15,
       "order": "15",
       "title": "Instruction Writing — Say the Behaviour, the Threshold and the Fallback",
@@ -416,6 +423,7 @@
     },
     {
       "slug": "delimiters-structure",
+      "stem": "16-Delimiters & structure",
       "number": 16,
       "order": "16",
       "title": "Delimiters & Structure — Making a Boundary Visible, Not Enforced",
@@ -491,6 +499,7 @@
     },
     {
       "slug": "role-persona-prompting",
+      "stem": "17-Role & persona prompting",
       "number": 17,
       "order": "17",
       "title": "Role & Persona Prompting — It Sets the Voice, Not the Accuracy",
@@ -526,6 +535,7 @@
     },
     {
       "slug": "system-prompt-vs-user-prompt-vs-assistant-prefill",
+      "stem": "18-System prompt vs user prompt vs assistant prefill",
       "number": 18,
       "order": "18",
       "title": "System Prompt vs User Prompt vs Assistant Prefill — Three Roles, One Token Stream",
@@ -586,6 +596,7 @@
     },
     {
       "slug": "output-format-specification",
+      "stem": "19-Output-format specification",
       "number": 19,
       "order": "19",
       "title": "Output-Format Specification — Ask in the Prompt, Enforce in Code, Count the Failures",
@@ -651,6 +662,7 @@
     },
     {
       "slug": "prompt-chaining",
+      "stem": "20-Prompt chaining",
       "number": 20,
       "order": "20",
       "title": "Prompt Chaining — Splitting One Overloaded Prompt into Staged Calls",
@@ -716,6 +728,7 @@
     },
     {
       "slug": "prompt-patterns-catalog",
+      "stem": "21-Prompt patterns catalog",
       "number": 21,
       "order": "21",
       "title": "Prompt Patterns Catalogue — Names for Structures People Already Used",
@@ -751,6 +764,7 @@
     },
     {
       "slug": "anti-patterns",
+      "stem": "22-Anti-patterns",
       "number": 22,
       "order": "22",
       "title": "Prompt Anti-Patterns — Four Ways a Prompt Rots",

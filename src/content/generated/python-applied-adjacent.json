@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "applied-adjacent-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Applied & adjacent",
       "category": "Concept map & reading order",
@@ -15,6 +16,7 @@
     },
     {
       "slug": "numpy-vectorization",
+      "stem": "83-numpy-vectorization",
       "number": 83,
       "order": "83",
       "title": "NumPy Vectorization",
@@ -50,6 +52,7 @@
     },
     {
       "slug": "pandas-memory-efficiency",
+      "stem": "84-pandas-memory-efficiency",
       "number": 84,
       "order": "84",
       "title": "Pandas Memory Efficiency",
@@ -85,6 +88,7 @@
     },
     {
       "slug": "sqlalchemy-vs-raw-sql",
+      "stem": "85-sqlalchemy-vs-raw-sql",
       "number": 85,
       "order": "85",
       "title": "SQLAlchemy vs Raw SQL",
@@ -120,6 +124,7 @@
     },
     {
       "slug": "monkey-patching",
+      "stem": "86-monkey-patching",
       "number": 86,
       "order": "86",
       "title": "Monkey Patching",
@@ -155,6 +160,7 @@
     },
     {
       "slug": "docker-for-python",
+      "stem": "87-docker-for-python",
       "number": 87,
       "order": "87",
       "title": "Docker for Python",

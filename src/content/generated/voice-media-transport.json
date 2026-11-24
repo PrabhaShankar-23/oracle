@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "media-transport-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Media & transport",
       "category": "Concept map & reading order",
@@ -46,6 +47,7 @@
     },
     {
       "slug": "browser-capture",
+      "stem": "007-browser-capture",
       "number": 7,
       "order": "007",
       "title": "Browser Capture — Microphone, Devices, Permissions",
@@ -105,6 +107,7 @@
     },
     {
       "slug": "rooms-participants-tracks",
+      "stem": "008-rooms-participants-tracks",
       "number": 8,
       "order": "008",
       "title": "Rooms, Participants and Tracks — A Call as LiveKit Models It",
@@ -164,6 +167,7 @@
     },
     {
       "slug": "tokens-grants-dispatch",
+      "stem": "009-tokens-grants-dispatch",
       "number": 9,
       "order": "009",
       "title": "Tokens, Grants and Agent Dispatch",
@@ -223,6 +227,7 @@
     },
     {
       "slug": "side-channels",
+      "stem": "011-side-channels",
       "number": 11,
       "order": "011",
       "title": "Side Channels — Transcripts, State and RPC Beside the Audio",
@@ -282,6 +287,7 @@
     },
     {
       "slug": "telephony-and-sip-phone-callers-in-a-room",
+      "stem": "breadth",
       "number": 12,
       "order": "012",
       "title": "Telephony and SIP — Phone Callers in a Room",

@@ -18,6 +18,8 @@ const WebRtcPage = lazy(() => import('./pages/system-design/WebRtcPage'))
 const AiSystemsPage = lazy(() => import('./pages/system-design/AiSystemsPage'))
 const AgenticDecisionPage = lazy(() => import('./pages/system-design/AgenticDecisionPage'))
 const NetworkingNotePage = lazy(() => import('./pages/system-design/NetworkingNotePage'))
+const LldNotePage = lazy(() => import('./pages/system-design/LldNotePage'))
+const SdDocPage = lazy(() => import('./pages/system-design/SdDocPage'))
 const VoiceNotePage = lazy(() => import('./pages/system-design/VoiceNotePage'))
 const PythonNotePage = lazy(() => import('./pages/python/PythonNotePage'))
 const PythonDocPage = lazy(() => import('./pages/python/PythonDocPage'))
@@ -46,6 +48,8 @@ export default function App() {
           <Route path="system-design/ai-systems/:slug" element={<AiSystemsPage />} />
           <Route path="system-design/agentic-design/:slug" element={<AgenticDecisionPage />} />
           <Route path="system-design/networking/:slug" element={<NetworkingNotePage />} />
+          <Route path="system-design/lld/:slug" element={<LldNotePage />} />
+          <Route path="system-design/docs/:slug" element={<SdDocPage />} />
           <Route path="system-design/voice/:slug" element={<VoiceNotePage />} />
           <Route path="python/snippet-questions" element={<PythonDocPage slug="snippet-questions" />} />
           <Route path="python/:slug" element={<PythonNotePage />} />

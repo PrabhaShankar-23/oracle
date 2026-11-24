@@ -4,6 +4,7 @@
   "notes": [
     {
       "slug": "production-prompt-systems-map",
+      "stem": "00-chapter-map",
       "number": -1,
       "title": "Chapter map: Production prompt systems",
       "category": "Concept map & reading order",
@@ -51,6 +52,7 @@
     },
     {
       "slug": "prompt-layer-reference-architecture",
+      "stem": "110-Prompt layer reference architecture",
       "number": 110,
       "order": "110",
       "title": "The Prompt Layer Reference Architecture — Six Stages and What Each Arrow Carries",
@@ -116,6 +118,7 @@
     },
     {
       "slug": "the-llm-gateway",
+      "stem": "111-The LLM gateway",
       "number": 111,
       "order": "111",
       "title": "The LLM Gateway — It Routes a Rendered Prompt and Never Writes One",
@@ -181,6 +184,7 @@
     },
     {
       "slug": "cost-modeling",
+      "stem": "112-Cost modeling",
       "number": 112,
       "order": "112",
       "title": "Cost Modelling — Four Token Prices, One Hit Rate and the Right Denominator",
@@ -256,6 +260,7 @@
     },
     {
       "slug": "latency-budget",
+      "stem": "113-Latency budget",
       "number": 113,
       "order": "113",
       "title": "Latency Budget — Time to First Token Plus Generation, and Where Each Millisecond Goes",
@@ -331,6 +336,7 @@
     },
     {
       "slug": "caching-strategy",
+      "stem": "114-Caching strategy",
       "number": 114,
       "order": "114",
       "title": "Caching Strategy — Choosing Between a Cheaper Call and No Call",
@@ -401,6 +407,7 @@
     },
     {
       "slug": "model-routing-by-difficulty",
+      "stem": "115-Model routing by difficulty",
       "number": 115,
       "order": "115",
       "title": "Model Routing by Difficulty — A Rich Prompt on a Small Model Against a Thin One on a Big Model",
@@ -471,6 +478,7 @@
     },
     {
       "slug": "degradation-fallback",
+      "stem": "116-Degradation & fallback",
       "number": 116,
       "order": "116",
       "title": "Degradation & Fallback — Make the Absence Visible to the Prompt",
@@ -541,6 +549,7 @@
     },
     {
       "slug": "batch-offline-prompting",
+      "stem": "117-Batch & offline prompting",
       "number": 117,
       "order": "117",
       "title": "Batch & Offline Prompting — Half Price for Anything No One Is Waiting For",
@@ -576,6 +585,7 @@
     },
     {
       "slug": "reliability-engineering",
+      "stem": "118-Reliability engineering",
       "number": 118,
       "order": "118",
       "title": "Reliability Engineering — Which Failure Gets Which Response",
@@ -646,6 +656,7 @@
     },
     {
       "slug": "compliance-auditability",
+      "stem": "119-Compliance & auditability",
       "number": 119,
       "order": "119",
       "title": "Compliance & Auditability — Reproduce the Inputs, Store the Output",
@@ -681,6 +692,7 @@
     },
     {
       "slug": "build-vs-buy-for-prompt-tooling",
+      "stem": "120-Build vs buy for prompt tooling",
       "number": 120,
       "order": "120",
       "title": "Build vs Buy for Prompt Tooling — Decide by Who Edits the Prompts",
