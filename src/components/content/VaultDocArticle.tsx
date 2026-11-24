@@ -4,7 +4,7 @@ import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
-import { useState } from 'react'
+import { useState, type ReactNode, type Ref } from 'react'
 import type { Heading, VaultDoc } from '../../content/types'
 import { HEADER_HEIGHT, READING_MAX_WIDTH } from '../../theme/theme'
 import HtmlContent from './HtmlContent'
@@ -20,10 +20,14 @@ type Props = {
   headings: Heading[]
   /** The lazily loaded article; `null` while it loads. */
   doc: Pick<VaultDoc, 'meta' | 'html'> | null
+  /** Controls shown above the article body, e.g. answer switches on a drill page. */
+  toolbar?: ReactNode
+  /** The element that holds the rendered article, for pages that act on its DOM. */
+  bodyRef?: Ref<HTMLDivElement>
 }
 
 /** A vault prose note as an article: meta box, body, and a contents rail (a drawer below `lg`). */
-export default function VaultDocArticle({ crumbs, title, subtitle, headings, doc }: Props) {
+export default function VaultDocArticle({ crumbs, title, subtitle, headings, doc, toolbar, bodyRef }: Props) {
   const theme = useTheme()
   const desktop = useMediaQuery(theme.breakpoints.up('lg'))
   const [tocOpen, setTocOpen] = useState(false)
@@ -66,7 +70,10 @@ export default function VaultDocArticle({ crumbs, title, subtitle, headings, doc
               ))}
             </Box>
           )}
-          {doc && <HtmlContent html={doc.html} />}
+          {toolbar}
+          <Box ref={bodyRef} sx={toolbar ? { '& [id]': { scrollMarginTop: HEADER_HEIGHT + 80 } } : undefined}>
+            {doc && <HtmlContent html={doc.html} />}
+          </Box>
         </Box>
 
         {desktop && headings.length > 1 && (

@@ -872,20 +872,44 @@ async function ingestAiCodingDocs() {
 
 /* ---------------- Python snippet bank (07-python/00-index) ---------------- */
 
-/** Predict-the-output drills. Each answer is an Obsidian callout; the site shows it as a closed toggle. */
+/** Predict-the-output drills. Each answer is a `<details>` toggle in the Markdown; the site keeps it closed. */
 const PYTHON_DOCS = [{ slug: 'snippet-questions', file: '07-python/00-index/96-python-snippet-questions.md' }]
 
+/** A toggle's kind from its title: the answer is `success`, a 🔍 Go deeper block is `example`. */
+const toggleKind = (title) => (/go deeper/i.test(title) ? 'example' : 'success')
+
 /**
- * Obsidian callouts (`> [!success]- Answer`, nested `> > [!example]- 🔍 Go deeper`) → closed `<details>`.
- * marked doesn't nest a details body reliably, so each callout body is rendered on its own and dropped
- * back in through a placeholder paragraph.
+ * Answer toggles → closed `<details class="callout …">`. Two sources: Lydia-Hallie-style HTML
+ * (`<details><summary><b>Answer</b></summary>` … `</details>`, nested for 🔍 Go deeper) and Obsidian
+ * callouts (`> [!success]- Answer`). marked doesn't nest a details body reliably, so each body is
+ * rendered on its own and dropped back in through a placeholder paragraph.
  */
 function renderCallouts(md) {
   const blocks = []
   const lines = md.split('\n')
   const out = []
+  let fence = false
   for (let i = 0; i < lines.length; i++) {
-    const head = /^> \[!(\w+)\][-+]?\s*(.*)$/.exec(lines[i])
+    if (/^\s*```/.test(lines[i])) fence = !fence
+    const html = !fence && /^<details><summary>(?:<b>)?(.*?)(?:<\/b>)?<\/summary>\s*$/.exec(lines[i])
+    if (html) {
+      const body = []
+      let depth = 1
+      let inner = false
+      while (++i < lines.length) {
+        if (/^\s*```/.test(lines[i])) inner = !inner
+        if (!inner && /^<details>/.test(lines[i])) depth++
+        if (!inner && /^<\/details>\s*$/.test(lines[i]) && --depth === 0) break
+        body.push(lines[i])
+      }
+      const title = html[1].trim()
+      blocks.push(
+        `<details class="callout callout-${toggleKind(title)}"><summary>${escapeHtml(title)}</summary>${renderCallouts(body.join('\n'))}</details>`,
+      )
+      out.push('', `CALLOUTBLOCK${blocks.length - 1}`, '')
+      continue
+    }
+    const head = !fence && /^> \[!(\w+)\][-+]?\s*(.*)$/.exec(lines[i])
     if (!head) {
       out.push(lines[i])
       continue
