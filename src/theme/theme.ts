@@ -8,7 +8,7 @@
  *
  * Colour roles follow M3 (https://m3.material.io/styles/color/roles).
  */
-import { charcoalDark } from './schemes/charcoalDark'
+import { githubDimmed } from './schemes/githubDimmed'
 import { deepforestDark } from './schemes/deepforestDark'
 import { everforestLight } from './schemes/everforestLight'
 import type { Scheme } from './schemes/types'
@@ -25,8 +25,12 @@ export const HEADER_HEIGHT = 64
 export const CONTENT_MAX_WIDTH = 1280
 export const READING_MAX_WIDTH = 860
 export const SIDEBAR_WIDTH = 280
-export const FONT_MONO = "'Roboto Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace"
-const FONT_SANS = "'Roboto Flex Variable', Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif"
+// Fonts go through CSS variables so one scheme can swap them: the default dark scheme (GitHub Dark
+// Dimmed) uses GitHub's system stack; light and forest keep Roboto, the fallback inside var().
+export const FONT_MONO = "var(--oracle-mono, 'Roboto Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace)"
+const FONT_SANS = "var(--oracle-sans, 'Roboto Flex Variable', Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif)"
+const GITHUB_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif"
+const GITHUB_MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace"
 
 /* ------------------------------------------------------------------ */
 /* M3 surface roles — not part of MUI's palette, so we add them         */
@@ -81,7 +85,7 @@ declare module '@mui/material/Chip' {
 // Colour schemes live in ./schemes, one file each. Pick the dark one here; everything else
 // (MUI palette, Mermaid, charts, code highlighting) follows from it.
 const light: Scheme = everforestLight
-const dark: Scheme = charcoalDark // alternatives: chatgptDark (pure black), everforestDark, deepforestDark
+const dark: Scheme = githubDimmed // alternatives: charcoalDark, chatgptDark (pure black), everforestDark, deepforestDark
 
 /**
  * Every scheme the app can show. `forest` is a second dark scheme, offered by the forest button in
@@ -282,6 +286,10 @@ const theme = createTheme({
         // Anchored headings/cards stop below the sticky app bar.
         '[id]': { scrollMarginTop: HEADER_HEIGHT + 16 },
         'code, kbd, pre, samp': { fontFamily: FONT_MONO },
+        // GitHub Dark Dimmed look, default dark scheme only: GitHub's fonts, brighter semibold headings.
+        // :where() keeps specificity low so a component's own colour still wins.
+        '[data-mui-color-scheme="dark"]': { '--oracle-sans': GITHUB_SANS, '--oracle-mono': GITHUB_MONO },
+        '[data-mui-color-scheme="dark"] :where(h1, h2, h3, h4, h5, h6)': { color: '#CDD9E5', fontWeight: 600 },
         '::selection': { background: t.vars?.palette.container.primary },
         '@media (prefers-reduced-motion: reduce)': {
           html: { scrollBehavior: 'auto' },

@@ -24,6 +24,8 @@ export const articleStyles: SxProps<Theme> = (t) => {
       borderTop: `1px solid ${v.divider}`,
     },
     '& > h2:first-of-type': { mt: 2, borderTop: 0 },
+    // Default dark scheme (GitHub Dark Dimmed): semibold headings, as in GitHub's Markdown preview.
+    '[data-mui-color-scheme="dark"] & :is(h2, h3, h4)': { fontWeight: 600 },
     '& h3': { ...t.typography.h6, mt: 4, mb: 1.5 },
     '& h4': { ...t.typography.subtitle1, mt: 3, mb: 1 },
     '& p': { my: 1.5 },
