@@ -249,7 +249,7 @@ export const sections: Section[] = [
         title: d.title,
         path: `/python/${d.slug}`,
         description: PYTHON_DOC_SUBTITLES[d.slug] ?? '',
-        group: 'Drills',
+        group: '00 Python questions',
         order: String(i).padStart(2, '0'),
       })),
       ...manifest.python.map((n) => ({
@@ -394,7 +394,7 @@ export const searchIndex: SearchItem[] = [
     group: 'Voice AI',
   })),
   ...manifest.pythonDocs.flatMap((d) => [
-    { key: `python-doc:${d.slug}`, label: d.title, secondary: 'Python · Drills', path: `/python/${d.slug}`, group: 'Python' },
+    { key: `python-doc:${d.slug}`, label: d.title, secondary: 'Python · Python questions', path: `/python/${d.slug}`, group: 'Python' },
     ...d.headings.map((h) => ({
       key: `python-doc:${d.slug}:${h.id}`,
       label: h.text.replace(/^[^\p{Letter}\p{Number}]+/u, ''),
