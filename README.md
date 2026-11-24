@@ -1,6 +1,6 @@
-# AlgoHandbook site
+# Builder's Handbook site
 
-The AlgoHandbook interview-prep notes as a responsive React site, published section by section.
+The Builder's Handbook interview-prep notes as a responsive React site, published section by section.
 
 **Live today:** DSA cold recall (169 problems) and System Design (5 case studies and WebRTC revision cards).
 
@@ -14,7 +14,7 @@ npm run dev
 ## Update content from the vault
 
 ```bash
-npm run ingest                       # default vault path: ~/AlgoHandbook
+npm run ingest                       # default vault path: ~/Builders-Handbook
 VAULT_DIR=/path/to/vault npm run ingest
 ```
 

@@ -1,4 +1,4 @@
-// Pulls pages from the AlgoHandbook vault into src/content/generated/*.json.
+// Pulls pages from the Builder's Handbook vault into src/content/generated/*.json.
 // Run: npm run ingest            (uses the default vault path below)
 //      VAULT_DIR=/path npm run ingest
 import * as cheerio from 'cheerio'
@@ -11,7 +11,7 @@ import path from 'node:path'
 
 const VAULT =
   process.env.VAULT_DIR ??
-  path.join(homedir(), 'AlgoHandbook')
+  path.join(homedir(), 'Builders-Handbook')
 const OUT = path.resolve(import.meta.dirname, '../src/content/generated')
 
 const CASE_STUDIES_DIR = '01-System Design/07-Design-problems/html'

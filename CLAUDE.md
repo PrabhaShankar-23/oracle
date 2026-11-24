@@ -4,8 +4,8 @@ Guidance for Claude Code in this repo.
 
 ## What this is
 
-A React site that publishes the **AlgoHandbook** notes vault
-(`~/AlgoHandbook`) section by section. Content is pulled from the vault
+A React site that publishes the **Builder's Handbook** notes vault
+(`~/Builders-Handbook`) section by section. Content is pulled from the vault
 by a script and committed as JSON. The vault is only written by `npm run vault:walkthroughs`
 (cold recall walkthroughs, see below); everything else in it is read-only from here.
 

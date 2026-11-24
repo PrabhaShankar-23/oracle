@@ -53,7 +53,7 @@ export default function AppShell() {
             noWrap
             sx={{ color: 'text.primary', textDecoration: 'none', fontSize: { xs: '1.125rem', sm: '1.25rem' }, mr: { md: 1 } }}
           >
-            AlgoHandbook
+            Builder's Handbook
           </Typography>
 
           <Box sx={{ flex: 1 }} />
@@ -99,7 +99,7 @@ export default function AppShell() {
           </Box>
 
           <Box component="footer" sx={{ py: 3, px: 2, textAlign: 'center', color: 'text.secondary' }}>
-            <Typography variant="caption">Built from the AlgoHandbook notes vault</Typography>
+            <Typography variant="caption">Built from the Builder's Handbook notes vault</Typography>
           </Box>
         </Box>
       </Box>

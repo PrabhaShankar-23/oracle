@@ -12,7 +12,7 @@ export default function NavDrawer({ open, onClose }: Props) {
     <Drawer open={open} onClose={onClose} slotProps={{ paper: { sx: { width: 'min(320px, 86vw)', borderRadius: '0 6px 6px 0' } } }}>
       <Box sx={{ px: 3, pt: 2.5, pb: 1 }}>
         <Typography variant="subtitle1" component={Link} to="/" onClick={onClose} sx={{ color: 'text.primary', textDecoration: 'none' }}>
-          AlgoHandbook
+          Builder's Handbook
         </Typography>
       </Box>
       <SideNav onNavigate={onClose} />

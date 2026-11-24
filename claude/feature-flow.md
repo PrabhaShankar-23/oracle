@@ -1,4 +1,4 @@
-# Feature flow — project profile (oracle / AlgoHandbook site)
+# Feature flow — project profile (oracle / Builder's Handbook site)
 
 Project-specific settings for the `/feature-flow` skill (`~/.claude/skills/feature-flow`).
 The skill supplies the process: frame → discover → architect → slices & milestones → test plan →
