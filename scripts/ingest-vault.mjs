@@ -873,7 +873,7 @@ async function ingestAiCodingDocs() {
 /* ---------------- Python snippet bank (07-python/00-index) ---------------- */
 
 /** Predict-the-output drills. Each answer is a `<details>` toggle in the Markdown; the site keeps it closed. */
-const PYTHON_DOCS = [{ slug: 'snippet-questions', file: '07-python/00-index/96-python-snippet-questions.md' }]
+const PYTHON_DOCS = [{ slug: 'snippet-questions', file: '07-python/00-index/00-python-questions.md' }]
 
 /** A toggle's kind from its title: the answer is `success`, a 🔍 Go deeper block is `example`. */
 const toggleKind = (title) => (/go deeper/i.test(title) ? 'example' : 'success')
