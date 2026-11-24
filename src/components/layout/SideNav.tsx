@@ -35,7 +35,7 @@ function layerFor(pathname: string): Layer {
 const slideIn = keyframes`from { opacity: 0; transform: translateX(12px) } to { opacity: 1; transform: none }`
 const slideBack = keyframes`from { opacity: 0; transform: translateX(-12px) } to { opacity: 1; transform: none }`
 
-function CountChip({ count }: { count: number }) {
+export function CountChip({ count }: { count: number }) {
   return (
     <Chip
       label={count}
@@ -52,7 +52,7 @@ function CountChip({ count }: { count: number }) {
   )
 }
 
-function PageRow({ page, pathname, onNavigate }: { page: NavPage; pathname: string; onNavigate?: () => void }) {
+export function PageRow({ page, pathname, onNavigate }: { page: NavPage; pathname: string; onNavigate?: () => void }) {
   return (
     <ListItemButton component={Link} to={page.path} onClick={onNavigate} selected={pathname === page.path} sx={{ minHeight: 40 }}>
       {page.order && (

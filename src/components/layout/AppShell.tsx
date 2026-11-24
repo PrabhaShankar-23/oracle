@@ -13,13 +13,12 @@ import { useTheme } from '@mui/material/styles'
 import { Suspense, useState } from 'react'
 import { Link, Outlet } from 'react-router'
 import { useHashScroll } from '../../hooks/useHashScroll'
-import { HEADER_HEIGHT, SIDEBAR_WIDTH } from '../../theme/theme'
 import PageLoader from '../content/PageLoader'
 import ColorModeToggle from './ColorModeToggle'
 import ForestToggle from './ForestToggle'
 import GlobalSearch from './GlobalSearch'
 import NavDrawer from './NavDrawer'
-import SideNav from './SideNav'
+import DualSideNav from './DualSideNav'
 
 export default function AppShell() {
   const theme = useTheme()
@@ -90,25 +89,7 @@ export default function AppShell() {
       </Dialog>
 
       <Box sx={{ flex: 1, display: 'flex', minWidth: 0 }}>
-        {sidebar && sidebarOpen && (
-          <Box
-            component="aside"
-            sx={(t) => ({
-              width: SIDEBAR_WIDTH,
-              flexShrink: 0,
-              position: 'sticky',
-              top: HEADER_HEIGHT,
-              alignSelf: 'flex-start',
-              height: `calc(100dvh - ${HEADER_HEIGHT}px)`,
-              overflowY: 'auto',
-              overscrollBehavior: 'contain',
-              borderRight: `1px solid ${t.vars.palette.surface.outlineVariant}`,
-              backgroundColor: t.vars.palette.surface.containerLow,
-            })}
-          >
-            <SideNav />
-          </Box>
-        )}
+        {sidebar && sidebarOpen && <DualSideNav />}
 
         <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
           <Box component="main" sx={{ flex: 1, minWidth: 0 }}>
