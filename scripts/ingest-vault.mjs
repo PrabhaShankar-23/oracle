@@ -951,10 +951,18 @@ async function ingestPythonDocs() {
     const headings = collectHeadings($, body)
     // Questions are `######` headings, too small to read as question titles: show them as h4 with an id
     // so a link can point at `#q-26`. (h4 stays out of the contents rail, which lists h2 and h3.)
+    // Each question (heading, snippet, options, answer, the rule after it) is wrapped in a
+    // <section class="snippet-q" data-level="high|medium|low" data-trap> so the page can filter by tag.
     body.find('h6').each((_, node) => {
       const h = $(node)
-      const n = /^(\d+)\./.exec(text(h))
-      h.replaceWith(`<h4${n ? ` id="q-${n[1]}"` : ''}>${h.html()}</h4>`)
+      const label = text(h)
+      const n = /^(\d+)\./.exec(label)
+      const level = /High/.test(label) ? 'high' : /Medium/.test(label) ? 'medium' : 'low'
+      const trap = /Trap/.test(label) ? ' data-trap="1"' : ''
+      const rest = h.nextUntil('h6, h2, h1')
+      const html = `<h4${n ? ` id="q-${n[1]}"` : ''}>${h.html()}</h4>` + rest.toArray().map((el) => $.html(el)).join('')
+      rest.remove()
+      h.replaceWith(`<section class="snippet-q" data-level="${level}"${trap}>${html}</section>`)
     })
     docs.push({ slug, icon, title, meta, headings, html: inner(body) })
     console.log(`  parsed ${file} (${headings.length} headings, ${body.find('details.callout-success').length} answers)`)
