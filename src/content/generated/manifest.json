@@ -4674,107 +4674,98 @@
       "sectionTitle": "Real-time & streaming"
     },
     {
+      "slug": "webrtc-map",
+      "title": "Chapter map: WebRTC",
+      "tier": "MAP",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
+      "slug": "webrtc-breadth-flashcards",
+      "title": "WebRTC — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "09-webrtc",
+      "sectionTitle": "WebRTC"
+    },
+    {
       "slug": "what-webrtc-is-for",
       "order": "077",
-      "title": "What WebRTC Is For",
+      "title": "What WebRTC Is For — Live Media Between Endpoints That Can't Accept a Call",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "the-three-apis",
       "order": "078",
-      "title": "The Three WebRTC APIs",
+      "title": "The Three WebRTC APIs — Capture, Connection, Data, and Three State Machines",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "signaling",
       "order": "079",
-      "title": "Signaling — The Part WebRTC Does Not Define",
+      "title": "Signaling — The Channel WebRTC Leaves to You",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "sdp-offer-answer",
       "order": "080",
-      "title": "SDP Offer/Answer",
+      "title": "SDP Offer/Answer — The Answer Is the Session",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "ice-stun-turn",
       "order": "081",
-      "title": "ICE, STUN & TURN — NAT Traversal",
+      "title": "ICE, STUN & TURN — Finding a Path Through NAT, and Paying for the Relay",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "nat-types-why-p2p-fails",
       "order": "082",
-      "title": "NAT Types & Why P2P Fails",
+      "title": "NAT Types & Why P2P Fails — Mapping, Filtering, Hairpinning",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "09-webrtc",
-      "sectionTitle": "WebRTC"
-    },
-    {
-      "slug": "webrtcs-transport-stack",
-      "title": "WebRTC's Transport Stack",
-      "tier": "BREADTH",
-      "relevance": "Medium",
-      "section": "09-webrtc",
-      "sectionTitle": "WebRTC"
-    },
-    {
-      "slug": "data-channels",
-      "title": "Data Channels",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "topologies-mesh-sfu-mcu",
       "order": "085",
-      "title": "Topologies — Mesh vs SFU vs MCU",
+      "title": "Topologies — Mesh vs SFU vs MCU, and When a Media Server Earns Its Place",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "09-webrtc",
-      "sectionTitle": "WebRTC"
-    },
-    {
-      "slug": "media-pipeline-basics",
-      "title": "Media Pipeline Basics",
-      "tier": "BREADTH",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "webrtc-for-voice-ai",
       "order": "087",
-      "title": "WebRTC for Voice AI",
+      "title": "WebRTC for Voice AI — The Transport on Each Hop Between a Microphone and a Model",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
     {
       "slug": "webrtc-vs-websocket-for-audio",
       "order": "088",
-      "title": "WebRTC vs WebSocket for Audio",
+      "title": "WebRTC vs WebSocket for Audio — What Happens to a Late Frame",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "09-webrtc",
       "sectionTitle": "WebRTC"
     },
@@ -4799,7 +4790,7 @@
       "order": "090",
       "title": "REST API Design — Naming, Pagination, Filtering, Versioning, Error Envelopes",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
@@ -4808,34 +4799,34 @@
       "order": "091",
       "title": "RPC-Style APIs & When They Beat REST",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "grpc",
       "order": "092",
-      "title": "gRPC — Protocol Buffers, HTTP/2 Transport, Codegen, the Four Call Types",
+      "title": "gRPC — Protocol Buffers, Codegen, Status Codes, the Four Call Types",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "grpc-in-production",
       "order": "093",
-      "title": "gRPC in Production — Deadlines, Interceptors, Load Balancing, gRPC-Web, Schema Evolution",
+      "title": "gRPC in Production — Deadlines, Connection Age, Retries, Browsers",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "graphql",
       "order": "094",
-      "title": "GraphQL — Single Endpoint, Client-Specified Queries, N+1, Persisted Queries, Caching",
+      "title": "GraphQL — One Endpoint, Client-Shaped Queries, N+1, Persisted Queries, Caching",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
@@ -4844,7 +4835,7 @@
       "order": "095",
       "title": "Webhooks — Signature Verification, Retries, Idempotency, Replay Protection",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
@@ -4853,7 +4844,7 @@
       "order": "096",
       "title": "Message Queues & Event Streams — SQS/RabbitMQ vs Kafka, Delivery Semantics, Ordering, DLQs",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
@@ -4862,7 +4853,7 @@
       "order": "097",
       "title": "Sync vs Async — Request/Response, Queue, Event-Driven",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
@@ -4871,34 +4862,34 @@
       "order": "098",
       "title": "Long-Running Jobs over HTTP — 202 + Polling vs Callback vs Streaming",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "ai-stack-protocols",
       "order": "099",
-      "title": "Server Protocols in the AI Stack — HTTP+SSE, MCP, A2A",
+      "title": "Server Protocols in the AI Stack — HTTP + SSE, MCP, A2A",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "api-choice-framework",
       "order": "100",
-      "title": "The API Choice Framework — REST vs gRPC vs GraphQL vs WebSocket vs SSE vs Queue",
+      "title": "The API Choice Framework — REST vs gRPC vs GraphQL vs SSE vs WebSocket vs Queue",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "schema-contracts-compatibility",
       "order": "101",
-      "title": "Schema, Contracts & Compatibility — OpenAPI, Protobuf, Contract Testing",
+      "title": "Schema, Contracts & Compatibility — OpenAPI, Protobuf, the CI Gate",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
@@ -4907,177 +4898,184 @@
       "order": "102",
       "title": "API Authentication — API Keys, OAuth2, JWT, mTLS, HMAC Signing",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
       "slug": "api-versioning-deprecation",
       "order": "103",
-      "title": "API Versioning & Deprecation Strategy",
+      "title": "API Versioning and Deprecation — Changing a Public Contract Without Breaking Clients",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "10-api-protocols",
       "sectionTitle": "API protocols"
     },
     {
+      "slug": "proxies-load-balancers-map",
+      "title": "Chapter map: Proxies & load balancers",
+      "tier": "MAP",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
+      "slug": "proxies-load-balancers-gateways-breadth-flashcards",
+      "title": "Proxies, Load Balancers & Gateways — Breadth Flashcards",
+      "tier": "BREADTH",
+      "relevance": "Senior",
+      "section": "11-proxies-load-balancers",
+      "sectionTitle": "Proxies & load balancers"
+    },
+    {
       "slug": "forward-vs-reverse-proxy",
       "order": "104",
-      "title": "Forward Proxy vs Reverse Proxy",
+      "title": "Forward Proxy vs Reverse Proxy — Who Chose the Hop, and What It Can See",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "reverse-proxy-responsibilities",
       "order": "105",
-      "title": "Reverse Proxy Responsibilities",
+      "title": "Reverse Proxy Responsibilities — The Request Pipeline and the Defaults That Bite",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "l4-load-balancing",
       "order": "106",
-      "title": "L4 (TCP/UDP) Load Balancing",
+      "title": "L4 Load Balancing — Flow Hashing, Pass-Through vs Proxy, and the Client IP",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "l7-load-balancing",
       "order": "107",
-      "title": "L7 (HTTP) Load Balancing",
+      "title": "L7 Load Balancing — Per-Request Picks, Upstream Pools, Routing Rules and Retries",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Senior",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "proxies-load-balancers-l4-vs-l7",
       "order": "108",
-      "title": "L4 vs L7 Load Balancing — The Tradeoff Table",
+      "title": "L4 vs L7 Load Balancing — The Tradeoff Table, the Products and the Decision Tree",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "load-balancing-algorithms",
       "order": "109",
-      "title": "Load Balancing Algorithms",
+      "title": "Load Balancing Algorithms — Turn Order, In-Flight Requests, Two Choices, Latency",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "consistent-hashing",
       "order": "110",
-      "title": "Consistent Hashing",
+      "title": "Consistent Hashing — Rings, Virtual Nodes, Maglev and Bounded Loads",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "sticky-sessions",
       "order": "111",
-      "title": "Sticky Sessions / Session Affinity",
+      "title": "Sticky Sessions — Cookie and IP Affinity, and Why It's a Scaling Smell",
       "tier": "SUPPORTING",
-      "relevance": "Medium",
+      "relevance": "Senior",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "health-checks",
       "order": "112",
-      "title": "Health Checks",
+      "title": "Health Checks — Active vs Passive, Shallow vs Deep, and Failing Open",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "outlier-detection-circuit-breaking",
       "order": "113",
-      "title": "Outlier Detection, Circuit Breaking, Draining & Graceful Shutdown",
+      "title": "Outlier Detection, Proxy Circuit Breaking and Draining",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "grpc-http2-load-balancing",
       "order": "114",
-      "title": "The gRPC / HTTP2 Load Balancing Problem",
+      "title": "The gRPC and HTTP/2 Load-Balancing Problem — One Connection, One Backend",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "global-load-balancing",
       "order": "115",
-      "title": "Global Load Balancing",
+      "title": "Global Load Balancing — DNS, Anycast and Anycast Front Doors",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "api-gateway",
       "order": "116",
-      "title": "API Gateway",
+      "title": "API Gateway — Identity-Aware Policy Before the Service",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "ingress-controllers",
       "order": "117",
-      "title": "Ingress Controllers & the Gateway API",
+      "title": "Ingress Controllers and the Gateway API — Kubernetes' Front Door",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "service-mesh",
       "order": "118",
-      "title": "Service Mesh",
+      "title": "Service Mesh — Sidecar vs Ambient, and When It's Worth It",
       "tier": "SUPPORTING",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "cdn-and-edge",
       "order": "119",
-      "title": "CDN & Edge",
+      "title": "CDN & Edge — PoPs, Shields, Cache Keys, Purge",
       "tier": "SUPPORTING",
-      "relevance": "High",
-      "section": "11-proxies-load-balancers",
-      "sectionTitle": "Proxies & load balancers"
-    },
-    {
-      "slug": "waf-ddos-protection-bot-mitigation",
-      "title": "WAF, DDoS Protection & Bot Mitigation",
-      "tier": "BREADTH",
-      "relevance": "Medium",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
     {
       "slug": "buffering-vs-streaming-proxies",
       "order": "121",
-      "title": "Buffering vs Streaming Proxies",
+      "title": "Buffering vs Streaming Proxies — The Hop That Holds Your Stream",
       "tier": "CORE",
-      "relevance": "High",
+      "relevance": "Architect",
       "section": "11-proxies-load-balancers",
       "sectionTitle": "Proxies & load balancers"
     },
@@ -8612,6 +8610,97 @@
         {
           "id": "next-lap-after-the-six-are-cold",
           "text": "Next lap (after the six ⭐ are cold)",
+          "level": 2
+        }
+      ]
+    }
+  ],
+  "pythonDocs": [
+    {
+      "slug": "snippet-questions",
+      "icon": "🐍",
+      "title": "Python Through Snippets, Made Simple",
+      "meta": [
+        "<strong>162 predict-the-output questions</strong>, Lydia Hallie style: read the snippet, <strong>predict the output out loud</strong>, then open the answer.",
+        "Every output here was produced by actually running the code on CPython 3.11.15.",
+        "Answers are <strong>closed by default</strong> (collapsible Obsidian callouts; on GitHub they render open).",
+        "The 140 🔴 High, 🟡 Medium and <svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M12 5.99 19.53 19H4.47zM12 2 1 21h22zm1 14h-2v2h2zm0-6h-2v4h2z\"></path></svg> Trap questions also have a <strong><svg class=\"md-icon\" viewBox=\"0 0 24 24\" width=\"1.15em\" height=\"1.15em\" fill=\"currentColor\" aria-hidden=\"true\" style=\"vertical-align:-0.2em;flex-shrink:0\"><path d=\"M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14\"></path></svg> Go deeper</strong> toggle inside the answer, closed by default too. Each one follows the same shape: <strong>Under the hood</strong> (what CPython actually does, with a small picture where it helps) → <strong>Why the obvious guess fails</strong> (traps) or <strong>The edge cases</strong> → <strong>Try a variant</strong> (one more snippet, run on 3.11.15) → <strong>In real code</strong>.",
+        "The <code>96</code> in the file name is this file&#39;s item number in <code>py_index_v4.md</code>, not a question count."
+      ],
+      "headings": [
+        {
+          "id": "tag-legend",
+          "text": "Tag legend",
+          "level": 2
+        },
+        {
+          "id": "contents",
+          "text": "Contents",
+          "level": 2
+        },
+        {
+          "id": "quick-routes",
+          "text": "Quick routes",
+          "level": 2
+        },
+        {
+          "id": "names-objects-core-types-q1q12",
+          "text": "Names, Objects & Core Types (Q1–Q12)",
+          "level": 2
+        },
+        {
+          "id": "strings-q13q22",
+          "text": "Strings (Q13–Q22)",
+          "level": 2
+        },
+        {
+          "id": "lists-tuples-q23q36",
+          "text": "Lists & Tuples (Q23–Q36)",
+          "level": 2
+        },
+        {
+          "id": "dicts-sets-q37q48",
+          "text": "Dicts & Sets (Q37–Q48)",
+          "level": 2
+        },
+        {
+          "id": "functions-scope-closures-q49q65",
+          "text": "Functions, Scope & Closures (Q49–Q65)",
+          "level": 2
+        },
+        {
+          "id": "comprehensions-iterators-generators-q66q77",
+          "text": "Comprehensions, Iterators & Generators (Q66–Q77)",
+          "level": 2
+        },
+        {
+          "id": "oop-classes-inheritance-dunders-q78q95",
+          "text": "OOP: Classes, Inheritance & Dunders (Q78–Q95)",
+          "level": 2
+        },
+        {
+          "id": "object-creation-constructors-q96q117",
+          "text": "Object Creation & Constructors (Q96–Q117)",
+          "level": 2
+        },
+        {
+          "id": "memory-management-garbage-collection-q118q136",
+          "text": "Memory Management & Garbage Collection (Q118–Q136)",
+          "level": 2
+        },
+        {
+          "id": "exceptions-context-managers-q137q146",
+          "text": "Exceptions & Context Managers (Q137–Q146)",
+          "level": 2
+        },
+        {
+          "id": "decorators-modern-syntax-q147q154",
+          "text": "Decorators & Modern Syntax (Q147–Q154)",
+          "level": 2
+        },
+        {
+          "id": "gotchas-idioms-q155q162",
+          "text": "Gotchas & Idioms (Q155–Q162)",
           "level": 2
         }
       ]

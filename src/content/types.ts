@@ -243,6 +243,7 @@ export type Manifest = {
   }[]
   gameDayDocs: (Omit<GameDayDoc, 'html'> & { headings: Heading[] })[]
   aiCodingDocs: (Omit<AiCodingDoc, 'html'> & { headings: Heading[] })[]
+  pythonDocs: (Omit<AiCodingDoc, 'html'> & { headings: Heading[] })[]
   agenticDecisions: NoteSummary[]
   networking: NoteSummary[]
   voice: (NoteSummary & { category?: string })[]
@@ -432,6 +433,8 @@ export type GameDayDocs = { docs: GameDayDoc[] }
 export type AiCodingDoc = VaultDoc & { icon: string }
 
 export type AiCodingDocs = { docs: AiCodingDoc[] }
+/** Python drill pages that aren't topic notes (the snippet bank). Same shape as the AI coding docs. */
+export type PythonDocs = { docs: AiCodingDoc[] }
 
 export type GameDaySearchEntry = {
   id: string

@@ -272,6 +272,8 @@ export const articleStyles: SxProps<Theme> = (t) => {
       border: `1px solid ${v.surface.outlineVariant}`,
     },
     '& summary': { cursor: 'pointer', fontWeight: 500, minHeight: 32, display: 'list-item' },
+    // Snippet-bank answers (Obsidian callouts): the answer is a closed toggle, and its "Go deeper" a tinted one inside.
+    '& details.callout-example': { backgroundColor: v.surface.containerLow, '& > summary': { color: v.primary.main } },
 
     // A vault note that isn't published on the site yet — readable, but deliberately not a link.
     '& .vault-ref': {

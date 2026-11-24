@@ -85,6 +85,11 @@ export const AI_CODING_SUBTITLES: Record<string, string> = {
   practice: '17 hands-on problems: task, how to do it, run code, follow-ups with cues.',
 }
 
+/** Subtitles for the Python drill pages that aren't topic notes. */
+export const PYTHON_DOC_SUBTITLES: Record<string, string> = {
+  'snippet-questions': '162 predict-the-output questions. Answers and the 🔍 Go deeper explanations stay closed until you open them.',
+}
+
 export const sections: Section[] = [
   {
     id: 'dsa',
@@ -239,13 +244,22 @@ export const sections: Section[] = [
     path: '/python',
     description: 'Language internals, async, packaging and the stdlib.',
     icon: TerminalOutlined,
-    pages: manifest.python.map((n) => ({
-      title: n.title,
-      path: `/python/${n.slug}`,
-      description: n.tier === 'MAP' ? 'Concept map, reading order and how the notes connect.' : `${n.tier} · ${n.relevance ?? 'Senior'} level.`,
-      group: numbered(n.section, n.sectionTitle),
-      order: n.order,
-    })),
+    pages: [
+      ...manifest.pythonDocs.map((d, i) => ({
+        title: d.title,
+        path: `/python/${d.slug}`,
+        description: PYTHON_DOC_SUBTITLES[d.slug] ?? '',
+        group: 'Drills',
+        order: String(i).padStart(2, '0'),
+      })),
+      ...manifest.python.map((n) => ({
+        title: n.title,
+        path: `/python/${n.slug}`,
+        description: n.tier === 'MAP' ? 'Concept map, reading order and how the notes connect.' : `${n.tier} · ${n.relevance ?? 'Senior'} level.`,
+        group: numbered(n.section, n.sectionTitle),
+        order: n.order,
+      })),
+    ],
   },
   { id: 'java', title: 'Java', path: '/java', description: 'Core Java, collections and concurrency.', icon: CoffeeOutlined, pages: [] },
   { id: 'spring', title: 'Spring', path: '/spring', description: 'Spring Boot, data and security.', icon: BoltOutlined, pages: [] },
@@ -379,6 +393,16 @@ export const searchIndex: SearchItem[] = [
     path: `/system-design/voice/${n.slug}`,
     group: 'Voice AI',
   })),
+  ...manifest.pythonDocs.flatMap((d) => [
+    { key: `python-doc:${d.slug}`, label: d.title, secondary: 'Python · Drills', path: `/python/${d.slug}`, group: 'Python' },
+    ...d.headings.map((h) => ({
+      key: `python-doc:${d.slug}:${h.id}`,
+      label: h.text.replace(/^[^\p{Letter}\p{Number}]+/u, ''),
+      secondary: `Python · ${d.title}`,
+      path: `/python/${d.slug}#${h.id}`,
+      group: 'Python',
+    })),
+  ]),
   ...manifest.aiCodingDocs.flatMap((d) => [
     { key: `ai-coding:${d.slug}`, label: d.title, secondary: 'AI Coding Patterns', path: `/ai-coding/${d.slug}`, group: 'AI Coding' },
     ...d.headings.map((h) => ({

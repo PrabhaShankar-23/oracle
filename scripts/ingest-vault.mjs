@@ -870,6 +870,75 @@ async function ingestAiCodingDocs() {
   return docs
 }
 
+/* ---------------- Python snippet bank (07-python/00-index) ---------------- */
+
+/** Predict-the-output drills. Each answer is an Obsidian callout; the site shows it as a closed toggle. */
+const PYTHON_DOCS = [{ slug: 'snippet-questions', file: '07-python/00-index/96-python-snippet-questions.md' }]
+
+/**
+ * Obsidian callouts (`> [!success]- Answer`, nested `> > [!example]- 🔍 Go deeper`) → closed `<details>`.
+ * marked doesn't nest a details body reliably, so each callout body is rendered on its own and dropped
+ * back in through a placeholder paragraph.
+ */
+function renderCallouts(md) {
+  const blocks = []
+  const lines = md.split('\n')
+  const out = []
+  for (let i = 0; i < lines.length; i++) {
+    const head = /^> \[!(\w+)\][-+]?\s*(.*)$/.exec(lines[i])
+    if (!head) {
+      out.push(lines[i])
+      continue
+    }
+    const body = []
+    while (i + 1 < lines.length && lines[i + 1].startsWith('>')) body.push(lines[++i].replace(/^> ?/, ''))
+    const [, kind, title] = head
+    blocks.push(
+      `<details class="callout callout-${kind}"><summary>${escapeHtml(title || kind)}</summary>${renderCallouts(body.join('\n'))}</details>`,
+    )
+    out.push('', `CALLOUTBLOCK${blocks.length - 1}`, '')
+  }
+  const $ = cheerio.load(marked.parse(out.join('\n'), { gfm: true, mangle: false, headerIds: false }))
+  const body = $('body')
+  promoteMermaidFences($, body)
+  flattenVaultRefsWithin($, body)
+  rewriteLinks($, body)
+  return inner(body).replace(/<p>CALLOUTBLOCK(\d+)<\/p>/g, (_, k) => blocks[Number(k)])
+}
+
+async function ingestPythonDocs() {
+  const docs = []
+  for (const { slug, file } of PYTHON_DOCS) {
+    const md = await readFile(path.join(VAULT, file), 'utf8')
+    const h1 = /^# (.*)$/m.exec(md)
+    const { icon, title } = prettifyTitle(h1[1])
+    // The opening blockquote is the meta box; the rest is the drill.
+    const rest = md.slice(h1.index + h1[0].length).replace(/^\s+/, '')
+    const lead = /^((?:>.*\n)+)/.exec(rest)
+    const meta = lead
+      ? lead[1]
+          .split('\n')
+          .map((l) => l.replace(/^> ?/, '').trim())
+          .filter(Boolean)
+          .map((l) => marked.parseInline(l))
+      : []
+    const $ = cheerio.load(renderCallouts(lead ? rest.slice(lead[0].length) : rest))
+    const body = $('body')
+    const headings = collectHeadings($, body)
+    // Questions are `######` headings, too small to read as question titles: show them as h4 with an id
+    // so a link can point at `#q-26`. (h4 stays out of the contents rail, which lists h2 and h3.)
+    body.find('h6').each((_, node) => {
+      const h = $(node)
+      const n = /^(\d+)\./.exec(text(h))
+      h.replaceWith(`<h4${n ? ` id="q-${n[1]}"` : ''}>${h.html()}</h4>`)
+    })
+    docs.push({ slug, icon, title, meta, headings, html: inner(body) })
+    console.log(`  parsed ${file} (${headings.length} headings, ${body.find('details.callout-success').length} answers)`)
+  }
+  await write('python-docs.json', { docs })
+  return docs
+}
+
 /*
  * Model answers: `02-Game-Day/model-answers/<recall-stem>/NN-slug.md`, one per question, linked from the
  * recall entry by `**🎤 Model answer:** [[…]]`. The format comes from the vault's
@@ -1689,7 +1758,7 @@ async function ingestAgenticDecisions() {
 
 /* ---------------- Manifest (nav + search, kept small for the main bundle) ---------------- */
 
-async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice, aiCoding) {
+async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay, agentic, networking, voice, python, prompt, practice, aiCoding, pythonDocs) {
   const practiceProblems = practice.families.flatMap((f) => f.groups.flatMap((g) => g.problems))
   await write('manifest.json', {
     dsaPractice: { total: practiceProblems.length, l1: practiceProblems.filter((p) => p.l1).length },
@@ -1783,6 +1852,10 @@ async function writeManifest(dsa, caseStudies, webrtc, utils, aiSystems, gameDay
       ...d,
       headings: d.headings.filter((h) => h.level === 2),
     })),
+    pythonDocs: pythonDocs.map(({ html: _html, ...d }) => ({
+      ...d,
+      headings: d.headings.filter((h) => h.level === 2),
+    })),
     dsaUtils: utils.flatMap((u) =>
       u.sections.flatMap((s) =>
         s.helpers.filter((h) => h.id).map((h) => ({ lang: u.lang, id: h.id, name: h.name, section: s.title })),
@@ -1815,4 +1888,5 @@ await writeManifest(
   prompt,
   await ingestPractice(dsa),
   await ingestAiCodingDocs(),
+  await ingestPythonDocs(),
 )
